@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Eye, Calendar } from "lucide-react";
@@ -24,7 +25,7 @@ export const CryptidCard = ({
   description,
   image,
   tags,
-}: CryptidCardProps) => {
+}: CryptidCardProps & { id: string }) => {
   const getDangerColor = () => {
     switch (dangerLevel) {
       case "High":
@@ -39,7 +40,8 @@ export const CryptidCard = ({
   };
 
   return (
-    <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group">
+    <Link to={`/cryptid/${(arguments[0] as any).id}`}>
+      <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative h-48 overflow-hidden bg-muted">
         <img
           src={image}
@@ -95,5 +97,6 @@ export const CryptidCard = ({
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 };
