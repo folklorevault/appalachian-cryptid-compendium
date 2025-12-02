@@ -19,13 +19,6 @@ database_id = "342726f9-dea9-41ce-888d-1a5a138e541c"
 binding = "IMAGES"
 bucket_name = "cryptid-images"
 
-# For local development
-[env.development]
-[[env.development.d1_databases]]
-binding = "DB"
-database_name = "cryptid-db"
-database_id = "local"
-
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
