@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cryptids } from "@/data/cryptids";
 
 const Index = () => {
@@ -68,9 +69,9 @@ const Index = () => {
               <a href="#directory" className="text-sm text-foreground hover:text-primary transition-colors">
                 Directory
               </a>
-              <a href="#about" className="text-sm text-foreground hover:text-primary transition-colors">
+              <Link to="/about" className="text-sm text-foreground hover:text-primary transition-colors">
                 About
-              </a>
+              </Link>
               <a href="#submit" className="text-sm text-foreground hover:text-primary transition-colors">
                 Submit Sighting
               </a>
@@ -90,13 +91,13 @@ const Index = () => {
             >
               Directory
             </a>
-            <a
-              href="#about"
+            <Link
+              to="/about"
               className="text-sm text-foreground hover:text-primary transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               About
-            </a>
+            </Link>
             <a
               href="#submit"
               className="text-sm text-foreground hover:text-primary transition-colors"
@@ -267,9 +268,9 @@ const Index = () => {
               <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Quick Links</h5>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
+                  <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
                     About the Project
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="#submit" className="text-muted-foreground hover:text-primary transition-colors">
