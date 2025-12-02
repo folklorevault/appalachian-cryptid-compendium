@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import CryptidDetail from "./pages/CryptidDetail";
 import About from "./pages/About";
 import Map from "./pages/Map";
+import ReportSighting from "./pages/ReportSighting";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/cryptid/:id" element={<CryptidDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/report" element={<ReportSighting />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -31,6 +31,9 @@ const About = () => {
               <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
                 Map
               </Link>
+              <Link to="/report" className="text-sm text-foreground hover:text-primary transition-colors">
+                Report
+              </Link>
             </nav>
           </div>
         </div>
