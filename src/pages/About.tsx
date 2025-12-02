@@ -60,13 +60,9 @@ const About = () => {
                   and night creatures have been passed down in family kitchens, truck stops, and festival tents.
                 </p>
                 <p className="text-foreground/90 leading-relaxed">
-                  In more recent years, a handful of locals started trying to keep up: jotting down dates, 
-                  places, and names whenever someone was willing to talk. But the stories themselves go back 
-                  much further, through Cherokee and other Indigenous traditions and all the retellings that 
-                  followed. This directory is merely trying to organize the lore, not claim to be the first 
-                  to record it.
-                </p>
-              </CardContent>
+                  These reports already live in Cherokee and other Indigenous traditions, family lore, county ghost books, and dead forums full of broken image links.
+                  <br /><br />
+                  This site behaves like a regional field office: tagging cases, cross-referencing sightings, and keeping the paperwork barely under control.
             </Card>
 
             {/* Regional Boxes - Qualitative */}
