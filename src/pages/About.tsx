@@ -28,6 +28,9 @@ const About = () => {
               <Link to="/about" className="text-sm text-primary transition-colors">
                 About
               </Link>
+              <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
+                Map
+              </Link>
             </nav>
           </div>
         </div>

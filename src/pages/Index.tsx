@@ -72,9 +72,9 @@ const Index = () => {
               <Link to="/about" className="text-sm text-foreground hover:text-primary transition-colors">
                 About
               </Link>
-              <a href="#submit" className="text-sm text-foreground hover:text-primary transition-colors">
-                Submit Sighting
-              </a>
+              <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
+                Map
+              </Link>
             </nav>
           </div>
         </div>
@@ -98,13 +98,13 @@ const Index = () => {
             >
               About
             </Link>
-            <a
-              href="#submit"
+            <Link
+              to="/map"
               className="text-sm text-foreground hover:text-primary transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Submit Sighting
-            </a>
+              Map
+            </Link>
           </nav>
         </div>
       )}
