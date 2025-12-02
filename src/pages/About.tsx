@@ -61,8 +61,10 @@ const About = () => {
                 </p>
                 <p className="text-foreground/90 leading-relaxed">
                   These reports already live in Cherokee and other Indigenous traditions, family lore, county ghost books, and dead forums full of broken image links.
-                  <br /><br />
+                </p>
+                <p className="text-foreground/90 leading-relaxed">
                   This site behaves like a regional field office: tagging cases, cross-referencing sightings, and keeping the paperwork barely under control.
+                </p>
             </Card>
 
             {/* Regional Boxes - Qualitative */}
