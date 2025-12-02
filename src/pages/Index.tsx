@@ -75,6 +75,9 @@ const Index = () => {
               <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
                 Map
               </Link>
+              <Link to="/report" className="text-sm text-foreground hover:text-primary transition-colors">
+                Report
+              </Link>
             </nav>
           </div>
         </div>
@@ -105,6 +108,13 @@ const Index = () => {
             >
               Map
             </Link>
+            <Link
+              to="/report"
+              className="text-sm text-foreground hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Report Sighting
+            </Link>
           </nav>
         </div>
       )}
@@ -130,15 +140,17 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                Explore Directory
+                <a href="#directory">Explore Directory</a>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-primary text-primary hover:bg-primary/10"
-              >
-                Report Sighting
-              </Button>
+              <Link to="/report">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-primary text-primary hover:bg-primary/10"
+                >
+                  Report Sighting
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
