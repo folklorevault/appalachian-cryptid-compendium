@@ -15,7 +15,12 @@ interface CryptidCardProps {
   tags: string[];
 }
 
+interface CryptidCardWithIdProps extends CryptidCardProps {
+  id: string;
+}
+
 export const CryptidCard = ({
+  id,
   name,
   scientificName,
   location,
@@ -25,7 +30,7 @@ export const CryptidCard = ({
   description,
   image,
   tags,
-}: CryptidCardProps & { id: string }) => {
+}: CryptidCardWithIdProps) => {
   const getDangerColor = () => {
     switch (dangerLevel) {
       case "High":
@@ -40,7 +45,7 @@ export const CryptidCard = ({
   };
 
   return (
-    <Link to={`/cryptid/${(arguments[0] as any).id}`}>
+    <Link to={`/cryptid/${id}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative h-48 overflow-hidden bg-muted">
         <img
