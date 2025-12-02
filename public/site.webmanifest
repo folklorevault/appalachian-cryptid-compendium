@@ -1,0 +1,21 @@
+{
+  "name": "Appalachian Cryptid Field Guide",
+  "short_name": "Cryptid Guide",
+  "description": "A field guide to the creatures of the Appalachian Mountains and American South",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#3a5a47",
+  "background_color": "#1a1a1a",
+  "display": "standalone",
+  "start_url": "/"
+}

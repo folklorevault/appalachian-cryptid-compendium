@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +15,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Upload, MapPin, Calendar, FileText, Send } from "lucide-react";
+import { ArrowLeft, Upload, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useSubmitSighting } from "@/hooks/use-sightings";
+
+interface FormErrors {
+  witnessName?: string;
+  email?: string;
+  date?: string;
+  location?: string;
+  state?: string;
+  description?: string;
+  physicalDescription?: string;
+}
 
 const ReportSighting = () => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitSighting = useSubmitSighting();
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [formData, setFormData] = useState({
     witnessName: "",
     email: "",
@@ -33,6 +48,55 @@ const ReportSighting = () => {
     behavior: "",
   });
 
+  const validateField = useCallback((field: string, value: string): string | undefined => {
+    switch (field) {
+      case "witnessName":
+        if (!value.trim()) return "Name is required";
+        if (value.trim().length < 2) return "Name must be at least 2 characters";
+        return undefined;
+      case "email":
+        if (!value.trim()) return "Email is required";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email";
+        return undefined;
+      case "date":
+        if (!value) return "Date is required";
+        if (new Date(value) > new Date()) return "Date cannot be in the future";
+        return undefined;
+      case "location":
+        if (!value.trim()) return "Location is required";
+        if (value.trim().length < 5) return "Please provide more location detail";
+        return undefined;
+      case "state":
+        if (!value) return "State is required";
+        return undefined;
+      case "description":
+        if (!value.trim()) return "Description is required";
+        if (value.trim().length < 50) return "Please provide at least 50 characters";
+        return undefined;
+      case "physicalDescription":
+        if (!value.trim()) return "Physical description is required";
+        if (value.trim().length < 20) return "Please provide at least 20 characters";
+        return undefined;
+      default:
+        return undefined;
+    }
+  }, []);
+
+  const validateForm = useCallback((): boolean => {
+    const newErrors: FormErrors = {};
+    const requiredFields = ["witnessName", "email", "date", "location", "state", "description", "physicalDescription"];
+    
+    requiredFields.forEach((field) => {
+      const error = validateField(field, formData[field as keyof typeof formData]);
+      if (error) {
+        newErrors[field as keyof FormErrors] = error;
+      }
+    });
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [formData, validateField]);
+
   const states = [
     "Alabama", "Arkansas", "Florida", "Georgia", "Kentucky",
     "Louisiana", "Mississippi", "North Carolina", "South Carolina",
@@ -41,6 +105,16 @@ const ReportSighting = () => {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const error = validateField(field, formData[field as keyof typeof formData]);
+    setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,66 +130,68 @@ const ReportSighting = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate submission (no backend connected)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Mark all fields as touched
+    const allTouched = Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {});
+    setTouched(allTouched);
 
-    toast({
-      title: "Report Received",
-      description: "Thank you for your submission. Our research team will review your sighting report.",
-    });
+    if (!validateForm()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fix the errors in the form before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Reset form
-    setFormData({
-      witnessName: "",
-      email: "",
-      date: "",
-      time: "",
-      location: "",
-      state: "",
-      creatureName: "",
-      description: "",
-      physicalDescription: "",
-      behavior: "",
-    });
-    setPhotoPreview(null);
-    setIsSubmitting(false);
+    try {
+      await submitSighting.mutateAsync({
+        witness_name: formData.witnessName,
+        email: formData.email,
+        date: formData.date,
+        time: formData.time || undefined,
+        location: formData.location,
+        state: formData.state,
+        creature_name: formData.creatureName || undefined,
+        description: formData.description,
+        physical_description: formData.physicalDescription,
+        behavior: formData.behavior || undefined,
+        photo_url: photoPreview || undefined,
+      });
+
+      toast({
+        title: "Report Received",
+        description: "Thank you for your submission. Our research team will review your sighting report.",
+      });
+
+      // Reset form
+      setFormData({
+        witnessName: "",
+        email: "",
+        date: "",
+        time: "",
+        location: "",
+        state: "",
+        creatureName: "",
+        description: "",
+        physicalDescription: "",
+        behavior: "",
+      });
+      setPhotoPreview(null);
+    } catch (error) {
+      toast({
+        title: "Submission Failed",
+        description: (error as Error).message || "Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
+
+  const isSubmitting = submitSighting.isPending;
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/">
-                <h1 className="text-2xl font-bold text-primary font-display tracking-tight">
-                  CRYPTID_DIRECTORY
-                </h1>
-              </Link>
-              <Badge variant="outline" className="hidden sm:inline-flex border-primary text-primary">
-                FIELD REPORT
-              </Badge>
-            </div>
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link to="/" className="text-sm text-foreground hover:text-primary transition-colors">
-                Directory
-              </Link>
-              <Link to="/about" className="text-sm text-foreground hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
-                Map
-              </Link>
-              <Link to="/report" className="text-sm text-primary transition-colors">
-                Report
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header badge="File a Report" />
 
       {/* Back Button */}
       <div className="container mx-auto px-4 py-6">
@@ -157,10 +233,14 @@ const ReportSighting = () => {
                       id="witnessName"
                       value={formData.witnessName}
                       onChange={(e) => handleInputChange("witnessName", e.target.value)}
+                      onBlur={() => handleBlur("witnessName")}
                       placeholder="Enter your name"
-                      required
-                      className="bg-background border-border"
+                      aria-invalid={touched.witnessName && !!errors.witnessName}
+                      className={`bg-background border-border ${touched.witnessName && errors.witnessName ? "border-destructive" : ""}`}
                     />
+                    {touched.witnessName && errors.witnessName && (
+                      <p className="text-xs text-destructive">{errors.witnessName}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address *</Label>
@@ -169,10 +249,14 @@ const ReportSighting = () => {
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
+                      onBlur={() => handleBlur("email")}
                       placeholder="your@email.com"
-                      required
-                      className="bg-background border-border"
+                      aria-invalid={touched.email && !!errors.email}
+                      className={`bg-background border-border ${touched.email && errors.email ? "border-destructive" : ""}`}
                     />
+                    {touched.email && errors.email && (
+                      <p className="text-xs text-destructive">{errors.email}</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -193,9 +277,14 @@ const ReportSighting = () => {
                       type="date"
                       value={formData.date}
                       onChange={(e) => handleInputChange("date", e.target.value)}
-                      required
-                      className="bg-background border-border"
+                      onBlur={() => handleBlur("date")}
+                      max={new Date().toISOString().split('T')[0]}
+                      aria-invalid={touched.date && !!errors.date}
+                      className={`bg-background border-border ${touched.date && errors.date ? "border-destructive" : ""}`}
                     />
+                    {touched.date && errors.date && (
+                      <p className="text-xs text-destructive">{errors.date}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="time">Approximate Time</Label>
@@ -225,18 +314,28 @@ const ReportSighting = () => {
                       id="location"
                       value={formData.location}
                       onChange={(e) => handleInputChange("location", e.target.value)}
+                      onBlur={() => handleBlur("location")}
                       placeholder="e.g., Near Pine Creek Trail"
-                      required
-                      className="bg-background border-border"
+                      aria-invalid={touched.location && !!errors.location}
+                      className={`bg-background border-border ${touched.location && errors.location ? "border-destructive" : ""}`}
                     />
+                    {touched.location && errors.location && (
+                      <p className="text-xs text-destructive">{errors.location}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="state">State *</Label>
                     <Select
                       value={formData.state}
-                      onValueChange={(value) => handleInputChange("state", value)}
+                      onValueChange={(value) => {
+                        handleInputChange("state", value);
+                        setTouched((prev) => ({ ...prev, state: true }));
+                      }}
                     >
-                      <SelectTrigger className="bg-background border-border">
+                      <SelectTrigger 
+                        className={`bg-background border-border ${touched.state && errors.state ? "border-destructive" : ""}`}
+                        aria-invalid={touched.state && !!errors.state}
+                      >
                         <SelectValue placeholder="Select state" />
                       </SelectTrigger>
                       <SelectContent>
@@ -247,6 +346,9 @@ const ReportSighting = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {touched.state && errors.state && (
+                      <p className="text-xs text-destructive">{errors.state}</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -276,11 +378,20 @@ const ReportSighting = () => {
                       id="description"
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
+                      onBlur={() => handleBlur("description")}
                       placeholder="Describe what happened in as much detail as possible..."
-                      required
                       rows={5}
-                      className="bg-background border-border resize-none"
+                      aria-invalid={touched.description && !!errors.description}
+                      className={`bg-background border-border resize-none ${touched.description && errors.description ? "border-destructive" : ""}`}
                     />
+                    <div className="flex justify-between">
+                      {touched.description && errors.description ? (
+                        <p className="text-xs text-destructive">{errors.description}</p>
+                      ) : (
+                        <span />
+                      )}
+                      <p className="text-xs text-muted-foreground">{formData.description.length} / 50 min</p>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="physicalDescription">Physical Description of Creature *</Label>
@@ -288,11 +399,20 @@ const ReportSighting = () => {
                       id="physicalDescription"
                       value={formData.physicalDescription}
                       onChange={(e) => handleInputChange("physicalDescription", e.target.value)}
+                      onBlur={() => handleBlur("physicalDescription")}
                       placeholder="Describe the creature's appearance: size, color, features..."
-                      required
                       rows={4}
-                      className="bg-background border-border resize-none"
+                      aria-invalid={touched.physicalDescription && !!errors.physicalDescription}
+                      className={`bg-background border-border resize-none ${touched.physicalDescription && errors.physicalDescription ? "border-destructive" : ""}`}
                     />
+                    <div className="flex justify-between">
+                      {touched.physicalDescription && errors.physicalDescription ? (
+                        <p className="text-xs text-destructive">{errors.physicalDescription}</p>
+                      ) : (
+                        <span />
+                      )}
+                      <p className="text-xs text-muted-foreground">{formData.physicalDescription.length} / 20 min</p>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="behavior">Observed Behavior</Label>
@@ -371,7 +491,10 @@ const ReportSighting = () => {
                     className="bg-primary text-primary-foreground hover:bg-primary/90 min-w-[150px]"
                   >
                     {isSubmitting ? (
-                      "Submitting..."
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
                     ) : (
                       <>
                         <Send className="mr-2 h-4 w-4" />
@@ -386,14 +509,7 @@ const ReportSighting = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card py-8 px-4">
-        <div className="container mx-auto text-center">
-          <p className="text-sm text-muted-foreground">
-            © 2024 Cryptid Directory. All field notes and specimen data classified.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

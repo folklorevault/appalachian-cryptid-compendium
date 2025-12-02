@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Badge } from "@/components/ui/badge";
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Key } from "lucide-react";
 import { cryptids } from "@/data/cryptids";
@@ -38,19 +37,26 @@ const getDangerColor = (level: string) => {
 const Map = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [mapboxToken, setMapboxToken] = useState("");
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
   const [selectedCryptid, setSelectedCryptid] = useState<string | null>(null);
 
-  const initializeMap = () => {
-    if (!mapContainer.current || !mapboxToken) return;
+  const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  const initializeMap = useCallback(() => {
+    if (!mapContainer.current) return;
+
+    if (!mapboxToken) {
+      setMapError("Mapbox token not configured. Please add VITE_MAPBOX_TOKEN to your .env file.");
+      return;
+    }
 
     mapboxgl.accessToken = mapboxToken;
 
     try {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: "mapbox://styles/mapbox/dark-v11",
+        style: "mapbox://styles/mapbox/outdoors-v12",
         center: [-84.5, 35.5], // Center on Appalachia
         zoom: 5,
         pitch: 30,
@@ -106,14 +112,20 @@ const Map = () => {
       });
     } catch (error) {
       console.error("Error initializing map:", error);
+      setMapError("Failed to load map. Please check your Mapbox token.");
     }
-  };
+  }, [mapboxToken]);
 
   useEffect(() => {
+    // Auto-initialize map if token is available
+    if (mapboxToken && !isMapLoaded && !mapError) {
+      initializeMap();
+    }
+    
     return () => {
       map.current?.remove();
     };
-  }, []);
+  }, [mapboxToken, isMapLoaded, mapError, initializeMap]);
 
   const selectedCryptidData = selectedCryptid
     ? cryptids.find((c) => c.id === selectedCryptid)
@@ -121,52 +133,7 @@ const Map = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/">
-                <h1 className="text-2xl font-bold text-primary font-display tracking-tight">
-                  CRYPTID_DIRECTORY
-                </h1>
-              </Link>
-              <Badge
-                variant="outline"
-                className="hidden sm:inline-flex border-primary text-primary"
-              >
-                SIGHTING MAP
-              </Badge>
-            </div>
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link
-                to="/"
-                className="text-sm text-foreground hover:text-primary transition-colors"
-              >
-                Directory
-              </Link>
-              <Link
-                to="/about"
-                className="text-sm text-foreground hover:text-primary transition-colors"
-              >
-                About
-              </Link>
-              <Link
-                to="/map"
-                className="text-sm text-primary transition-colors"
-              >
-                Map
-              </Link>
-              <Link
-                to="/report"
-                className="text-sm text-foreground hover:text-primary transition-colors"
-              >
-                Report
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header badge="Sighting Map" />
 
       {/* Back Button */}
       <div className="container mx-auto px-4 py-4">
@@ -182,16 +149,18 @@ const Map = () => {
       </div>
 
       <div className="container mx-auto px-4 pb-8">
-        {!isMapLoaded && (
-          <Card className="border-2 border-border mb-6">
+        {mapError && (
+          <Card className="border-2 border-destructive/50 mb-6">
             <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-2 text-primary">
+              <div className="flex items-center gap-2 text-destructive">
                 <Key className="h-5 w-5" />
-                <span className="font-bold">Mapbox API Token Required</span>
+                <span className="font-bold">Map Configuration Required</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                To view the interactive sighting map, please enter your Mapbox
-                public token. You can get one for free at{" "}
+                {mapError}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Get a free Mapbox token at{" "}
                 <a
                   href="https://mapbox.com"
                   target="_blank"
@@ -200,23 +169,8 @@ const Map = () => {
                 >
                   mapbox.com
                 </a>
+                {" "}and add it to your environment variables.
               </p>
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  placeholder="Enter your Mapbox public token..."
-                  value={mapboxToken}
-                  onChange={(e) => setMapboxToken(e.target.value)}
-                  className="flex-1 bg-background border-border"
-                />
-                <Button
-                  onClick={initializeMap}
-                  disabled={!mapboxToken}
-                  className="bg-primary text-primary-foreground"
-                >
-                  Load Map
-                </Button>
-              </div>
             </CardContent>
           </Card>
         )}
@@ -228,12 +182,22 @@ const Map = () => {
               ref={mapContainer}
               className="w-full h-[500px] lg:h-[600px] rounded-lg border-2 border-border bg-card"
             />
-            {!isMapLoaded && (
+            {!isMapLoaded && !mapError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-lg">
+                <div className="text-center space-y-2">
+                  <MapPin className="h-12 w-12 text-muted-foreground mx-auto animate-pulse" />
+                  <p className="text-muted-foreground font-typewriter">
+                    Loading sighting map...
+                  </p>
+                </div>
+              </div>
+            )}
+            {!isMapLoaded && mapError && (
               <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-lg">
                 <div className="text-center space-y-2">
                   <MapPin className="h-12 w-12 text-muted-foreground mx-auto" />
                   <p className="text-muted-foreground">
-                    Enter your Mapbox token to view the map
+                    Map unavailable
                   </p>
                 </div>
               </div>
@@ -250,17 +214,17 @@ const Map = () => {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded-full bg-destructive" />
-                    <span className="text-sm text-foreground">High Threat</span>
+                    <span className="text-sm text-foreground">Advisory: Elevated</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded-full bg-secondary" />
                     <span className="text-sm text-foreground">
-                      Medium Threat
+                      Advisory: Moderate
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded-full bg-accent" />
-                    <span className="text-sm text-foreground">Low Threat</span>
+                    <span className="text-sm text-foreground">Advisory: Low</span>
                   </div>
                 </div>
               </CardContent>
@@ -270,7 +234,7 @@ const Map = () => {
               <Card className="border-2 border-primary">
                 <CardContent className="p-4 space-y-3">
                   <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter">
-                    SELECTED SPECIMEN
+                    SELECTED CASE FILE
                   </div>
                   <div className="flex items-start gap-3">
                     <img
@@ -301,7 +265,7 @@ const Map = () => {
                       size="sm"
                       className="w-full bg-primary text-primary-foreground"
                     >
-                      View Full Profile
+                      View Case File
                     </Button>
                   </Link>
                 </CardContent>

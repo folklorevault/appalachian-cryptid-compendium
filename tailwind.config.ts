@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -116,10 +117,10 @@ export default {
           'Courier New',
           'monospace'
         ],
-        display: ['Creepster', 'cursive'],
+        display: ['Rokkitt', 'serif'],
         typewriter: ['Special Elite', 'cursive']
       }
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

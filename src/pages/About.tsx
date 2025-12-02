@@ -1,43 +1,16 @@
 import { Link } from "react-router-dom";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Users, MapPin, FileText, Eye } from "lucide-react";
+import { Stamp } from "@/components/Stamp";
+import { ArrowLeft, Mountain, Trees, Factory, Waves } from "lucide-react";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/">
-                <h1 className="text-2xl font-bold text-primary font-display tracking-tight">
-                  CRYPTID_DIRECTORY
-                </h1>
-              </Link>
-              <Badge variant="outline" className="hidden sm:inline-flex border-primary text-primary">
-                v2.4.1
-              </Badge>
-            </div>
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link to="/" className="text-sm text-foreground hover:text-primary transition-colors">
-                Directory
-              </Link>
-              <Link to="/about" className="text-sm text-primary transition-colors">
-                About
-              </Link>
-              <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
-                Map
-              </Link>
-              <Link to="/report" className="text-sm text-foreground hover:text-primary transition-colors">
-                Report
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background paper-texture">
+      <Header />
 
       {/* Back Button */}
       <div className="container mx-auto px-4 py-6">
@@ -60,63 +33,137 @@ const About = () => {
               Our Mission
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Documenting and preserving the rich folklore and mysterious sightings 
-              of the Appalachian Mountains and Southern United States.
+              Documenting and preserving the strange stories, backroad sightings, and local legends 
+              of the Appalachian Mountains and the American South.
             </p>
           </div>
 
           {/* Main Content */}
           <div className="space-y-8">
-            <Card className="border-2 border-border">
+            <Card className="border-2 border-border relative overflow-hidden aged-card">
+              <div className="absolute top-4 right-4 hidden sm:block">
+                <Stamp text="Est. 2024" variant="muted" rotation={12} className="text-xs" />
+              </div>
               <CardContent className="p-6 space-y-4">
                 <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter">
                   FIELD NOTES // ORIGIN STORY
                 </div>
                 <p className="text-foreground/90 leading-relaxed">
-                  The Cryptid Directory was established in 1987 by a group of dedicated field researchers, 
-                  folklorists, and enthusiasts who recognized the need for a comprehensive database of 
-                  cryptid sightings in the Appalachian region. What started as a collection of handwritten 
-                  notes and grainy photographs has evolved into the digital archive you see today.
+                  The Cryptid Directory grew out of front-porch stories and late-night talk, long before 
+                  it ever became a website. These are the kinds of tales you hear snapping beans on your 
+                  grandparents' porch, standing in a gravel driveway after church, or riding the backroads 
+                  while someone points at a ridge and says, "That's where your uncle saw it."
                 </p>
                 <p className="text-foreground/90 leading-relaxed">
-                  Our team has spent decades interviewing witnesses, investigating sighting locations, 
-                  and compiling historical records. We approach each case with scientific rigor while 
-                  respecting the cultural significance these creatures hold in local communities.
+                  In a region that proudly calls Jonesborough the Storytelling Capital of the World, stories 
+                  move faster than cell service. For generations, ghost lights, strange tracks, river monsters, 
+                  and night creatures have been passed down in family kitchens, truck stops, and festival tents.
+                </p>
+                <p className="text-foreground/90 leading-relaxed">
+                  In more recent years, a handful of locals started trying to keep up: jotting down dates, 
+                  places, and names whenever someone was willing to talk. But the stories themselves go back 
+                  much further, through Cherokee and other Indigenous traditions and all the retellings that 
+                  followed. This directory is merely trying to organize the lore, not claim to be the first 
+                  to record it.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Regional Boxes - Qualitative */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card className="border-2 border-border">
-                <CardContent className="p-4 text-center">
-                  <FileText className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-foreground">500+</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Documented Cases</div>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Mountain className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-foreground font-display text-lg">Cherokee Territories</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Many creatures in this guide trace back to Cherokee oral traditions—stories that 
+                        were here long before any settler wrote them down.
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
               <Card className="border-2 border-border">
-                <CardContent className="p-4 text-center">
-                  <Eye className="h-8 w-8 text-accent mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-foreground">1,200+</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Witness Accounts</div>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Trees className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-foreground font-display text-lg">Mountain Hollers</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Remote valleys and ridgelines where sightings cluster. If it's been seen, 
+                        chances are it was somewhere off the main road.
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
               <Card className="border-2 border-border">
-                <CardContent className="p-4 text-center">
-                  <MapPin className="h-8 w-8 text-secondary mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-foreground">13</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">States Covered</div>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-lg bg-accent/20">
+                      <Factory className="h-6 w-6 text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-foreground font-display text-lg">Coal Country</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Industrial history and folklore intertwine. Abandoned mines, rail lines, 
+                        and factory towns have their own haunted corners.
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
               <Card className="border-2 border-border">
-                <CardContent className="p-4 text-center">
-                  <Users className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-foreground">37</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Field Researchers</div>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-lg bg-accent/20">
+                      <Waves className="h-6 w-6 text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-foreground font-display text-lg">River Bottoms</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Swamps, creeks, and lowlands where things move in the dark. 
+                        Water draws life—and whatever else might be out there.
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
+
+            <Card className="border-2 border-border">
+              <CardContent className="p-6 space-y-4">
+                <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter">
+                  ROOTS OF THE WORK
+                </div>
+                <p className="text-foreground/90 leading-relaxed">
+                  The entries in this guide sit at the crossroads of several traditions. Some stories echo 
+                  older Cherokee and other Indigenous accounts that settlers tried to recast as "lost races" 
+                  or monsters, like the so-called Moon-Eyed People of Appalachian legend.
+                </p>
+                <p className="text-foreground/90 leading-relaxed">
+                  Others grew out of frontier ghost lore and 19th-century hauntings, such as the Bell Witch 
+                  reports from Middle Tennessee, where a family claimed to be tormented by a talking, physical 
+                  spirit between 1817 and 1821.
+                </p>
+                <p className="text-foreground/90 leading-relaxed">
+                  More recent cryptids emerged alongside railroads, mines, highways, and disasters. In Point 
+                  Pleasant, West Virginia, sightings of a red-eyed winged figure in the 1960s became intertwined 
+                  with the 1967 collapse of the Silver Bridge, folding industrial tragedy into modern monster 
+                  folklore and tourism.
+                </p>
+                <p className="text-foreground/90 leading-relaxed italic border-l-2 border-primary/30 pl-4">
+                  Taken together, these stories say as much about fear, landscape, and community memory as 
+                  they do about any creature in the dark.
+                </p>
+              </CardContent>
+            </Card>
 
             <Card className="border-2 border-border">
               <CardContent className="p-6 space-y-4">
@@ -125,44 +172,44 @@ const About = () => {
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">Investigation Process</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-3 font-display">Investigation Process</h3>
                     <ul className="space-y-2 text-foreground/80 text-sm">
                       <li className="flex items-start gap-2">
                         <span className="text-primary">▸</span>
-                        Initial witness interview and statement recording
+                        Collect witness accounts and local stories
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary">▸</span>
-                        Site visit and environmental documentation
+                        Note locations, conditions, and recurring details
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary">▸</span>
-                        Historical research and cross-reference with archives
+                        Cross-reference reports with newspapers, folklore collections, and regional history
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary">▸</span>
-                        Analysis and classification of evidence
+                        Organize material into case files and regional categories
                       </li>
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">Classification System</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-3 font-display">Classification System</h3>
                     <ul className="space-y-2 text-foreground/80 text-sm">
                       <li className="flex items-start gap-2">
                         <span className="text-accent">▸</span>
-                        Threat level assessment based on documented behavior
+                        Advisory level based on reported behavior and local reputation
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-accent">▸</span>
-                        Regional categorization and habitat mapping
+                        Regional tags tied to specific towns, hollers, and landmarks
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-accent">▸</span>
-                        Taxonomic speculation where applicable
+                        Taxonomic speculation where it helps track patterns
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-accent">▸</span>
-                        Cultural significance and folklore documentation
+                        Cultural notes on who tells the story, how it's used, and why it persists
                       </li>
                     </ul>
                   </div>
@@ -173,30 +220,25 @@ const About = () => {
             <Card className="border-2 border-primary/30 bg-primary/5">
               <CardContent className="p-6 text-center space-y-4">
                 <div className="text-xs uppercase tracking-widest text-primary font-typewriter">
-                  CONTRIBUTE TO RESEARCH
+                  FILE A REPORT
                 </div>
-                <h3 className="text-xl font-bold text-foreground">Have You Witnessed Something Unexplained?</h3>
+                <h3 className="text-xl font-bold text-foreground font-display">Seen Something You Can't Explain?</h3>
                 <p className="text-muted-foreground">
-                  Your account could be vital to our research. All submissions are reviewed by our team 
-                  and treated with the utmost confidentiality.
+                  Your account could help fill in the map. All submissions are reviewed 
+                  and treated with discretion.
                 </p>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  Submit a Sighting Report
-                </Button>
+                <Link to="/report">
+                  <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                    Submit Your Account
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card py-8 px-4 mt-12">
-        <div className="container mx-auto text-center">
-          <p className="text-sm text-muted-foreground">
-            © 2024 Cryptid Directory. All field notes and specimen data classified.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

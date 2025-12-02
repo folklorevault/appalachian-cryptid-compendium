@@ -1,9 +1,11 @@
 import { useState, useMemo } from "react";
 import { CryptidCard } from "@/components/CryptidCard";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Menu, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cryptids } from "@/data/cryptids";
 
@@ -11,7 +13,6 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [selectedDanger, setSelectedDanger] = useState<string>("all");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const filteredCryptids = useMemo(() => {
     return cryptids.filter((cryptid) => {
@@ -45,102 +46,30 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background dark">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-primary font-display tracking-tight">
-              CRYPTID_DIRECTORY
-            </h1>
-              <Badge variant="outline" className="hidden sm:inline-flex border-primary text-primary">
-                v2.4.1
-              </Badge>
-            </div>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-foreground"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-            <nav className="hidden lg:flex items-center gap-6">
-              <a href="#directory" className="text-sm text-foreground hover:text-primary transition-colors">
-                Directory
-              </a>
-              <Link to="/about" className="text-sm text-foreground hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link to="/map" className="text-sm text-foreground hover:text-primary transition-colors">
-                Map
-              </Link>
-              <Link to="/report" className="text-sm text-foreground hover:text-primary transition-colors">
-                Report
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-border bg-card">
-          <nav className="container mx-auto px-4 py-4 flex flex-col gap-3">
-            <a
-              href="#directory"
-              className="text-sm text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Directory
-            </a>
-            <Link
-              to="/about"
-              className="text-sm text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              to="/map"
-              className="text-sm text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Map
-            </Link>
-            <Link
-              to="/report"
-              className="text-sm text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Report Sighting
-            </Link>
-          </nav>
-        </div>
-      )}
+    <div className="min-h-screen bg-background paper-texture">
+      <Header />
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="inline-block">
-              <Badge className="bg-primary/10 text-primary border-primary mb-4" variant="outline">
-                FIELD RESEARCH DIVISION
-              </Badge>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground leading-tight font-display">
-              Appalachian & Southern
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight font-display">
+              Appalachian Cryptid
               <br />
-              <span className="text-primary">Cryptid Field Guide</span>
+              <span className="text-primary">Field Guide</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A comprehensive catalog of documented cryptid sightings across the Appalachian Mountains
-              and Southern United States. Compiled from field reports, eyewitness accounts, and ongoing research.
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Creatures of the Mountains & American South
+            </p>
+            <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
+              A field guide to the creatures that haunt the ridgelines, backroads, and hollers 
+              of the Appalachian Mountains and American South—compiled from witness reports, 
+              local legends, and ongoing research.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <a href="#directory">Explore Directory</a>
+                <a href="#field-guide">Explore the Guide</a>
               </Button>
               <Link to="/report">
                 <Button
@@ -148,7 +77,7 @@ const Index = () => {
                   variant="outline"
                   className="border-2 border-primary text-primary hover:bg-primary/10"
                 >
-                  Report Sighting
+                  Report a Sighting
                 </Button>
               </Link>
             </div>
@@ -157,14 +86,14 @@ const Index = () => {
       </section>
 
       {/* Filter & Search Section */}
-      <section id="directory" className="py-12 px-4 border-y border-border bg-card/50">
+      <section id="field-guide" className="py-12 px-4 border-y border-border bg-card/50">
         <div className="container mx-auto">
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                SEARCH DATABASE
+                Browse the Collection
               </div>
-              <h3 className="text-2xl font-bold text-foreground">Filter Specimens</h3>
+              <h3 className="text-2xl font-bold text-foreground">Find a Creature</h3>
             </div>
 
             {/* Search Bar */}
@@ -231,7 +160,7 @@ const Index = () => {
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
                 Showing <span className="text-primary font-bold">{filteredCryptids.length}</span> of{" "}
-                <span className="text-primary font-bold">{cryptids.length}</span> documented specimens
+                <span className="text-primary font-bold">{cryptids.length}</span> creatures in our field guide
               </p>
             </div>
           </div>
@@ -266,51 +195,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h4 className="text-lg font-bold text-foreground mb-3 font-display">CRYPTID_DIRECTORY</h4>
-              <p className="text-sm text-muted-foreground">
-                Documenting unknown species across the Appalachian and Southern United States since 1987.
-              </p>
-            </div>
-            <div>
-              <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Quick Links</h5>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
-                    About the Project
-                  </Link>
-                </li>
-                <li>
-                  <a href="#submit" className="text-muted-foreground hover:text-primary transition-colors">
-                    Submit a Sighting
-                  </a>
-                </li>
-                <li>
-                  <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">
-                    Contact Research Team
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Disclaimer</h5>
-              <p className="text-xs text-muted-foreground">
-                All specimens documented for research purposes only. Do not approach or attempt to capture any
-                cryptids. Report all sightings to local authorities and our research team.
-              </p>
-            </div>
-          </div>
-          <div className="border-t border-border pt-6">
-            <p className="text-center text-sm text-muted-foreground">
-              © 2024 Cryptid Directory. All field notes and specimen data classified.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer variant="full" />
     </div>
   );
 };

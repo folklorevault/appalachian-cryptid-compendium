@@ -1,8 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { cryptids } from "@/data/cryptids";
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Stamp } from "@/components/Stamp";
 import { ArrowLeft, MapPin, Eye, Calendar, AlertTriangle } from "lucide-react";
 
 const CryptidDetail = () => {
@@ -11,9 +13,9 @@ const CryptidDetail = () => {
 
   if (!cryptid) {
     return (
-      <div className="min-h-screen bg-background dark flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Specimen Not Found</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-4">Case File Not Found</h1>
           <Link to="/">
             <Button variant="outline" className="border-primary text-primary">Return to Directory</Button>
           </Link>
@@ -30,37 +32,46 @@ const CryptidDetail = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background dark">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <Link to="/">
-              <Button variant="ghost" className="gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Back to Directory
-              </Button>
-            </Link>
-            <h1 className="text-xl font-bold text-primary font-display">CRYPTID_DIRECTORY</h1>
-          </div>
-        </div>
-      </header>
+  const getAdvisoryLabel = () => {
+    switch (cryptid.dangerLevel) {
+      case "High": return "Elevated";
+      case "Medium": return "Moderate";
+      case "Low": return "Low";
+      default: return cryptid.dangerLevel;
+    }
+  };
 
-      <div className="container mx-auto px-4 py-8">
+  return (
+    <div className="min-h-screen bg-background paper-texture">
+      <Header badge="Case File" />
+
+      {/* Back Button */}
+      <div className="container mx-auto px-4 py-4">
+        <Link to="/">
+          <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Directory
+          </Button>
+        </Link>
+      </div>
+
+      <div className="container mx-auto px-4 pb-8">
         {/* Hero Image & Basic Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg border-2 border-border">
-            <img src={cryptid.image} alt={cryptid.name} className="w-full h-full object-cover" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-lg vintage-frame">
+            <img src={cryptid.image} alt={cryptid.name} className="w-full h-full object-cover sepia-light" />
             <div className="absolute top-4 right-4">
-              <Badge className={getDangerColor()}>{cryptid.dangerLevel} THREAT</Badge>
+              <Badge className={getDangerColor()}>Advisory: {getAdvisoryLabel()}</Badge>
+            </div>
+            <div className="absolute bottom-4 left-4">
+              <Stamp text="Documented" variant="primary" rotation={-8} />
             </div>
           </div>
 
           <div className="space-y-6">
-            <div>
+            <div className="relative">
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                SPECIMEN CLASSIFICATION
+                CASE FILE #{cryptid.id.toUpperCase().slice(0, 3)}-{cryptid.sightings.toString().padStart(3, '0')}
               </div>
               <h1 className="text-4xl font-bold text-foreground font-display mb-2">{cryptid.name}</h1>
               <p className="text-xl italic text-muted-foreground font-serif">{cryptid.scientificName}</p>
@@ -77,22 +88,22 @@ const CryptidDetail = () => {
               <div className="flex items-start gap-3">
                 <Eye className="h-5 w-5 text-accent mt-1" />
                 <div>
-                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Documented Sightings</div>
-                  <div className="text-foreground">{cryptid.sightings} confirmed encounters</div>
+                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Filed Reports</div>
+                  <div className="text-foreground">{cryptid.sightings} documented encounters</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Calendar className="h-5 w-5 text-secondary mt-1" />
                 <div>
-                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Last Sighting</div>
+                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Most Recent</div>
                   <div className="text-foreground">{cryptid.lastSighting}</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-1" />
                 <div>
-                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Threat Assessment</div>
-                  <div className="text-foreground">{cryptid.dangerLevel} risk to human interaction</div>
+                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Advisory Level</div>
+                  <div className="text-foreground">{getAdvisoryLabel()} - based on reported behavior</div>
                 </div>
               </div>
             </div>
@@ -138,10 +149,10 @@ const CryptidDetail = () => {
 
         {/* Witness Testimonies */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground font-display mb-6">Witness Testimonies</h2>
+          <h2 className="text-2xl font-bold text-foreground font-display mb-6">Witness Accounts</h2>
           <div className="space-y-4">
             {cryptid.testimonies.map((testimony) => (
-              <Card key={testimony.id} className="border-2 border-border hover:border-primary/50 transition-colors">
+              <Card key={testimony.id} className="border-2 border-border hover:border-primary/50 transition-colors aged-card">
                 <CardContent className="p-6">
                   <div className="flex flex-wrap gap-4 mb-4 text-sm">
                     <div><span className="text-muted-foreground">Witness:</span> <span className="text-foreground font-medium">{testimony.witness}</span></div>
@@ -157,7 +168,7 @@ const CryptidDetail = () => {
 
         {/* Historical Timeline */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground font-display mb-6">Historical Timeline</h2>
+          <h2 className="text-2xl font-bold text-foreground font-display mb-6">Timeline of Reports</h2>
           <div className="space-y-4">
             {cryptid.timeline.map((event, idx) => (
               <div key={idx} className="flex gap-4">

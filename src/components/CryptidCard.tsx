@@ -44,25 +44,35 @@ export const CryptidCard = ({
     }
   };
 
+  const getAdvisoryLabel = () => {
+    switch (dangerLevel) {
+      case "High":
+        return "Elevated";
+      case "Medium":
+        return "Moderate";
+      case "Low":
+        return "Low";
+      default:
+        return dangerLevel;
+    }
+  };
+
   return (
     <Link to={`/cryptid/${id}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative h-48 overflow-hidden bg-muted">
         <img
           src={image}
-          alt={`${name} specimen photograph`}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          alt={name}
+          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover"
         />
         <div className="absolute top-2 right-2">
-          <Badge className={getDangerColor()}>{dangerLevel} THREAT</Badge>
+          <Badge className={getDangerColor()}>Advisory: {getAdvisoryLabel()}</Badge>
         </div>
       </div>
       
       <CardContent className="p-4 space-y-3">
         <div className="border-b border-border pb-3">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-typewriter mb-1">
-            SPECIMEN DATA
-          </div>
           <h3 className="text-xl font-bold text-foreground">{name}</h3>
           <p className="text-sm italic text-muted-foreground font-serif">{scientificName}</p>
         </div>
@@ -74,18 +84,15 @@ export const CryptidCard = ({
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Eye className="h-4 w-4 text-accent" />
-            <span className="text-foreground">{sightings} documented sightings</span>
+            <span className="text-foreground">{sightings} Filed Reports</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 text-secondary" />
-            <span className="text-foreground">Last seen: {lastSighting}</span>
+            <span className="text-foreground">Most Recent: {lastSighting}</span>
           </div>
         </div>
 
         <div className="border-t border-border pt-3">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-typewriter mb-2">
-            FIELD NOTES
-          </div>
           <p className="text-sm text-foreground/80 leading-relaxed">{description}</p>
         </div>
 
