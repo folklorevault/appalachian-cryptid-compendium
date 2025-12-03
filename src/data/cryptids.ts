@@ -1,12 +1,4 @@
-import mothmanImg from "@/assets/mothman.jpg";
-import wampusCatImg from "@/assets/wampus-cat.jpg";
-import moonEyedPeopleImg from "@/assets/moon-eyed-people.jpg";
-import skunkApeImg from "@/assets/skunk-ape.jpg";
-import lizardManImg from "@/assets/lizard-man.jpg";
-import foukeMonsterImg from "@/assets/fouke-monster.jpg";
-import tailypoImg from "@/assets/tailypo.jpg";
-import graftonMonsterImg from "@/assets/grafton-monster.jpg";
-import whiteScreamerImg from "@/assets/white-screamer.jpg";
+// Images are now served from public/cryptids/
 
 export interface Testimony {
   id: string;
@@ -32,6 +24,7 @@ export interface Cryptid {
   sightings: number;
   description: string;
   image: string;
+  gridImage: string;
   tags: string[];
   region: string;
   // Extended details
@@ -53,7 +46,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Medium",
     sightings: 127,
     description: "Large humanoid creature with massive wings and glowing red eyes. Often appears before disasters. Witnesses report a chilling screech and an overwhelming sense of dread.",
-    image: mothmanImg,
+    image: "/cryptids/mothman.webp",
+    gridImage: "/cryptids/mothmangrid.webp",
     tags: ["Winged", "Nocturnal", "Omen"],
     region: "appalachia",
     physicalDescription: "Stands approximately 6-7 feet tall with a humanoid body structure. Most distinctive features are enormous moth-like wings spanning 10+ feet and large, luminous red eyes that glow intensely in darkness. Body appears gray or brown with a muscular build. No visible head or neck - eyes positioned directly in torso area.",
@@ -102,7 +96,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "High",
     sightings: 89,
     description: "Six-legged feline creature of Cherokee legend. Known for supernatural speed and yellowish-green eyes that glow in darkness. Extremely territorial and aggressive when threatened.",
-    image: wampusCatImg,
+    image: "/cryptids/wampuscat.webp",
+    gridImage: "/cryptids/wampuscatgrid.webp",
     tags: ["Feline", "Aggressive", "Cherokee Legend"],
     region: "appalachia",
     physicalDescription: "Large feline approximately 4-5 feet in length with six legs - four in normal positions plus two additional front legs. Covered in dark, matted fur. Eyes are yellowish-green and reflect light powerfully. Pronounced canine teeth. Muscular build, estimated weight 200-300 pounds. Moves with unnatural fluidity.",
@@ -143,7 +138,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Low",
     sightings: 34,
     description: "Pale-skinned nocturnal humanoids with large, light-sensitive eyes. Cherokee legends describe them as peaceful but elusive beings who built ancient stone structures.",
-    image: moonEyedPeopleImg,
+    image: "/cryptids/mooneyedperson.webp",
+    gridImage: "/cryptids/mooneyedgrid.webp",
     tags: ["Humanoid", "Nocturnal", "Ancient"],
     region: "appalachia",
     physicalDescription: "Humanoid beings standing 5-6 feet tall with unusually pale, almost luminescent skin. Most striking feature is oversized eyes adapted for nocturnal vision - reportedly sensitive to daylight. Slender build with delicate features. Some accounts describe them wearing primitive clothing or animal skins.",
@@ -184,7 +180,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Medium",
     sightings: 156,
     description: "Florida's answer to Bigfoot. Bipedal ape-like creature covered in reddish-brown hair. Named for its powerful, sulfurous odor that announces its presence from hundreds of feet away.",
-    image: skunkApeImg,
+    image: "/cryptids/skunkape.webp",
+    gridImage: "/cryptids/skunkapegrid.webp",
     tags: ["Bipedal", "Primate", "Malodorous"],
     region: "southeast",
     physicalDescription: "Large bipedal primate standing 6-8 feet tall, weighing an estimated 300-500 pounds. Covered in reddish-brown to dark brown hair with lighter coloring on chest and face. Pronounced brow ridge, flat nose, and powerful build. Leaves 15-17 inch footprints. Most distinctive characteristic is overwhelming sulfurous odor.",
@@ -225,7 +222,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "High",
     sightings: 67,
     description: "Seven-foot tall reptilian humanoid with green scaly skin and three-fingered hands. Known for aggressive behavior and superhuman strength. Multiple vehicle attacks documented.",
-    image: lizardManImg,
+    image: "/cryptids/lizardman.webp",
+    gridImage: "/cryptids/lizardmangrid.webp",
     tags: ["Reptilian", "Aggressive", "Bipedal"],
     region: "southeast",
     physicalDescription: "Bipedal reptilian humanoid standing 7 feet tall. Muscular build estimated at 300 pounds. Covered in green scaly skin with texture resembling alligator hide. Head features include glowing red eyes, no visible nose or ears. Hands have three fingers with sharp claws. Feet are three-toed with webbing. Tail reported in some sightings.",
@@ -266,7 +264,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Medium",
     sightings: 93,
     description: "Massive ape-like creature standing 7-10 feet tall. Covered in dark hair with broad shoulders and long arms. Leaves three-toed tracks and emits foul odor.",
-    image: foukeMonsterImg,
+    image: "/cryptids/foukemonster.webp",
+    gridImage: "/cryptids/foukemonstergrid.webp",
     tags: ["Bipedal", "Primate", "Large"],
     region: "southern",
     physicalDescription: "Massive bipedal creature standing 7-10 feet tall with estimated weight of 250-400 pounds. Covered in long dark hair or fur, appearing reddish-brown in sunlight. Broad shoulders and muscular build. Long arms extending past knees. Face shows ape-like features. Leaves distinctive three-toed footprints measuring up to 14 inches.",
@@ -307,7 +306,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Medium",
     sightings: 52,
     description: "Small, cat-like creature with yellow eyes and a distinctive long tail. Legend tells of its relentless pursuit to reclaim its severed tail. Known for its haunting cry: 'Tailypo, tailypo.'",
-    image: tailypoImg,
+    image: "/cryptids/tailypo.webp",
+    gridImage: "/cryptids/tailypogrid.webp",
     tags: ["Small", "Persistent", "Folklore"],
     region: "appalachia",
     physicalDescription: "Small to medium-sized creature described as cat-like in appearance. Covered in black or dark gray fur. Most distinctive feature is an extremely long, sinuous tail. Eyes glow yellow or amber in darkness. Size estimates vary from house cat to medium dog. Elongated face with pronounced teeth. Moves with unnatural fluidity.",
@@ -348,7 +348,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Low",
     sightings: 41,
     description: "Massive white creature standing 8-9 feet tall. Appears headless with eyes and mouth embedded in torso. Smooth, seal-like skin. Despite imposing appearance, no aggressive encounters reported.",
-    image: graftonMonsterImg,
+    image: "/cryptids/graftonmonster.webp",
+    gridImage: "/cryptids/graftonmonstergrid.webp",
     tags: ["Large", "White", "Docile"],
     region: "appalachia",
     physicalDescription: "Massive humanoid entity standing 8-9 feet tall. Chalk white or pale gray in color with smooth, seal-like skin. Most unusual feature is apparent lack of head - eyes and mouth appear to be embedded directly in the torso/shoulder area. No visible neck. Large, muscular body. Moves with surprising grace despite size. Some accounts describe a foul odor.",
@@ -389,7 +390,8 @@ export const cryptids: Cryptid[] = [
     dangerLevel: "Low",
     sightings: 28,
     description: "Ghostly white creature that produces bloodcurdling screams echoing through mountain valleys. Rarely seen, more often heard. Witnesses describe a deer-like form shrouded in mist.",
-    image: whiteScreamerImg,
+    image: "/cryptids/whitescreamer.webp",
+    gridImage: "/cryptids/whitescreamergrid.webp",
     tags: ["Vocal", "Elusive", "Mountain"],
     region: "appalachia",
     physicalDescription: "Ghostly white or pale apparition, typically described as deer-like in form though details are difficult to confirm due to mist-like quality. Size varies in reports from normal deer size to much larger. Most notable feature is the spectral white coloration and seeming ability to blend with fog or mist. Some accounts describe glowing eyes. Movement appears unnatural, sometimes seeming to float.",

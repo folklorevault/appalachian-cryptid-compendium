@@ -58,7 +58,7 @@ const CryptidDetail = () => {
       <div className="container mx-auto px-4 pb-8">
         {/* Hero Image & Basic Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg vintage-frame">
+          <div className="relative aspect-[2/3] overflow-hidden rounded-lg vintage-frame">
             <img src={cryptid.image} alt={cryptid.name} className="w-full h-full object-cover sepia-light" />
             <div className="absolute top-4 right-4">
               <Badge className={getDangerColor()}>Advisory: {getAdvisoryLabel()}</Badge>

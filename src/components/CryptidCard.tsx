@@ -12,6 +12,7 @@ interface CryptidCardProps {
   sightings: number;
   description: string;
   image: string;
+  gridImage: string;
   tags: string[];
 }
 
@@ -28,7 +29,7 @@ export const CryptidCard = ({
   dangerLevel,
   sightings,
   description,
-  image,
+  gridImage,
   tags,
 }: CryptidCardWithIdProps) => {
   const getDangerColor = () => {
@@ -60,9 +61,9 @@ export const CryptidCard = ({
   return (
     <Link to={`/cryptid/${id}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
-      <div className="relative h-48 overflow-hidden bg-muted">
+      <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
         <img
-          src={image}
+          src={gridImage}
           alt={name}
           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover"
         />
