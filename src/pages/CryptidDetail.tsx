@@ -6,10 +6,21 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
 import { ArrowLeft, MapPin, Eye, Calendar, AlertTriangle } from "lucide-react";
+import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
+import { useSEO } from "@/hooks/use-seo";
 
 const CryptidDetail = () => {
   const { id } = useParams();
   const cryptid = cryptids.find((c) => c.id === id);
+
+  // SEO meta tags
+  useSEO({
+    title: cryptid?.name,
+    description: cryptid?.description,
+    image: cryptid?.image ? `https://appalachiancryptid.com${cryptid.image}` : undefined,
+    url: `https://appalachiancryptid.com/cryptid/${id}`,
+    type: "article"
+  });
 
   if (!cryptid) {
     return (
@@ -43,6 +54,22 @@ const CryptidDetail = () => {
 
   return (
     <div className="min-h-screen bg-background paper-texture">
+      <StructuredData
+        type="article"
+        data={createCryptidArticleSchema({
+          name: cryptid.name,
+          description: cryptid.description,
+          image: cryptid.image,
+          lastSighting: cryptid.lastSighting
+        })}
+      />
+      <StructuredData
+        type="breadcrumb"
+        data={createBreadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: cryptid.name }
+        ])}
+      />
       <Header badge="Case File" />
 
       {/* Back Button */}

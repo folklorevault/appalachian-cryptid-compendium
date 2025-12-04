@@ -44,13 +44,18 @@ const Map = () => {
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const initializeMap = useCallback(() => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current) {
+      console.log("Map container not ready");
+      return;
+    }
 
     if (!mapboxToken) {
+      console.log("No Mapbox token found");
       setMapError("Mapbox token not configured. Please add VITE_MAPBOX_TOKEN to your .env file.");
       return;
     }
 
+    console.log("Initializing map with token:", mapboxToken.substring(0, 15) + "...");
     mapboxgl.accessToken = mapboxToken;
 
     try {
@@ -62,6 +67,11 @@ const Map = () => {
         pitch: 30,
       });
 
+      map.current.on("error", (e) => {
+        console.error("Mapbox error:", e);
+        setMapError(`Map error: ${e.error?.message || "Unknown error"}`);
+      });
+
       map.current.addControl(
         new mapboxgl.NavigationControl({
           visualizePitch: true,
@@ -70,6 +80,7 @@ const Map = () => {
       );
 
       map.current.on("load", () => {
+        console.log("Map loaded successfully!");
         setIsMapLoaded(true);
 
         // Add markers for each cryptid
@@ -117,15 +128,19 @@ const Map = () => {
   }, [mapboxToken]);
 
   useEffect(() => {
-    // Auto-initialize map if token is available
-    if (mapboxToken && !isMapLoaded && !mapError) {
+    // Only initialize once if we have a token and haven't tried yet
+    if (mapboxToken && !map.current && !mapError) {
       initializeMap();
     }
-    
+
+    // Cleanup only on unmount
     return () => {
-      map.current?.remove();
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
     };
-  }, [mapboxToken, isMapLoaded, mapError, initializeMap]);
+  }, [mapboxToken, mapError, initializeMap]);
 
   const selectedCryptidData = selectedCryptid
     ? cryptids.find((c) => c.id === selectedCryptid)

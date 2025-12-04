@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cryptids } from "@/data/cryptids";
+import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,6 +48,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background paper-texture">
+      <StructuredData type="website" data={createWebSiteSchema()} />
       <Header />
 
       {/* Hero Section */}
