@@ -88,9 +88,11 @@ export default {
   		},
       fontFamily: {
         sans: [
-          'Work Sans',
           'ui-sans-serif',
           'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
           'sans-serif',
           'Apple Color Emoji',
           'Segoe UI Emoji',
@@ -98,7 +100,6 @@ export default {
           'Noto Color Emoji'
         ],
         serif: [
-          'Lora',
           'ui-serif',
           'Georgia',
           'Cambria',
@@ -107,7 +108,6 @@ export default {
           'serif'
         ],
         mono: [
-          'Space Mono',
           'ui-monospace',
           'SFMono-Regular',
           'Menlo',
@@ -117,8 +117,8 @@ export default {
           'Courier New',
           'monospace'
         ],
-        display: ['Rokkitt', 'serif'],
-        typewriter: ['Special Elite', 'cursive']
+        display: ['Georgia', 'Times New Roman', 'serif'],
+        typewriter: ['Courier New', 'ui-monospace', 'SFMono-Regular', 'monospace']
       }
   	}
   },

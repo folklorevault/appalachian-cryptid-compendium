@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import type mapboxgl from "mapbox-gl";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,10 +39,12 @@ const Map = () => {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [selectedCryptid, setSelectedCryptid] = useState<string | null>(null);
+  const [mapboxLib, setMapboxLib] = useState<typeof import("mapbox-gl") | null>(null);
 
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const initializeMap = useCallback(() => {
+    if (!mapboxLib) return;
     if (!mapContainer.current) {
       console.log("Map container not ready");
       return;
@@ -56,10 +57,10 @@ const Map = () => {
     }
 
     console.log("Initializing map with token:", mapboxToken.substring(0, 15) + "...");
-    mapboxgl.accessToken = mapboxToken;
+    mapboxLib.accessToken = mapboxToken;
 
     try {
-      map.current = new mapboxgl.Map({
+      map.current = new mapboxLib.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/outdoors-v12",
         center: [-84.5, 35.5], // Center on Appalachia
@@ -73,7 +74,7 @@ const Map = () => {
       });
 
       map.current.addControl(
-        new mapboxgl.NavigationControl({
+        new mapboxLib.NavigationControl({
           visualizePitch: true,
         }),
         "top-right"
@@ -116,7 +117,7 @@ const Map = () => {
             });
           });
 
-          new mapboxgl.Marker(el)
+          new mapboxLib.Marker(el)
             .setLngLat([coords.lng, coords.lat])
             .addTo(map.current!);
         });
@@ -125,11 +126,25 @@ const Map = () => {
       console.error("Error initializing map:", error);
       setMapError("Failed to load map. Please check your Mapbox token.");
     }
-  }, [mapboxToken]);
+  }, [mapboxLib, mapboxToken]);
 
   useEffect(() => {
-    // Only initialize once if we have a token and haven't tried yet
-    if (mapboxToken && !map.current && !mapError) {
+    // Load Mapbox only when the page is visited to keep the main bundle lean
+    if (mapboxToken && !mapboxLib && !mapError) {
+      Promise.all([
+        import("mapbox-gl"),
+        import("mapbox-gl/dist/mapbox-gl.css"),
+      ])
+        .then(([module]) => {
+          setMapboxLib(module.default || module);
+        })
+        .catch((error) => {
+          console.error("Error loading Mapbox:", error);
+          setMapError("Failed to load map library. Please try again.");
+        });
+    }
+
+    if (mapboxToken && mapboxLib && !map.current && !mapError) {
       initializeMap();
     }
 
@@ -140,7 +155,7 @@ const Map = () => {
         map.current = null;
       }
     };
-  }, [mapboxToken, mapError, initializeMap]);
+  }, [mapboxToken, mapError, initializeMap, mapboxLib]);
 
   const selectedCryptidData = selectedCryptid
     ? cryptids.find((c) => c.id === selectedCryptid)
@@ -255,6 +270,10 @@ const Map = () => {
                     <img
                       src={selectedCryptidData.image}
                       alt={selectedCryptidData.name}
+                      loading="lazy"
+                      decoding="async"
+                      width="64"
+                      height="64"
                       className="w-16 h-16 object-cover rounded border border-border"
                     />
                     <div>

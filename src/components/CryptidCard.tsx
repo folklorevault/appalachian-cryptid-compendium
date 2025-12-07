@@ -65,6 +65,10 @@ export const CryptidCard = ({
         <img
           src={gridImage}
           alt={name}
+          loading="lazy"
+          decoding="async"
+          width="600"
+          height="900"
           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover"
         />
         <div className="absolute top-2 right-2">
