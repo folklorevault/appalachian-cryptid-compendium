@@ -88,6 +88,7 @@ export default {
   		},
       fontFamily: {
         sans: [
+          'Work Sans',
           'ui-sans-serif',
           'system-ui',
           '-apple-system',
@@ -117,8 +118,8 @@ export default {
           'Courier New',
           'monospace'
         ],
-        display: ['Georgia', 'Times New Roman', 'serif'],
-        typewriter: ['Courier New', 'ui-monospace', 'SFMono-Regular', 'monospace']
+        display: ['Rokkitt', 'Georgia', 'Times New Roman', 'serif'],
+        typewriter: ['Special Elite', 'Courier New', 'ui-monospace', 'SFMono-Regular', 'monospace']
       }
   	}
   },
