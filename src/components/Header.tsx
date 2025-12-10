@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
 
 interface NavItem {
   to: string;
   label: string;
   isAnchor?: boolean;
+  isExternal?: boolean;
 }
 
 interface HeaderProps {
@@ -97,6 +98,15 @@ export const Header = ({ badge }: HeaderProps) => {
                   </Link>
                 )
               ))}
+              <a
+                href="https://ko-fi.com/appalachiancryptidkeeper"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 transition-colors"
+              >
+                <Heart className="h-4 w-4" />
+                Support
+              </a>
             </nav>
           </div>
         </div>
@@ -135,6 +145,16 @@ export const Header = ({ badge }: HeaderProps) => {
                 </Link>
               )
             ))}
+            <a
+              href="https://ko-fi.com/appalachiancryptidkeeper"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Heart className="h-4 w-4" />
+              Support
+            </a>
           </nav>
         </div>
       )}

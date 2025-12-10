@@ -34,10 +34,15 @@ const CryptidDetail = () => {
     ? urlFor(cryptid.image).width(1200).height(630).fit('crop').url()
     : `https://appalachiancryptid.com/og-image.png`;
 
+  // Build SEO-optimized description with location context
+  const seoDescription = cryptid
+    ? `${cryptid.description || `Learn about the ${cryptid.name}`} Sightings reported near ${cryptid.location}. Part of the Appalachian Cryptid Field Guide.`
+    : undefined;
+
   // SEO meta tags
   useSEO({
-    title: cryptid?.name,
-    description: cryptid?.description,
+    title: cryptid ? `${cryptid.name} - ${cryptid.location} Cryptid` : undefined,
+    description: seoDescription,
     image: ogImageUrl,
     url: `https://appalachiancryptid.com/cryptid/${id}`,
     type: "article"
