@@ -4,6 +4,7 @@ import {
   fetchCryptidBySlug,
   fetchCryptidById,
   fetchMapCryptids,
+  fetchRelatedCryptids,
 } from '@/lib/sanity-provider'
 
 // Query key factory for cache management
@@ -16,6 +17,7 @@ export const cryptidKeys = {
   detail: (slug: string) => [...cryptidKeys.details(), slug] as const,
   detailById: (id: string) => [...cryptidKeys.details(), 'id', id] as const,
   map: () => [...cryptidKeys.all, 'map'] as const,
+  related: (slug: string) => [...cryptidKeys.all, 'related', slug] as const,
 }
 
 // Get all cryptids with optional filters
@@ -55,5 +57,19 @@ export function useMapCryptids() {
     queryKey: cryptidKeys.map(),
     queryFn: fetchMapCryptids,
     staleTime: 1000 * 60 * 10, // 10 minutes - map data changes infrequently
+  })
+}
+
+// Get related cryptids (same region or danger level)
+export function useRelatedCryptids(
+  slug: string | undefined,
+  region: string | undefined,
+  dangerLevel: string | undefined
+) {
+  return useQuery({
+    queryKey: cryptidKeys.related(slug || ''),
+    queryFn: () => fetchRelatedCryptids(slug!, region!, dangerLevel!),
+    enabled: !!slug && !!region && !!dangerLevel,
+    staleTime: 1000 * 60 * 5,
   })
 }

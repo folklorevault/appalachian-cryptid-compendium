@@ -121,3 +121,14 @@ export const mapCryptidsQuery = `*[_type == "cryptid" && defined(coordinates)] {
   description,
   gridImage
 }`
+
+// Get related cryptids (same region or danger level, excluding current)
+export const relatedCryptidsQuery = `*[_type == "cryptid" && slug.current != $slug && (region == $region || dangerLevel == $dangerLevel)][0...3] {
+  _id,
+  name,
+  slug,
+  location,
+  dangerLevel,
+  description,
+  gridImage
+}`

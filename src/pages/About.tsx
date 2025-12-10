@@ -26,6 +26,11 @@ const About = () => {
       <section className="py-12 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center space-y-4 mb-12">
+            <img
+              src="/stampappalachiancryptidlogo.svg"
+              alt="Appalachian Cryptid Field Guide"
+              className="h-60 w-60 mx-auto mb-4"
+            />
             <Badge className="bg-primary/10 text-primary border-primary" variant="outline">
               ABOUT THE PROJECT
             </Badge>
@@ -33,7 +38,7 @@ const About = () => {
               Our Mission
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Documenting and preserving the strange stories, backroad sightings, and local legends 
+              Documenting and preserving the strange stories, backroad sightings, and local legends
               of the Appalachian Mountains and the American South.
             </p>
           </div>

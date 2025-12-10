@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ interface CryptidCardProps {
 }
 
 export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const {
     _id,
     name,
@@ -29,6 +31,11 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
   const imageUrl = gridImage
     ? urlFor(gridImage).width(600).height(900).url()
     : getStaticImagePath(slug.current, 'grid');
+
+  // Low quality placeholder for blur-up effect (Sanity only)
+  const blurUrl = gridImage
+    ? urlFor(gridImage).width(20).height(30).blur(10).url()
+    : undefined;
 
   const getDangerColor = () => {
     switch (dangerLevel) {
@@ -60,6 +67,15 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     <Link to={`/cryptid/${slug.current}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
+        {/* Blur placeholder */}
+        {blurUrl && !imageLoaded && (
+          <img
+            src={blurUrl}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm"
+          />
+        )}
         <img
           src={imageUrl}
           alt={name}
@@ -67,7 +83,10 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
           decoding="async"
           width="600"
           height="900"
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
         <div className="absolute top-2 right-2">
           <Badge className={getDangerColor()}>Advisory: {getAdvisoryLabel()}</Badge>

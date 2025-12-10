@@ -7,7 +7,7 @@ import { Stamp } from "@/components/Stamp";
 import { ArrowLeft, MapPin, Eye, Calendar, AlertTriangle, Loader2 } from "lucide-react";
 import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
 import { useSEO } from "@/hooks/use-seo";
-import { useCryptid } from "@/hooks/use-sanity-cryptids";
+import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
 import { getStaticImagePath } from "@/lib/sanity-provider";
 
@@ -17,16 +17,28 @@ const CryptidDetail = () => {
   // Fetch cryptid from Sanity (or static fallback)
   const { data: cryptid, isLoading, error } = useCryptid(id);
 
+  // Fetch related cryptids
+  const { data: relatedCryptids = [] } = useRelatedCryptids(
+    cryptid?.slug?.current,
+    cryptid?.region,
+    cryptid?.dangerLevel
+  );
+
   // Get image URL - from Sanity if available, otherwise static fallback
   const imageUrl = cryptid?.image
     ? urlFor(cryptid.image).width(800).height(1200).url()
     : id ? getStaticImagePath(id, 'detail') : '';
 
+  // OG image - use wider format for social sharing
+  const ogImageUrl = cryptid?.image
+    ? urlFor(cryptid.image).width(1200).height(630).fit('crop').url()
+    : `https://appalachiancryptid.com/og-image.png`;
+
   // SEO meta tags
   useSEO({
     title: cryptid?.name,
     description: cryptid?.description,
-    image: imageUrl ? `https://appalachiancryptid.com${imageUrl}` : undefined,
+    image: ogImageUrl,
     url: `https://appalachiancryptid.com/cryptid/${id}`,
     type: "article"
   });
@@ -104,13 +116,14 @@ const CryptidDetail = () => {
 
       <div className="container mx-auto px-4 pb-8">
         {/* Hero Image & Basic Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-start">
           <div className="relative aspect-[2/3] overflow-hidden rounded-lg vintage-frame">
             <img
               src={imageUrl}
               alt={cryptid.name}
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               width="800"
               height="1200"
               className="w-full h-full object-cover sepia-light"
@@ -124,9 +137,9 @@ const CryptidDetail = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="relative">
+            <div>
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                CASE FILE #{cryptid.slug.current.toUpperCase().slice(0, 3)}-{cryptid.sightings.toString().padStart(3, '0')}
+                CASE FILE #{cryptid.slug?.current?.toUpperCase().slice(0, 3) || 'UNK'}-{(cryptid.sightings ?? 0).toString().padStart(3, '0')}
               </div>
               <h1 className="text-4xl font-bold text-foreground font-display mb-2">{cryptid.name}</h1>
               {cryptid.scientificName && (
@@ -146,7 +159,7 @@ const CryptidDetail = () => {
                 <Eye className="h-5 w-5 text-accent mt-1" />
                 <div>
                   <div className="text-xs uppercase text-muted-foreground font-typewriter">Filed Reports</div>
-                  <div className="text-foreground">{cryptid.sightings} documented encounters</div>
+                  <div className="text-foreground">{cryptid.sightings ?? 0} documented encounters</div>
                 </div>
               </div>
               {cryptid.lastSighting && (
@@ -255,6 +268,45 @@ const CryptidDetail = () => {
                   </Card>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Related Cryptids */}
+        {relatedCryptids.length > 0 && (
+          <div className="mb-8 border-t border-border pt-8">
+            <h2 className="text-2xl font-bold text-foreground font-display mb-6">Related Case Files</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {relatedCryptids.map((related) => {
+                const relatedImageUrl = related.gridImage
+                  ? urlFor(related.gridImage).width(400).height(400).url()
+                  : getStaticImagePath(related.slug?.current || '', 'grid');
+
+                return (
+                  <Link
+                    key={related._id}
+                    to={`/cryptid/${related.slug?.current}`}
+                    className="group"
+                  >
+                    <Card className="border-2 border-border hover:border-primary transition-colors overflow-hidden">
+                      <div className="aspect-square overflow-hidden">
+                        <img
+                          src={relatedImageUrl}
+                          alt={related.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform group-hover:scale-105 sepia-light"
+                        />
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
+                          {related.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{related.location}</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}

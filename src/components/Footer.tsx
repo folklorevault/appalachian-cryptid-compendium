@@ -24,7 +24,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <img
-                src="/stampappalachiancryptid.webp"
+                src="/stampappalachiancryptidlogo.svg"
                 alt="Appalachian Cryptid Field Guide"
                 className="h-12 w-12"
               />

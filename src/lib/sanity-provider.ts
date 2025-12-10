@@ -8,6 +8,7 @@ import {
   cryptidBySlugQuery,
   cryptidByIdQuery,
   mapCryptidsQuery,
+  relatedCryptidsQuery,
 } from './sanity-queries'
 import { cryptids as staticCryptids } from '@/data/cryptids'
 import type {
@@ -219,6 +220,25 @@ export async function fetchMapCryptids(): Promise<SanityCryptidMapItem[]> {
         gridImage: undefined, // Static images handled separately
       }
     })
+}
+
+// Get related cryptids (same region or danger level)
+export async function fetchRelatedCryptids(
+  slug: string,
+  region: string,
+  dangerLevel: string
+): Promise<SanityCryptidListItem[]> {
+  const useSanity = await checkSanityAvailability()
+
+  if (useSanity) {
+    return sanityClient.fetch(relatedCryptidsQuery, { slug, region, dangerLevel })
+  }
+
+  // Fallback to static data
+  return staticCryptids
+    .filter((c) => c.id !== slug && (c.region === region || c.dangerLevel === dangerLevel))
+    .slice(0, 3)
+    .map(convertStaticToSanityFormat)
 }
 
 // Check if using Sanity or static data

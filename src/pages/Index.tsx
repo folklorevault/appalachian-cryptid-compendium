@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
 import { CryptidCard } from "@/components/CryptidCard";
+import { CryptidCardSkeleton } from "@/components/CryptidCardSkeleton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Loader2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
@@ -163,10 +164,7 @@ const Index = () => {
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
                 {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Loading creatures...
-                  </span>
+                  "Loading creatures..."
                 ) : (
                   <>
                     Showing <span className="text-primary font-bold">{filteredCryptids.length}</span> creatures in our field guide
@@ -182,8 +180,10 @@ const Index = () => {
       <section className="py-16 px-4">
         <div className="container mx-auto">
           {isLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <CryptidCardSkeleton key={i} />
+              ))}
             </div>
           ) : error ? (
             <div className="text-center py-12">
