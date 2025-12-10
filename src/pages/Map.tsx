@@ -4,21 +4,10 @@ import type mapboxgl from "mapbox-gl";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Key } from "lucide-react";
-import { cryptids } from "@/data/cryptids";
-
-// Coordinates for cryptid locations
-const cryptidLocations: Record<string, { lat: number; lng: number }> = {
-  mothman: { lat: 38.8451, lng: -82.1371 }, // Point Pleasant, WV
-  "wampus-cat": { lat: 35.9606, lng: -83.9207 }, // Eastern Tennessee
-  "moon-eyed-people": { lat: 35.4676, lng: -83.5174 }, // Cherokee National Forest, NC
-  "skunk-ape": { lat: 25.9543, lng: -81.0503 }, // Everglades, FL
-  "lizard-man": { lat: 34.2018, lng: -80.2307 }, // Scape Ore Swamp, SC
-  "fouke-monster": { lat: 33.2681, lng: -93.8930 }, // Fouke, AR
-  tailypo: { lat: 36.6002, lng: -81.2198 }, // Blue Ridge Mountains, VA
-  "grafton-monster": { lat: 39.3429, lng: -80.0187 }, // Grafton, WV
-  "white-screamer": { lat: 34.8000, lng: -87.6769 }, // White Screamer location, AL
-};
+import { ArrowLeft, MapPin, Key, Loader2 } from "lucide-react";
+import { useMapCryptids } from "@/hooks/use-sanity-cryptids";
+import { urlFor } from "@/lib/sanity";
+import { getStaticImagePath } from "@/lib/sanity-provider";
 
 const getDangerColor = (level: string) => {
   switch (level) {
@@ -38,10 +27,13 @@ const Map = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
-  const [selectedCryptid, setSelectedCryptid] = useState<string | null>(null);
+  const [selectedCryptidId, setSelectedCryptidId] = useState<string | null>(null);
   const [mapboxLib, setMapboxLib] = useState<typeof import("mapbox-gl") | null>(null);
 
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  // Fetch cryptids from Sanity (or static fallback)
+  const { data: cryptids = [], isLoading } = useMapCryptids();
 
   const initializeMap = useCallback(() => {
     if (!mapboxLib) return;
@@ -86,8 +78,7 @@ const Map = () => {
 
         // Add markers for each cryptid
         cryptids.forEach((cryptid) => {
-          const coords = cryptidLocations[cryptid.id];
-          if (!coords || !map.current) return;
+          if (!cryptid.coordinates || !map.current) return;
 
           // Create custom marker element
           const el = document.createElement("div");
@@ -109,16 +100,16 @@ const Map = () => {
             el.style.transform = "scale(1)";
           });
           el.addEventListener("click", () => {
-            setSelectedCryptid(cryptid.id);
+            setSelectedCryptidId(cryptid._id);
             map.current?.flyTo({
-              center: [coords.lng, coords.lat],
+              center: [cryptid.coordinates!.lng, cryptid.coordinates!.lat],
               zoom: 8,
               duration: 1500,
             });
           });
 
           new mapboxLib.Marker(el)
-            .setLngLat([coords.lng, coords.lat])
+            .setLngLat([cryptid.coordinates.lng, cryptid.coordinates.lat])
             .addTo(map.current!);
         });
       });
@@ -126,7 +117,7 @@ const Map = () => {
       console.error("Error initializing map:", error);
       setMapError("Failed to load map. Please check your Mapbox token.");
     }
-  }, [mapboxLib, mapboxToken]);
+  }, [mapboxLib, mapboxToken, cryptids]);
 
   useEffect(() => {
     // Load Mapbox only when the page is visited to keep the main bundle lean
@@ -144,7 +135,7 @@ const Map = () => {
         });
     }
 
-    if (mapboxToken && mapboxLib && !map.current && !mapError) {
+    if (mapboxToken && mapboxLib && !map.current && !mapError && cryptids.length > 0) {
       initializeMap();
     }
 
@@ -155,11 +146,18 @@ const Map = () => {
         map.current = null;
       }
     };
-  }, [mapboxToken, mapError, initializeMap, mapboxLib]);
+  }, [mapboxToken, mapError, initializeMap, mapboxLib, cryptids]);
 
-  const selectedCryptidData = selectedCryptid
-    ? cryptids.find((c) => c.id === selectedCryptid)
+  const selectedCryptid = selectedCryptidId
+    ? cryptids.find((c) => c._id === selectedCryptidId)
     : null;
+
+  // Get image URL for selected cryptid
+  const selectedCryptidImage = selectedCryptid?.gridImage
+    ? urlFor(selectedCryptid.gridImage).width(64).height(64).url()
+    : selectedCryptid?.slug?.current
+      ? getStaticImagePath(selectedCryptid.slug.current, 'detail')
+      : '';
 
   return (
     <div className="min-h-screen bg-background">
@@ -212,12 +210,16 @@ const Map = () => {
               ref={mapContainer}
               className="w-full h-[500px] lg:h-[600px] rounded-lg border-2 border-border bg-card"
             />
-            {!isMapLoaded && !mapError && (
+            {(!isMapLoaded || isLoading) && !mapError && (
               <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-lg">
                 <div className="text-center space-y-2">
-                  <MapPin className="h-12 w-12 text-muted-foreground mx-auto animate-pulse" />
+                  {isLoading ? (
+                    <Loader2 className="h-12 w-12 text-primary mx-auto animate-spin" />
+                  ) : (
+                    <MapPin className="h-12 w-12 text-muted-foreground mx-auto animate-pulse" />
+                  )}
                   <p className="text-muted-foreground font-typewriter">
-                    Loading sighting map...
+                    {isLoading ? "Loading cryptid data..." : "Loading sighting map..."}
                   </p>
                 </div>
               </div>
@@ -260,7 +262,7 @@ const Map = () => {
               </CardContent>
             </Card>
 
-            {selectedCryptidData ? (
+            {selectedCryptid ? (
               <Card className="border-2 border-primary">
                 <CardContent className="p-4 space-y-3">
                   <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter">
@@ -268,8 +270,8 @@ const Map = () => {
                   </div>
                   <div className="flex items-start gap-3">
                     <img
-                      src={selectedCryptidData.image}
-                      alt={selectedCryptidData.name}
+                      src={selectedCryptidImage}
+                      alt={selectedCryptid.name}
                       loading="lazy"
                       decoding="async"
                       width="64"
@@ -278,23 +280,22 @@ const Map = () => {
                     />
                     <div>
                       <h3 className="font-bold text-foreground">
-                        {selectedCryptidData.name}
+                        {selectedCryptid.name}
                       </h3>
-                      <p className="text-xs text-muted-foreground italic">
-                        {selectedCryptidData.scientificName}
-                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="h-4 w-4 text-primary" />
                     <span className="text-foreground">
-                      {selectedCryptidData.location}
+                      {selectedCryptid.location}
                     </span>
                   </div>
-                  <p className="text-sm text-foreground/80">
-                    {selectedCryptidData.description}
-                  </p>
-                  <Link to={`/cryptid/${selectedCryptidData.id}`}>
+                  {selectedCryptid.description && (
+                    <p className="text-sm text-foreground/80">
+                      {selectedCryptid.description}
+                    </p>
+                  )}
+                  <Link to={`/cryptid/${selectedCryptid.slug.current}`}>
                     <Button
                       size="sm"
                       className="w-full bg-primary text-primary-foreground"
@@ -322,20 +323,19 @@ const Map = () => {
                 <div className="space-y-2 max-h-[200px] overflow-y-auto">
                   {cryptids.map((cryptid) => (
                     <button
-                      key={cryptid.id}
+                      key={cryptid._id}
                       onClick={() => {
-                        setSelectedCryptid(cryptid.id);
-                        const coords = cryptidLocations[cryptid.id];
-                        if (coords && map.current) {
+                        setSelectedCryptidId(cryptid._id);
+                        if (cryptid.coordinates && map.current) {
                           map.current.flyTo({
-                            center: [coords.lng, coords.lat],
+                            center: [cryptid.coordinates.lng, cryptid.coordinates.lat],
                             zoom: 8,
                             duration: 1500,
                           });
                         }
                       }}
                       className={`w-full text-left p-2 rounded transition-colors ${
-                        selectedCryptid === cryptid.id
+                        selectedCryptidId === cryptid._id
                           ? "bg-primary/20 border border-primary"
                           : "hover:bg-muted"
                       }`}

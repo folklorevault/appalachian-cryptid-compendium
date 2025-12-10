@@ -7,7 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The Appalachian Cryptid Compendium is a React-based web application for cataloging cryptid sightings in the Appalachian region. The project uses:
 
 - **Frontend**: React 18 + TypeScript + Vite + shadcn/ui + Tailwind CSS
-- **Backend**: Cloudflare Pages Functions + D1 Database
+- **CMS**: Sanity CMS for cryptid content management
+- **Backend**: Cloudflare Pages Functions + D1 Database (for sighting reports)
 - **State Management**: TanStack Query for server state
 - **Routing**: React Router v6
 - **Map**: Mapbox GL JS for interactive sighting maps
@@ -49,40 +50,51 @@ wrangler d1 execute cryptid-db --local --command="SELECT * FROM cryptids"
 # Deploy database to production
 wrangler d1 execute cryptid-db --file=./db/schema.sql
 
+# Create R2 bucket for image storage
+wrangler r2 bucket create cryptid-images
+
 # Start local development with D1 binding
 wrangler pages dev dist --binding DB=cryptid-db
 ```
 
 ## Architecture
 
-### Dual Data Mode (API + Static Fallback)
+### Sanity CMS Integration
 
-The application implements a smart fallback system that allows development without a running backend:
+Cryptid content is managed via Sanity CMS:
 
-- **data-provider.ts**: Checks API availability and falls back to static data from `src/data/cryptids.ts`
-- **API functions** in `src/lib/api.ts`: Direct API client for backend operations
-- **Custom hooks** in `src/hooks/`: Use TanStack Query for data fetching with caching
+- **Sanity Studio**: Hosted at `appalachian-cryptid.sanity.studio` for content editing
+- **Schema**: `sanity/schemas/cryptid.ts` defines cryptid documents with embedded testimonies and timeline events
+- **Client**: `src/lib/sanity.ts` configures the Sanity client with image URL builder
+- **Queries**: `src/lib/sanity-queries.ts` contains GROQ queries for fetching data
+- **Provider**: `src/lib/sanity-provider.ts` handles data fetching with static fallback
+- **Hooks**: `src/hooks/use-sanity-cryptids.ts` provides TanStack Query hooks
 
-When the backend is unavailable (e.g., during frontend-only development), the app automatically uses static data. This is transparent to components.
+### Dual Data Mode (Sanity + Static Fallback)
+
+The application implements a smart fallback system:
+
+- **sanity-provider.ts**: Checks Sanity availability and falls back to static data from `src/data/cryptids.ts`
+- When Sanity is unavailable or not configured, the app automatically uses static data
+- This allows development without a configured Sanity project
 
 ### Backend Structure (Cloudflare Pages Functions)
 
-API routes are file-based in the `functions/api/` directory:
+API routes for sighting reports are file-based in the `functions/api/` directory:
 
-- `functions/api/cryptids/index.ts` → `GET /api/cryptids`, `POST /api/cryptids`
-- `functions/api/cryptids/[id].ts` → `GET /api/cryptids/:id`, `PUT /api/cryptids/:id`, `DELETE /api/cryptids/:id`
 - `functions/api/sightings/index.ts` → `GET /api/sightings`, `POST /api/sightings`
 - `functions/api/sightings/[id].ts` → `PUT /api/sightings/:id`, `DELETE /api/sightings/:id`
 - `functions/api/auth.ts` → `POST /api/auth` (login), `GET /api/auth` (verify)
+- `functions/api/upload.ts` → `POST /api/upload` (image uploads to R2)
+- `functions/api/images/[[path]].ts` → `GET /api/images/*` (serve images from R2)
 - `functions/api/_shared.ts` → Shared utilities, types, and helpers
+
+Note: Cryptid data is now managed via Sanity CMS; the D1 cryptids tables are deprecated.
 
 ### Database Schema
 
-The D1 database schema (`db/schema.sql`) includes:
+The D1 database schema (`db/schema.sql`) is used for:
 
-- `cryptids`: Main cryptid records
-- `testimonies`: Eyewitness accounts (one-to-many with cryptids)
-- `timeline_events`: Historical events (one-to-many with cryptids)
 - `sighting_reports`: User-submitted sighting reports (pending admin review)
 
 ### Authentication
@@ -97,6 +109,7 @@ Admin authentication uses a simple bearer token system:
 ### Frontend Patterns
 
 - **Route structure** defined in `src/App.tsx` using React Router
+- **Lazy loading**: All pages except Index use `React.lazy()` for code splitting - follow this pattern for new pages
 - **shadcn/ui components** in `src/components/ui/` (do not modify directly)
 - **Custom components** in `src/components/`
 - **Pages** in `src/pages/`
@@ -109,11 +122,12 @@ Admin authentication uses a simple bearer token system:
 2. **Detail Pages**: View full cryptid information including testimonies and timeline
 3. **Interactive Map**: Mapbox-powered map showing sighting locations
 4. **Report Sightings**: Public form for submitting new sighting reports
-5. **Admin Panel**: Review and manage sighting reports, CRUD operations on cryptids
+5. **Admin Panel**: Review and moderate user-submitted sighting reports
+6. **Sanity Studio**: Full CMS for managing cryptid content with testimonies and timeline events
 
 ## Security Practices
 
-This project uses Snyk for security scanning. When generating or modifying code:
+When generating or modifying code:
 
 - Run security scans on new first-party code
 - Address security issues found in newly introduced code or dependencies
@@ -124,6 +138,19 @@ This project uses Snyk for security scanning. When generating or modifying code:
 
 - The app runs on port 8080 (not 5173) due to Vite configuration
 - When adding new routes, place them ABOVE the catch-all `*` route in `src/App.tsx`
-- Tags in the database are stored as JSON strings and must be parsed/stringified
 - The `wrangler.toml` requires a `database_id` to be filled in after creating the D1 database
 - For local D1 development, use `database_id = "local"` in the development environment config
+
+## Sanity Setup
+
+To configure Sanity CMS:
+
+1. Create a Sanity project at https://sanity.io/manage
+2. Add environment variables:
+   - `VITE_SANITY_PROJECT_ID`: Your project ID
+   - `VITE_SANITY_DATASET`: Dataset name (usually `production`)
+3. Install Studio dependencies: `cd sanity && npm install`
+4. Run Studio locally: `cd sanity && npm run dev`
+5. Deploy Studio: `cd sanity && npm run deploy`
+
+The frontend will fall back to static data if Sanity is not configured.

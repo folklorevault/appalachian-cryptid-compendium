@@ -2,36 +2,34 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Eye, Calendar } from "lucide-react";
+import { urlFor } from "@/lib/sanity";
+import { getStaticImagePath } from "@/lib/sanity-provider";
+import type { SanityCryptidListItem } from "@/types/sanity";
 
 interface CryptidCardProps {
-  name: string;
-  scientificName: string;
-  location: string;
-  lastSighting: string;
-  dangerLevel: "Low" | "Medium" | "High";
-  sightings: number;
-  description: string;
-  image: string;
-  gridImage: string;
-  tags: string[];
+  cryptid: SanityCryptidListItem;
 }
 
-interface CryptidCardWithIdProps extends CryptidCardProps {
-  id: string;
-}
+export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
+  const {
+    _id,
+    name,
+    slug,
+    scientificName,
+    location,
+    lastSighting,
+    dangerLevel,
+    sightings,
+    description,
+    gridImage,
+    tags,
+  } = cryptid;
 
-export const CryptidCard = ({
-  id,
-  name,
-  scientificName,
-  location,
-  lastSighting,
-  dangerLevel,
-  sightings,
-  description,
-  gridImage,
-  tags,
-}: CryptidCardWithIdProps) => {
+  // Get image URL - from Sanity if available, otherwise static fallback
+  const imageUrl = gridImage
+    ? urlFor(gridImage).width(600).height(900).url()
+    : getStaticImagePath(slug.current, 'grid');
+
   const getDangerColor = () => {
     switch (dangerLevel) {
       case "High":
@@ -59,11 +57,11 @@ export const CryptidCard = ({
   };
 
   return (
-    <Link to={`/cryptid/${id}`}>
+    <Link to={`/cryptid/${slug.current}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
         <img
-          src={gridImage}
+          src={imageUrl}
           alt={name}
           loading="lazy"
           decoding="async"
@@ -75,11 +73,13 @@ export const CryptidCard = ({
           <Badge className={getDangerColor()}>Advisory: {getAdvisoryLabel()}</Badge>
         </div>
       </div>
-      
+
       <CardContent className="p-4 space-y-3">
         <div className="border-b border-border pb-3">
           <h3 className="text-xl font-bold text-foreground">{name}</h3>
-          <p className="text-sm italic text-muted-foreground font-serif">{scientificName}</p>
+          {scientificName && (
+            <p className="text-sm italic text-muted-foreground font-serif">{scientificName}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -91,27 +91,33 @@ export const CryptidCard = ({
             <Eye className="h-4 w-4 text-accent" />
             <span className="text-foreground">{sightings} Filed Reports</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-secondary" />
-            <span className="text-foreground">Most Recent: {lastSighting}</span>
+          {lastSighting && (
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-secondary" />
+              <span className="text-foreground">Most Recent: {lastSighting}</span>
+            </div>
+          )}
+        </div>
+
+        {description && (
+          <div className="border-t border-border pt-3">
+            <p className="text-sm text-foreground/80 leading-relaxed">{description}</p>
           </div>
-        </div>
+        )}
 
-        <div className="border-t border-border pt-3">
-          <p className="text-sm text-foreground/80 leading-relaxed">{description}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-2 pt-2">
-          {tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="outline"
-              className="text-xs border-primary/30 text-primary"
-            >
-              {tag}
-            </Badge>
-          ))}
-        </div>
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            {tags.map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-xs border-primary/30 text-primary"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
     </Link>

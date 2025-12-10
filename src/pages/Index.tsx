@@ -4,10 +4,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { cryptids } from "@/data/cryptids";
+import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
 
 const Index = () => {
@@ -15,28 +14,30 @@ const Index = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [selectedDanger, setSelectedDanger] = useState<string>("all");
 
+  // Fetch cryptids from Sanity (or static fallback)
+  const { data: cryptids = [], isLoading, error } = useCryptids({
+    region: selectedRegion,
+    dangerLevel: selectedDanger,
+    search: searchQuery,
+  });
+
+  // Additional client-side filtering for immediate search feedback
   const filteredCryptids = useMemo(() => {
-    return cryptids.filter((cryptid) => {
-      const matchesSearch =
-        cryptid.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cryptid.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cryptid.description.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!searchQuery) return cryptids;
 
-      const matchesRegion =
-        selectedRegion === "all" || cryptid.region === selectedRegion;
-
-      const matchesDanger =
-        selectedDanger === "all" || cryptid.dangerLevel === selectedDanger;
-
-      return matchesSearch && matchesRegion && matchesDanger;
-    });
-  }, [searchQuery, selectedRegion, selectedDanger]);
+    const query = searchQuery.toLowerCase();
+    return cryptids.filter((cryptid) =>
+      cryptid.name.toLowerCase().includes(query) ||
+      cryptid.location.toLowerCase().includes(query) ||
+      (cryptid.description?.toLowerCase().includes(query) ?? false)
+    );
+  }, [cryptids, searchQuery]);
 
   const regions = [
     { value: "all", label: "All Regions" },
-    { value: "appalachia", label: "Appalachia" },
-    { value: "southeast", label: "Southeast" },
-    { value: "southern", label: "Southern" },
+    { value: "Appalachia", label: "Appalachia" },
+    { value: "Southeast", label: "Southeast" },
+    { value: "Southern", label: "Southern" },
   ];
 
   const dangerLevels = [
@@ -65,8 +66,8 @@ const Index = () => {
               Creatures of the Mountains & American South
             </p>
             <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
-              A field guide to the creatures that haunt the ridgelines, backroads, and hollers 
-              of the Appalachian Mountains and American South—compiled from witness reports, 
+              A field guide to the creatures that haunt the ridgelines, backroads, and hollers
+              of the Appalachian Mountains and American South—compiled from witness reports,
               local legends, and ongoing research.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -161,8 +162,16 @@ const Index = () => {
 
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
-                Showing <span className="text-primary font-bold">{filteredCryptids.length}</span> of{" "}
-                <span className="text-primary font-bold">{cryptids.length}</span> creatures in our field guide
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Loading creatures...
+                  </span>
+                ) : (
+                  <>
+                    Showing <span className="text-primary font-bold">{filteredCryptids.length}</span> creatures in our field guide
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -172,7 +181,15 @@ const Index = () => {
       {/* Cryptid Grid */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          {filteredCryptids.length === 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-xl text-destructive">Error loading cryptids. Please try again.</p>
+            </div>
+          ) : filteredCryptids.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-xl text-muted-foreground">No cryptids found matching your criteria.</p>
               <Button
@@ -190,7 +207,7 @@ const Index = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCryptids.map((cryptid) => (
-                <CryptidCard key={cryptid.id} {...cryptid} />
+                <CryptidCard key={cryptid._id} cryptid={cryptid} />
               ))}
             </div>
           )}

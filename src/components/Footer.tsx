@@ -22,9 +22,16 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h4 className="text-lg font-bold text-foreground mb-3 font-display">
-              Appalachian Cryptid
-            </h4>
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src="/stampappalachiancryptid.webp"
+                alt="Appalachian Cryptid Field Guide"
+                className="h-12 w-12"
+              />
+              <h4 className="text-lg font-bold text-foreground font-display">
+                Appalachian Cryptid
+              </h4>
+            </div>
             <p className="text-sm text-muted-foreground">
               Front-porch stories, backroad sightings, and local legends from
               the mountains and hollers of Appalachia and the American South.
