@@ -12,6 +12,12 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'subhead',
+      title: 'Subhead',
+      type: 'string',
+      description: 'A one to two sentence micro intro displayed under the name',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -88,6 +94,12 @@ export default defineType({
       type: 'image',
       options: {hotspot: true},
       description: 'Full portrait image for the detail page hero',
+    }),
+    defineField({
+      name: 'imageAlt',
+      title: 'Image Alt Text',
+      type: 'string',
+      description: 'Descriptive alt text for accessibility',
     }),
     defineField({
       name: 'gridImage',

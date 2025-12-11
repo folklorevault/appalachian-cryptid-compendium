@@ -64,11 +64,15 @@ wrangler pages dev dist --binding DB=cryptid-db
 Cryptid content is managed via Sanity CMS:
 
 - **Sanity Studio**: Hosted at `appalachian-cryptid.sanity.studio` for content editing
-- **Schema**: `sanity/schemas/cryptid.ts` defines cryptid documents with embedded testimonies and timeline events
+- **Schema**: `sanity/appalachian-cryptid/schemaTypes/cryptid.ts` - **THIS IS THE DEPLOYED SCHEMA** (not `sanity/schemas/`)
 - **Client**: `src/lib/sanity.ts` configures the Sanity client with image URL builder
 - **Queries**: `src/lib/sanity-queries.ts` contains GROQ queries for fetching data
 - **Provider**: `src/lib/sanity-provider.ts` handles data fetching with static fallback
 - **Hooks**: `src/hooks/use-sanity-cryptids.ts` provides TanStack Query hooks
+
+**IMPORTANT**: There are two Sanity folders - always use `sanity/appalachian-cryptid/` for schema changes:
+- `sanity/` - Legacy/partial setup (do not use)
+- `sanity/appalachian-cryptid/` - **Active studio that deploys**
 
 ### Dual Data Mode (Sanity + Static Fallback)
 
@@ -149,8 +153,10 @@ To configure Sanity CMS:
 2. Add environment variables:
    - `VITE_SANITY_PROJECT_ID`: Your project ID
    - `VITE_SANITY_DATASET`: Dataset name (usually `production`)
-3. Install Studio dependencies: `cd sanity && npm install`
-4. Run Studio locally: `cd sanity && npm run dev`
-5. Deploy Studio: `cd sanity && npm run deploy`
+3. Install Studio dependencies: `cd sanity/appalachian-cryptid && npm install`
+4. Run Studio locally: `cd sanity/appalachian-cryptid && npm run dev`
+5. Deploy Studio: `cd sanity/appalachian-cryptid && npm run deploy`
+
+**IMPORTANT**: Always use `sanity/appalachian-cryptid/` directory for Sanity commands, NOT `sanity/`.
 
 The frontend will fall back to static data if Sanity is not configured.

@@ -24,6 +24,7 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     sightings,
     description,
     gridImage,
+    imageAlt,
     tags,
   } = cryptid;
 
@@ -78,7 +79,7 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
         )}
         <img
           src={imageUrl}
-          alt={name}
+          alt={imageAlt || name}
           loading="lazy"
           decoding="async"
           width="600"

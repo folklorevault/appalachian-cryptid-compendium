@@ -1,3 +1,6 @@
+# Robots.txt for Appalachian Cryptid Field Guide
+# https://appalachiancryptid.com
+
 User-agent: Googlebot
 Allow: /
 
@@ -12,5 +15,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Disallow admin and API routes
+Disallow: /admin
+Disallow: /api/
 
 Sitemap: https://appalachiancryptid.com/sitemap.xml

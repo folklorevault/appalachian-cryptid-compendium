@@ -35,8 +35,9 @@ const CryptidDetail = () => {
     : `https://appalachiancryptid.com/og-image.png`;
 
   // Build SEO-optimized description with location context
+  // Prefer subhead for concise intro, fall back to description
   const seoDescription = cryptid
-    ? `${cryptid.description || `Learn about the ${cryptid.name}`} Sightings reported near ${cryptid.location}. Part of the Appalachian Cryptid Field Guide.`
+    ? `${cryptid.subhead || cryptid.description || `Learn about the ${cryptid.name}`} Sightings reported near ${cryptid.location}. Part of the Appalachian Cryptid Field Guide.`
     : undefined;
 
   // SEO meta tags
@@ -95,9 +96,12 @@ const CryptidDetail = () => {
         type="article"
         data={createCryptidArticleSchema({
           name: cryptid.name,
-          description: cryptid.description || '',
+          description: cryptid.subhead || cryptid.description || '',
           image: imageUrl,
-          lastSighting: cryptid.lastSighting || ''
+          lastSighting: cryptid.lastSighting || '',
+          slug: cryptid.slug?.current,
+          tags: cryptid.tags,
+          location: cryptid.location
         })}
       />
       <StructuredData
@@ -125,7 +129,7 @@ const CryptidDetail = () => {
           <div className="relative aspect-[2/3] overflow-hidden rounded-lg vintage-frame">
             <img
               src={imageUrl}
-              alt={cryptid.name}
+              alt={cryptid.imageAlt || cryptid.name}
               loading="eager"
               decoding="async"
               fetchPriority="high"
@@ -147,6 +151,9 @@ const CryptidDetail = () => {
                 CASE FILE #{cryptid.slug?.current?.toUpperCase().slice(0, 3) || 'UNK'}-{(cryptid.sightings ?? 0).toString().padStart(3, '0')}
               </div>
               <h1 className="text-4xl font-bold text-foreground font-display mb-2">{cryptid.name}</h1>
+              {cryptid.subhead && (
+                <p className="text-base text-foreground/80 mb-2">{cryptid.subhead}</p>
+              )}
               {cryptid.scientificName && (
                 <p className="text-xl italic text-muted-foreground font-serif">{cryptid.scientificName}</p>
               )}

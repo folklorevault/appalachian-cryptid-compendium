@@ -4,6 +4,7 @@
 export const cryptidsListQuery = `*[_type == "cryptid"] | order(name asc) {
   _id,
   name,
+  subhead,
   slug,
   scientificName,
   location,
@@ -14,6 +15,7 @@ export const cryptidsListQuery = `*[_type == "cryptid"] | order(name asc) {
   lastSighting,
   description,
   image,
+  imageAlt,
   gridImage,
   tags
 }`
@@ -26,6 +28,7 @@ export const filteredCryptidsQuery = `*[_type == "cryptid"
 ] | order(name asc) {
   _id,
   name,
+  subhead,
   slug,
   scientificName,
   location,
@@ -36,6 +39,7 @@ export const filteredCryptidsQuery = `*[_type == "cryptid"
   lastSighting,
   description,
   image,
+  imageAlt,
   gridImage,
   tags
 }`
@@ -44,6 +48,7 @@ export const filteredCryptidsQuery = `*[_type == "cryptid"
 export const cryptidBySlugQuery = `*[_type == "cryptid" && slug.current == $slug][0] {
   _id,
   name,
+  subhead,
   slug,
   scientificName,
   location,
@@ -54,6 +59,7 @@ export const cryptidBySlugQuery = `*[_type == "cryptid" && slug.current == $slug
   lastSighting,
   description,
   image,
+  imageAlt,
   gridImage,
   tags,
   physicalDescription,
@@ -79,6 +85,7 @@ export const cryptidBySlugQuery = `*[_type == "cryptid" && slug.current == $slug
 export const cryptidByIdQuery = `*[_type == "cryptid" && _id == $id][0] {
   _id,
   name,
+  subhead,
   slug,
   scientificName,
   location,
@@ -89,6 +96,7 @@ export const cryptidByIdQuery = `*[_type == "cryptid" && _id == $id][0] {
   lastSighting,
   description,
   image,
+  imageAlt,
   gridImage,
   tags,
   physicalDescription,

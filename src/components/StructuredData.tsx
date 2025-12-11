@@ -28,6 +28,25 @@ interface ArticleSchema {
     "@type": "Organization";
     name: string;
   };
+  publisher?: {
+    "@type": "Organization";
+    name: string;
+    url: string;
+    logo?: {
+      "@type": "ImageObject";
+      url: string;
+    };
+  };
+  mainEntityOfPage?: {
+    "@type": "WebPage";
+    "@id": string;
+  };
+  keywords?: string[];
+  about?: {
+    "@type": "Thing";
+    name: string;
+    description: string;
+  };
 }
 
 interface BreadcrumbSchema {
@@ -92,19 +111,41 @@ export function createCryptidArticleSchema(cryptid: {
   description: string;
   image?: string;
   lastSighting?: string;
+  slug?: string;
+  tags?: string[];
+  location?: string;
 }): ArticleSchema {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: cryptid.name,
+    headline: `${cryptid.name} - Appalachian Cryptid Case File`,
     description: cryptid.description,
     image: cryptid.image
-      ? `https://appalachiancryptid.com${cryptid.image}`
+      ? (cryptid.image.startsWith('http') ? cryptid.image : `https://appalachiancryptid.com${cryptid.image}`)
       : undefined,
     dateModified: cryptid.lastSighting,
     author: {
       "@type": "Organization",
       name: "Appalachian Cryptid Field Guide",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+      url: "https://appalachiancryptid.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://appalachiancryptid.com/og-image.png",
+      },
+    },
+    mainEntityOfPage: cryptid.slug ? {
+      "@type": "WebPage",
+      "@id": `https://appalachiancryptid.com/cryptid/${cryptid.slug}`,
+    } : undefined,
+    keywords: cryptid.tags,
+    about: {
+      "@type": "Thing",
+      name: cryptid.name,
+      description: `${cryptid.name} cryptid sightings and reports${cryptid.location ? ` near ${cryptid.location}` : ''}.`,
     },
   };
 }

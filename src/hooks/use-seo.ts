@@ -17,9 +17,9 @@ export function useSEO({
   type = "website",
 }: SEOProps) {
   useEffect(() => {
-    const baseTitle = "Appalachian Cryptid Field Guide";
+    const baseTitle = "Appalachian Cryptids List";
     const baseDescription =
-      "A field guide to the creatures that haunt the ridgelines, backroads, and hollers of the Appalachian Mountains and American South. Compiled from witness reports, local legends, and ongoing research.";
+      "Complete list of Appalachian cryptids, monsters, and strange creatures. Browse documented sightings of Mothman, Wampus Cat, and more from the mountains and hollers of the American South.";
     const baseUrl = "https://appalachiancryptid.com";
     const baseImage = `${baseUrl}/og-image.png`;
 
@@ -48,6 +48,11 @@ export function useSEO({
     );
 
     // Update Open Graph tags
+    updateMetaTag(
+      'meta[property="og:site_name"]',
+      baseTitle,
+      "property"
+    );
     updateMetaTag(
       'meta[property="og:title"]',
       title ? `${title} | ${baseTitle}` : baseTitle,

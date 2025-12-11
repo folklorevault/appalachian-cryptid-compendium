@@ -58,11 +58,11 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight font-display">
-              Appalachian Cryptid
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight font-display">
+              Appalachian Cryptids List
               <br />
               <span className="text-primary">Field Guide</span>
-            </h2>
+            </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Creatures of the Mountains & American South
             </p>
@@ -98,6 +98,10 @@ const Index = () => {
                 Browse the Collection
               </div>
               <h3 className="text-2xl font-bold text-foreground">Find a Creature</h3>
+              <p className="text-sm text-muted-foreground mt-2 max-w-xl mx-auto">
+                Browse the Bureau's working list of Appalachian cryptids, monsters, and strange creatures.
+                Use the search bar and filters to find case files by name, location, or threat level.
+              </p>
             </div>
 
             {/* Search Bar */}

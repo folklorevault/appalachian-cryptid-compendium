@@ -45,6 +45,7 @@ export interface SanityCryptid {
   _id: string
   _type: 'cryptid'
   name: string
+  subhead?: string
   slug: SanitySlug
   scientificName?: string
   location: string
@@ -55,6 +56,7 @@ export interface SanityCryptid {
   lastSighting?: string
   description?: string
   image?: SanityImage
+  imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
   physicalDescription?: string
@@ -69,6 +71,7 @@ export interface SanityCryptid {
 export interface SanityCryptidListItem {
   _id: string
   name: string
+  subhead?: string
   slug: SanitySlug
   scientificName?: string
   location: string
@@ -79,6 +82,7 @@ export interface SanityCryptidListItem {
   lastSighting?: string
   description?: string
   image?: SanityImage
+  imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
 }
