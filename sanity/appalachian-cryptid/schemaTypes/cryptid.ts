@@ -76,12 +76,6 @@ export default defineType({
       initialValue: 0,
     }),
     defineField({
-      name: 'lastSighting',
-      title: 'Last Sighting',
-      type: 'string',
-      description: 'e.g., "November 2023"',
-    }),
-    defineField({
       name: 'description',
       title: 'Short Description',
       type: 'text',

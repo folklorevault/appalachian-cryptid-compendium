@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
-import { ArrowLeft, MapPin, Eye, Calendar, AlertTriangle, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Eye, AlertTriangle, Loader2 } from "lucide-react";
 import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
 import { useSEO } from "@/hooks/use-seo";
 import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
@@ -98,7 +98,6 @@ const CryptidDetail = () => {
           name: cryptid.name,
           description: cryptid.subhead || cryptid.description || '',
           image: imageUrl,
-          lastSighting: cryptid.lastSighting || '',
           slug: cryptid.slug?.current,
           tags: cryptid.tags,
           location: cryptid.location
@@ -174,15 +173,6 @@ const CryptidDetail = () => {
                   <div className="text-foreground">{cryptid.sightings ?? 0} documented encounters</div>
                 </div>
               </div>
-              {cryptid.lastSighting && (
-                <div className="flex items-start gap-3">
-                  <Calendar className="h-5 w-5 text-secondary mt-1" />
-                  <div>
-                    <div className="text-xs uppercase text-muted-foreground font-typewriter">Most Recent</div>
-                    <div className="text-foreground">{cryptid.lastSighting}</div>
-                  </div>
-                </div>
-              )}
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-1" />
                 <div>

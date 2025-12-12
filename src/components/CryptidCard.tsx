@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Eye, Calendar } from "lucide-react";
+import { MapPin, Eye } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
 import { getStaticImagePath } from "@/lib/sanity-provider";
 import type { SanityCryptidListItem } from "@/types/sanity";
@@ -19,7 +19,6 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     slug,
     scientificName,
     location,
-    lastSighting,
     dangerLevel,
     sightings,
     description,
@@ -111,12 +110,6 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
             <Eye className="h-4 w-4 text-accent" />
             <span className="text-foreground">{sightings} Filed Reports</span>
           </div>
-          {lastSighting && (
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-secondary" />
-              <span className="text-foreground">Most Recent: {lastSighting}</span>
-            </div>
-          )}
         </div>
 
         {description && (

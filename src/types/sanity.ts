@@ -53,7 +53,6 @@ export interface SanityCryptid {
   region: 'Appalachia' | 'Southeast' | 'Southern'
   dangerLevel: 'Low' | 'Medium' | 'High'
   sightings: number
-  lastSighting?: string
   description?: string
   image?: SanityImage
   imageAlt?: string
@@ -79,7 +78,6 @@ export interface SanityCryptidListItem {
   region: 'Appalachia' | 'Southeast' | 'Southern'
   dangerLevel: 'Low' | 'Medium' | 'High'
   sightings: number
-  lastSighting?: string
   description?: string
   image?: SanityImage
   imageAlt?: string

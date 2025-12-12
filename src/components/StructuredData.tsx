@@ -110,7 +110,6 @@ export function createCryptidArticleSchema(cryptid: {
   name: string;
   description: string;
   image?: string;
-  lastSighting?: string;
   slug?: string;
   tags?: string[];
   location?: string;
@@ -123,7 +122,6 @@ export function createCryptidArticleSchema(cryptid: {
     image: cryptid.image
       ? (cryptid.image.startsWith('http') ? cryptid.image : `https://appalachiancryptid.com${cryptid.image}`)
       : undefined,
-    dateModified: cryptid.lastSighting,
     author: {
       "@type": "Organization",
       name: "Appalachian Cryptid Field Guide",

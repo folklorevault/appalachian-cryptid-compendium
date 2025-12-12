@@ -36,14 +36,6 @@ const cryptidCoordinates: Record<string, { lat: number; lng: number }> = {
 async function checkSanityAvailability(): Promise<boolean> {
   if (sanityAvailable !== null) return sanityAvailable
 
-  // Check if project ID is configured
-  const projectId = import.meta.env.VITE_SANITY_PROJECT_ID
-  if (!projectId || projectId === 'your-project-id') {
-    console.log('Sanity not configured, using static data')
-    sanityAvailable = false
-    return false
-  }
-
   try {
     // Try to fetch a single document ID to verify connection
     await sanityClient.fetch('*[_type == "cryptid"][0]._id')
@@ -76,7 +68,6 @@ function convertStaticToSanityFormat(
     region: cryptid.region as 'Appalachia' | 'Southeast' | 'Southern',
     dangerLevel: cryptid.dangerLevel,
     sightings: cryptid.sightings,
-    lastSighting: cryptid.lastSighting,
     description: cryptid.description,
     // For static images, we'll use the path directly (not Sanity image refs)
     image: undefined,
