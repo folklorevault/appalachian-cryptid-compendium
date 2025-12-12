@@ -6,7 +6,7 @@ export const sanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID || '8thljucm',
   dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
-  useCdn: true, // Use CDN for read-only frontend queries
+  useCdn: import.meta.env.PROD, // Use CDN in production, fresh data in dev
 })
 
 const builder = imageUrlBuilder(sanityClient)
