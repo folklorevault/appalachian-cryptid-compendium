@@ -70,12 +70,8 @@ export const cryptidBySlugQuery = `*[_type == "cryptid" && slug.current == $slug
     location,
     account
   },
-  timeline[] {
-    _key,
-    year,
-    event,
-    location
-  }
+  notableSightings,
+  bureauNotes
 }`
 
 // Get single cryptid by ID (for backwards compatibility)
@@ -106,12 +102,8 @@ export const cryptidByIdQuery = `*[_type == "cryptid" && _id == $id][0] {
     location,
     account
   },
-  timeline[] {
-    _key,
-    year,
-    event,
-    location
-  }
+  notableSightings,
+  bureauNotes
 }`
 
 // Get all cryptids for map (with coordinates)

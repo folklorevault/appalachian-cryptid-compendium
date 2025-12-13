@@ -256,7 +256,7 @@ const Admin = () => {
               <div>
                 <h3 className="font-bold text-foreground">Manage Cryptids</h3>
                 <p className="text-sm text-muted-foreground">
-                  Add, edit, and manage cryptid entries with testimonies and timeline events in Sanity Studio.
+                  Add, edit, and manage cryptid entries with testimonies, notable sightings, and bureau notes in Sanity Studio.
                 </p>
               </div>
               <a

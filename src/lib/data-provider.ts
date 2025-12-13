@@ -46,13 +46,8 @@ function convertStaticCryptid(cryptid: (typeof staticCryptids)[0]): Cryptid {
       location: t.location,
       account: t.account,
     })),
-    timeline: cryptid.timeline.map((e, idx) => ({
-      id: `${cryptid.id}-e${idx}`,
-      cryptid_id: cryptid.id,
-      year: e.year,
-      event: e.event,
-      location: e.location,
-    })),
+    notable_sightings: cryptid.notableSightings,
+    bureau_notes: cryptid.bureauNotes,
   };
 }
 

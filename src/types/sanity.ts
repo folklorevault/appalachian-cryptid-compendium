@@ -34,13 +34,6 @@ export interface SanityTestimony {
   account: string
 }
 
-export interface SanityTimelineEvent {
-  _key: string
-  year: string
-  event: string
-  location?: string
-}
-
 export interface SanityCryptid {
   _id: string
   _type: 'cryptid'
@@ -63,7 +56,8 @@ export interface SanityCryptid {
   habitat?: string
   diet?: string
   testimonies?: SanityTestimony[]
-  timeline?: SanityTimelineEvent[]
+  notableSightings?: string
+  bureauNotes?: string
 }
 
 // Type for list queries (less data)

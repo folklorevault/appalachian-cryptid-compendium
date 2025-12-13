@@ -181,39 +181,18 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'timeline',
-      title: 'Timeline Events',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'timelineEvent',
-          title: 'Timeline Event',
-          fields: [
-            {
-              name: 'year',
-              title: 'Year',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            },
-            {
-              name: 'event',
-              title: 'Event',
-              type: 'text',
-              rows: 2,
-              validation: (Rule) => Rule.required(),
-            },
-            {
-              name: 'location',
-              title: 'Location',
-              type: 'string',
-            },
-          ],
-          preview: {
-            select: {title: 'year', subtitle: 'event'},
-          },
-        },
-      ],
+      name: 'notableSightings',
+      title: 'Notable Sightings',
+      type: 'text',
+      rows: 6,
+      description: 'Summary of notable sighting events',
+    }),
+    defineField({
+      name: 'bureauNotes',
+      title: 'Bureau Notes',
+      type: 'text',
+      rows: 6,
+      description: 'Internal notes from Bureau field agents',
     }),
   ],
   preview: {

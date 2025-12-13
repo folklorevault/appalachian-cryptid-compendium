@@ -252,25 +252,26 @@ const CryptidDetail = () => {
           </div>
         )}
 
-        {/* Historical Timeline */}
-        {cryptid.timeline && cryptid.timeline.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground font-display mb-6">Timeline of Reports</h2>
-            <div className="space-y-4">
-              {cryptid.timeline.map((event) => (
-                <div key={event._key} className="flex gap-4">
-                  <div className="flex-shrink-0 w-24">
-                    <Badge variant="outline" className="font-mono border-primary text-primary">{event.year}</Badge>
-                  </div>
-                  <Card className="flex-1 border-2 border-border">
-                    <CardContent className="p-4">
-                      <p className="text-foreground font-medium mb-1">{event.event}</p>
-                      {event.location && <p className="text-sm text-muted-foreground">{event.location}</p>}
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
+        {/* Notable Sightings & Bureau Notes */}
+        {(cryptid.notableSightings || cryptid.bureauNotes) && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {cryptid.notableSightings && (
+              <Card className="border-2 border-border">
+                <CardContent className="p-6">
+                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">Notable Sightings</h3>
+                  <p className="text-foreground/90 leading-relaxed whitespace-pre-line">{cryptid.notableSightings}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {cryptid.bureauNotes && (
+              <Card className="border-2 border-border border-primary/30 bg-primary/5">
+                <CardContent className="p-6">
+                  <h3 className="text-xs uppercase tracking-widest text-primary font-typewriter mb-3">Bureau Notes</h3>
+                  <p className="text-foreground/90 leading-relaxed whitespace-pre-line">{cryptid.bureauNotes}</p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
 

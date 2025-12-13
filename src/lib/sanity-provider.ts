@@ -84,12 +84,8 @@ function convertStaticToSanityFormat(
       location: t.location,
       account: t.account,
     })),
-    timeline: cryptid.timeline.map((e, idx) => ({
-      _key: `event-${idx}`,
-      year: e.year,
-      event: e.event,
-      location: e.location,
-    })),
+    notableSightings: cryptid.notableSightings,
+    bureauNotes: cryptid.bureauNotes,
   }
 }
 

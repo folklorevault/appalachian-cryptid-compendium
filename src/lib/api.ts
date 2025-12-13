@@ -60,7 +60,8 @@ export interface Cryptid {
   habitat: string;
   diet: string;
   testimonies?: Testimony[];
-  timeline?: TimelineEvent[];
+  notable_sightings?: string;
+  bureau_notes?: string;
 }
 
 export interface Testimony {
@@ -70,14 +71,6 @@ export interface Testimony {
   date: string;
   location: string;
   account: string;
-}
-
-export interface TimelineEvent {
-  id: string;
-  cryptid_id: string;
-  year: string;
-  event: string;
-  location: string;
 }
 
 export interface SightingReport {

@@ -8,12 +8,6 @@ export interface Testimony {
   account: string;
 }
 
-export interface TimelineEvent {
-  year: string;
-  event: string;
-  location: string;
-}
-
 export interface Cryptid {
   id: string;
   name: string;
@@ -33,7 +27,8 @@ export interface Cryptid {
   habitat: string;
   diet: string;
   testimonies: Testimony[];
-  timeline: TimelineEvent[];
+  notableSightings: string;
+  bureauNotes: string;
 }
 
 export const cryptids: Cryptid[] = [
@@ -77,15 +72,8 @@ export const cryptids: Cryptid[] = [
         account: "I was visiting family when I saw it near the car. It was a large gray figure with glowing red eyes. It rose up behind the car - I dropped my baby's bottle and ran. My daughter started screaming. That thing was real, and it was terrifying. I was so scared I couldn't speak for hours."
       }
     ],
-    timeline: [
-      { year: "1966", event: "First documented sighting near TNT plant", location: "Point Pleasant, WV" },
-      { year: "1966-1967", event: "Over 100 sightings reported during 13-month period", location: "Point Pleasant area, WV" },
-      { year: "1967", event: "Silver Bridge collapse; Mothman sightings cease abruptly", location: "Point Pleasant, WV" },
-      { year: "1985", event: "Sighting resurgence begins", location: "West Virginia" },
-      { year: "2001", event: "Multiple sightings reported before 9/11 attacks", location: "Various US locations" },
-      { year: "2007", event: "Sightings reported before Minnesota bridge collapse", location: "Minneapolis, MN" },
-      { year: "2023", event: "Recent sighting near abandoned factory", location: "Point Pleasant, WV" }
-    ]
+    notableSightings: "1966: First documented sighting near TNT plant in Point Pleasant, WV. Over 100 sightings reported during a 13-month period. 1967: Silver Bridge collapse coincides with abrupt cessation of sightings. 1985: Sighting resurgence begins across West Virginia. 2001: Multiple sightings reported before 9/11 attacks. 2007: Sightings reported before Minnesota bridge collapse. 2023: Recent sighting near abandoned factory in Point Pleasant.",
+    bureauNotes: "CLASSIFICATION: HARBINGER. Subject demonstrates consistent correlation with catastrophic events. Recommend continued monitoring of Point Pleasant area. Field agents advised to document all sightings with precise timestamps. DO NOT ENGAGE. Report immediately to Regional Director."
   },
   {
     id: "wampus-cat",
@@ -120,14 +108,8 @@ export const cryptids: Cryptid[] = [
         account: "My grandmother told me stories about the Wampus Cat - about the woman who was cursed. I never believed until I saw it with my own eyes. It killed two of our calves in one night. We found tracks - six-toed prints, each as big as my hand. The elders say it's a warning when the Wampus Cat returns."
       }
     ],
-    timeline: [
-      { year: "Pre-1800s", event: "Cherokee oral traditions establish Wampus Cat legend", location: "Cherokee territories" },
-      { year: "1920s", event: "First documented encounter by settlers", location: "Eastern Tennessee" },
-      { year: "1978", event: "Hunter's encounter with six-legged cat", location: "Cherokee National Forest" },
-      { year: "1995", event: "Livestock killings attributed to Wampus Cat", location: "Great Smoky Mountains" },
-      { year: "2012", event: "Trail camera captures unclear six-legged figure", location: "Eastern TN mountains" },
-      { year: "2023", event: "Recent sighting with photographic evidence", location: "Polk County, TN" }
-    ]
+    notableSightings: "Pre-1800s: Cherokee oral traditions establish Wampus Cat legend. 1920s: First documented encounter by settlers in Eastern Tennessee. 1978: Hunter's terrifying encounter with six-legged cat in Cherokee National Forest. 1995: Livestock killings attributed to Wampus Cat near Great Smoky Mountains. 2012: Trail camera captures unclear six-legged figure. 2023: Recent sighting with photographic evidence in Polk County, TN.",
+    bureauNotes: "CLASSIFICATION: APEX PREDATOR. Extreme caution advised. Subject displays territorial aggression and supernatural speed. Cherokee cultural advisors consulted - recommend respecting traditional boundaries. Livestock owners in affected areas have been provided cover story. Armed response authorized only in defense of human life."
   },
   {
     id: "moon-eyed-people",
@@ -162,14 +144,8 @@ export const cryptids: Cryptid[] = [
         account: "My grandfather's grandfather told stories of the Moon-Eyed People. They were here before us, building in stone. They couldn't bear the sun and lived in darkness. The old stories say they were driven west, but some believe they went underground, into the deep caves. Sometimes, on dark nights near the old stone walls, people still see them."
       }
     ],
-    timeline: [
-      { year: "Pre-1000 AD", event: "Moon-Eyed People allegedly inhabit region, build stone structures", location: "Appalachian region" },
-      { year: "1000s", event: "Cherokee oral traditions describe displacement of Moon-Eyed People", location: "Cherokee territories" },
-      { year: "1797", event: "First written account by Benjamin Smith Barton", location: "Western North Carolina" },
-      { year: "1920s", event: "Archaeological interest in pre-Cherokee stone structures", location: "North Carolina mountains" },
-      { year: "1987", event: "Anthropologist encounters pale humanoid figures", location: "Cherokee National Forest" },
-      { year: "2024", event: "Recent night sighting near ancient stone formation", location: "Murphy, NC" }
-    ]
+    notableSightings: "Pre-1000 AD: Moon-Eyed People allegedly inhabit region, build stone structures. 1000s: Cherokee oral traditions describe displacement of Moon-Eyed People. 1797: First written account by Benjamin Smith Barton. 1920s: Archaeological interest in pre-Cherokee stone structures increases. 1987: Anthropologist encounters pale humanoid figures in Cherokee National Forest. 2024: Recent night sighting near ancient stone formation in Murphy, NC.",
+    bureauNotes: "CLASSIFICATION: INDIGENOUS REMNANT. Non-hostile. Subject population appears to be surviving members of pre-Cherokee civilization. Photophobic condition confirmed. Bureau maintains protective surveillance of known habitation sites. Archaeological excavation requests to be denied under Cultural Preservation Protocol 7-C. Contact attempts NOT authorized."
   },
   {
     id: "skunk-ape",
@@ -204,14 +180,8 @@ export const cryptids: Cryptid[] = [
         account: "I've been tracking the Skunk Ape for years. That day, I finally got my chance. I was on my airboat when I saw it crossing through shallow water about 50 yards away. It was massive, walking on two legs like a man but covered in dark hair. I grabbed my camera and got several shots before it disappeared into the sawgrass. The smell lingered for hours."
       }
     ],
-    timeline: [
-      { year: "1818", event: "Early Spanish explorer accounts of 'devil monkeys'", location: "Florida" },
-      { year: "1960s", event: "Modern Skunk Ape reports begin to increase", location: "South Florida" },
-      { year: "1974", event: "Multiple sightings lead to organized searches", location: "Everglades" },
-      { year: "1998", event: "Dave Shealy captures video footage", location: "Ochopee, FL" },
-      { year: "2000", event: "Famous Myakka photographs taken", location: "Sarasota County, FL" },
-      { year: "2023", event: "Trail camera captures large bipedal figure", location: "Big Cypress Preserve" }
-    ]
+    notableSightings: "1818: Early Spanish explorer accounts of 'devil monkeys' in Florida. 1960s: Modern Skunk Ape reports begin to increase across South Florida. 1974: Multiple sightings lead to organized searches in Everglades. 1998: Dave Shealy captures video footage in Ochopee. 2000: Famous Myakka photographs taken in Sarasota County. 2023: Trail camera captures large bipedal figure in Big Cypress Preserve.",
+    bureauNotes: "CLASSIFICATION: PRIMATE UNKNOWN. Subject appears to be surviving population of undocumented great ape species. Distinctive odor useful for early detection. Florida Fish & Wildlife cooperating under Operation Swamp Watch. Public attribution to 'escaped exotic animals' effective. Capture attempts suspended after 1974 incident - observe and document only."
   },
   {
     id: "lizard-man",
@@ -246,14 +216,8 @@ export const cryptids: Cryptid[] = [
         account: "We woke up to our car alarm going off. When Tom went outside, the car was damaged - deep scratches and dents like something attacked it. The chrome was partially ripped off. We found three-toed tracks in the mud leading to the swamp. Our neighbor said he saw a large green creature the week before. We don't go near that swamp anymore."
       }
     ],
-    timeline: [
-      { year: "1988", event: "Christopher Davis encounter launches modern legend", location: "Scape Ore Swamp, SC" },
-      { year: "1988", event: "Multiple vehicle attacks reported in two-month period", location: "Lee County, SC" },
-      { year: "1990", event: "Sightings reported along Lynches River", location: "South Carolina" },
-      { year: "2008", event: "Couple reports sighting near swamp at night", location: "Bishopville, SC" },
-      { year: "2015", event: "Trail camera captures unclear bipedal figure", location: "Lee County, SC" },
-      { year: "2023", event: "Fresh three-toed tracks found near swamp", location: "Scape Ore Swamp" }
-    ]
+    notableSightings: "1988: Christopher Davis encounter launches modern legend at Scape Ore Swamp. Multiple vehicle attacks reported in two-month period across Lee County. 1990: Sightings reported along Lynches River. 2008: Couple reports sighting near swamp at night in Bishopville. 2015: Trail camera captures unclear bipedal figure. 2023: Fresh three-toed tracks found near Scape Ore Swamp.",
+    bureauNotes: "CLASSIFICATION: HOSTILE ENTITY. EXTREME CAUTION. Subject displays unprecedented aggression toward vehicles and humans. Possible territorial behavior centered on Scape Ore Swamp. Night travel through affected area strongly discouraged. Local law enforcement briefed under Protocol Red. Physical evidence (vehicle damage, tracks) to be collected and catalogued. Armed field teams on standby."
   },
   {
     id: "fouke-monster",
@@ -288,14 +252,8 @@ export const cryptids: Cryptid[] = [
         account: "My brother Bobby and I went out looking for that thing after it attacked their house. We tracked it to Boggy Creek. The smell was terrible - like a wet dog times a hundred. We heard it moving through the brush, breaking branches. Then we saw it - massive, covered in dark hair, walking upright. It let out this howl that made our blood run cold. We got out of there fast."
       }
     ],
-    timeline: [
-      { year: "1851", event: "First reported encounter in Arkansas bottomlands", location: "Miller County, AR" },
-      { year: "1946", event: "Sightings reported near Jonesville", location: "Arkansas" },
-      { year: "1971", event: "Famous attacks on Ford house", location: "Fouke, AR" },
-      { year: "1972", event: "Documentary film 'The Legend of Boggy Creek' released", location: "N/A" },
-      { year: "1997", event: "Renewed sightings lead to investigation", location: "Fouke area" },
-      { year: "2023", event: "Trail camera captures large bipedal figure", location: "Boggy Creek region" }
-    ]
+    notableSightings: "1851: First reported encounter in Arkansas bottomlands, Miller County. 1946: Sightings reported near Jonesville. 1971: Famous attacks on Ford house in Fouke, AR. 1972: Documentary film 'The Legend of Boggy Creek' brings national attention. 1997: Renewed sightings lead to investigation. 2023: Trail camera captures large bipedal figure in Boggy Creek region.",
+    bureauNotes: "CLASSIFICATION: PRIMATE UNKNOWN - AGGRESSIVE. Subject has demonstrated willingness to approach and attack human habitations. Unlike other Sasquatch-type entities, shows reduced fear of humans. Boggy Creek bottomlands designated Restricted Research Zone. Local tourism has complicated containment - cover story maintained via 'legend' narrative. Field agents deployed during high-activity periods."
   },
   {
     id: "tailypo",
@@ -330,14 +288,8 @@ export const cryptids: Cryptid[] = [
         account: "We heard scratching on our cabin walls for three nights straight. Each night, we'd hear this voice - raspy, inhuman - calling out 'Where's my tail, where's my tail.' On the third night, I saw it through the window. Small, dark, with these glowing eyes and a tail that seemed too long for its body. We left the next morning and never went back to that cabin."
       }
     ],
-    timeline: [
-      { year: "1800s", event: "Original legend established in Appalachian oral tradition", location: "Tennessee/North Carolina mountains" },
-      { year: "1920s", event: "First written versions of tale published", location: "Appalachia" },
-      { year: "1978", event: "Modern encounter reported near remote cabin", location: "Cocke County, TN" },
-      { year: "1990s", event: "Researchers collect multiple similar accounts", location: "Appalachian region" },
-      { year: "2015", event: "Hikers report hearing 'tailypo' calls", location: "Great Smoky Mountains" },
-      { year: "2024", event: "Recent sighting near isolated mountain cabin", location: "Eastern Tennessee" }
-    ]
+    notableSightings: "1800s: Original legend established in Appalachian oral tradition across Tennessee/North Carolina mountains. 1920s: First written versions of tale published. 1978: Modern encounter reported near remote cabin in Cocke County, TN. 1990s: Researchers collect multiple similar accounts across Appalachian region. 2015: Hikers report hearing 'tailypo' calls in Great Smoky Mountains. 2024: Recent sighting near isolated mountain cabin in Eastern Tennessee.",
+    bureauNotes: "CLASSIFICATION: PERSISTENCE ENTITY. Subject exhibits behavior consistent with obsessive retrieval patterns. Vocalizations confirmed by multiple independent witnesses. Bureau theory: possible psychic imprint phenomenon rather than biological entity. Remote cabin locations remain highest risk. Agents advised: if encounter occurs, DO NOT take any physical samples or souvenirs from subject. See Case File TLP-1889 for context."
   },
   {
     id: "grafton-monster",
@@ -372,14 +324,8 @@ export const cryptids: Cryptid[] = [
         account: "We interviewed multiple witnesses following the initial sighting. The descriptions were remarkably consistent - a tall, white, apparently headless figure. The witnesses were clearly shaken. Whatever they saw, it was real to them. The town was in an uproar for weeks. People were afraid to go out at night."
       }
     ],
-    timeline: [
-      { year: "1964", event: "First documented sighting by Robert Cockrell", location: "Grafton, WV" },
-      { year: "1964", event: "Multiple sightings in June and July", location: "Taylor County, WV" },
-      { year: "1965", event: "Sporadic reports continue", location: "Grafton area" },
-      { year: "1994", event: "Sighting reported near abandoned factory", location: "Grafton, WV" },
-      { year: "2015", event: "Late-night encounter on rural road", location: "Taylor County, WV" },
-      { year: "2023", event: "Recent sighting matches original description", location: "Near Grafton, WV" }
-    ]
+    notableSightings: "1964: First documented sighting by Robert Cockrell in Grafton, WV. Multiple sightings follow in June and July across Taylor County. 1965: Sporadic reports continue in Grafton area. 1994: Sighting reported near abandoned factory. 2015: Late-night encounter on rural road in Taylor County. 2023: Recent sighting matches original description near Grafton.",
+    bureauNotes: "CLASSIFICATION: ANOMALOUS HUMANOID. Non-aggressive despite fearsome appearance. Anatomical structure defies known biology - apparent 'headless' configuration requires further study. Subject demonstrates curiosity toward vehicles and human observers. No recorded attacks in 60+ years of documentation. Approach with caution but lethal force NOT authorized. Priority: photographic documentation of facial/sensory arrangement."
   },
   {
     id: "white-screamer",
@@ -414,13 +360,7 @@ export const cryptids: Cryptid[] = [
         account: "My husband and I were camping when we woke to this screaming. It sounded almost human but more primal, anguished. We looked outside and saw this pale white figure in the fog. It was hard to make out details but it seemed to be floating above the ground. The screaming went on for maybe two minutes, then it was gone. We packed up and left at first light."
       }
     ],
-    timeline: [
-      { year: "1920s", event: "Early accounts in Appalachian folklore", location: "Tennessee mountains" },
-      { year: "1950s", event: "Multiple hikers report mysterious screams", location: "Great Smoky Mountains" },
-      { year: "1982", event: "Hunter encounters white figure in mist", location: "Cades Cove, TN" },
-      { year: "1995", event: "Audio recording captures unexplained screams", location: "Appalachian Trail" },
-      { year: "2010", event: "Campers witness screaming white apparition", location: "Blue Ridge Parkway" },
-      { year: "2024", event: "Recent reports of early morning screams", location: "Roan Mountain, TN" }
-    ]
+    notableSightings: "1920s: Early accounts emerge in Appalachian folklore across Tennessee mountains. 1950s: Multiple hikers report mysterious screams in Great Smoky Mountains. 1982: Hunter encounters white figure in mist at Cades Cove. 1995: Audio recording captures unexplained screams along Appalachian Trail. 2010: Campers witness screaming white apparition near Blue Ridge Parkway. 2024: Recent reports of early morning screams at Roan Mountain, TN.",
+    bureauNotes: "CLASSIFICATION: ATMOSPHERIC PHENOMENON. Subject may represent intersection of wildlife and meteorological conditions, though biological origin not ruled out. Screams recorded at frequencies outside normal cervid range. Mist-association suggests possible dimensional aspect - cross-reference with Appalachian 'thin places' research. Audio capture remains priority. Witnesses report profound emotional response - psychological support protocols in place for affected field agents."
   }
 ];
