@@ -154,7 +154,7 @@ const Map = () => {
 
   // Get image URL for selected cryptid
   const selectedCryptidImage = selectedCryptid?.gridImage
-    ? urlFor(selectedCryptid.gridImage).width(64).height(64).url()
+    ? urlFor(selectedCryptid.gridImage).width(64).height(64).fit("crop").quality(55).url()
     : selectedCryptid?.slug?.current
       ? getStaticImagePath(selectedCryptid.slug.current, 'detail')
       : '';

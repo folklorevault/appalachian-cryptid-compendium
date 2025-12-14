@@ -27,14 +27,37 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     tags,
   } = cryptid;
 
-  // Get image URL - from Sanity if available, otherwise static fallback
+  // Responsive card image:
+  // - Keep bytes low on mobile by using srcset/sizes
+  // - Let Sanity serve modern formats via urlFor().auto('format') in src/lib/sanity.ts
+  const cardWidths = [320, 420, 520, 640] as const;
   const imageUrl = gridImage
-    ? urlFor(gridImage).width(600).height(900).url()
-    : getStaticImagePath(slug.current, 'grid');
+    ? urlFor(gridImage)
+        .width(420)
+        .height(630)
+        .fit("crop")
+        .quality(65)
+        .url()
+    : getStaticImagePath(slug.current, "grid");
+
+  const srcSet = gridImage
+    ? cardWidths
+        .map((w) => {
+          const h = Math.round(w * 1.5); // 2:3 aspect
+          const u = urlFor(gridImage)
+            .width(w)
+            .height(h)
+            .fit("crop")
+            .quality(65)
+            .url();
+          return `${u} ${w}w`;
+        })
+        .join(", ")
+    : undefined;
 
   // Low quality placeholder for blur-up effect (Sanity only)
   const blurUrl = gridImage
-    ? urlFor(gridImage).width(20).height(30).blur(10).url()
+    ? urlFor(gridImage).width(24).height(36).blur(12).quality(30).url()
     : undefined;
 
   const getDangerColor = () => {
@@ -78,6 +101,8 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
         )}
         <img
           src={imageUrl}
+          srcSet={srcSet}
+          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 400px"
           alt={imageAlt || name}
           loading="lazy"
           decoding="async"

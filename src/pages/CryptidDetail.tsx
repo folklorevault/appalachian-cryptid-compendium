@@ -14,9 +14,11 @@ import { getStaticImagePath } from "@/lib/sanity-provider";
 
 const CryptidDetail = () => {
   const { id } = useParams();
+  const routeId = typeof id === "string" ? id : undefined;
+  const safeSlugParam = routeId && /^[a-z0-9-]+$/i.test(routeId) ? routeId : undefined;
 
   // Fetch cryptid from Sanity (or static fallback)
-  const { data: cryptid, isLoading, error } = useCryptid(id);
+  const { data: cryptid, isLoading, error } = useCryptid(safeSlugParam);
 
   // Fetch related cryptids
   const { data: relatedCryptids = [] } = useRelatedCryptids(
@@ -27,12 +29,22 @@ const CryptidDetail = () => {
 
   // Get image URL - from Sanity if available, otherwise static fallback
   const imageUrl = cryptid?.image
-    ? urlFor(cryptid.image).width(800).height(1200).url()
-    : id ? getStaticImagePath(id, 'detail') : '';
+    ? urlFor(cryptid.image).width(800).height(1200).fit("crop").quality(75).url()
+    : safeSlugParam ? getStaticImagePath(safeSlugParam, 'detail') : '';
+
+  const heroSrcSet = cryptid?.image
+    ? [480, 640, 800, 960, 1120]
+        .map((w) => {
+          const h = Math.round(w * 1.5); // 2:3 aspect
+          const u = urlFor(cryptid.image).width(w).height(h).fit("crop").quality(75).url();
+          return `${u} ${w}w`;
+        })
+        .join(", ")
+    : undefined;
 
   // OG image - use wider format for social sharing
   const ogImageUrl = cryptid?.image
-    ? urlFor(cryptid.image).width(1200).height(630).fit('crop').url()
+    ? urlFor(cryptid.image).width(1200).height(630).fit('crop').quality(80).url()
     : `https://appalachiancryptid.com/og-image.png`;
 
   // Build SEO-optimized description with location context
@@ -46,7 +58,9 @@ const CryptidDetail = () => {
     title: cryptid ? `${cryptid.name} - ${cryptid.location} Cryptid` : undefined,
     description: seoDescription,
     image: ogImageUrl,
-    url: `https://appalachiancryptid.com/cryptid/${id}`,
+    url: cryptid?.slug?.current
+      ? `https://appalachiancryptid.com/cryptid/${encodeURIComponent(cryptid.slug.current)}`
+      : undefined,
     type: "article"
   });
 
@@ -129,6 +143,8 @@ const CryptidDetail = () => {
           <div className="relative aspect-[2/3] overflow-hidden rounded-lg vintage-frame">
             <img
               src={imageUrl}
+              srcSet={heroSrcSet}
+              sizes="(max-width: 1024px) 92vw, 800px"
               alt={cryptid.imageAlt || cryptid.name}
               loading="eager"
               decoding="async"
