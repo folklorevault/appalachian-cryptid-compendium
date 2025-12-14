@@ -10,9 +10,20 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 
+    <!-- DNS prefetch for third-party resources -->
+    <link rel="dns-prefetch" href="https://cdn.sanity.io">
+    <link rel="preconnect" href="https://cdn.sanity.io" crossorigin>
+
     <link
       rel="preload"
       href="/fonts/worksans-400-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    >
+    <link
+      rel="preload"
+      href="/fonts/worksans-600-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin

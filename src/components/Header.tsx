@@ -38,8 +38,10 @@ export const Header = ({ badge }: HeaderProps) => {
             <div className="flex items-center gap-4">
               <Link to="/" className="flex items-center gap-3">
                 <img
-                  src="/stampappalachiancryptidlogo.svg"
+                  src="/stampappalachiancryptid.webp"
                   alt="Appalachian Cryptid Field Guide"
+                  width="48"
+                  height="48"
                   className="h-10 w-10 sm:h-12 sm:w-12"
                 />
                 <h1 className="text-xl sm:text-2xl font-bold text-primary font-display tracking-tight">

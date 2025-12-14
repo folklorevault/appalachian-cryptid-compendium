@@ -24,8 +24,10 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
           <div>
             <div className="flex items-center gap-3 mb-3">
               <img
-                src="/stampappalachiancryptidlogo.svg"
+                src="/stampappalachiancryptid.webp"
                 alt="Appalachian Cryptid Field Guide"
+                width="48"
+                height="48"
                 className="h-12 w-12"
               />
               <h4 className="text-lg font-bold text-foreground font-display">
