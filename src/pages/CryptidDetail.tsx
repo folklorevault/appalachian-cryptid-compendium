@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
+import { BureauMemo } from "@/components/BureauMemo";
 import { ArrowLeft, MapPin, Eye, AlertTriangle, Loader2 } from "lucide-react";
 import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
 import { useSEO } from "@/hooks/use-seo";
@@ -254,7 +255,7 @@ const CryptidDetail = () => {
 
         {/* Notable Sightings & Bureau Notes */}
         {(cryptid.notableSightings || cryptid.bureauNotes) && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 items-start">
             {cryptid.notableSightings && (
               <Card className="border-2 border-border">
                 <CardContent className="p-6">
@@ -265,12 +266,11 @@ const CryptidDetail = () => {
             )}
 
             {cryptid.bureauNotes && (
-              <Card className="border-2 border-border border-primary/30 bg-primary/5">
-                <CardContent className="p-6">
-                  <h3 className="text-xs uppercase tracking-widest text-primary font-typewriter mb-3">Bureau Notes</h3>
-                  <p className="text-foreground/90 leading-relaxed whitespace-pre-line">{cryptid.bureauNotes}</p>
-                </CardContent>
-              </Card>
+              <BureauMemo
+                content={cryptid.bureauNotes}
+                cryptidName={cryptid.name}
+                caseNumber={cryptid.slug?.current?.toUpperCase().slice(0, 3) + "-" + (cryptid.sightings ?? 0).toString().padStart(3, '0')}
+              />
             )}
           </div>
         )}
