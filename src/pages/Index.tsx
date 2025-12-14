@@ -10,10 +10,14 @@ import { Link } from "react-router-dom";
 import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
 
+const INITIAL_VISIBLE = 6;
+const LOAD_MORE_COUNT = 6;
+
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [selectedDanger, setSelectedDanger] = useState<string>("all");
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
   // Fetch cryptids from Sanity (or static fallback)
   const { data: cryptids = [], isLoading, error } = useCryptids({
@@ -22,17 +26,43 @@ const Index = () => {
     search: searchQuery,
   });
 
-  // Additional client-side filtering for immediate search feedback
+  // Sort cryptids with Mothman pinned to top, then filter
   const filteredCryptids = useMemo(() => {
-    if (!searchQuery) return cryptids;
+    // Pin Mothman to the top
+    const sorted = [...cryptids].sort((a, b) => {
+      const aIsMothman = a.slug?.current === "mothman" || a.name.toLowerCase() === "mothman";
+      const bIsMothman = b.slug?.current === "mothman" || b.name.toLowerCase() === "mothman";
+      if (aIsMothman && !bIsMothman) return -1;
+      if (bIsMothman && !aIsMothman) return 1;
+      return 0;
+    });
+
+    if (!searchQuery) return sorted;
 
     const query = searchQuery.toLowerCase();
-    return cryptids.filter((cryptid) =>
+    return sorted.filter((cryptid) =>
       cryptid.name.toLowerCase().includes(query) ||
       cryptid.location.toLowerCase().includes(query) ||
       (cryptid.description?.toLowerCase().includes(query) ?? false)
     );
   }, [cryptids, searchQuery]);
+
+  // Slice to only show visible count
+  const visibleCryptids = useMemo(() => {
+    return filteredCryptids.slice(0, visibleCount);
+  }, [filteredCryptids, visibleCount]);
+
+  const hasMore = visibleCount < filteredCryptids.length;
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
+  };
+
+  // Reset visible count when filters change
+  const handleFilterChange = (setter: (value: string) => void, value: string) => {
+    setter(value);
+    setVisibleCount(INITIAL_VISIBLE);
+  };
 
   const regions = [
     { value: "all", label: "All Regions" },
@@ -129,7 +159,7 @@ const Index = () => {
                     key={region.value}
                     variant={selectedRegion === region.value ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setSelectedRegion(region.value)}
+                    onClick={() => handleFilterChange(setSelectedRegion, region.value)}
                     className={
                       selectedRegion === region.value
                         ? "bg-primary text-primary-foreground"
@@ -152,7 +182,7 @@ const Index = () => {
                     key={level.value}
                     variant={selectedDanger === level.value ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setSelectedDanger(level.value)}
+                    onClick={() => handleFilterChange(setSelectedDanger, level.value)}
                     className={
                       selectedDanger === level.value
                         ? "bg-secondary text-secondary-foreground"
@@ -171,7 +201,8 @@ const Index = () => {
                   "Loading creatures..."
                 ) : (
                   <>
-                    Showing <span className="text-primary font-bold">{filteredCryptids.length}</span> creatures in our field guide
+                    Showing <span className="text-primary font-bold">{visibleCryptids.length}</span> of{" "}
+                    <span className="text-primary font-bold">{filteredCryptids.length}</span> creatures in our field guide
                   </>
                 )}
               </p>
@@ -201,6 +232,7 @@ const Index = () => {
                   setSearchQuery("");
                   setSelectedRegion("all");
                   setSelectedDanger("all");
+                  setVisibleCount(INITIAL_VISIBLE);
                 }}
                 variant="outline"
                 className="mt-4 border-primary text-primary hover:bg-primary/10"
@@ -209,11 +241,28 @@ const Index = () => {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCryptids.map((cryptid) => (
-                <CryptidCard key={cryptid._id} cryptid={cryptid} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {visibleCryptids.map((cryptid) => (
+                  <CryptidCard key={cryptid._id} cryptid={cryptid} />
+                ))}
+              </div>
+              {hasMore && (
+                <div className="text-center mt-10">
+                  <Button
+                    onClick={handleLoadMore}
+                    size="lg"
+                    variant="outline"
+                    className="border-2 border-primary text-primary hover:bg-primary/10"
+                  >
+                    Load More Creatures
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {filteredCryptids.length - visibleCount} more to discover
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
