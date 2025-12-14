@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Eye } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
-import { getStaticImagePath } from "@/lib/sanity-provider";
 import type { SanityCryptidListItem } from "@/types/sanity";
 
 interface CryptidCardProps {
@@ -31,34 +30,34 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
   // - Keep bytes low on mobile by using srcset/sizes
   // - Let Sanity serve modern formats via urlFor().auto('format') in src/lib/sanity.ts
   const cardWidths = [320, 420, 520, 640] as const;
-  const imageUrl = gridImage
-    ? urlFor(gridImage)
-        .width(420)
-        .height(630)
+
+  // Only render if gridImage is available from Sanity
+  if (!gridImage) {
+    return null;
+  }
+
+  const imageUrl = urlFor(gridImage)
+    .width(420)
+    .height(630)
+    .fit("crop")
+    .quality(65)
+    .url();
+
+  const srcSet = cardWidths
+    .map((w) => {
+      const h = Math.round(w * 1.5); // 2:3 aspect
+      const u = urlFor(gridImage)
+        .width(w)
+        .height(h)
         .fit("crop")
         .quality(65)
-        .url()
-    : getStaticImagePath(slug.current, "grid");
+        .url();
+      return `${u} ${w}w`;
+    })
+    .join(", ");
 
-  const srcSet = gridImage
-    ? cardWidths
-        .map((w) => {
-          const h = Math.round(w * 1.5); // 2:3 aspect
-          const u = urlFor(gridImage)
-            .width(w)
-            .height(h)
-            .fit("crop")
-            .quality(65)
-            .url();
-          return `${u} ${w}w`;
-        })
-        .join(", ")
-    : undefined;
-
-  // Low quality placeholder for blur-up effect (Sanity only)
-  const blurUrl = gridImage
-    ? urlFor(gridImage).width(24).height(36).blur(12).quality(30).url()
-    : undefined;
+  // Low quality placeholder for blur-up effect
+  const blurUrl = urlFor(gridImage).width(24).height(36).blur(12).quality(30).url();
 
   const getDangerColor = () => {
     switch (dangerLevel) {
@@ -91,7 +90,7 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
         {/* Blur placeholder */}
-        {blurUrl && !imageLoaded && (
+        {!imageLoaded && (
           <img
             src={blurUrl}
             alt=""

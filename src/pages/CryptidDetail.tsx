@@ -10,7 +10,6 @@ import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } fr
 import { useSEO } from "@/hooks/use-seo";
 import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
-import { getStaticImagePath } from "@/lib/sanity-provider";
 
 const CryptidDetail = () => {
   const { id } = useParams();
@@ -27,10 +26,10 @@ const CryptidDetail = () => {
     cryptid?.dangerLevel
   );
 
-  // Get image URL - from Sanity if available, otherwise static fallback
+  // Get image URL from Sanity
   const imageUrl = cryptid?.image
     ? urlFor(cryptid.image).width(800).height(1200).fit("crop").quality(75).url()
-    : safeSlugParam ? getStaticImagePath(safeSlugParam, 'detail') : '';
+    : '';
 
   const heroSrcSet = cryptid?.image
     ? [480, 640, 800, 960, 1120]
@@ -296,10 +295,8 @@ const CryptidDetail = () => {
           <div className="mb-8 border-t border-border pt-8">
             <h2 className="text-2xl font-bold text-foreground font-display mb-6">Related Case Files</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {relatedCryptids.map((related) => {
-                const relatedImageUrl = related.gridImage
-                  ? urlFor(related.gridImage).width(400).height(400).url()
-                  : getStaticImagePath(related.slug?.current || '', 'grid');
+              {relatedCryptids.filter(related => related.gridImage).map((related) => {
+                const relatedImageUrl = urlFor(related.gridImage).width(400).height(400).url();
 
                 return (
                   <Link

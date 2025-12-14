@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Key, Loader2 } from "lucide-react";
 import { useMapCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
-import { getStaticImagePath } from "@/lib/sanity-provider";
 
 const getDangerColor = (level: string) => {
   switch (level) {
@@ -155,9 +154,7 @@ const Map = () => {
   // Get image URL for selected cryptid
   const selectedCryptidImage = selectedCryptid?.gridImage
     ? urlFor(selectedCryptid.gridImage).width(64).height(64).fit("crop").quality(55).url()
-    : selectedCryptid?.slug?.current
-      ? getStaticImagePath(selectedCryptid.slug.current, 'detail')
-      : '';
+    : '';
 
   return (
     <div className="min-h-screen bg-background">
@@ -269,15 +266,17 @@ const Map = () => {
                     SELECTED CASE FILE
                   </div>
                   <div className="flex items-start gap-3">
-                    <img
-                      src={selectedCryptidImage}
-                      alt={selectedCryptid.name}
-                      loading="lazy"
-                      decoding="async"
-                      width="64"
-                      height="64"
-                      className="w-16 h-16 object-cover rounded border border-border"
-                    />
+                    {selectedCryptidImage && (
+                      <img
+                        src={selectedCryptidImage}
+                        alt={selectedCryptid.name}
+                        loading="lazy"
+                        decoding="async"
+                        width="64"
+                        height="64"
+                        className="w-16 h-16 object-cover rounded border border-border"
+                      />
+                    )}
                     <div>
                       <h3 className="font-bold text-foreground">
                         {selectedCryptid.name}
