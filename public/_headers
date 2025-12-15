@@ -10,7 +10,7 @@
 /favicon_io/*
   Cache-Control: public, max-age=31536000, immutable
 
-/og-image.png
+/og-image.jpg
   Cache-Control: public, max-age=31536000, immutable
 
 /site.webmanifest

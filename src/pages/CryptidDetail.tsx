@@ -44,7 +44,7 @@ const CryptidDetail = () => {
   // OG image - use wider format for social sharing
   const ogImageUrl = cryptid?.image
     ? urlFor(cryptid.image).width(1200).height(630).fit('crop').quality(80).url()
-    : `https://appalachiancryptid.com/og-image.png`;
+    : `https://appalachiancryptid.com/og-image.jpg`;
 
   // Build SEO-optimized description with location context
   // Prefer subhead for concise intro, fall back to description

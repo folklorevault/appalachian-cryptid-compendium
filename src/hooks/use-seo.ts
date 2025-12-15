@@ -21,7 +21,7 @@ export function useSEO({
     const baseDescription =
       "Complete list of Appalachian cryptids, monsters, and strange creatures. Browse documented sightings of Mothman, Wampus Cat, and more from the mountains and hollers of the American South.";
     const baseUrl = "https://appalachiancryptid.com";
-    const baseImage = `${baseUrl}/og-image.png`;
+    const baseImage = `${baseUrl}/og-image.jpg`;
 
     // Update document title
     document.title = title ? `${title} | ${baseTitle}` : baseTitle;

@@ -132,7 +132,7 @@ export function createCryptidArticleSchema(cryptid: {
       url: "https://appalachiancryptid.com",
       logo: {
         "@type": "ImageObject",
-        url: "https://appalachiancryptid.com/og-image.png",
+        url: "https://appalachiancryptid.com/og-image.jpg",
       },
     },
     mainEntityOfPage: cryptid.slug ? {
