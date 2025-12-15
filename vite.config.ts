@@ -17,6 +17,10 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    // Enable CSS code splitting for better performance
+    cssCodeSplit: true,
+    // Increase chunk size warning limit (we're already chunking appropriately)
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
