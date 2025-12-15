@@ -27,7 +27,7 @@ const About = () => {
         <div className="container mx-auto max-w-4xl">
           <div className="text-center space-y-4 mb-12">
             <img
-              src="/stampappalachiancryptidlogo.svg"
+              src="/appalachian-cryptid-logo.svg"
               alt="Appalachian Cryptid Field Guide"
               className="h-60 w-60 mx-auto mb-4"
             />
