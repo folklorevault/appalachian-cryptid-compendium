@@ -28,14 +28,14 @@ const CryptidDetail = () => {
 
   // Get image URL from Sanity
   const imageUrl = cryptid?.image
-    ? urlFor(cryptid.image).width(800).height(1200).fit("crop").quality(75).url()
+    ? urlFor(cryptid.image).width(800).height(1200).fit("crop").quality(70).url()
     : '';
 
   const heroSrcSet = cryptid?.image
-    ? [480, 640, 800, 960, 1120]
+    ? [480, 640, 800, 960]
         .map((w) => {
           const h = Math.round(w * 1.5); // 2:3 aspect
-          const u = urlFor(cryptid.image).width(w).height(h).fit("crop").quality(75).url();
+          const u = urlFor(cryptid.image).width(w).height(h).fit("crop").quality(70).url();
           return `${u} ${w}w`;
         })
         .join(", ")
