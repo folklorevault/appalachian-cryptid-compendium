@@ -79,19 +79,6 @@ export const BureauMemo = ({ content, cryptidName, caseNumber }: BureauMemoProps
           {content}
         </div>
 
-        {/* Bureau Seal/Logo Stamp */}
-        <div className="absolute bottom-12 right-6 z-10 pointer-events-none" aria-hidden="true">
-          <img
-            src="/appalachian-cryptid-logo.webp"
-            alt=""
-            className="w-24 h-24 opacity-[0.15] sepia saturate-0"
-            style={{
-              transform: "rotate(8deg)",
-              filter: "sepia(100%) saturate(0%) brightness(0.4)"
-            }}
-          />
-        </div>
-
         {/* Classification Footer */}
         <div className="mt-6 pt-3 border-t border-dashed border-foreground/20">
           <p className="memo-footer">

@@ -29,7 +29,8 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
   // Responsive card image:
   // - Keep bytes low on mobile by using srcset/sizes
   // - Let Sanity serve modern formats via urlFor().auto('format') in src/lib/sanity.ts
-  const cardWidths = [320, 420, 540] as const;
+  // - Grid is 1 col mobile, 2 cols tablet, 3 cols desktop
+  const cardWidths = [320, 400, 480] as const;
 
   // Only render if gridImage is available from Sanity
   if (!gridImage) {
@@ -37,8 +38,8 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
   }
 
   const imageUrl = urlFor(gridImage)
-    .width(420)
-    .height(630)
+    .width(400)
+    .height(600)
     .fit("crop")
     .quality(60)
     .url();
@@ -101,12 +102,12 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
         <img
           src={imageUrl}
           srcSet={srcSet}
-          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 420px"
+          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
           alt={imageAlt || name}
           loading="lazy"
           decoding="async"
-          width="420"
-          height="630"
+          width="400"
+          height="600"
           onLoad={() => setImageLoaded(true)}
           className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
