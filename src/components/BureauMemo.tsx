@@ -82,7 +82,7 @@ export const BureauMemo = ({ content, cryptidName, caseNumber }: BureauMemoProps
         {/* Bureau Seal/Logo Stamp */}
         <div className="absolute bottom-12 right-6 z-10 pointer-events-none" aria-hidden="true">
           <img
-            src="/appalachian-cryptid-logo.svg"
+            src="/appalachian-cryptid-logo.webp"
             alt=""
             className="w-24 h-24 opacity-[0.15] sepia saturate-0"
             style={{
