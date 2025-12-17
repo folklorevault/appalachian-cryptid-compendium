@@ -95,7 +95,8 @@ API routes for sighting reports are file-based in the `functions/api/` directory
 - `functions/api/auth.ts` → `POST /api/auth` (login), `GET /api/auth` (verify)
 - `functions/api/upload.ts` → `POST /api/upload` (image uploads to R2)
 - `functions/api/images/[[path]].ts` → `GET /api/images/*` (serve **optimized** images from R2)
-- `functions/api/analytics.ts` → `POST /api/analytics` (track events), `GET /api/analytics` (retrieve data, admin-only)
+- `functions/api/analytics.ts` → `POST /api/analytics` (track events with dual-write to Analytics Engine + D1), `GET /api/analytics` (info)
+- `functions/api/analytics/stats.ts` → `GET /api/analytics/stats` (retrieve dashboard stats from D1, admin-only)
 - `functions/api/cache/purge.ts` → `POST /api/cache/purge` (clear cache, admin-only)
 - `functions/_middleware.ts` → Global middleware for caching, SEO headers, and edge optimization
 - `functions/api/_shared.ts` → Shared utilities, types, and helpers
@@ -104,9 +105,10 @@ Note: Cryptid data is now managed via Sanity CMS; the D1 cryptids tables are dep
 
 ### Database Schema
 
-The D1 database schema (`db/schema.sql`) is used for:
+The D1 database schema (`db/schema.sql` and `db/analytics-schema.sql`) is used for:
 
 - `sighting_reports`: User-submitted sighting reports (pending admin review)
+- `analytics`: Analytics events for admin dashboard (dual-written with Analytics Engine)
 
 ### Authentication
 
@@ -192,17 +194,20 @@ Images served from `/api/images/*` support automatic optimization via query para
 
 ### Analytics
 
-Privacy-focused analytics are automatically tracked for:
+Privacy-focused analytics with **dual-write strategy**:
+- **Writes to**: Cloudflare Analytics Engine (long-term, unlimited scale) + D1 (dashboard queries)
 - **Page views**: All cryptid detail pages and homepage
 - **Search queries**: What users search for (debounced)
 - **Filters**: Region and danger level filter usage
 - **Sighting submissions**: Successful sighting report submissions
 
-Analytics data is stored in D1 and accessible via the admin endpoint:
-
+**Access analytics:**
 ```bash
+# Dashboard stats (from D1)
 curl -H "Authorization: Bearer YOUR_ADMIN_KEY" \
-  https://your-domain.com/api/analytics
+  https://your-domain.com/api/analytics/stats
+
+# Or use the admin dashboard at /admin/analytics
 ```
 
 **Client-side usage:**

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp, Search, Filter, Eye, FileText, RefreshCw, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getToken } from "@/lib/api";
 
 interface AnalyticsStats {
   totals: {
@@ -52,7 +53,7 @@ const Analytics = () => {
     setError(null);
 
     try {
-      const token = localStorage.getItem("admin_token");
+      const token = getToken();
       if (!token) {
         setError("Not authenticated. Please log in.");
         setLoading(false);
