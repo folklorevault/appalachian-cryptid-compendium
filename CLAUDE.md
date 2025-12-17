@@ -44,11 +44,15 @@ wrangler d1 create cryptid-db
 # Run database migrations (apply schema)
 wrangler d1 execute cryptid-db --local --file=./db/schema.sql
 
+# Run analytics table migration
+wrangler d1 execute cryptid-db --local --file=./db/analytics-schema.sql
+
 # Query the database locally
 wrangler d1 execute cryptid-db --local --command="SELECT * FROM cryptids"
 
 # Deploy database to production
 wrangler d1 execute cryptid-db --file=./db/schema.sql
+wrangler d1 execute cryptid-db --file=./db/analytics-schema.sql
 
 # Create R2 bucket for image storage
 wrangler r2 bucket create cryptid-images
@@ -90,7 +94,10 @@ API routes for sighting reports are file-based in the `functions/api/` directory
 - `functions/api/sightings/[id].ts` → `PUT /api/sightings/:id`, `DELETE /api/sightings/:id`
 - `functions/api/auth.ts` → `POST /api/auth` (login), `GET /api/auth` (verify)
 - `functions/api/upload.ts` → `POST /api/upload` (image uploads to R2)
-- `functions/api/images/[[path]].ts` → `GET /api/images/*` (serve images from R2)
+- `functions/api/images/[[path]].ts` → `GET /api/images/*` (serve **optimized** images from R2)
+- `functions/api/analytics.ts` → `POST /api/analytics` (track events), `GET /api/analytics` (retrieve data, admin-only)
+- `functions/api/cache/purge.ts` → `POST /api/cache/purge` (clear cache, admin-only)
+- `functions/_middleware.ts` → Global middleware for caching, SEO headers, and edge optimization
 - `functions/api/_shared.ts` → Shared utilities, types, and helpers
 
 Note: Cryptid data is now managed via Sanity CMS; the D1 cryptids tables are deprecated.
@@ -128,6 +135,9 @@ Admin authentication uses a simple bearer token system:
 4. **Report Sightings**: Public form for submitting new sighting reports
 5. **Admin Panel**: Review and moderate user-submitted sighting reports
 6. **Sanity Studio**: Full CMS for managing cryptid content with testimonies and timeline events
+7. **Image Optimization**: Automatic image resizing, compression, and format conversion via Cloudflare Workers
+8. **Analytics**: Privacy-focused analytics tracking page views, cryptid popularity, and user interactions
+9. **Edge Caching**: Cloudflare edge caching for fast page loads worldwide
 
 ## Security Practices
 
@@ -160,3 +170,81 @@ To configure Sanity CMS:
 **IMPORTANT**: Always use `sanity/appalachian-cryptid/` directory for Sanity commands, NOT `sanity/`.
 
 The frontend will fall back to static data if Sanity is not configured.
+
+## Cloudflare Workers Features
+
+This project leverages several Cloudflare Workers features for performance and analytics. See `CLOUDFLARE-FEATURES.md` for full documentation.
+
+### Image Optimization
+
+Images served from `/api/images/*` support automatic optimization via query parameters:
+
+```tsx
+// Example: 800x800 WebP at 85% quality
+<img src="/api/images/mothman.jpg?w=800&h=800&f=webp&q=85" />
+```
+
+**Parameters:**
+- `w` - Width in pixels
+- `h` - Height in pixels
+- `q` - Quality (1-100, default: 85)
+- `f` - Format (webp, avif, jpeg, png)
+
+### Analytics
+
+Privacy-focused analytics are automatically tracked for:
+- **Page views**: All cryptid detail pages and homepage
+- **Search queries**: What users search for (debounced)
+- **Filters**: Region and danger level filter usage
+- **Sighting submissions**: Successful sighting report submissions
+
+Analytics data is stored in D1 and accessible via the admin endpoint:
+
+```bash
+curl -H "Authorization: Bearer YOUR_ADMIN_KEY" \
+  https://your-domain.com/api/analytics
+```
+
+**Client-side usage:**
+```tsx
+import { analytics } from '@/lib/analytics';
+
+// Track custom event
+analytics.trackEvent('button_clicked', { button: 'load_more' });
+
+// Track cryptid view (already integrated in CryptidDetail.tsx)
+analytics.trackCryptidView(slug, name);
+```
+
+### Edge Caching
+
+Automatic caching is configured via `functions/_middleware.ts`:
+- **Homepage**: 30 minutes
+- **Cryptid detail pages**: 1 hour
+- **Images**: 1 year (immutable)
+
+All responses include an `X-Cache` header (`HIT` or `MISS`).
+
+**Purge cache after content updates:**
+```bash
+curl -X POST \
+  -H "Authorization: Bearer YOUR_ADMIN_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"path": "/cryptids/mothman"}' \
+  https://your-domain.com/api/cache/purge
+```
+
+### SEO & Performance
+
+The middleware automatically adds:
+- Security headers (X-Frame-Options, X-Content-Type-Options, etc.)
+- Cache-Control headers for optimal performance
+- Edge rendering for faster worldwide delivery
+
+**Best Practices:**
+1. Always use optimized images with `?w=&f=webp` parameters
+2. Purge cache after publishing new cryptids in Sanity
+3. Monitor analytics for popular content
+4. Check `X-Cache` headers in Network tab to verify caching
+
+For complete documentation, see `CLOUDFLARE-FEATURES.md`.

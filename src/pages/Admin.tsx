@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ import {
   X,
   Loader2,
   ExternalLink,
+  BarChart3,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -249,29 +251,52 @@ const Admin = () => {
           </Button>
         </div>
 
-        {/* Sanity Studio Link */}
-        <Card className="border-2 border-primary/50 mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-foreground">Manage Cryptids</h3>
-                <p className="text-sm text-muted-foreground">
-                  Add, edit, and manage cryptid entries with testimonies, notable sightings, and bureau notes in Sanity Studio.
-                </p>
+        {/* Admin Tools */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          {/* Sanity Studio Link */}
+          <Card className="border-2 border-primary/50">
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div>
+                  <h3 className="font-bold text-foreground">Manage Cryptids</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Add, edit, and manage cryptid entries with testimonies, notable sightings, and bureau notes in Sanity Studio.
+                  </p>
+                </div>
+                <a
+                  href="https://cryptid.sanity.studio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button className="w-full bg-primary text-primary-foreground">
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Open Sanity Studio
+                  </Button>
+                </a>
               </div>
-              <a
-                href="https://cryptid.sanity.studio"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button className="bg-primary text-primary-foreground">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open Sanity Studio
-                </Button>
-              </a>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+
+          {/* Analytics Dashboard Link */}
+          <Card className="border-2 border-accent/50">
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div>
+                  <h3 className="font-bold text-foreground">Analytics Dashboard</h3>
+                  <p className="text-sm text-muted-foreground">
+                    View page views, popular cryptids, search queries, and visitor activity tracked by Cloudflare analytics.
+                  </p>
+                </div>
+                <Link to="/admin/analytics">
+                  <Button className="w-full bg-accent text-accent-foreground">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    View Analytics
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Sighting Reports Section */}
         <div className="space-y-4">

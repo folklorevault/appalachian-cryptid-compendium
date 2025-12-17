@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } fr
 import { useSEO } from "@/hooks/use-seo";
 import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
+import { analytics } from "@/lib/analytics";
 
 const CryptidDetail = () => {
   const { id } = useParams();
@@ -62,6 +64,16 @@ const CryptidDetail = () => {
       : undefined,
     type: "article"
   });
+
+  // Track cryptid view with analytics
+  useEffect(() => {
+    if (cryptid) {
+      analytics.trackCryptidView(
+        cryptid.slug?.current || cryptid.name.toLowerCase(),
+        cryptid.name
+      );
+    }
+  }, [cryptid]);
 
   if (isLoading) {
     return (

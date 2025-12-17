@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { CryptidCard } from "@/components/CryptidCard";
 import { CryptidCardSkeleton } from "@/components/CryptidCardSkeleton";
 import { Header } from "@/components/Header";
@@ -9,6 +9,7 @@ import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
+import { analytics } from "@/lib/analytics";
 
 const INITIAL_VISIBLE = 6;
 const LOAD_MORE_COUNT = 6;
@@ -56,6 +57,10 @@ const Index = () => {
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
+    analytics.trackEvent("load_more_cryptids", {
+      visible_count: visibleCount + LOAD_MORE_COUNT,
+      total: filteredCryptids.length,
+    });
   };
 
   // Reset visible count when filters change
@@ -63,6 +68,30 @@ const Index = () => {
     setter(value);
     setVisibleCount(INITIAL_VISIBLE);
   };
+
+  // Track search queries (with debounce)
+  useEffect(() => {
+    if (searchQuery) {
+      const timeout = setTimeout(() => {
+        analytics.trackEvent("search", {
+          query: searchQuery,
+          results: filteredCryptids.length,
+        });
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [searchQuery, filteredCryptids.length]);
+
+  // Track filter usage
+  useEffect(() => {
+    if (selectedRegion !== "all" || selectedDanger !== "all") {
+      analytics.trackEvent("filter_applied", {
+        region: selectedRegion,
+        danger: selectedDanger,
+        results: filteredCryptids.length,
+      });
+    }
+  }, [selectedRegion, selectedDanger, filteredCryptids.length]);
 
   const regions = [
     { value: "all", label: "All Regions" },

@@ -18,6 +18,7 @@ import {
 import { ArrowLeft, Upload, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSubmitSighting } from "@/hooks/use-sightings";
+import { analytics } from "@/lib/analytics";
 
 interface FormErrors {
   witnessName?: string;
@@ -164,6 +165,13 @@ const ReportSighting = () => {
         description: "Thank you for your submission. Our research team will review your sighting report.",
       });
 
+      // Track successful sighting submission
+      analytics.trackEvent("sighting_submitted", {
+        creature: formData.creatureName || "unknown",
+        state: formData.state,
+        has_photo: !!photoPreview,
+      });
+
       // Reset form
       setFormData({
         witnessName: "",
@@ -178,6 +186,7 @@ const ReportSighting = () => {
         behavior: "",
       });
       setPhotoPreview(null);
+      setTouched({});
     } catch (error) {
       toast({
         title: "Submission Failed",

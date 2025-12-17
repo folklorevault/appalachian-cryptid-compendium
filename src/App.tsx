@@ -12,6 +12,7 @@ const About = lazy(() => import("./pages/About"));
 const Map = lazy(() => import("./pages/Map"));
 const ReportSighting = lazy(() => import("./pages/ReportSighting"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Analytics = lazy(() => import("./pages/Analytics"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/map" element={<Map />} />
             <Route path="/report" element={<ReportSighting />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/analytics" element={<Analytics />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
