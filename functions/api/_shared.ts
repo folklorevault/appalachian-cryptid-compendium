@@ -3,6 +3,7 @@
 export interface Env {
   DB: D1Database;
   IMAGES: R2Bucket;
+  ANALYTICS_ENGINE: AnalyticsEngineDataset;
   ADMIN_API_KEY?: string;
 }
 

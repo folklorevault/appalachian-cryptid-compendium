@@ -1,4 +1,4 @@
-// POST /api/analytics - Track page views and events
+// POST /api/analytics - Track page views and events with Cloudflare Analytics Engine
 
 import { Env, errorResponse, handleOptions, corsHeaders } from "./_shared";
 
@@ -17,23 +17,27 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return errorResponse("Event and page are required", 400);
     }
 
-    // Use Cloudflare Analytics Engine (if configured)
-    // This requires the analytics_engine binding in wrangler.toml
-    if (env.ANALYTICS) {
-      await env.ANALYTICS.writeDataPoint({
-        blobs: [event, page, cryptid || "", referrer || "", userAgent || ""],
-        doubles: [Date.now()],
-        indexes: [page], // Index by page for easy querying
+    // Write to Cloudflare Analytics Engine
+    // Analytics Engine stores data points with:
+    // - blobs: array of strings (up to 20)
+    // - doubles: array of numbers (up to 20)
+    // - indexes: array of strings for indexing (up to 10)
+    if (env.ANALYTICS_ENGINE) {
+      await env.ANALYTICS_ENGINE.writeDataPoint({
+        // Store string data as blobs
+        blobs: [
+          event,                    // blob1: event type (page_view, search, filter, etc.)
+          page,                     // blob2: page path
+          cryptid || "",            // blob3: cryptid name/slug
+          referrer || "",           // blob4: referrer URL
+          userAgent || "",          // blob5: user agent
+        ],
+        // Store numeric data as doubles
+        doubles: [Date.now()],      // double1: timestamp
+        // Index by page for easy querying
+        indexes: [page],
       });
     }
-
-    // Also log to console for debugging
-    console.log("Analytics:", {
-      event,
-      page,
-      cryptid,
-      timestamp: new Date().toISOString(),
-    });
 
     return new Response(
       JSON.stringify({ success: true }),
@@ -52,6 +56,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 };
 
 // GET /api/analytics - Retrieve analytics data (admin only)
+// Note: For detailed analytics, use the Cloudflare Dashboard:
+// https://dash.cloudflare.com -> Analytics Engine -> cryptid_analytics
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env, request } = context;
 
@@ -64,24 +70,34 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       return errorResponse("Unauthorized", 401);
     }
 
-    // Query popular cryptids from D1
-    const stmt = await env.DB.prepare(`
-      SELECT
-        page,
-        COUNT(*) as views,
-        MAX(timestamp) as last_viewed
-      FROM analytics
-      WHERE page LIKE '/cryptids/%'
-      GROUP BY page
-      ORDER BY views DESC
-      LIMIT 10
-    `);
-
-    const { results } = await stmt.all();
-
+    // Analytics Engine doesn't support direct SQL queries from Workers
+    // You need to use the Cloudflare API or Dashboard to query data
+    // For now, return a message directing admins to the dashboard
     return new Response(
       JSON.stringify({
-        popular_cryptids: results,
+        message: "Analytics data is available in the Cloudflare Dashboard",
+        dashboard_url: "https://dash.cloudflare.com",
+        instructions: [
+          "1. Go to Workers & Pages",
+          "2. Select your project",
+          "3. Go to Analytics Engine",
+          "4. Select 'cryptid_analytics' dataset",
+          "5. Run SQL queries or view visualizations"
+        ],
+        example_queries: [
+          {
+            description: "Most viewed cryptids (last 7 days)",
+            sql: `SELECT blob3 as cryptid, COUNT(*) as views FROM cryptid_analytics WHERE blob1 = 'page_view' AND blob3 != '' AND timestamp > NOW() - INTERVAL '7' DAY GROUP BY blob3 ORDER BY views DESC LIMIT 10`
+          },
+          {
+            description: "Page views by path (last 24 hours)",
+            sql: `SELECT blob2 as page, COUNT(*) as views FROM cryptid_analytics WHERE blob1 = 'page_view' AND timestamp > NOW() - INTERVAL '1' DAY GROUP BY blob2 ORDER BY views DESC`
+          },
+          {
+            description: "Total events by type",
+            sql: `SELECT blob1 as event, COUNT(*) as count FROM cryptid_analytics GROUP BY blob1 ORDER BY count DESC`
+          }
+        ],
         generated_at: new Date().toISOString(),
       }),
       {

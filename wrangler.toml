@@ -19,10 +19,10 @@ database_id = "342726f9-dea9-41ce-888d-1a5a138e541c"
 binding = "IMAGES"
 bucket_name = "cryptid-images"
 
-# Analytics Engine (optional - for advanced analytics)
-# Uncomment to enable Analytics Engine tracking
-# [[analytics_engine_datasets]]
-# binding = "ANALYTICS"
+# Analytics Engine for tracking page views and events
+[[analytics_engine_datasets]]
+binding = "ANALYTICS_ENGINE"
+dataset = "cryptid_analytics"
 
 # Environment variables
 [vars]
