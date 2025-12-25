@@ -15,7 +15,7 @@ export interface Cryptid {
   location: string;
   lastSighting: string;
   dangerLevel: "Low" | "Medium" | "High";
-  sightings: number;
+  firstDocumented?: string;
   description: string;
   image: string;
   gridImage: string;
@@ -39,7 +39,7 @@ export const cryptids: Cryptid[] = [
     location: "Point Pleasant, West Virginia",
     lastSighting: "November 2023",
     dangerLevel: "Medium",
-    sightings: 127,
+    firstDocumented: "1966",
     description: "Large humanoid creature with massive wings and glowing red eyes. Often appears before disasters. Witnesses report a chilling screech and an overwhelming sense of dread.",
     image: "/cryptids/mothman.webp",
     gridImage: "/cryptids/mothmangrid.webp",
@@ -82,7 +82,6 @@ export const cryptids: Cryptid[] = [
     location: "Eastern Tennessee",
     lastSighting: "August 2023",
     dangerLevel: "High",
-    sightings: 89,
     description: "Six-legged feline creature of Cherokee legend. Known for supernatural speed and yellowish-green eyes that glow in darkness. Extremely territorial and aggressive when threatened.",
     image: "/cryptids/wampuscat.webp",
     gridImage: "/cryptids/wampuscatgrid.webp",
@@ -118,7 +117,6 @@ export const cryptids: Cryptid[] = [
     location: "Cherokee National Forest, North Carolina",
     lastSighting: "March 2024",
     dangerLevel: "Low",
-    sightings: 34,
     description: "Pale-skinned nocturnal humanoids with large, light-sensitive eyes. Cherokee legends describe them as peaceful but elusive beings who built ancient stone structures.",
     image: "/cryptids/mooneyedperson.webp",
     gridImage: "/cryptids/mooneyedgrid.webp",
@@ -154,7 +152,6 @@ export const cryptids: Cryptid[] = [
     location: "Everglades, Florida",
     lastSighting: "December 2023",
     dangerLevel: "Medium",
-    sightings: 156,
     description: "Florida's answer to Bigfoot. Bipedal ape-like creature covered in reddish-brown hair. Named for its powerful, sulfurous odor that announces its presence from hundreds of feet away.",
     image: "/cryptids/skunkape.webp",
     gridImage: "/cryptids/skunkapegrid.webp",
@@ -190,7 +187,6 @@ export const cryptids: Cryptid[] = [
     location: "Scape Ore Swamp, South Carolina",
     lastSighting: "July 2023",
     dangerLevel: "High",
-    sightings: 67,
     description: "Seven-foot tall reptilian humanoid with green scaly skin and three-fingered hands. Known for aggressive behavior and superhuman strength. Multiple vehicle attacks documented.",
     image: "/cryptids/lizardman.webp",
     gridImage: "/cryptids/lizardmangrid.webp",
@@ -226,7 +222,6 @@ export const cryptids: Cryptid[] = [
     location: "Fouke, Arkansas",
     lastSighting: "October 2023",
     dangerLevel: "Medium",
-    sightings: 93,
     description: "Massive ape-like creature standing 7-10 feet tall. Covered in dark hair with broad shoulders and long arms. Leaves three-toed tracks and emits foul odor.",
     image: "/cryptids/foukemonster.webp",
     gridImage: "/cryptids/foukemonstergrid.webp",
@@ -262,7 +257,6 @@ export const cryptids: Cryptid[] = [
     location: "Appalachian Mountains",
     lastSighting: "February 2024",
     dangerLevel: "Medium",
-    sightings: 52,
     description: "Small, cat-like creature with yellow eyes and a distinctive long tail. Legend tells of its relentless pursuit to reclaim its severed tail. Known for its haunting cry: 'Tailypo, tailypo.'",
     image: "/cryptids/tailypo.webp",
     gridImage: "/cryptids/tailypogrid.webp",
@@ -298,7 +292,6 @@ export const cryptids: Cryptid[] = [
     location: "Grafton, West Virginia",
     lastSighting: "September 2023",
     dangerLevel: "Low",
-    sightings: 41,
     description: "Massive white creature standing 8-9 feet tall. Appears headless with eyes and mouth embedded in torso. Smooth, seal-like skin. Despite imposing appearance, no aggressive encounters reported.",
     image: "/cryptids/graftonmonster.webp",
     gridImage: "/cryptids/graftonmonstergrid.webp",
@@ -334,7 +327,6 @@ export const cryptids: Cryptid[] = [
     location: "Appalachian Highlands",
     lastSighting: "January 2024",
     dangerLevel: "Low",
-    sightings: 28,
     description: "Ghostly white creature that produces bloodcurdling screams echoing through mountain valleys. Rarely seen, more often heard. Witnesses describe a deer-like form shrouded in mist.",
     image: "/cryptids/whitescreamer.webp",
     gridImage: "/cryptids/whitescreamergrid.webp",

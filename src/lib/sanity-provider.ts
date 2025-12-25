@@ -9,12 +9,20 @@ import {
   cryptidByIdQuery,
   mapCryptidsQuery,
   relatedCryptidsQuery,
+  anomaliesListQuery,
+  filteredAnomaliesQuery,
+  anomalyBySlugQuery,
+  mapAnomaliesQuery,
+  relatedAnomaliesQuery,
 } from './sanity-queries'
 import { cryptids as staticCryptids } from '@/data/cryptids'
 import type {
   SanityCryptid,
   SanityCryptidListItem,
   SanityCryptidMapItem,
+  SanityAnomaly,
+  SanityAnomalyListItem,
+  SanityAnomalyMapItem,
 } from '@/types/sanity'
 
 let sanityAvailable: boolean | null = null
@@ -67,7 +75,7 @@ function convertStaticToSanityFormat(
       : undefined,
     region: cryptid.region as 'Appalachia' | 'Southeast' | 'Southern',
     dangerLevel: cryptid.dangerLevel,
-    sightings: cryptid.sightings,
+    firstDocumented: cryptid.firstDocumented,
     description: cryptid.description,
     // For static images, we'll use the path directly (not Sanity image refs)
     image: undefined,
@@ -236,4 +244,78 @@ export async function isUsingSanity(): Promise<boolean> {
 // Force refresh availability check
 export function resetSanityCheck(): void {
   sanityAvailable = null
+}
+
+// ============================================
+// ANOMALY FETCH FUNCTIONS (Anomalies Desk)
+// ============================================
+
+// Get all anomalies (for Anomalies Desk page)
+export async function fetchAnomalies(filters?: {
+  anomalyType?: string
+  status?: string
+  region?: string
+  search?: string
+}): Promise<SanityAnomalyListItem[]> {
+  const useSanity = await checkSanityAvailability()
+
+  if (useSanity) {
+    if (filters?.anomalyType || filters?.status || filters?.region || filters?.search) {
+      return sanityClient.fetch(filteredAnomaliesQuery, {
+        anomalyType: filters.anomalyType || 'all',
+        status: filters.status || 'all',
+        region: filters.region || 'all',
+        search: filters.search ? `*${filters.search}*` : '',
+      })
+    }
+    return sanityClient.fetch(anomaliesListQuery)
+  }
+
+  // No static fallback for anomalies - return empty array
+  // User will need to add content via Sanity
+  return []
+}
+
+// Get single anomaly by slug
+export async function fetchAnomalyBySlug(
+  slug: string
+): Promise<SanityAnomaly | null> {
+  const useSanity = await checkSanityAvailability()
+
+  if (useSanity) {
+    try {
+      const anomaly = await sanityClient.fetch(anomalyBySlugQuery, { slug })
+      return anomaly
+    } catch {
+      return null
+    }
+  }
+
+  return null
+}
+
+// Get anomalies for map (with coordinates)
+export async function fetchMapAnomalies(): Promise<SanityAnomalyMapItem[]> {
+  const useSanity = await checkSanityAvailability()
+
+  if (useSanity) {
+    return sanityClient.fetch(mapAnomaliesQuery)
+  }
+
+  return []
+}
+
+// Get related anomalies (same type or region)
+export async function fetchRelatedAnomalies(
+  slug: string,
+  anomalyType: string,
+  region: string
+): Promise<SanityAnomalyListItem[]> {
+  const useSanity = await checkSanityAvailability()
+
+  if (useSanity) {
+    return sanityClient.fetch(relatedAnomaliesQuery, { slug, anomalyType, region })
+  }
+
+  return []
 }

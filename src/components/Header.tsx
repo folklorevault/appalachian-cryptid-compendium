@@ -16,6 +16,7 @@ interface HeaderProps {
 
 const navItems: NavItem[] = [
   { to: "/#field-guide", label: "Field Guide", isAnchor: true },
+  { to: "/anomalies", label: "Anomalies Desk" },
   { to: "/about", label: "About" },
   { to: "/map", label: "Sighting Map" },
   { to: "/report", label: "Report a Sighting" },

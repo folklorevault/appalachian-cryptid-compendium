@@ -80,19 +80,3 @@ class Analytics {
 
 // Export singleton instance
 export const analytics = new Analytics();
-
-// Auto-track page views on route changes
-if (typeof window !== "undefined") {
-  // Track initial page load
-  analytics.trackPageView(window.location.pathname);
-
-  // Track client-side navigation (for React Router)
-  let lastPath = window.location.pathname;
-  setInterval(() => {
-    const currentPath = window.location.pathname;
-    if (currentPath !== lastPath) {
-      analytics.trackPageView(currentPath);
-      lastPath = currentPath;
-    }
-  }, 1000);
-}

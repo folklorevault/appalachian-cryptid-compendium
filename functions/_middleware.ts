@@ -18,7 +18,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   // Check if this is a cryptid detail page for SEO optimization
-  const cryptidMatch = url.pathname.match(/^\/cryptids\/([^/]+)$/);
+  const cryptidMatch = url.pathname.match(/^\/cryptid\/([^/]+)$/);
 
   if (cryptidMatch) {
     const slug = cryptidMatch[1];

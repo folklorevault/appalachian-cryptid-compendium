@@ -45,7 +45,7 @@ export interface SanityCryptid {
   coordinates?: SanityGeopoint
   region: 'Appalachia' | 'Southeast' | 'Southern'
   dangerLevel: 'Low' | 'Medium' | 'High'
-  sightings: number
+  firstDocumented?: string
   description?: string
   image?: SanityImage
   imageAlt?: string
@@ -71,7 +71,6 @@ export interface SanityCryptidListItem {
   coordinates?: SanityGeopoint
   region: 'Appalachia' | 'Southeast' | 'Southern'
   dangerLevel: 'Low' | 'Medium' | 'High'
-  sightings: number
   description?: string
   image?: SanityImage
   imageAlt?: string
@@ -86,6 +85,78 @@ export interface SanityCryptidMapItem {
   slug: SanitySlug
   location: string
   dangerLevel: 'Low' | 'Medium' | 'High'
+  coordinates: SanityGeopoint
+  description?: string
+  gridImage?: SanityImage
+}
+
+// Anomaly types for the Anomalies Desk
+export type AnomalyType = 'Lights' | 'Hauntings' | 'Curses' | 'Omen Events' | 'Sounds/Calls' | 'Weather Oddities' | 'Time Weirdness' | 'Places'
+export type AnomalyStatus = 'Open File' | 'Active' | 'Cold' | 'Seasonal'
+export type AnomalyRegion = 'TN' | 'NC' | 'VA' | 'WV' | 'KY' | 'GA' | 'SC' | 'AL'
+export type AnomalySubRegion = 'Smokies' | 'Blue Ridge' | 'Cumberland' | 'Allegheny' | 'Shenandoah' | 'New River' | 'Ohio River'
+
+export interface SanityWitnessAccount {
+  _key: string
+  witness: string
+  date?: string
+  account: string
+}
+
+export interface SanityAnomaly {
+  _id: string
+  _type: 'anomaly'
+  name: string
+  subhead?: string
+  slug: SanitySlug
+  location: string
+  coordinates?: SanityGeopoint
+  region: AnomalyRegion
+  subRegion?: AnomalySubRegion
+  anomalyType: AnomalyType
+  status: AnomalyStatus
+  firstDocumented?: string
+  description?: string
+  image?: SanityImage
+  imageAlt?: string
+  gridImage?: SanityImage
+  tags?: string[]
+  phenomenon?: string
+  theories?: string
+  frequency?: string
+  witnesses?: SanityWitnessAccount[]
+  relatedLocations?: string
+  bureauNotes?: string
+  safetyAdvisory?: string
+}
+
+// Type for anomaly list queries (less data)
+export interface SanityAnomalyListItem {
+  _id: string
+  name: string
+  subhead?: string
+  slug: SanitySlug
+  location: string
+  coordinates?: SanityGeopoint
+  region: AnomalyRegion
+  subRegion?: AnomalySubRegion
+  anomalyType: AnomalyType
+  status: AnomalyStatus
+  description?: string
+  image?: SanityImage
+  imageAlt?: string
+  gridImage?: SanityImage
+  tags?: string[]
+}
+
+// Type for anomaly map queries
+export interface SanityAnomalyMapItem {
+  _id: string
+  name: string
+  slug: SanitySlug
+  location: string
+  anomalyType: AnomalyType
+  status: AnomalyStatus
   coordinates: SanityGeopoint
   description?: string
   gridImage?: SanityImage

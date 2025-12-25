@@ -70,10 +70,10 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'sightings',
-      title: 'Number of Sightings',
-      type: 'number',
-      initialValue: 0,
+      name: 'firstDocumented',
+      title: 'First Documented',
+      type: 'string',
+      description: 'Year or date of first known documentation, e.g., "1966" or "November 1966"',
     }),
     defineField({
       name: 'description',
@@ -214,9 +214,9 @@ export default defineType({
       by: [{field: 'dangerLevel', direction: 'desc'}],
     },
     {
-      title: 'Most Sightings',
-      name: 'sightingsDesc',
-      by: [{field: 'sightings', direction: 'desc'}],
+      title: 'First Documented (Oldest)',
+      name: 'firstDocumentedAsc',
+      by: [{field: 'firstDocumented', direction: 'asc'}],
     },
   ],
 })

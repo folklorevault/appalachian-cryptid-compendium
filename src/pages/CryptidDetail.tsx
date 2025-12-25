@@ -6,7 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
 import { BureauMemo } from "@/components/BureauMemo";
-import { ArrowLeft, MapPin, Eye, AlertTriangle, Loader2 } from "lucide-react";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { ShareButtons } from "@/components/ShareButtons";
+import { CryptidDetailSkeleton } from "@/components/CryptidDetailSkeleton";
+import { BackToTop } from "@/components/BackToTop";
+import { LabelTape } from "@/components/EvidenceChip";
+import { FilingCabinet, FilingDrawer, FilingCabinetControls } from "@/components/FilingDrawer";
+import { ArrowLeft, MapPin, Calendar, AlertTriangle } from "lucide-react";
 import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
 import { useSEO } from "@/hooks/use-seo";
 import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
@@ -76,14 +82,7 @@ const CryptidDetail = () => {
   }, [cryptid]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading case file...</p>
-        </div>
-      </div>
-    );
+    return <CryptidDetailSkeleton />;
   }
 
   if (error || !cryptid) {
@@ -175,7 +174,7 @@ const CryptidDetail = () => {
           <div className="space-y-6">
             <div>
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                CASE FILE #{cryptid.slug?.current?.toUpperCase().slice(0, 3) || 'UNK'}-{(cryptid.sightings ?? 0).toString().padStart(3, '0')}
+                CASE FILE #{cryptid.slug?.current?.toUpperCase().slice(0, 3) || 'UNK'}-{(cryptid.slug?.current?.length ?? 0).toString().padStart(3, '0')}
               </div>
               <h1 className="text-4xl font-bold text-foreground font-display mb-2">{cryptid.name}</h1>
               {cryptid.subhead && (
@@ -194,13 +193,15 @@ const CryptidDetail = () => {
                   <div className="text-foreground">{cryptid.location}</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <Eye className="h-5 w-5 text-accent mt-1" />
-                <div>
-                  <div className="text-xs uppercase text-muted-foreground font-typewriter">Filed Reports</div>
-                  <div className="text-foreground">{cryptid.sightings ?? 0} documented encounters</div>
+              {cryptid.firstDocumented && (
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-5 w-5 text-accent mt-1" />
+                  <div>
+                    <div className="text-xs uppercase text-muted-foreground font-typewriter">First Documented</div>
+                    <div className="text-foreground">{cryptid.firstDocumented}</div>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-1" />
                 <div>
@@ -213,92 +214,105 @@ const CryptidDetail = () => {
             {cryptid.tags && cryptid.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {cryptid.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="border-primary/30 text-primary">{tag}</Badge>
+                  <LabelTape key={tag}>{tag}</LabelTape>
                 ))}
               </div>
             )}
+
+            {/* Actions: Favorite & Share */}
+            <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-border">
+              <FavoriteButton
+                slug={cryptid.slug?.current || ""}
+                name={cryptid.name}
+                variant="inline"
+              />
+              <ShareButtons title={cryptid.name} />
+            </div>
           </div>
         </div>
 
-        {/* Detailed Sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {cryptid.physicalDescription && (
-            <Card className="border-2 border-border">
-              <CardContent className="p-6">
-                <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">Physical Description</h3>
-                <p className="text-foreground/90 leading-relaxed">{cryptid.physicalDescription}</p>
-              </CardContent>
-            </Card>
-          )}
+        {/* Detailed Sections - Filing Cabinet */}
+        {(cryptid.physicalDescription || cryptid.behavior || cryptid.habitat || cryptid.diet || cryptid.notableSightings) && (
+          <div className="mb-8">
+            <FilingCabinet defaultOpen={cryptid.physicalDescription ? ["physical"] : []}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-foreground font-display">Case Sections</h2>
+                <FilingCabinetControls />
+              </div>
 
-          {cryptid.behavior && (
-            <Card className="border-2 border-border">
-              <CardContent className="p-6">
-                <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">Behavior Patterns</h3>
-                <p className="text-foreground/90 leading-relaxed">{cryptid.behavior}</p>
-              </CardContent>
-            </Card>
-          )}
+              {cryptid.physicalDescription && (
+                <FilingDrawer value="physical" label="Physical Profile">
+                  <p className="whitespace-pre-line">{cryptid.physicalDescription}</p>
+                </FilingDrawer>
+              )}
 
-          {cryptid.habitat && (
-            <Card className="border-2 border-border">
-              <CardContent className="p-6">
-                <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">Habitat & Range</h3>
-                <p className="text-foreground/90 leading-relaxed">{cryptid.habitat}</p>
-              </CardContent>
-            </Card>
-          )}
+              {cryptid.behavior && (
+                <FilingDrawer value="behavior" label="Behavioral Notes">
+                  <p className="whitespace-pre-line">{cryptid.behavior}</p>
+                </FilingDrawer>
+              )}
 
-          {cryptid.diet && (
-            <Card className="border-2 border-border">
-              <CardContent className="p-6">
-                <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">Dietary Information</h3>
-                <p className="text-foreground/90 leading-relaxed">{cryptid.diet}</p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+              {cryptid.habitat && (
+                <FilingDrawer value="habitat" label="Habitat Analysis">
+                  <p className="whitespace-pre-line">{cryptid.habitat}</p>
+                </FilingDrawer>
+              )}
 
-        {/* Witness Testimonies */}
+              {cryptid.diet && (
+                <FilingDrawer value="diet" label="Dietary Report">
+                  <p className="whitespace-pre-line">{cryptid.diet}</p>
+                </FilingDrawer>
+              )}
+
+              {cryptid.notableSightings && (
+                <FilingDrawer value="sightings" label="Sighting Timeline">
+                  <p className="whitespace-pre-line">{cryptid.notableSightings}</p>
+                </FilingDrawer>
+              )}
+            </FilingCabinet>
+          </div>
+        )}
+
+        {/* Witness Testimonies - as Filing Drawers */}
         {cryptid.testimonies && cryptid.testimonies.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground font-display mb-6">Witness Accounts</h2>
-            <div className="space-y-4">
-              {cryptid.testimonies.map((testimony) => (
-                <Card key={testimony._key} className="border-2 border-border hover:border-primary/50 transition-colors aged-card">
-                  <CardContent className="p-6">
+            <FilingCabinet defaultOpen={["addendum-0"]}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-foreground font-display">Witness Accounts</h2>
+                <FilingCabinetControls />
+              </div>
+
+              {cryptid.testimonies.map((testimony, index) => {
+                // Convert index to letter: 0 -> A, 1 -> B, etc.
+                const addendumLetter = String.fromCharCode(65 + index);
+
+                return (
+                  <FilingDrawer
+                    key={testimony._key}
+                    value={`addendum-${index}`}
+                    label={`Addendum ${addendumLetter}`}
+                  >
                     <div className="flex flex-wrap gap-4 mb-4 text-sm">
                       <div><span className="text-muted-foreground">Witness:</span> <span className="text-foreground font-medium">{testimony.witness}</span></div>
                       {testimony.date && <div><span className="text-muted-foreground">Date:</span> <span className="text-foreground">{testimony.date}</span></div>}
                       {testimony.location && <div><span className="text-muted-foreground">Location:</span> <span className="text-foreground">{testimony.location}</span></div>}
                     </div>
                     <p className="text-foreground/80 leading-relaxed italic border-l-2 border-primary pl-4">"{testimony.account}"</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </FilingDrawer>
+                );
+              })}
+            </FilingCabinet>
           </div>
         )}
 
-        {/* Notable Sightings & Bureau Notes */}
-        {(cryptid.notableSightings || cryptid.bureauNotes) && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 items-start">
-            {cryptid.notableSightings && (
-              <Card className="border-2 border-border">
-                <CardContent className="p-6">
-                  <h3 className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">Notable Sightings</h3>
-                  <p className="text-foreground/90 leading-relaxed whitespace-pre-line">{cryptid.notableSightings}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {cryptid.bureauNotes && (
-              <BureauMemo
-                content={cryptid.bureauNotes}
-                cryptidName={cryptid.name}
-                caseNumber={cryptid.slug?.current?.toUpperCase().slice(0, 3) + "-" + (cryptid.sightings ?? 0).toString().padStart(3, '0')}
-              />
-            )}
+        {/* Bureau Memo - stands alone as official correspondence */}
+        {cryptid.bureauNotes && (
+          <div className="mb-8 max-w-2xl">
+            <BureauMemo
+              content={cryptid.bureauNotes}
+              cryptidName={cryptid.name}
+              caseNumber={cryptid.slug?.current?.toUpperCase().slice(0, 3) + "-" + (cryptid.slug?.current?.length ?? 0).toString().padStart(3, '0')}
+            />
           </div>
         )}
 
@@ -339,6 +353,7 @@ const CryptidDetail = () => {
           </div>
         )}
       </div>
+      <BackToTop />
     </div>
   );
 };

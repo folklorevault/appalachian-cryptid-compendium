@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Eye } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import type { SanityCryptidListItem } from "@/types/sanity";
 
 interface CryptidCardProps {
@@ -19,7 +20,6 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     scientificName,
     location,
     dangerLevel,
-    sightings,
     description,
     gridImage,
     imageAlt,
@@ -90,6 +90,7 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     <Link to={`/cryptid/${slug.current}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
+        <FavoriteButton slug={slug.current} name={name} variant="overlay" />
         {/* Blur placeholder */}
         {!imageLoaded && (
           <img
@@ -126,15 +127,9 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
           )}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-primary" />
-            <span className="text-foreground">{location}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <Eye className="h-4 w-4 text-accent" />
-            <span className="text-foreground">{sightings} Filed Reports</span>
-          </div>
+        <div className="flex items-center gap-2 text-sm">
+          <MapPin className="h-4 w-4 text-primary" />
+          <span className="text-foreground">{location}</span>
         </div>
 
         {description && (

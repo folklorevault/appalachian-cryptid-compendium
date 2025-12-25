@@ -4,77 +4,90 @@ import { CryptidCardSkeleton } from "@/components/CryptidCardSkeleton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BackToTop } from "@/components/BackToTop";
-import { TrendingCryptids } from "@/components/TrendingCryptids";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LabelTape } from "@/components/EvidenceChip";
-import { Search, X, Heart, FolderOpen } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useCryptids } from "@/hooks/use-sanity-cryptids";
+import { Search, X, Heart, Zap, Ghost, Skull, Eye, Volume2, Cloud, Clock, MapPinned, FolderOpen } from "lucide-react";
+import { useAnomalies } from "@/hooks/use-sanity-anomalies";
 import { useFavorites } from "@/hooks/use-favorites";
 import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
 import { analytics } from "@/lib/analytics";
+import { useSEO } from "@/hooks/use-seo";
+import type { AnomalyType, AnomalyStatus, AnomalyRegion } from "@/types/sanity";
 
 const INITIAL_VISIBLE = 6;
 const LOAD_MORE_COUNT = 6;
 
-const Index = () => {
+// Icon mapping for anomaly types
+const typeIcons: Record<AnomalyType, typeof Zap> = {
+  'Lights': Zap,
+  'Hauntings': Ghost,
+  'Curses': Skull,
+  'Omen Events': Eye,
+  'Sounds/Calls': Volume2,
+  'Weather Oddities': Cloud,
+  'Time Weirdness': Clock,
+  'Places': MapPinned,
+};
+
+const Anomalies = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
-  const [selectedDanger, setSelectedDanger] = useState<string>("all");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
+
+  // SEO
+  useSEO({
+    title: "Anomalies Desk | Appalachian Cryptid Compendium",
+    description: "Lights, hauntings, curses, and other unresolved Appalachian incidents, cataloged like field reports.",
+  });
 
   // Favorites hook
   const { favorites, count: favoritesCount } = useFavorites();
 
-  // Fetch cryptids from Sanity (or static fallback)
-  const { data: cryptids = [], isLoading, error } = useCryptids({
+  // Fetch anomalies from Sanity
+  const { data: anomalies = [], isLoading, error } = useAnomalies({
+    anomalyType: selectedType,
+    status: selectedStatus,
     region: selectedRegion,
-    dangerLevel: selectedDanger,
     search: searchQuery,
   });
 
-  // Sort cryptids with Mothman pinned to top, then filter
-  const filteredCryptids = useMemo(() => {
-    // Pin Mothman to the top
-    let sorted = [...cryptids].sort((a, b) => {
-      const aIsMothman = a.slug?.current === "mothman" || a.name.toLowerCase() === "mothman";
-      const bIsMothman = b.slug?.current === "mothman" || b.name.toLowerCase() === "mothman";
-      if (aIsMothman && !bIsMothman) return -1;
-      if (bIsMothman && !aIsMothman) return 1;
-      return 0;
-    });
+  // Filter anomalies
+  const filteredAnomalies = useMemo(() => {
+    let results = [...anomalies];
 
     // Filter by favorites if enabled
     if (showFavoritesOnly) {
-      sorted = sorted.filter((cryptid) =>
-        favorites.includes(cryptid.slug?.current || "")
+      results = results.filter((anomaly) =>
+        favorites.includes(`anomaly-${anomaly.slug?.current}` || "")
       );
     }
 
-    if (!searchQuery) return sorted;
+    if (!searchQuery) return results;
 
     const query = searchQuery.toLowerCase();
-    return sorted.filter((cryptid) =>
-      cryptid.name.toLowerCase().includes(query) ||
-      cryptid.location.toLowerCase().includes(query) ||
-      (cryptid.description?.toLowerCase().includes(query) ?? false)
+    return results.filter((anomaly) =>
+      anomaly.name.toLowerCase().includes(query) ||
+      anomaly.location.toLowerCase().includes(query) ||
+      (anomaly.description?.toLowerCase().includes(query) ?? false)
     );
-  }, [cryptids, searchQuery, showFavoritesOnly, favorites]);
+  }, [anomalies, searchQuery, showFavoritesOnly, favorites]);
 
   // Slice to only show visible count
-  const visibleCryptids = useMemo(() => {
-    return filteredCryptids.slice(0, visibleCount);
-  }, [filteredCryptids, visibleCount]);
+  const visibleAnomalies = useMemo(() => {
+    return filteredAnomalies.slice(0, visibleCount);
+  }, [filteredAnomalies, visibleCount]);
 
-  const hasMore = visibleCount < filteredCryptids.length;
+  const hasMore = visibleCount < filteredAnomalies.length;
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
-    analytics.trackEvent("load_more_cryptids", {
+    analytics.trackEvent("load_more_anomalies", {
       visible_count: visibleCount + LOAD_MORE_COUNT,
-      total: filteredCryptids.length,
+      total: filteredAnomalies.length,
     });
   };
 
@@ -84,48 +97,58 @@ const Index = () => {
     setVisibleCount(INITIAL_VISIBLE);
   };
 
-  // Track search queries (with debounce)
+  // Track search queries
   useEffect(() => {
     if (searchQuery) {
       const timeout = setTimeout(() => {
-        analytics.trackEvent("search", {
+        analytics.trackEvent("anomaly_search", {
           query: searchQuery,
-          results: filteredCryptids.length,
+          results: filteredAnomalies.length,
         });
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [searchQuery, filteredCryptids.length]);
+  }, [searchQuery, filteredAnomalies.length]);
 
-  // Track filter usage
-  useEffect(() => {
-    if (selectedRegion !== "all" || selectedDanger !== "all") {
-      analytics.trackEvent("filter_applied", {
-        region: selectedRegion,
-        danger: selectedDanger,
-        results: filteredCryptids.length,
-      });
-    }
-  }, [selectedRegion, selectedDanger, filteredCryptids.length]);
-
-  const regions = [
-    { value: "all", label: "All Regions" },
-    { value: "Appalachia", label: "Appalachia" },
-    { value: "Southeast", label: "Southeast" },
-    { value: "Southern", label: "Southern" },
+  const anomalyTypes: { value: string; label: string; icon?: typeof Zap }[] = [
+    { value: "all", label: "All Types" },
+    { value: "Lights", label: "Lights", icon: Zap },
+    { value: "Hauntings", label: "Hauntings", icon: Ghost },
+    { value: "Curses", label: "Curses", icon: Skull },
+    { value: "Omen Events", label: "Omen Events", icon: Eye },
+    { value: "Sounds/Calls", label: "Sounds", icon: Volume2 },
+    { value: "Weather Oddities", label: "Weather", icon: Cloud },
+    { value: "Time Weirdness", label: "Time", icon: Clock },
+    { value: "Places", label: "Places", icon: MapPinned },
   ];
 
-  const dangerLevels = [
-    { value: "all", label: "All Threats" },
-    { value: "Low", label: "Low Threat" },
-    { value: "Medium", label: "Medium Threat" },
-    { value: "High", label: "High Threat" },
+  const statuses: { value: string; label: string }[] = [
+    { value: "all", label: "All Status" },
+    { value: "Active", label: "Active" },
+    { value: "Open File", label: "Open File" },
+    { value: "Cold", label: "Cold" },
+    { value: "Seasonal", label: "Seasonal" },
   ];
+
+  const regions: { value: string; label: string }[] = [
+    { value: "all", label: "All States" },
+    { value: "TN", label: "Tennessee" },
+    { value: "NC", label: "N. Carolina" },
+    { value: "VA", label: "Virginia" },
+    { value: "WV", label: "W. Virginia" },
+    { value: "KY", label: "Kentucky" },
+    { value: "GA", label: "Georgia" },
+    { value: "SC", label: "S. Carolina" },
+    { value: "AL", label: "Alabama" },
+  ];
+
+  // Count anomalies with favorites prefix
+  const anomalyFavoritesCount = favorites.filter(f => f.startsWith("anomaly-")).length;
 
   return (
     <div className="min-h-screen bg-background paper-texture">
       <StructuredData type="website" data={createWebSiteSchema()} />
-      <Header />
+      <Header badge="Anomalies Desk" />
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
@@ -133,51 +156,31 @@ const Index = () => {
         <div className="container mx-auto relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight font-display">
-              Appalachian Cryptids List
-              <br />
-              <span className="text-primary">Field Guide</span>
+              Anomalies Desk
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Creatures of the Mountains & American South
+              A field guide to Appalachian phenomena
             </p>
             <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
-              A field guide to the creatures that haunt the ridgelines, backroads, and hollers
-              of the Appalachian Mountains and American South—compiled from witness reports,
-              local legends, and ongoing research.
+              Lights, hauntings, curses, and other unresolved incidents from the mountains
+              and hollers—cataloged from witness reports, local legends, and ongoing investigations.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <a href="#field-guide">Explore the Guide</a>
-              </Button>
-              <Link to="/report">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-primary text-primary hover:bg-primary/10"
-                >
-                  Report a Sighting
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Trending Cryptids */}
-      <TrendingCryptids />
-
       {/* Filter & Search Section */}
-      <section id="field-guide" className="py-12 px-4 border-y border-border bg-card/50">
+      <section id="case-files" className="py-12 px-4 border-y border-border bg-card/50">
         <div className="container mx-auto">
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                Browse the Collection
+                Browse the Case Files
               </div>
-              <h3 className="text-2xl font-bold text-foreground">Find a Creature</h3>
+              <h3 className="text-2xl font-bold text-foreground">Find an Anomaly</h3>
               <p className="text-sm text-muted-foreground mt-2 max-w-xl mx-auto">
-                Browse the Bureau's working list of Appalachian cryptids, monsters, and strange creatures.
-                Use the search bar and filters to find case files by name, location, or threat level.
+                Search the Bureau's catalog of unexplained Appalachian phenomena.
+                Filter by type, status, or region to narrow your investigation.
               </p>
             </div>
 
@@ -195,25 +198,51 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Filters */}
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-              <div className="flex flex-wrap gap-2 justify-center">
-                <span className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter self-center">
-                  Region:
-                </span>
-                {regions.map((region) => (
+            {/* Type Filters */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter self-center mr-2">
+                Type:
+              </span>
+              {anomalyTypes.map((type) => {
+                const Icon = type.icon;
+                return (
                   <Button
-                    key={region.value}
-                    variant={selectedRegion === region.value ? "default" : "outline"}
+                    key={type.value}
+                    variant={selectedType === type.value ? "default" : "outline"}
                     size="sm"
-                    onClick={() => handleFilterChange(setSelectedRegion, region.value)}
+                    onClick={() => handleFilterChange(setSelectedType, type.value)}
                     className={
-                      selectedRegion === region.value
+                      selectedType === type.value
                         ? "bg-primary text-primary-foreground"
                         : "border-border hover:border-primary"
                     }
                   >
-                    {region.label}
+                    {Icon && <Icon className="h-3 w-3 mr-1" />}
+                    {type.label}
+                  </Button>
+                );
+              })}
+            </div>
+
+            {/* Status & Region Filters */}
+            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+              <div className="flex flex-wrap gap-2 justify-center">
+                <span className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter self-center">
+                  Status:
+                </span>
+                {statuses.map((status) => (
+                  <Button
+                    key={status.value}
+                    variant={selectedStatus === status.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleFilterChange(setSelectedStatus, status.value)}
+                    className={
+                      selectedStatus === status.value
+                        ? "bg-secondary text-secondary-foreground"
+                        : "border-border hover:border-secondary"
+                    }
+                  >
+                    {status.label}
                   </Button>
                 ))}
               </div>
@@ -222,21 +251,21 @@ const Index = () => {
 
               <div className="flex flex-wrap gap-2 justify-center">
                 <span className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter self-center">
-                  Threat:
+                  State:
                 </span>
-                {dangerLevels.map((level) => (
+                {regions.slice(0, 5).map((region) => (
                   <Button
-                    key={level.value}
-                    variant={selectedDanger === level.value ? "default" : "outline"}
+                    key={region.value}
+                    variant={selectedRegion === region.value ? "default" : "outline"}
                     size="sm"
-                    onClick={() => handleFilterChange(setSelectedDanger, level.value)}
+                    onClick={() => handleFilterChange(setSelectedRegion, region.value)}
                     className={
-                      selectedDanger === level.value
-                        ? "bg-secondary text-secondary-foreground"
-                        : "border-border hover:border-secondary"
+                      selectedRegion === region.value
+                        ? "bg-accent text-accent-foreground"
+                        : "border-border hover:border-accent"
                     }
                   >
-                    {level.label}
+                    {region.label}
                   </Button>
                 ))}
               </div>
@@ -256,15 +285,15 @@ const Index = () => {
                     ? "bg-destructive text-destructive-foreground"
                     : "border-border hover:border-destructive"
                 }
-                disabled={favoritesCount === 0}
+                disabled={anomalyFavoritesCount === 0}
               >
                 <Heart className={`h-4 w-4 mr-1 ${showFavoritesOnly ? "fill-current" : ""}`} />
-                Saved ({favoritesCount})
+                Saved ({anomalyFavoritesCount})
               </Button>
             </div>
 
             {/* Active Filter Chips */}
-            {(selectedRegion !== "all" || selectedDanger !== "all" || searchQuery || showFavoritesOnly) && (
+            {(selectedType !== "all" || selectedStatus !== "all" || selectedRegion !== "all" || searchQuery || showFavoritesOnly) && (
               <div className="flex flex-wrap gap-2 justify-center items-center">
                 <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-typewriter">Filing:</span>
                 {showFavoritesOnly && (
@@ -272,14 +301,19 @@ const Index = () => {
                     Saved Files
                   </LabelTape>
                 )}
-                {selectedRegion !== "all" && (
-                  <LabelTape onRemove={() => handleFilterChange(setSelectedRegion, "all")}>
-                    {selectedRegion}
+                {selectedType !== "all" && (
+                  <LabelTape onRemove={() => handleFilterChange(setSelectedType, "all")}>
+                    {selectedType}
                   </LabelTape>
                 )}
-                {selectedDanger !== "all" && (
-                  <LabelTape onRemove={() => handleFilterChange(setSelectedDanger, "all")}>
-                    {selectedDanger}
+                {selectedStatus !== "all" && (
+                  <LabelTape onRemove={() => handleFilterChange(setSelectedStatus, "all")}>
+                    {selectedStatus}
+                  </LabelTape>
+                )}
+                {selectedRegion !== "all" && (
+                  <LabelTape onRemove={() => handleFilterChange(setSelectedRegion, "all")}>
+                    {regions.find(r => r.value === selectedRegion)?.label || selectedRegion}
                   </LabelTape>
                 )}
                 {searchQuery && (
@@ -292,8 +326,9 @@ const Index = () => {
                   size="sm"
                   onClick={() => {
                     setSearchQuery("");
+                    setSelectedType("all");
+                    setSelectedStatus("all");
                     setSelectedRegion("all");
-                    setSelectedDanger("all");
                     setShowFavoritesOnly(false);
                     setVisibleCount(INITIAL_VISIBLE);
                   }}
@@ -310,9 +345,9 @@ const Index = () => {
                   "Opening file cabinet..."
                 ) : (
                   <>
-                    Drawer contains <span className="text-primary font-bold">{filteredCryptids.length}</span> files
-                    {visibleCryptids.length < filteredCryptids.length && (
-                      <> · Viewing first <span className="text-primary font-bold">{visibleCryptids.length}</span></>
+                    Drawer contains <span className="text-primary font-bold">{filteredAnomalies.length}</span> case files
+                    {visibleAnomalies.length < filteredAnomalies.length && (
+                      <> · Viewing first <span className="text-primary font-bold">{visibleAnomalies.length}</span></>
                     )}
                   </>
                 )}
@@ -322,7 +357,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Cryptid Grid */}
+      {/* Anomaly Grid */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
           {isLoading ? (
@@ -333,16 +368,20 @@ const Index = () => {
             </div>
           ) : error ? (
             <div className="text-center py-12">
-              <p className="text-xl text-destructive">Error loading cryptids. Please try again.</p>
+              <p className="text-xl text-destructive">Error loading case files. Please try again.</p>
             </div>
-          ) : filteredCryptids.length === 0 ? (
+          ) : filteredAnomalies.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-xl text-muted-foreground">No cryptids found matching your criteria.</p>
+              <p className="text-xl text-muted-foreground">No case files found matching your criteria.</p>
+              <p className="text-sm text-muted-foreground/70 mt-2">
+                Case files are added via Sanity CMS. Check back soon for new entries.
+              </p>
               <Button
                 onClick={() => {
                   setSearchQuery("");
+                  setSelectedType("all");
+                  setSelectedStatus("all");
                   setSelectedRegion("all");
-                  setSelectedDanger("all");
                   setVisibleCount(INITIAL_VISIBLE);
                 }}
                 variant="outline"
@@ -354,8 +393,8 @@ const Index = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {visibleCryptids.map((cryptid) => (
-                  <CasefileCard key={cryptid._id} type="cryptid" data={cryptid} />
+                {visibleAnomalies.map((anomaly) => (
+                  <CasefileCard key={anomaly._id} type="anomaly" data={anomaly} />
                 ))}
               </div>
               {hasMore && (
@@ -370,7 +409,7 @@ const Index = () => {
                     Next Drawer
                   </Button>
                   <p className="text-xs text-muted-foreground mt-2 font-typewriter">
-                    {filteredCryptids.length - visibleCount} files remaining
+                    {filteredAnomalies.length - visibleCount} files remaining
                   </p>
                 </div>
               )}
@@ -385,4 +424,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Anomalies;
