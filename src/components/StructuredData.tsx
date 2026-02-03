@@ -1,7 +1,5 @@
 // Schema.org structured data component for SEO
-// Renders JSON-LD scripts in the document head
-
-import { useEffect } from "react";
+// Renders JSON-LD scripts inline (not via useEffect) so Googlebot sees them
 
 interface WebSiteSchema {
   "@context": "https://schema.org";
@@ -66,26 +64,15 @@ type StructuredDataProps = {
 };
 
 export function StructuredData({ type, data }: StructuredDataProps) {
-  useEffect(() => {
-    // Create script element
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.textContent = JSON.stringify(data);
-    script.id = `structured-data-${type}`;
-
-    // Add to head
-    document.head.appendChild(script);
-
-    // Cleanup on unmount
-    return () => {
-      const existingScript = document.getElementById(`structured-data-${type}`);
-      if (existingScript) {
-        document.head.removeChild(existingScript);
-      }
-    };
-  }, [type, data]);
-
-  return null; // This component doesn't render anything visible
+  // Render script tag directly in JSX so it's in the initial HTML render
+  // This ensures Googlebot sees the structured data without needing to execute JS
+  // Note: dangerouslySetInnerHTML is safe here because we control the data (JSON.stringify of our own objects)
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
 }
 
 // Helper functions to create common schemas
