@@ -27,6 +27,26 @@ import type {
 
 let sanityAvailable: boolean | null = null
 
+// Session storage key for caching Sanity availability
+const SANITY_AVAILABLE_KEY = 'sanity-available'
+const SANITY_CHECK_EXPIRY_KEY = 'sanity-check-expiry'
+const CACHE_DURATION_MS = 5 * 60 * 1000 // 5 minutes
+
+// Initialize from sessionStorage if available
+if (typeof window !== 'undefined') {
+  try {
+    const expiry = sessionStorage.getItem(SANITY_CHECK_EXPIRY_KEY)
+    if (expiry && Date.now() < parseInt(expiry, 10)) {
+      const cached = sessionStorage.getItem(SANITY_AVAILABLE_KEY)
+      if (cached !== null) {
+        sanityAvailable = cached === 'true'
+      }
+    }
+  } catch {
+    // sessionStorage not available
+  }
+}
+
 // Coordinates for cryptid locations (used for static fallback)
 const cryptidCoordinates: Record<string, { lat: number; lng: number }> = {
   mothman: { lat: 38.8451, lng: -82.1371 },
@@ -52,6 +72,16 @@ async function checkSanityAvailability(): Promise<boolean> {
   } catch (error) {
     console.log('Sanity unavailable, falling back to static data:', error)
     sanityAvailable = false
+  }
+
+  // Cache the result in sessionStorage to avoid check on subsequent navigations
+  if (typeof window !== 'undefined') {
+    try {
+      sessionStorage.setItem(SANITY_AVAILABLE_KEY, String(sanityAvailable))
+      sessionStorage.setItem(SANITY_CHECK_EXPIRY_KEY, String(Date.now() + CACHE_DURATION_MS))
+    } catch {
+      // sessionStorage not available
+    }
   }
 
   return sanityAvailable

@@ -1,7 +1,25 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+
+// Plugin to make CSS non-render-blocking (loads async, applies when ready)
+function asyncCssPlugin(): Plugin {
+  return {
+    name: 'async-css',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      // Transform: <link rel="stylesheet" href="...css">
+      // Into: <link rel="stylesheet" href="...css" media="print" onload="this.media='all'">
+      // This makes CSS load without blocking render (critical CSS is already inlined)
+      return html.replace(
+        /<link rel="stylesheet" crossorigin href="(\/assets\/[^"]+\.css)">/g,
+        '<link rel="stylesheet" crossorigin href="$1" media="print" onload="this.media=\'all\'">' +
+        '<noscript><link rel="stylesheet" href="$1"></noscript>'
+      );
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -10,7 +28,11 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     allowedHosts: true,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger(),
+    mode === "production" && asyncCssPlugin(),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -28,7 +50,8 @@ export default defineConfig(({ mode }) => ({
           "vendor-react": ["react", "react-dom", "react-router-dom"],
           // TanStack Query chunk
           "vendor-query": ["@tanstack/react-query"],
-          // UI library chunk (radix primitives used by shadcn)
+          // UI library chunk (Radix primitives - used by shadcn/ui)
+          // Note: These share internal code, so keeping them together is more efficient
           "vendor-ui": [
             "@radix-ui/react-dialog",
             "@radix-ui/react-dropdown-menu",
