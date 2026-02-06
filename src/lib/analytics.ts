@@ -1,81 +1,13 @@
-// Client-side analytics tracking
-
-interface AnalyticsEvent {
-  event: string;
-  page: string;
-  cryptid?: string;
-  referrer?: string;
-  userAgent?: string;
-}
+// Analytics stub - actual tracking handled by Umami
+// This file exists so existing analytics.trackEvent() calls don't break
 
 class Analytics {
-  private endpoint = "/api/analytics";
-  private enabled = true;
-
-  // Track page view
-  trackPageView(page: string, cryptid?: string) {
-    if (!this.enabled) return;
-
-    this.track({
-      event: "page_view",
-      page,
-      cryptid,
-      referrer: document.referrer,
-      userAgent: navigator.userAgent,
-    });
-  }
-
-  // Track cryptid view
-  trackCryptidView(slug: string, name: string) {
-    this.trackPageView(`/cryptids/${slug}`, name);
-  }
-
-  // Track custom event
-  trackEvent(event: string, data?: Record<string, any>) {
-    if (!this.enabled) return;
-
-    this.track({
-      event,
-      page: window.location.pathname,
-      ...data,
-    });
-  }
-
-  // Send analytics data
-  private async track(data: AnalyticsEvent) {
-    try {
-      // Use sendBeacon for reliability (doesn't get cancelled on page unload)
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(
-          this.endpoint,
-          JSON.stringify(data)
-        );
-      } else {
-        // Fallback to fetch
-        fetch(this.endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-          keepalive: true,
-        }).catch(() => {
-          // Silently fail - analytics shouldn't break the app
-        });
-      }
-    } catch (error) {
-      // Silently fail
-      console.debug("Analytics error:", error);
-    }
-  }
-
-  // Disable analytics (for privacy compliance)
-  disable() {
-    this.enabled = false;
-  }
-
-  // Enable analytics
-  enable() {
-    this.enabled = true;
-  }
+  // No-op methods for backwards compatibility
+  trackPageView(_page: string, _cryptid?: string) {}
+  trackCryptidView(_slug: string, _name: string) {}
+  trackEvent(_event: string, _data?: Record<string, unknown>) {}
+  disable() {}
+  enable() {}
 }
 
 // Export singleton instance
