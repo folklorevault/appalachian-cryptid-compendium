@@ -20,6 +20,7 @@ const ScrollToTop = () => {
 };
 
 const CryptidDetail = lazy(() => import("./pages/CryptidDetail"));
+const FieldGuide = lazy(() => import("./pages/FieldGuide"));
 const Anomalies = lazy(() => import("./pages/Anomalies"));
 const AnomalyDetail = lazy(() => import("./pages/AnomalyDetail"));
 const About = lazy(() => import("./pages/About"));
@@ -43,6 +44,7 @@ const App = () => (
         <Suspense fallback={<div className="min-h-screen bg-background text-foreground flex items-center justify-center">Loading...</div>}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/field-guide" element={<FieldGuide />} />
             <Route path="/cryptid/:id" element={<CryptidDetail />} />
             <Route path="/anomalies" element={<Anomalies />} />
             <Route path="/anomaly/:id" element={<AnomalyDetail />} />
