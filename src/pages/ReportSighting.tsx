@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SightingReceipt } from "@/components/SightingReceipt";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,12 +31,22 @@ interface FormErrors {
   physicalDescription?: string;
 }
 
+interface SubmissionData {
+  witnessName: string;
+  date: string;
+  location: string;
+  state: string;
+  creatureName?: string;
+}
+
 const ReportSighting = () => {
   const { toast } = useToast();
   const submitSighting = useSubmitSighting();
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [submissionData, setSubmissionData] = useState<SubmissionData | null>(null);
   const [formData, setFormData] = useState({
     witnessName: "",
     email: "",
@@ -160,11 +171,6 @@ const ReportSighting = () => {
         photo_url: photoPreview || undefined,
       });
 
-      toast({
-        title: "Report Received",
-        description: "Thank you for your submission. Our research team will review your sighting report.",
-      });
-
       // Track successful sighting submission
       analytics.trackEvent("sighting_submitted", {
         creature: formData.creatureName || "unknown",
@@ -172,22 +178,30 @@ const ReportSighting = () => {
         has_photo: !!photoPreview,
       });
 
-      // Reset form
-      setFormData({
-        witnessName: "",
-        email: "",
-        date: "",
-        time: "",
-        location: "",
-        state: "",
-        creatureName: "",
-        description: "",
-        physicalDescription: "",
-        behavior: "",
+      // Store submission data and show receipt
+      setSubmissionData({
+        witnessName: formData.witnessName,
+        date: formData.date,
+        location: formData.location,
+        state: formData.state,
+        creatureName: formData.creatureName || undefined,
       });
-      setPhotoPreview(null);
-      setTouched({});
+      setSubmitted(true);
     } catch (error) {
+      // In dev mode, show the receipt anyway so we can test the UI
+      if (import.meta.env.DEV) {
+        console.warn("[DEV MODE] API failed, showing receipt anyway:", error);
+        setSubmissionData({
+          witnessName: formData.witnessName,
+          date: formData.date,
+          location: formData.location,
+          state: formData.state,
+          creatureName: formData.creatureName || undefined,
+        });
+        setSubmitted(true);
+        return;
+      }
+
       toast({
         title: "Submission Failed",
         description: (error as Error).message || "Please try again later.",
@@ -197,6 +211,26 @@ const ReportSighting = () => {
   };
 
   const isSubmitting = submitSighting.isPending;
+
+  const handleFileAnother = () => {
+    setSubmitted(false);
+    setSubmissionData(null);
+    setFormData({
+      witnessName: "",
+      email: "",
+      date: "",
+      time: "",
+      location: "",
+      state: "",
+      creatureName: "",
+      description: "",
+      physicalDescription: "",
+      behavior: "",
+    });
+    setPhotoPreview(null);
+    setTouched({});
+    setErrors({});
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -215,20 +249,40 @@ const ReportSighting = () => {
       {/* Form Section */}
       <section className="pb-16 px-4">
         <div className="container mx-auto max-w-3xl">
-          <div className="text-center space-y-4 mb-8">
-            <Badge className="bg-primary/10 text-primary border-primary" variant="outline">
-              SUBMIT FIELD REPORT
-            </Badge>
-            <h1 className="text-4xl font-bold text-foreground font-display">
-              Report a Sighting
-            </h1>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Your encounter could be vital to our research. Please provide as much detail as possible.
-              All submissions are reviewed by our team and treated with confidentiality.
-            </p>
-          </div>
+          {submitted && submissionData ? (
+            <>
+              <div className="text-center space-y-4 mb-8">
+                <Badge className="bg-accent/20 text-accent border-accent" variant="outline">
+                  REPORT SUBMITTED
+                </Badge>
+                <h1 className="text-4xl font-bold text-foreground font-display">
+                  Report Filed Successfully
+                </h1>
+                <p className="text-muted-foreground max-w-xl mx-auto">
+                  Your sighting has been logged in the official record. Please retain this receipt for your files.
+                </p>
+              </div>
+              <SightingReceipt
+                submissionData={submissionData}
+                onFileAnother={handleFileAnother}
+              />
+            </>
+          ) : (
+            <>
+              <div className="text-center space-y-4 mb-8">
+                <Badge className="bg-primary/10 text-primary border-primary" variant="outline">
+                  SUBMIT FIELD REPORT
+                </Badge>
+                <h1 className="text-4xl font-bold text-foreground font-display">
+                  Report a Sighting
+                </h1>
+                <p className="text-muted-foreground max-w-xl mx-auto">
+                  Your encounter could be vital to our research. Please provide as much detail as possible.
+                  All submissions are reviewed by our team and treated with confidentiality.
+                </p>
+              </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
             {/* Witness Information */}
             <Card className="border-2 border-border">
               <CardContent className="p-6 space-y-4">
@@ -515,6 +569,8 @@ const ReportSighting = () => {
               </CardContent>
             </Card>
           </form>
+            </>
+          )}
         </div>
       </section>
 
