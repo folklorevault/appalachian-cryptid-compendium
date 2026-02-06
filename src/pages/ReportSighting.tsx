@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Upload, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSubmitSighting } from "@/hooks/use-sightings";
 import { analytics } from "@/lib/analytics";
@@ -42,7 +42,6 @@ interface SubmissionData {
 const ReportSighting = () => {
   const { toast } = useToast();
   const submitSighting = useSubmitSighting();
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -129,17 +128,6 @@ const ReportSighting = () => {
     setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -168,14 +156,12 @@ const ReportSighting = () => {
         description: formData.description,
         physical_description: formData.physicalDescription,
         behavior: formData.behavior || undefined,
-        photo_url: photoPreview || undefined,
       });
 
       // Track successful sighting submission
       analytics.trackEvent("sighting_submitted", {
         creature: formData.creatureName || "unknown",
         state: formData.state,
-        has_photo: !!photoPreview,
       });
 
       // Store submission data and show receipt
@@ -227,7 +213,6 @@ const ReportSighting = () => {
       physicalDescription: "",
       behavior: "",
     });
-    setPhotoPreview(null);
     setTouched({});
     setErrors({});
   };
@@ -487,55 +472,6 @@ const ReportSighting = () => {
                       rows={3}
                       className="bg-background border-border resize-none"
                     />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Photo Upload */}
-            <Card className="border-2 border-border">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <Upload className="h-4 w-4" />
-                  PHOTOGRAPHIC EVIDENCE (OPTIONAL)
-                </div>
-                <div className="space-y-4">
-                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                    {photoPreview ? (
-                      <div className="space-y-4">
-                        <img
-                          src={photoPreview}
-                          alt="Preview"
-                          className="max-h-48 mx-auto rounded border border-border"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setPhotoPreview(null)}
-                          className="border-border"
-                        >
-                          Remove Photo
-                        </Button>
-                      </div>
-                    ) : (
-                      <label className="cursor-pointer block">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handlePhotoChange}
-                          className="hidden"
-                        />
-                        <div className="space-y-2">
-                          <Upload className="h-10 w-10 text-muted-foreground mx-auto" />
-                          <p className="text-sm text-muted-foreground">
-                            Click to upload or drag and drop
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            PNG, JPG up to 10MB
-                          </p>
-                        </div>
-                      </label>
-                    )}
                   </div>
                 </div>
               </CardContent>
