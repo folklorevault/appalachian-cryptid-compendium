@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Menu, X, Heart } from "lucide-react";
 
 interface NavItem {
@@ -15,12 +16,9 @@ interface HeaderProps {
 }
 
 const navItems: NavItem[] = [
-  { to: "/", label: "Directory" },
-  { to: "/field-guide", label: "Field Guide" },
   { to: "/anomalies", label: "Anomalies Desk" },
-  { to: "/about", label: "About" },
   { to: "/map", label: "Sighting Map" },
-  { to: "/report", label: "Report a Sighting" },
+  { to: "/about", label: "About" },
 ];
 
 export const Header = ({ badge }: HeaderProps) => {
@@ -104,6 +102,14 @@ export const Header = ({ badge }: HeaderProps) => {
                 <Heart className="h-4 w-4" />
                 Support
               </a>
+              <Link to="/report">
+                <Button
+                  size="sm"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  Report Sighting
+                </Button>
+              </Link>
             </nav>
           </div>
         </div>
@@ -152,6 +158,14 @@ export const Header = ({ badge }: HeaderProps) => {
               <Heart className="h-4 w-4" />
               Support
             </a>
+            <Link to="/report" onClick={() => setMobileMenuOpen(false)}>
+              <Button
+                size="sm"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Report Sighting
+              </Button>
+            </Link>
           </nav>
         </div>
       )}

@@ -39,6 +39,14 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
+                  to="/field-guide"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Field Guide
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/about"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >

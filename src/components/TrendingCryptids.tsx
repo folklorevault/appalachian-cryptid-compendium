@@ -5,7 +5,7 @@ import { useTrending } from "@/hooks/use-trending";
 
 /**
  * Displays the top trending cryptids based on view analytics.
- * Shows a horizontal scrollable list with fire icons and view counts.
+ * Shows a horizontal list with fire icons for popular cryptids.
  */
 export const TrendingCryptids = () => {
   const { data: trending = [], isLoading, error } = useTrending();
@@ -34,16 +34,13 @@ export const TrendingCryptids = () => {
             >
               <Badge
                 variant="outline"
-                className="px-3 py-2 text-sm border-2 border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 gap-2"
+                className="px-3 py-2 text-sm border-2 border-border hover:border-accent hover:bg-accent/10 transition-all duration-200"
               >
                 <span className="flex items-center gap-1">
                   {index === 0 && <Flame className="h-4 w-4 text-destructive" />}
                   <span className="font-medium text-foreground group-hover:text-accent capitalize">
                     {item.cryptid.replace(/-/g, " ")}
                   </span>
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {item.views} {item.views === 1 ? "view" : "views"}
                 </span>
               </Badge>
             </Link>
