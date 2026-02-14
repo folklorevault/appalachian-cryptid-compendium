@@ -1,4 +1,4 @@
-// Analytics stub - actual tracking handled by Umami
+// Analytics stub - actual tracking handled by Rybbit
 // This file exists so existing analytics.trackEvent() calls don't break
 
 class Analytics {
