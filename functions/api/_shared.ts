@@ -5,6 +5,8 @@ export interface Env {
   IMAGES: R2Bucket;
   ANALYTICS_ENGINE: AnalyticsEngineDataset;
   ADMIN_API_KEY?: string;
+  INDEXNOW_KEY?: string;
+  SANITY_WEBHOOK_SECRET?: string;
 }
 
 export interface Cryptid {
