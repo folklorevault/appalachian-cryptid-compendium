@@ -7,6 +7,7 @@ export interface Env {
   ADMIN_API_KEY?: string;
   INDEXNOW_KEY?: string;
   SANITY_WEBHOOK_SECRET?: string;
+  LOOPS_API_KEY?: string;
 }
 
 export interface Cryptid {

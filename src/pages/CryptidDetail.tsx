@@ -18,6 +18,7 @@ import { useSEO } from "@/hooks/use-seo";
 import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
 import { analytics } from "@/lib/analytics";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const CryptidDetail = () => {
   const { id } = useParams();
@@ -352,6 +353,10 @@ const CryptidDetail = () => {
             </div>
           </div>
         )}
+        {/* Newsletter Signup - compact strip */}
+        <div className="mb-8 border-t border-border pt-8">
+          <NewsletterSignup variant="compact" />
+        </div>
       </div>
       <BackToTop />
     </div>

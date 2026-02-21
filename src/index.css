@@ -620,6 +620,54 @@ All colors MUST be HSL.
 }
 
 /* ============================================
+   Newsletter Signup - Input & Button Styles
+   ============================================ */
+
+/* Typewriter-style input with dotted underline */
+.newsletter-input::placeholder {
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* Disable hover-lift on newsletter paper so it reads as a static form */
+.newsletter-paper.memo-paper:hover {
+  transform: none;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 0 40px rgba(139, 115, 85, 0.04),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Stamp-styled submit button */
+.newsletter-stamp-btn {
+  position: relative;
+}
+
+.newsletter-stamp-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: hsl(var(--primary));
+  transition: opacity 0.2s;
+}
+
+.newsletter-stamp-btn:hover::after {
+  opacity: 0.05;
+}
+
+/* Dark mode input adjustments */
+.dark .newsletter-input {
+  border-bottom-color: hsl(40 15% 50%);
+}
+
+.dark .newsletter-input:focus {
+  border-bottom-color: hsl(152 50% 50%);
+}
+
+/* ============================================
    FILE FOLDER & INDEX CARD STYLES (About Page)
    ============================================ */
 

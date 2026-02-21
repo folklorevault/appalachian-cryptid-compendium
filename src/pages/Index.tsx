@@ -14,6 +14,7 @@ import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { useFavorites } from "@/hooks/use-favorites";
 import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
 import { analytics } from "@/lib/analytics";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const INITIAL_VISIBLE = 6;
 const LOAD_MORE_COUNT = 6;
@@ -376,6 +377,25 @@ const Index = () => {
               )}
             </>
           )}
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="py-16 px-4 border-t border-border">
+        <div className="container mx-auto">
+          <div className="text-center mb-8">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+              Email Newsletter
+            </div>
+            <h3 className="text-2xl font-bold text-foreground font-display">
+              Get New Cryptid Alerts
+            </h3>
+            <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+              Sign up and we'll email you when new creatures are added to the guide
+              or the Bureau has news to report.
+            </p>
+          </div>
+          <NewsletterSignup />
         </div>
       </section>
 
