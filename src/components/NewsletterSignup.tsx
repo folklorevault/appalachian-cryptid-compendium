@@ -12,9 +12,19 @@ function useNewsletterForm() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<SignupState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  // Honeypot: hidden field that bots auto-fill
+  const [website, setWebsite] = useState("");
+  // Timing: record when the form was rendered
+  const [loadedAt] = useState(() => Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check — silently "succeed" so bots don't retry
+    if (website) {
+      setState("success");
+      return;
+    }
 
     if (!email || !email.includes("@")) {
       setErrorMsg("A valid transmission address is required.");
@@ -29,7 +39,7 @@ function useNewsletterForm() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, _t: loadedAt }),
       });
 
       const data = await res.json();
@@ -46,14 +56,14 @@ function useNewsletterForm() {
     }
   };
 
-  return { email, setEmail, state, setState, errorMsg, handleSubmit };
+  return { email, setEmail, state, setState, errorMsg, website, setWebsite, handleSubmit };
 }
 
 // ─── COMPACT VARIANT ───────────────────────────────────────
 // Slim inline strip for detail pages - no clips, stamps, or letterhead
 
 const CompactSignup = () => {
-  const { email, setEmail, state, setState, errorMsg, handleSubmit } = useNewsletterForm();
+  const { email, setEmail, state, setState, errorMsg, website, setWebsite, handleSubmit } = useNewsletterForm();
 
   if (state === "success") {
     return (
@@ -74,6 +84,11 @@ const CompactSignup = () => {
         Get notified when new cryptids are added to the guide
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+        {/* Honeypot — visually hidden, traps bots */}
+        <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", tabIndex: -1 }}>
+          <label htmlFor="website-compact">Website</label>
+          <input id="website-compact" type="text" name="website" autoComplete="off" tabIndex={-1} value={website} onChange={(e) => setWebsite(e.target.value)} />
+        </div>
         <div className="flex-1">
           <input
             type="email"
@@ -120,7 +135,7 @@ const CompactSignup = () => {
 // Complete memo-paper form with stamps, clips, and letterhead
 
 const FullSignup = () => {
-  const { email, setEmail, state, setState, errorMsg, handleSubmit } = useNewsletterForm();
+  const { email, setEmail, state, setState, errorMsg, website, setWebsite, handleSubmit } = useNewsletterForm();
 
   // Success state - receipt style
   if (state === "success") {
@@ -262,6 +277,11 @@ const FullSignup = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="relative z-[2]">
+            {/* Honeypot — visually hidden, traps bots */}
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", tabIndex: -1 }}>
+              <label htmlFor="website-full">Website</label>
+              <input id="website-full" type="text" name="website" autoComplete="off" tabIndex={-1} value={website} onChange={(e) => setWebsite(e.target.value)} />
+            </div>
             {/* Email input - typewriter style with dotted underline */}
             <div className="mb-4">
               <label className="block text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">

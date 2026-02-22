@@ -10,11 +10,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return errorResponse("Newsletter service not configured", 503);
   }
 
-  let body: { email?: string };
+  let body: { email?: string; _t?: number };
   try {
     body = await request.json();
   } catch {
     return errorResponse("Invalid request body");
+  }
+
+  // Timing check — reject submissions faster than 2 seconds (bot behavior)
+  const MIN_FORM_MS = 2000;
+  if (body._t && Date.now() - body._t < MIN_FORM_MS) {
+    // Fake success so bots don't retry
+    return jsonResponse({ success: true });
   }
 
   const email = body.email?.trim().toLowerCase();
