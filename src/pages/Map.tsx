@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Key, Loader2 } from "lucide-react";
 import { useMapCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
+import { useSEO } from "@/hooks/use-seo";
 
 const getDangerColor = (level: string) => {
   switch (level) {
@@ -22,6 +23,12 @@ const getDangerColor = (level: string) => {
 };
 
 const Map = () => {
+  useSEO({
+    title: "Sighting Map",
+    description: "Interactive map of cryptid sightings across Appalachia and the American South. Explore reported encounters with Mothman, Wampus Cat, and other creatures.",
+    url: "https://appalachiancryptid.com/map",
+  });
+
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);

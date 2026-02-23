@@ -21,8 +21,9 @@ const About = () => {
 
   // SEO
   useSEO({
-    title: "About the Bureau | Appalachian Cryptid Compendium",
+    title: "About the Bureau",
     description: "Operational mandate and archival protocols for documenting unexplained phenomena in the Appalachian region.",
+    url: "https://appalachiancryptid.com/about",
   });
 
   // Auto-update active tab on scroll

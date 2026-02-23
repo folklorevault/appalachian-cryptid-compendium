@@ -8,6 +8,21 @@ const NotFound = () => {
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+
+    // Tell crawlers not to index 404 pages
+    let robotsMeta = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+    if (!robotsMeta) {
+      robotsMeta = document.createElement("meta");
+      robotsMeta.setAttribute("name", "robots");
+      document.head.appendChild(robotsMeta);
+    }
+    robotsMeta.setAttribute("content", "noindex, nofollow");
+
+    document.title = "Page Not Found | Appalachian Cryptids List";
+
+    return () => {
+      robotsMeta?.remove();
+    };
   }, [location.pathname]);
 
   return (

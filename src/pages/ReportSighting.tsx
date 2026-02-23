@@ -20,6 +20,7 @@ import { ArrowLeft, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-rea
 import { useToast } from "@/hooks/use-toast";
 import { useSubmitSighting } from "@/hooks/use-sightings";
 import { analytics } from "@/lib/analytics";
+import { useSEO } from "@/hooks/use-seo";
 
 interface FormErrors {
   witnessName?: string;
@@ -40,6 +41,12 @@ interface SubmissionData {
 }
 
 const ReportSighting = () => {
+  useSEO({
+    title: "Report a Sighting",
+    description: "Submit your cryptid sighting report to the Appalachian Cryptid Field Guide. Help document unexplained encounters across Appalachia.",
+    url: "https://appalachiancryptid.com/report",
+  });
+
   const { toast } = useToast();
   const submitSighting = useSubmitSighting();
   const [errors, setErrors] = useState<FormErrors>({});

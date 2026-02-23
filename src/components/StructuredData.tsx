@@ -58,9 +58,33 @@ interface BreadcrumbSchema {
   }>;
 }
 
+interface CollectionPageSchema {
+  "@context": "https://schema.org";
+  "@type": "CollectionPage";
+  name: string;
+  description: string;
+  url: string;
+  publisher?: {
+    "@type": "Organization";
+    name: string;
+    url: string;
+  };
+  mainEntity: {
+    "@type": "ItemList";
+    numberOfItems: number;
+    itemListElement: Array<{
+      "@type": "ListItem";
+      position: number;
+      url: string;
+      name: string;
+      description?: string;
+    }>;
+  };
+}
+
 type StructuredDataProps = {
-  type: "website" | "article" | "breadcrumb";
-  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema;
+  type: "website" | "article" | "breadcrumb" | "collection";
+  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema;
 };
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -145,5 +169,35 @@ export function createBreadcrumbSchema(items: Array<{ name: string; url?: string
       name: item.name,
       item: item.url ? `https://appalachiancryptid.com${item.url}` : undefined,
     })),
+  };
+}
+
+export function createCollectionPageSchema(
+  cryptids: Array<{ name: string; slug?: { current?: string }; description?: string }>
+): CollectionPageSchema {
+  const baseUrl = "https://appalachiancryptid.com";
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Appalachian Cryptids List",
+    description:
+      "Complete list of Appalachian cryptids, monsters, and strange creatures. Browse documented sightings from the mountains and hollers of the American South.",
+    url: baseUrl,
+    publisher: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+      url: baseUrl,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: cryptids.length,
+      itemListElement: cryptids.map((cryptid, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${baseUrl}/cryptid/${cryptid.slug?.current}`,
+        name: cryptid.name,
+        description: cryptid.description || undefined,
+      })),
+    },
   };
 }

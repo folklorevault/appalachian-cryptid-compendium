@@ -486,7 +486,7 @@ const FieldGuide = () => {
 
   // SEO
   useSEO({
-    title: "Appalachian Cryptid Field Guide - Complete Reference",
+    title: "Field Guide - Complete Reference",
     description:
       "A naturalist's field guide to the cryptids, creatures, anomalies, and strange phenomena of the Appalachian Mountains and American South. Browse documented sightings and local legends.",
     url: "https://appalachiancryptid.com/field-guide",

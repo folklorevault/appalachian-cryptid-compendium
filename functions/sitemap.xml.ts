@@ -66,6 +66,16 @@ export const onRequestGet: PagesFunction<Env> = async () => {
         changefreq: "weekly",
         priority: "0.9",
       },
+      {
+        loc: `${baseUrl}/field-guide`,
+        changefreq: "weekly",
+        priority: "0.8",
+      },
+      {
+        loc: `${baseUrl}/about`,
+        changefreq: "monthly",
+        priority: "0.6",
+      },
       // Dynamic cryptid pages
       ...cryptids.map((cryptid) => ({
         loc: `${baseUrl}/cryptid/${cryptid.slug?.current}`,
@@ -130,6 +140,16 @@ ${urls
     <loc>${baseUrl}/anomalies</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/field-guide</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>`;
 

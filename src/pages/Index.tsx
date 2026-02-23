@@ -12,14 +12,20 @@ import { Search, X, Heart, FolderOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { useFavorites } from "@/hooks/use-favorites";
-import { StructuredData, createWebSiteSchema } from "@/components/StructuredData";
+import { StructuredData, createWebSiteSchema, createCollectionPageSchema } from "@/components/StructuredData";
 import { analytics } from "@/lib/analytics";
+import { useSEO } from "@/hooks/use-seo";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const INITIAL_VISIBLE = 6;
 const LOAD_MORE_COUNT = 6;
 
 const Index = () => {
+  useSEO({
+    title: undefined, // Uses base title
+    url: "https://appalachiancryptid.com/",
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [selectedDanger, setSelectedDanger] = useState<string>("all");
@@ -126,6 +132,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background paper-texture">
       <StructuredData type="website" data={createWebSiteSchema()} />
+      {cryptids.length > 0 && (
+        <StructuredData type="collection" data={createCollectionPageSchema(cryptids)} />
+      )}
       <Header />
 
       {/* Hero Section */}
@@ -355,8 +364,8 @@ const Index = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {visibleCryptids.map((cryptid) => (
-                  <CasefileCard key={cryptid._id} type="cryptid" data={cryptid} />
+                {visibleCryptids.map((cryptid, index) => (
+                  <CasefileCard key={cryptid._id} type="cryptid" data={cryptid} priority={index < 3} />
                 ))}
               </div>
               {hasMore && (

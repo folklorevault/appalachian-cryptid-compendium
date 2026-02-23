@@ -41,8 +41,9 @@ const Anomalies = () => {
 
   // SEO
   useSEO({
-    title: "Anomalies Desk | Appalachian Cryptid Compendium",
+    title: "Anomalies Desk",
     description: "Lights, hauntings, curses, and other unresolved Appalachian incidents, cataloged like field reports.",
+    url: "https://appalachiancryptid.com/anomalies",
   });
 
   // Favorites hook

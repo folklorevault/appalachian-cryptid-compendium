@@ -12,6 +12,8 @@ type CasefileType = "cryptid" | "anomaly";
 interface CasefileCardProps {
   type: CasefileType;
   data: SanityCryptidListItem | SanityAnomalyListItem;
+  /** When true, loads image eagerly with high fetch priority (use for above-the-fold cards) */
+  priority?: boolean;
 }
 
 // Type guard for cryptid
@@ -24,7 +26,7 @@ function isAnomaly(data: SanityCryptidListItem | SanityAnomalyListItem): data is
   return 'anomalyType' in data;
 }
 
-export const CasefileCard = ({ type, data }: CasefileCardProps) => {
+export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const {
@@ -94,8 +96,9 @@ export const CasefileCard = ({ type, data }: CasefileCardProps) => {
             srcSet={srcSet}
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
             alt={name}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
             decoding="async"
+            fetchPriority={priority ? "high" : undefined}
             width="400"
             height="400"
             onLoad={() => setImageLoaded(true)}
