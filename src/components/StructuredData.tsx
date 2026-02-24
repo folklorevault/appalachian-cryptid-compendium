@@ -58,6 +58,19 @@ interface BreadcrumbSchema {
   }>;
 }
 
+interface FAQPageSchema {
+  "@context": "https://schema.org";
+  "@type": "FAQPage";
+  mainEntity: Array<{
+    "@type": "Question";
+    name: string;
+    acceptedAnswer: {
+      "@type": "Answer";
+      text: string;
+    };
+  }>;
+}
+
 interface CollectionPageSchema {
   "@context": "https://schema.org";
   "@type": "CollectionPage";
@@ -83,8 +96,8 @@ interface CollectionPageSchema {
 }
 
 type StructuredDataProps = {
-  type: "website" | "article" | "breadcrumb" | "collection";
-  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema;
+  type: "website" | "article" | "breadcrumb" | "collection" | "faq";
+  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema;
 };
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -168,6 +181,23 @@ export function createBreadcrumbSchema(items: Array<{ name: string; url?: string
       position: index + 1,
       name: item.name,
       item: item.url ? `https://appalachiancryptid.com${item.url}` : undefined,
+    })),
+  };
+}
+
+export function createFAQPageSchema(
+  faqs: Array<{ question: string; answer: string }>
+): FAQPageSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
     })),
   };
 }

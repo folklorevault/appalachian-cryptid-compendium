@@ -12,8 +12,16 @@ import { CryptidDetailSkeleton } from "@/components/CryptidDetailSkeleton";
 import { BackToTop } from "@/components/BackToTop";
 import { LabelTape } from "@/components/EvidenceChip";
 import { FilingCabinet, FilingDrawer, FilingCabinetControls } from "@/components/FilingDrawer";
-import { ArrowLeft, MapPin, Calendar, AlertTriangle } from "lucide-react";
-import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
+import { MapPin, Calendar, AlertTriangle } from "lucide-react";
+import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema, createFAQPageSchema } from "@/components/StructuredData";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { useSEO } from "@/hooks/use-seo";
 import { useCryptid, useRelatedCryptids } from "@/hooks/use-sanity-cryptids";
 import { urlFor } from "@/lib/sanity";
@@ -132,20 +140,33 @@ const CryptidDetail = () => {
       <StructuredData
         type="breadcrumb"
         data={createBreadcrumbSchema([
-          { name: "Home", url: "/" },
+          { name: "Cryptid Directory", url: "/" },
           { name: cryptid.name }
         ])}
       />
+      {cryptid.declassifiedBriefings && cryptid.declassifiedBriefings.length > 0 && (
+        <StructuredData
+          type="faq"
+          data={createFAQPageSchema(cryptid.declassifiedBriefings)}
+        />
+      )}
       <Header badge="Case File" />
 
-      {/* Back Button */}
+      {/* Breadcrumb Navigation */}
       <div className="container mx-auto px-4 py-4">
-        <Link to="/">
-          <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Directory
-          </Button>
-        </Link>
+        <Breadcrumb>
+          <BreadcrumbList className="font-typewriter uppercase tracking-widest text-xs">
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Cryptid Directory</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>/</BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>{cryptid.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
       <div className="container mx-auto px-4 pb-8">
@@ -270,6 +291,28 @@ const CryptidDetail = () => {
                   <p className="whitespace-pre-line">{cryptid.notableSightings}</p>
                 </FilingDrawer>
               )}
+            </FilingCabinet>
+          </div>
+        )}
+
+        {/* Declassified Briefings (FAQ) */}
+        {cryptid.declassifiedBriefings && cryptid.declassifiedBriefings.length > 0 && (
+          <div className="mb-8">
+            <FilingCabinet defaultOpen={[]}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-foreground font-display">Declassified Briefings</h2>
+                <FilingCabinetControls />
+              </div>
+
+              {cryptid.declassifiedBriefings.map((briefing) => (
+                <FilingDrawer
+                  key={briefing._key}
+                  value={briefing._key}
+                  label={briefing.question}
+                >
+                  <p className="whitespace-pre-line">{briefing.answer}</p>
+                </FilingDrawer>
+              ))}
             </FilingCabinet>
           </div>
         )}

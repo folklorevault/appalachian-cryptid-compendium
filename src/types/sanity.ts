@@ -26,6 +26,12 @@ export interface SanitySlug {
   current: string
 }
 
+export interface SanityDeclassifiedBriefing {
+  _key: string
+  question: string
+  answer: string
+}
+
 export interface SanityTestimony {
   _key: string
   witness: string
@@ -58,6 +64,7 @@ export interface SanityCryptid {
   testimonies?: SanityTestimony[]
   notableSightings?: string
   bureauNotes?: string
+  declassifiedBriefings?: SanityDeclassifiedBriefing[]
 }
 
 // Type for list queries (less data)
@@ -128,6 +135,7 @@ export interface SanityAnomaly {
   relatedLocations?: string
   bureauNotes?: string
   safetyAdvisory?: string
+  declassifiedBriefings?: SanityDeclassifiedBriefing[]
 }
 
 // Type for anomaly list queries (less data)

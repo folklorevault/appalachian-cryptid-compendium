@@ -224,6 +224,37 @@ export default defineType({
       rows: 3,
       description: 'Any warnings or precautions for investigators',
     }),
+    defineField({
+      name: 'declassifiedBriefings',
+      title: 'Declassified Briefings (FAQ)',
+      type: 'array',
+      description: 'Frequently asked questions displayed as "Declassified Briefings" on the detail page. Powers Google FAQ rich snippets.',
+      of: [
+        {
+          type: 'object',
+          name: 'briefing',
+          title: 'Briefing',
+          fields: [
+            {
+              name: 'question',
+              title: 'Question',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'answer',
+              title: 'Answer',
+              type: 'text',
+              rows: 4,
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {title: 'question'},
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

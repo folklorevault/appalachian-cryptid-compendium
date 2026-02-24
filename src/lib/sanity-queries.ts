@@ -69,7 +69,12 @@ export const cryptidBySlugQuery = `*[_type == "cryptid" && slug.current == $slug
     account
   },
   notableSightings,
-  bureauNotes
+  bureauNotes,
+  declassifiedBriefings[] {
+    _key,
+    question,
+    answer
+  }
 }`
 
 // Get single cryptid by ID (for backwards compatibility)
@@ -101,7 +106,12 @@ export const cryptidByIdQuery = `*[_type == "cryptid" && _id == $id][0] {
     account
   },
   notableSightings,
-  bureauNotes
+  bureauNotes,
+  declassifiedBriefings[] {
+    _key,
+    question,
+    answer
+  }
 }`
 
 // Get all cryptids for map (with coordinates)
@@ -203,7 +213,12 @@ export const anomalyBySlugQuery = `*[_type == "anomaly" && slug.current == $slug
   },
   relatedLocations,
   bureauNotes,
-  safetyAdvisory
+  safetyAdvisory,
+  declassifiedBriefings[] {
+    _key,
+    question,
+    answer
+  }
 }`
 
 // Get all anomalies for map (with coordinates)

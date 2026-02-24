@@ -12,8 +12,16 @@ import { CryptidDetailSkeleton } from "@/components/CryptidDetailSkeleton";
 import { BackToTop } from "@/components/BackToTop";
 import { LabelTape } from "@/components/EvidenceChip";
 import { FilingCabinet, FilingDrawer, FilingCabinetControls } from "@/components/FilingDrawer";
-import { ArrowLeft, MapPin, Calendar, AlertTriangle, Clock, Zap, Ghost, Skull, Eye, Volume2, Cloud, MapPinned } from "lucide-react";
-import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema } from "@/components/StructuredData";
+import { MapPin, Calendar, AlertTriangle, Clock, Zap, Ghost, Skull, Eye, Volume2, Cloud, MapPinned } from "lucide-react";
+import { StructuredData, createCryptidArticleSchema, createBreadcrumbSchema, createFAQPageSchema } from "@/components/StructuredData";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { useSEO } from "@/hooks/use-seo";
 import { useAnomaly, useRelatedAnomalies } from "@/hooks/use-sanity-anomalies";
 import { urlFor } from "@/lib/sanity";
@@ -139,21 +147,40 @@ const AnomalyDetail = () => {
       <StructuredData
         type="breadcrumb"
         data={createBreadcrumbSchema([
-          { name: "Home", url: "/" },
+          { name: "Cryptid Directory", url: "/" },
           { name: "Anomalies Desk", url: "/anomalies" },
           { name: anomaly.name }
         ])}
       />
+      {anomaly.declassifiedBriefings && anomaly.declassifiedBriefings.length > 0 && (
+        <StructuredData
+          type="faq"
+          data={createFAQPageSchema(anomaly.declassifiedBriefings)}
+        />
+      )}
       <Header badge="Case File" />
 
-      {/* Back Button */}
+      {/* Breadcrumb Navigation */}
       <div className="container mx-auto px-4 py-4">
-        <Link to="/anomalies">
-          <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Anomalies Desk
-          </Button>
-        </Link>
+        <Breadcrumb>
+          <BreadcrumbList className="font-typewriter uppercase tracking-widest text-xs">
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Directory</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>/</BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/anomalies">Anomalies Desk</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>/</BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>{anomaly.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
       <div className="container mx-auto px-4 pb-8">
@@ -289,6 +316,28 @@ const AnomalyDetail = () => {
                   <p className="whitespace-pre-line">{anomaly.relatedLocations}</p>
                 </FilingDrawer>
               )}
+            </FilingCabinet>
+          </div>
+        )}
+
+        {/* Declassified Briefings (FAQ) */}
+        {anomaly.declassifiedBriefings && anomaly.declassifiedBriefings.length > 0 && (
+          <div className="mb-8">
+            <FilingCabinet defaultOpen={[]}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-foreground font-display">Declassified Briefings</h2>
+                <FilingCabinetControls />
+              </div>
+
+              {anomaly.declassifiedBriefings.map((briefing) => (
+                <FilingDrawer
+                  key={briefing._key}
+                  value={briefing._key}
+                  label={briefing.question}
+                >
+                  <p className="whitespace-pre-line">{briefing.answer}</p>
+                </FilingDrawer>
+              ))}
             </FilingCabinet>
           </div>
         )}
