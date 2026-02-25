@@ -50,13 +50,10 @@ export default defineConfig(({ mode }) => ({
           "vendor-react": ["react", "react-dom", "react-router-dom"],
           // TanStack Query chunk
           "vendor-query": ["@tanstack/react-query"],
-          // UI library chunk (Radix primitives - used by shadcn/ui)
-          // Note: These share internal code, so keeping them together is more efficient
+          // UI library chunk (only Radix primitives needed on homepage)
+          // Dialog, dropdown-menu, label, select are used only in lazy routes
+          // and will be automatically bundled with those routes by Vite
           "vendor-ui": [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-label",
-            "@radix-ui/react-select",
             "@radix-ui/react-slot",
             "@radix-ui/react-toast",
             "@radix-ui/react-tooltip",
