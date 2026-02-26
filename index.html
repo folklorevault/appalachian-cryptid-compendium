@@ -1,13 +1,8 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Preconnect hints MUST be first for maximum benefit -->
-    <!-- No crossorigin: Sanity API client uses fetch() without CORS mode for queries -->
-    <link rel="preconnect" href="https://8thljucm.apicdn.sanity.io">
-    <!-- crossorigin: Sanity image CDN is used via <img> tags (CORS requests) -->
-    <link rel="preconnect" href="https://cdn.sanity.io" crossorigin>
-    <!-- Rybbit analytics script loads from this origin -->
-    <link rel="preconnect" href="https://rybbit.folklorevault.com">
+    <!-- Preconnects handled via _headers Early Hints (103 response) —
+         arrives before HTML, so <link> tags here would be redundant -->
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
