@@ -1,21 +1,22 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, lazy, Suspense } from "react";
 import { CasefileCard } from "@/components/CasefileCard";
 import { CryptidCardSkeleton } from "@/components/CryptidCardSkeleton";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { BackToTop } from "@/components/BackToTop";
-import { TrendingCryptids } from "@/components/TrendingCryptids";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LabelTape } from "@/components/EvidenceChip";
-import { Search, X, Heart, FolderOpen } from "lucide-react";
+import { Search, Heart, FolderOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCryptids } from "@/hooks/use-sanity-cryptids";
 import { useFavorites } from "@/hooks/use-favorites";
 import { StructuredData, createWebSiteSchema, createCollectionPageSchema } from "@/components/StructuredData";
 import { analytics } from "@/lib/analytics";
 import { useSEO } from "@/hooks/use-seo";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
+
+// Below-fold components — lazy-loaded to reduce initial bundle size
+const NewsletterSignup = lazy(() => import("@/components/NewsletterSignup").then(m => ({ default: m.NewsletterSignup })));
+const BackToTop = lazy(() => import("@/components/BackToTop").then(m => ({ default: m.BackToTop })));
 
 const INITIAL_VISIBLE = 6;
 const LOAD_MORE_COUNT = 6;
@@ -172,9 +173,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {/* Trending Cryptids */}
-      <TrendingCryptids />
 
       {/* Filter & Search Section */}
       <section id="field-guide" className="py-12 px-4 border-y border-border bg-card/50">
@@ -404,12 +402,12 @@ const Index = () => {
               or the Bureau has news to report.
             </p>
           </div>
-          <NewsletterSignup />
+          <Suspense fallback={null}><NewsletterSignup /></Suspense>
         </div>
       </section>
 
       <Footer variant="full" />
-      <BackToTop />
+      <Suspense fallback={null}><BackToTop /></Suspense>
     </div>
   );
 };

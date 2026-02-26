@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <!-- Preconnect hints MUST be first for maximum benefit -->
-    <!-- crossorigin required: Sanity client uses fetch() (CORS requests) -->
-    <link rel="preconnect" href="https://8thljucm.apicdn.sanity.io" crossorigin>
+    <!-- No crossorigin: Sanity API client uses fetch() without CORS mode for queries -->
+    <link rel="preconnect" href="https://8thljucm.apicdn.sanity.io">
+    <!-- crossorigin: Sanity image CDN is used via <img> tags (CORS requests) -->
     <link rel="preconnect" href="https://cdn.sanity.io" crossorigin>
-    <link rel="dns-prefetch" href="https://8thljucm.apicdn.sanity.io" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.sanity.io" crossorigin>
-    <link rel="dns-prefetch" href="https://rybbit.folklorevault.com">
+    <!-- Rybbit analytics script loads from this origin -->
+    <link rel="preconnect" href="https://rybbit.folklorevault.com">
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

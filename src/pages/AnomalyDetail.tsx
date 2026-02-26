@@ -281,7 +281,7 @@ const AnomalyDetail = () => {
             {/* Actions: Favorite & Share */}
             <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-border">
               <FavoriteButton
-                slug={`anomaly-${anomaly.slug?.current}` || ""}
+                slug={`anomaly-${anomaly.slug?.current ?? ""}`}
                 name={anomaly.name}
                 variant="inline"
               />

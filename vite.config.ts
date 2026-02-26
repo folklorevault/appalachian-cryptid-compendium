@@ -55,7 +55,6 @@ export default defineConfig(({ mode }) => ({
           // and will be automatically bundled with those routes by Vite
           "vendor-ui": [
             "@radix-ui/react-slot",
-            "@radix-ui/react-toast",
             "@radix-ui/react-tooltip",
           ],
           // Sanity client chunk

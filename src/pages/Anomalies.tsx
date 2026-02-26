@@ -64,7 +64,7 @@ const Anomalies = () => {
     // Filter by favorites if enabled
     if (showFavoritesOnly) {
       results = results.filter((anomaly) =>
-        favorites.includes(`anomaly-${anomaly.slug?.current}` || "")
+        favorites.includes(`anomaly-${anomaly.slug?.current ?? ""}`)
       );
     }
 
