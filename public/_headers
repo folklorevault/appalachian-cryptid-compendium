@@ -19,8 +19,9 @@
 # Early Hints: Cloudflare sends 103 responses with these Link headers
 # before the HTML is ready, giving browsers a head start on connections
 /
-  Link: <https://8thljucm.apicdn.sanity.io>; rel=preconnect; crossorigin
+  Link: <https://8thljucm.apicdn.sanity.io>; rel=preconnect
   Link: <https://cdn.sanity.io>; rel=preconnect; crossorigin
+  Link: <https://rybbit.folklorevault.com>; rel=preconnect
 
 /*
   Cache-Control: public, max-age=0, must-revalidate
