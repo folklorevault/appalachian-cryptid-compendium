@@ -134,8 +134,8 @@ export const FilingDrawer = ({
       className={cn(
         "group",
         "rounded-sm overflow-hidden",
-        "border-2 border-[#c4a55a]/60",
-        "bg-[#f5f0e1]",
+        "border-2 border-[hsl(var(--bureau-border))]/60",
+        "bg-[hsl(var(--bureau-manila-light))]",
         // Subtle shadow for depth
         "shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]",
         className
@@ -147,16 +147,16 @@ export const FilingDrawer = ({
           className={cn(
             "flex flex-1 items-center gap-3 w-full text-left",
             "px-4 py-3",
-            "bg-[#e8dcc4]",
-            "border-b-2 border-[#c4a55a]/40",
+            "bg-[hsl(var(--bureau-manila))]",
+            "border-b-2 border-[hsl(var(--bureau-border))]/40",
             // Hover state - tab "lifts"
-            "hover:bg-[#efe4ce]",
+            "hover:bg-[hsl(var(--bureau-manila-light))]",
             "transition-colors duration-75",
             // Focus state
             "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
             // Open state styling
-            "group-data-[state=open]:bg-[#efe4ce]",
-            "group-data-[state=open]:border-b-[#c4a55a]/60"
+            "group-data-[state=open]:bg-[hsl(var(--bureau-manila-light))]",
+            "group-data-[state=open]:border-b-[hsl(var(--bureau-border))]/60"
           )}
         >
           {/* Tab shape - sits above the line */}
@@ -164,12 +164,12 @@ export const FilingDrawer = ({
             className={cn(
               "relative",
               "px-3 py-1",
-              "bg-[#d4c49a]",
-              "border border-[#b8a070]",
+              "bg-[hsl(var(--bureau-manila-dark))]",
+              "border border-[hsl(var(--bureau-border))]",
               "rounded-t-md rounded-b-none",
               "-mb-1",
               // Shadow under tab
-              "shadow-[0_2px_0_#c4b078]",
+              "shadow-[0_2px_0_hsl(var(--bureau-border))]",
               // Slight lift on hover/open
               "group-hover:-translate-y-px",
               "group-data-[state=open]:-translate-y-px",
@@ -178,8 +178,8 @@ export const FilingDrawer = ({
           >
             <span
               className={cn(
-                "font-mono text-[11px] font-semibold tracking-[0.08em] uppercase",
-                "text-[#4a3f2f]"
+                "font-typewriter text-xs font-bold tracking-[0.08em] uppercase",
+                "text-foreground"
               )}
             >
               {label}
@@ -194,13 +194,13 @@ export const FilingDrawer = ({
             className={cn(
               "flex items-center justify-center",
               "w-6 h-6",
-              "text-[#7a6a50]",
+              "text-[hsl(var(--bureau-ink-muted))]",
               "transition-transform duration-75"
             )}
           >
             <span
               className={cn(
-                "font-mono text-sm font-bold",
+                "font-typewriter text-sm font-bold",
                 "group-data-[state=closed]:block",
                 "group-data-[state=open]:hidden"
               )}
@@ -209,7 +209,7 @@ export const FilingDrawer = ({
             </span>
             <span
               className={cn(
-                "font-mono text-sm font-bold",
+                "font-typewriter text-sm font-bold",
                 "group-data-[state=closed]:hidden",
                 "group-data-[state=open]:block"
               )}
@@ -232,7 +232,7 @@ export const FilingDrawer = ({
         <div className="relative">
           {/* Slotted-in notch effect - darker line where tab meets content */}
           <div
-            className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#a08050]/40 to-transparent"
+            className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(var(--bureau-manila-dark))]/40 to-transparent"
             aria-hidden="true"
           />
 
@@ -240,11 +240,11 @@ export const FilingDrawer = ({
             className={cn(
               "px-5 py-4 pt-5 pr-24",
               // Interior paper - slightly different texture
-              "bg-[#faf8f2]",
+              "bg-[hsl(var(--bureau-paper))]",
               // Inset shadow for depth - "looking into folder"
               "shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]",
               // Content typography
-              "text-[#3a352d]",
+              "text-[hsl(var(--bureau-ink))]",
               "text-sm leading-relaxed"
             )}
           >
@@ -253,16 +253,16 @@ export const FilingDrawer = ({
               className={cn(
                 "absolute top-3 right-4",
                 "px-2 py-0.5",
-                "bg-[#8b0000]/10",
-                "border border-[#8b0000]/30",
+                "bg-[hsl(var(--bureau-stamp))]/10",
+                "border border-[hsl(var(--bureau-stamp))]/30",
                 "rounded-sm",
                 "transform rotate-[-2deg]"
               )}
             >
               <span
                 className={cn(
-                  "font-mono text-[9px] font-bold tracking-[0.15em] uppercase",
-                  "text-[#8b0000]/70"
+                  "font-typewriter text-[9px] font-bold tracking-[0.15em] uppercase",
+                  "text-[hsl(var(--bureau-stamp))]/70"
                 )}
               >
                 In Review
@@ -291,10 +291,10 @@ export const FilingCabinetControls = ({ className }: { className?: string }) => 
         className={cn(
           "inline-flex items-center gap-1.5",
           "px-2.5 py-1",
-          "text-[10px] font-mono uppercase tracking-wider",
-          "text-[#6a5a4a]",
-          "bg-[#e8dcc4] hover:bg-[#ded2bc]",
-          "border border-[#c4a55a]/50",
+          "text-[10px] font-typewriter uppercase tracking-wider",
+          "text-[hsl(var(--bureau-ink-muted))]",
+          "bg-[hsl(var(--bureau-manila))] hover:bg-[hsl(var(--bureau-manila-dark))]",
+          "border border-[hsl(var(--bureau-border))]/50",
           "rounded-sm",
           "transition-colors duration-75",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"

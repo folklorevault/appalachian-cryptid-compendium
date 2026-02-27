@@ -55,6 +55,7 @@ export const Header = ({ badge }: HeaderProps) => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden text-foreground"
             aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -64,12 +65,13 @@ export const Header = ({ badge }: HeaderProps) => {
           </button>
 
           {/* Desktop navigation */}
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-6" aria-label="Main navigation">
             {navItems.map((item) => (
               item.isAnchor ? (
                 <a
                   key={item.to}
                   href={item.to}
+                  aria-current={isActive(item.to) ? "page" : undefined}
                   className={`text-sm transition-colors ${
                     isActive(item.to)
                       ? "text-primary"
@@ -82,6 +84,7 @@ export const Header = ({ badge }: HeaderProps) => {
                 <Link
                   key={item.to}
                   to={item.to}
+                  aria-current={isActive(item.to) ? "page" : undefined}
                   className={`text-sm transition-colors ${
                     isActive(item.to)
                       ? "text-primary"
@@ -116,12 +119,13 @@ export const Header = ({ badge }: HeaderProps) => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-border bg-card">
-          <nav className="container mx-auto px-4 py-4 flex flex-col gap-3">
+          <nav className="container mx-auto px-4 py-4 flex flex-col gap-3" aria-label="Mobile navigation">
             {navItems.map((item) => (
               item.isAnchor ? (
                 <a
                   key={item.to}
                   href={item.to}
+                  aria-current={isActive(item.to) ? "page" : undefined}
                   className={`text-sm transition-colors ${
                     isActive(item.to)
                       ? "text-primary"
@@ -135,6 +139,7 @@ export const Header = ({ badge }: HeaderProps) => {
                 <Link
                   key={item.to}
                   to={item.to}
+                  aria-current={isActive(item.to) ? "page" : undefined}
                   className={`text-sm transition-colors ${
                     isActive(item.to)
                       ? "text-primary"

@@ -90,7 +90,9 @@ const CompactSignup = () => {
           <input id="website-compact" type="text" name="website" autoComplete="off" tabIndex={-1} value={website} onChange={(e) => setWebsite(e.target.value)} />
         </div>
         <div className="flex-1">
+          <label htmlFor="newsletter-email-compact" className="sr-only">Email address</label>
           <input
+            id="newsletter-email-compact"
             type="email"
             value={email}
             onChange={(e) => {
@@ -98,11 +100,13 @@ const CompactSignup = () => {
               if (state === "error") setState("idle");
             }}
             placeholder="your email address"
+            aria-invalid={state === "error" || undefined}
+            aria-describedby={state === "error" && errorMsg ? "newsletter-compact-error" : undefined}
             className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-1.5 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 transition-colors"
             disabled={state === "submitting"}
           />
           {state === "error" && errorMsg && (
-            <p className="text-[10px] text-destructive font-typewriter mt-1 uppercase tracking-wider">
+            <p id="newsletter-compact-error" role="alert" className="text-[10px] text-destructive font-typewriter mt-1 uppercase tracking-wider">
               {errorMsg}
             </p>
           )}
@@ -284,11 +288,12 @@ const FullSignup = () => {
             </div>
             {/* Email input - typewriter style with dotted underline */}
             <div className="mb-4">
-              <label className="block text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+              <label htmlFor="newsletter-email-full" className="block text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
                 Transmission Address (Email)
               </label>
               <div className="relative">
                 <input
+                  id="newsletter-email-full"
                   type="email"
                   value={email}
                   onChange={(e) => {
@@ -296,12 +301,14 @@ const FullSignup = () => {
                     if (state === "error") setState("idle");
                   }}
                   placeholder="operative.email@field-office.gov"
+                  aria-invalid={state === "error" || undefined}
+                  aria-describedby={state === "error" && errorMsg ? "newsletter-full-error" : undefined}
                   className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-2 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 transition-colors"
                   disabled={state === "submitting"}
                 />
               </div>
               {state === "error" && errorMsg && (
-                <p className="text-xs text-destructive font-typewriter mt-1.5 uppercase tracking-wider">
+                <p id="newsletter-full-error" role="alert" className="text-xs text-destructive font-typewriter mt-1.5 uppercase tracking-wider">
                   {errorMsg}
                 </p>
               )}

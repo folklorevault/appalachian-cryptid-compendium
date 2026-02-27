@@ -41,7 +41,7 @@ export const IncidentLog = ({
         </div>
 
         {/* Main content */}
-        <div className="p-4 font-mono text-[11px] leading-relaxed text-[#2a2a2a]">
+        <div className="p-4 font-typewriter text-[11px] leading-relaxed text-[#2a2a2a]">
           {/* Header block */}
           <div className="border-b-2 border-double border-[#8b7355] pb-3 mb-4">
             <div className="text-center tracking-[0.3em] text-[10px] text-[#5a4a3a]">

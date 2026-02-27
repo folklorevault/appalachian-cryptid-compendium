@@ -152,6 +152,7 @@ const CryptidDetail = () => {
       )}
       <Header badge="Case File" />
 
+      <main id="main-content">
       {/* Breadcrumb Navigation */}
       <div className="container mx-auto px-4 py-4">
         <Breadcrumb>
@@ -401,6 +402,7 @@ const CryptidDetail = () => {
           <NewsletterSignup variant="compact" />
         </div>
       </div>
+      </main>
       <BackToTop />
     </div>
   );

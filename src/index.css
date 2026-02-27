@@ -106,8 +106,18 @@ All colors MUST be HSL.
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     
     --font-display: "Rokkitt", "Georgia", "Times New Roman", serif;
-    
+
     --font-typewriter: "Special Elite", "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* Bureau Artifact Colors — manila & aged paper family */
+    --bureau-manila: 40 40% 78%;
+    --bureau-manila-dark: 40 35% 68%;
+    --bureau-manila-light: 40 35% 88%;
+    --bureau-paper: 40 30% 96%;
+    --bureau-ink: 25 30% 22%;
+    --bureau-ink-muted: 25 20% 38%;
+    --bureau-border: 35 30% 72%;
+    --bureau-stamp: 8 45% 28%;
 
     --shadow-2xs: 0 1px 3px 0px hsl(25 30% 20% / 0.05);
 

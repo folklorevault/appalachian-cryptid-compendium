@@ -182,7 +182,7 @@ const Index = () => {
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
                 Browse the Collection
               </div>
-              <h3 className="text-2xl font-bold text-foreground">Find a Creature</h3>
+              <h2 className="text-2xl font-bold text-foreground">Find a Creature</h2>
               <p className="text-sm text-muted-foreground mt-2 max-w-xl mx-auto">
                 Browse the Bureau's working list of Appalachian cryptids, monsters, and strange creatures.
                 Use the search bar and filters to find case files by name, location, or threat level.
@@ -192,8 +192,10 @@ const Index = () => {
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <label htmlFor="cryptid-search" className="sr-only">Search cryptids by name, location, or description</label>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" aria-hidden="true" />
                 <Input
+                  id="cryptid-search"
                   type="text"
                   placeholder="Search by name, location, or description..."
                   value={searchQuery}
@@ -215,6 +217,7 @@ const Index = () => {
                     variant={selectedRegion === region.value ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleFilterChange(setSelectedRegion, region.value)}
+                    aria-pressed={selectedRegion === region.value}
                     className={
                       selectedRegion === region.value
                         ? "bg-primary text-primary-foreground"
@@ -238,6 +241,7 @@ const Index = () => {
                     variant={selectedDanger === level.value ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleFilterChange(setSelectedDanger, level.value)}
+                    aria-pressed={selectedDanger === level.value}
                     className={
                       selectedDanger === level.value
                         ? "bg-secondary text-secondary-foreground"
@@ -259,6 +263,8 @@ const Index = () => {
                   setShowFavoritesOnly(!showFavoritesOnly);
                   setVisibleCount(INITIAL_VISIBLE);
                 }}
+                aria-pressed={showFavoritesOnly}
+                aria-label={showFavoritesOnly ? "Show all cryptids" : `Show ${favoritesCount} saved cryptids`}
                 className={
                   showFavoritesOnly
                     ? "bg-destructive text-destructive-foreground"
@@ -394,9 +400,9 @@ const Index = () => {
             <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
               Email Newsletter
             </div>
-            <h3 className="text-2xl font-bold text-foreground font-display">
+            <h2 className="text-2xl font-bold text-foreground font-display">
               Get New Cryptid Alerts
-            </h3>
+            </h2>
             <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
               Sign up and we'll email you when new creatures are added to the guide
               or the Bureau has news to report.

@@ -10,7 +10,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
       <footer className="border-t border-border bg-card py-8 px-4">
         <div className="container mx-auto text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 Appalachian Cryptid Field Guide. Compiled in East Tennessee.
+            © 2026 Appalachian Cryptid Field Guide. Compiled in East Tennessee.
           </p>
         </div>
       </footer>
@@ -85,7 +85,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
         </div>
         <div className="border-t border-border pt-6">
           <p className="text-center text-sm text-muted-foreground">
-            © 2024 Appalachian Cryptid Field Guide. Compiled in East Tennessee.
+            © 2026 Appalachian Cryptid Field Guide. Compiled in East Tennessee.
           </p>
         </div>
       </div>

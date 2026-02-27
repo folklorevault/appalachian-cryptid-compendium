@@ -28,49 +28,60 @@ export const EvidenceChip = ({
     "label-tape": cn(
       // DYMO label maker aesthetic - embossed black on colored tape
       "px-2.5 py-1 rounded-sm",
-      "bg-[#c4b998] text-[#1a1a1a]", // Aged cream/tan tape
-      "font-mono uppercase tracking-[0.15em] text-[10px]",
+      "bg-[hsl(var(--bureau-manila))] text-[hsl(var(--bureau-ink))]",
+      "font-typewriter uppercase tracking-[0.15em] text-[10px]",
       "shadow-[inset_0_1px_0_rgba(255,255,255,0.3),inset_0_-1px_0_rgba(0,0,0,0.1)]",
-      "border border-[#a89f7c]",
+      "border border-[hsl(var(--bureau-border))]",
       // Slight embossed/debossed effect
       "[text-shadow:0_1px_0_rgba(255,255,255,0.3)]"
     ),
     "manila-tab": cn(
       // Manila folder tab
       "px-3 py-1 rounded-t-md rounded-b-none",
-      "bg-[#e8d9a0] text-[#4a3728]",
+      "bg-[hsl(var(--bureau-manila))] text-[hsl(var(--bureau-ink))]",
       "font-typewriter text-[11px]",
-      "border-x border-t border-[#c4a35a]",
-      "shadow-[0_2px_0_#d4c078]",
+      "border-x border-t border-[hsl(var(--bureau-border))]",
+      "shadow-[0_2px_0_hsl(var(--bureau-manila-dark))]",
       // Tab shape with notched bottom
-      "relative before:absolute before:bottom-0 before:left-0 before:right-0 before:h-[2px] before:bg-[#c4a35a]"
+      "relative before:absolute before:bottom-0 before:left-0 before:right-0 before:h-[2px] before:bg-[hsl(var(--bureau-border))]"
     ),
     "punch-card": cn(
       // IBM punch card aesthetic
       "px-2 py-0.5 rounded-none",
-      "bg-[#f5f0dc] text-[#2d2d2d]",
-      "font-mono uppercase text-[9px] tracking-[0.2em]",
-      "border border-[#c9c4b0]",
+      "bg-[hsl(var(--bureau-paper))] text-[hsl(var(--bureau-ink))]",
+      "font-typewriter uppercase text-[9px] tracking-[0.2em]",
+      "border border-[hsl(var(--bureau-border))]",
       // Punch holes effect on sides
-      "before:content-['◯'] before:text-[6px] before:text-[#bbb5a0] before:mr-1",
-      "after:content-['◯'] after:text-[6px] after:text-[#bbb5a0] after:ml-1"
+      "before:content-['◯'] before:text-[6px] before:text-[hsl(var(--bureau-ink-muted))] before:mr-1",
+      "after:content-['◯'] after:text-[6px] after:text-[hsl(var(--bureau-ink-muted))] after:ml-1"
     ),
   };
 
+  const chipClasses = cn(
+    baseStyles,
+    variantStyles[variant],
+    onRemove && "cursor-pointer hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
+    className
+  );
+
+  if (onRemove) {
+    const labelText = typeof children === "string" ? children : undefined;
+    return (
+      <button
+        type="button"
+        className={chipClasses}
+        onClick={onRemove}
+        aria-label={labelText ? `Remove ${labelText} filter` : "Remove filter"}
+      >
+        {children}
+        <X className="h-3 w-3 opacity-70" aria-hidden="true" />
+      </button>
+    );
+  }
+
   return (
-    <span
-      className={cn(
-        baseStyles,
-        variantStyles[variant],
-        onRemove && "cursor-pointer hover:opacity-80",
-        className
-      )}
-      onClick={onRemove}
-    >
+    <span className={chipClasses}>
       {children}
-      {onRemove && (
-        <X className="h-3 w-3 opacity-60 hover:opacity-100" />
-      )}
     </span>
   );
 };
