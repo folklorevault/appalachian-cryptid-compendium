@@ -11,7 +11,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: "/field-guide", label: "Field Guide" },
+  { href: "/", label: "Field Guide" },
   { href: "/anomalies", label: "Anomalies Desk" },
   { href: "/map", label: "Sighting Map" },
   { href: "/about", label: "About" },
