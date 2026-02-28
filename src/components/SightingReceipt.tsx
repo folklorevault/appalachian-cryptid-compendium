@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Stamp } from "@/components/Stamp";
 import { FileText, RotateCcw } from "lucide-react";
@@ -91,7 +91,7 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
               text="File Copy"
               variant="muted"
               rotation={-15}
-              className="text-[10px] px-3 py-1 opacity-50 border-2"
+              className="text-xs px-3 py-1 opacity-50 border-2"
             />
           </div>
 
@@ -113,7 +113,7 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
             <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
               Assigned Case Number
             </div>
-            <div className="text-lg font-bold tracking-wider">
+            <div className="text-xl font-bold tracking-wider">
               {caseNumber}
             </div>
           </div>
@@ -181,7 +181,7 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
           <RotateCcw className="mr-2 h-4 w-4" />
           File Another Report
         </Button>
-        <Link to="/">
+        <Link href="/">
           <Button className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90">
             Return to Directory
           </Button>

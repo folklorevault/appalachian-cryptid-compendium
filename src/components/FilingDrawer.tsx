@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { cn } from "@/lib/utils";
@@ -261,7 +263,7 @@ export const FilingDrawer = ({
             >
               <span
                 className={cn(
-                  "font-typewriter text-[9px] font-bold tracking-[0.15em] uppercase",
+                  "font-typewriter text-xs font-bold tracking-[0.15em] uppercase",
                   "text-[hsl(var(--bureau-stamp))]/70"
                 )}
               >
@@ -291,7 +293,7 @@ export const FilingCabinetControls = ({ className }: { className?: string }) => 
         className={cn(
           "inline-flex items-center gap-1.5",
           "px-2.5 py-1",
-          "text-[10px] font-typewriter uppercase tracking-wider",
+          "text-xs font-typewriter uppercase tracking-wider",
           "text-[hsl(var(--bureau-ink-muted))]",
           "bg-[hsl(var(--bureau-manila))] hover:bg-[hsl(var(--bureau-manila-dark))]",
           "border border-[hsl(var(--bureau-border))]/50",

@@ -1,16 +1,19 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface FooterProps {
   variant?: "simple" | "full";
 }
 
 export const Footer = ({ variant = "simple" }: FooterProps) => {
+  const year = new Date().getFullYear();
+
   if (variant === "simple") {
     return (
-      <footer className="border-t border-border bg-card py-8 px-4">
-        <div className="container mx-auto text-center">
+      <footer className="border-t border-border bg-card py-8 px-6">
+        <div className="max-w-6xl mx-auto text-center">
           <p className="text-sm text-muted-foreground">
-            © 2026 Appalachian Cryptid Field Guide. Compiled in East Tennessee.
+            © {year} Appalachian Cryptid Field Guide. Compiled in East
+            Tennessee.
           </p>
         </div>
       </footer>
@@ -18,15 +21,13 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
   }
 
   return (
-    <footer className="border-t border-border bg-card py-12 px-4">
-      <div className="container mx-auto">
+    <footer className="border-t border-border bg-card py-16 px-6 lg:py-20 lg:px-8">
+      <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <div className="mb-3">
-              <h4 className="text-lg font-bold text-foreground font-display">
-                Appalachian Cryptid
-              </h4>
-            </div>
+            <h4 className="text-xl font-bold text-foreground font-display mb-3">
+              Appalachian Cryptid
+            </h4>
             <p className="text-sm text-muted-foreground">
               Front-porch stories, backroad sightings, and local legends from
               the mountains and hollers of Appalachia and the American South.
@@ -39,7 +40,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  to="/field-guide"
+                  href="/field-guide"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Field Guide
@@ -47,7 +48,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
               </li>
               <li>
                 <Link
-                  to="/about"
+                  href="/about"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   About This Project
@@ -55,7 +56,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
               </li>
               <li>
                 <Link
-                  to="/report"
+                  href="/report"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   File a Report
@@ -63,7 +64,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
               </li>
               <li>
                 <Link
-                  to="/map"
+                  href="/map"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Sighting Map
@@ -85,7 +86,8 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
         </div>
         <div className="border-t border-border pt-6">
           <p className="text-center text-sm text-muted-foreground">
-            © 2026 Appalachian Cryptid Field Guide. Compiled in East Tennessee.
+            © {year} Appalachian Cryptid Field Guide. Compiled in East
+            Tennessee.
           </p>
         </div>
       </div>

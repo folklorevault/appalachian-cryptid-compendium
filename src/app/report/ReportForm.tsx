@@ -1,9 +1,9 @@
+"use client";
+
 import { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { Header } from "@/components/Header";
+import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { SightingReceipt } from "@/components/SightingReceipt";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,9 +18,6 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useSubmitSighting } from "@/hooks/use-sightings";
-import { analytics } from "@/lib/analytics";
-import { useSEO } from "@/hooks/use-seo";
 
 interface FormErrors {
   witnessName?: string;
@@ -40,15 +37,9 @@ interface SubmissionData {
   creatureName?: string;
 }
 
-const ReportSighting = () => {
-  useSEO({
-    title: "Report a Sighting",
-    description: "Submit your cryptid sighting report to the Appalachian Cryptid Field Guide. Help document unexplained encounters across Appalachia.",
-    url: "https://appalachiancryptid.com/report",
-  });
-
+export function ReportForm() {
   const { toast } = useToast();
-  const submitSighting = useSubmitSighting();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -103,14 +94,14 @@ const ReportSighting = () => {
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
     const requiredFields = ["witnessName", "email", "date", "location", "state", "description", "physicalDescription"];
-    
+
     requiredFields.forEach((field) => {
       const error = validateField(field, formData[field as keyof typeof formData]);
       if (error) {
         newErrors[field as keyof FormErrors] = error;
       }
     });
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [formData, validateField]);
@@ -151,25 +142,32 @@ const ReportSighting = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      await submitSighting.mutateAsync({
-        witness_name: formData.witnessName,
-        email: formData.email,
-        date: formData.date,
-        time: formData.time || undefined,
-        location: formData.location,
-        state: formData.state,
-        creature_name: formData.creatureName || undefined,
-        description: formData.description,
-        physical_description: formData.physicalDescription,
-        behavior: formData.behavior || undefined,
+      const response = await fetch("/api/sightings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          witness_name: formData.witnessName,
+          email: formData.email,
+          date: formData.date,
+          time: formData.time || undefined,
+          location: formData.location,
+          state: formData.state,
+          creature_name: formData.creatureName || undefined,
+          description: formData.description,
+          physical_description: formData.physicalDescription,
+          behavior: formData.behavior || undefined,
+        }),
       });
 
-      // Track successful sighting submission
-      analytics.trackEvent("sighting_submitted", {
-        creature: formData.creatureName || "unknown",
-        state: formData.state,
-      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Failed to submit report" }));
+        throw new Error(errorData.error || "Failed to submit report");
+      }
 
       // Store submission data and show receipt
       setSubmissionData({
@@ -182,7 +180,7 @@ const ReportSighting = () => {
       setSubmitted(true);
     } catch (error) {
       // In dev mode, show the receipt anyway so we can test the UI
-      if (import.meta.env.DEV) {
+      if (process.env.NODE_ENV === 'development') {
         console.warn("[DEV MODE] API failed, showing receipt anyway:", error);
         setSubmissionData({
           witnessName: formData.witnessName,
@@ -200,10 +198,10 @@ const ReportSighting = () => {
         description: (error as Error).message || "Please try again later.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  const isSubmitting = submitSighting.isPending;
 
   const handleFileAnother = () => {
     setSubmitted(false);
@@ -226,11 +224,9 @@ const ReportSighting = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header badge="File a Report" />
-
       {/* Back Button */}
       <div className="container mx-auto px-4 py-6">
-        <Link to="/">
+        <Link href="/">
           <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Directory
@@ -244,10 +240,10 @@ const ReportSighting = () => {
           {submitted && submissionData ? (
             <>
               <div className="text-center space-y-4 mb-8">
-                <Badge className="bg-accent/20 text-accent border-accent" variant="outline">
-                  REPORT SUBMITTED
-                </Badge>
-                <h1 className="text-4xl font-bold text-foreground font-display">
+                <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
+                  Report Submitted
+                </div>
+                <h1 className="text-[28px] font-bold text-foreground font-display">
                   Report Filed Successfully
                 </h1>
                 <p className="text-muted-foreground max-w-xl mx-auto">
@@ -262,10 +258,10 @@ const ReportSighting = () => {
           ) : (
             <>
               <div className="text-center space-y-4 mb-8">
-                <Badge className="bg-primary/10 text-primary border-primary" variant="outline">
-                  SUBMIT FIELD REPORT
-                </Badge>
-                <h1 className="text-4xl font-bold text-foreground font-display">
+                <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
+                  Submit Field Report
+                </div>
+                <h1 className="text-[28px] font-bold text-foreground font-display">
                   Report a Sighting
                 </h1>
                 <p className="text-muted-foreground max-w-xl mx-auto">
@@ -387,7 +383,7 @@ const ReportSighting = () => {
                         setTouched((prev) => ({ ...prev, state: true }));
                       }}
                     >
-                      <SelectTrigger 
+                      <SelectTrigger
                         className={`bg-background border-border ${touched.state && errors.state ? "border-destructive" : ""}`}
                         aria-invalid={touched.state && !!errors.state}
                       >
@@ -485,29 +481,30 @@ const ReportSighting = () => {
             </Card>
 
             {/* Submit */}
-            <Card className="border-2 border-primary/30 bg-primary/5">
+            <Card className="border-2 border-[hsl(var(--bureau-border))] bg-card">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                   <p className="text-sm text-muted-foreground">
                     By submitting, you confirm this report is truthful and accurate.
                   </p>
-                  <Button
+                  <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 min-w-[150px]"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[150px] justify-center"
+                    style={{ transform: "rotate(-1deg)", filter: "url(#stamp-texture)" }}
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Submitting...
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Filing...
                       </>
                     ) : (
                       <>
-                        <Send className="mr-2 h-4 w-4" />
-                        Submit Report
+                        <Send className="h-4 w-4" />
+                        File Report
                       </>
                     )}
-                  </Button>
+                  </button>
                 </div>
               </CardContent>
             </Card>
@@ -520,6 +517,4 @@ const ReportSighting = () => {
       <Footer />
     </div>
   );
-};
-
-export default ReportSighting;
+}

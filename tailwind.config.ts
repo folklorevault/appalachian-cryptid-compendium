@@ -3,7 +3,7 @@ import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}", "./src/lib/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
   	container: {
@@ -87,39 +87,9 @@ export default {
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		},
       fontFamily: {
-        sans: [
-          'Work Sans',
-          'ui-sans-serif',
-          'system-ui',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'sans-serif',
-          'Apple Color Emoji',
-          'Segoe UI Emoji',
-          'Segoe UI Symbol',
-          'Noto Color Emoji'
-        ],
-        serif: [
-          'ui-serif',
-          'Georgia',
-          'Cambria',
-          'Times New Roman',
-          'Times',
-          'serif'
-        ],
-        mono: [
-          'ui-monospace',
-          'SFMono-Regular',
-          'Menlo',
-          'Monaco',
-          'Consolas',
-          'Liberation Mono',
-          'Courier New',
-          'monospace'
-        ],
-        display: ['Rokkitt', 'Georgia', 'Times New Roman', 'serif'],
-        typewriter: ['Special Elite', 'Courier New', 'ui-monospace', 'SFMono-Regular', 'monospace']
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'Times New Roman', 'serif'],
+        typewriter: ['var(--font-typewriter)', 'Courier New', 'ui-monospace', 'monospace']
       }
   	}
   },

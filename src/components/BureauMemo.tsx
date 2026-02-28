@@ -31,7 +31,7 @@ export const BureauMemo = ({ content, cryptidName, caseNumber }: BureauMemoProps
             text="Internal"
             variant="muted"
             rotation={-3}
-            className="text-[9px] px-2 py-1 opacity-60 border-2"
+            className="text-xs px-2 py-1 opacity-60 border-2"
           />
         </div>
 
@@ -41,7 +41,7 @@ export const BureauMemo = ({ content, cryptidName, caseNumber }: BureauMemoProps
             text="File Copy"
             variant="muted"
             rotation={-12}
-            className="text-[8px] px-2 py-0.5 opacity-40 border-2"
+            className="text-xs px-2 py-0.5 opacity-40 border-2"
           />
         </div>
 

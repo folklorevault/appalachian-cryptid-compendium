@@ -1,21 +1,13 @@
+"use client";
+
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Header } from "@/components/Header";
+import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { BackToTop } from "@/components/BackToTop";
 import { Stamp } from "@/components/Stamp";
-import { useCryptids } from "@/hooks/use-sanity-cryptids";
-import { useAnomalies } from "@/hooks/use-sanity-anomalies";
-import { useSEO } from "@/hooks/use-seo";
-import {
-  StructuredData,
-  createWebSiteSchema,
-  createBreadcrumbSchema,
-} from "@/components/StructuredData";
 import { urlFor } from "@/lib/sanity";
 import type { SanityCryptidListItem, SanityAnomalyListItem } from "@/types/sanity";
-import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, AlertTriangle, Calendar, BookOpen, Zap, Radio } from "lucide-react";
+import { MapPin, AlertTriangle, BookOpen, Zap, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Group cryptids alphabetically for the TOC
@@ -98,7 +90,7 @@ const FieldGuideEntry = ({
     >
       {/* Entry number in margin */}
       <div className="absolute -left-6 top-4 hidden lg:block">
-        <span className="text-[10px] font-typewriter text-muted-foreground/40">
+        <span className="text-xs font-typewriter text-muted-foreground/40">
           {String(index + 1).padStart(3, "0")}
         </span>
       </div>
@@ -106,12 +98,12 @@ const FieldGuideEntry = ({
       <div className="flex gap-4 sm:gap-5">
         {imageUrl && (
           <div className="flex-shrink-0">
-            <Link to={`/cryptid/${cryptid.slug?.current}`}>
+            <Link href={`/cryptid/${cryptid.slug?.current}`}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded overflow-hidden bg-muted border border-border/50">
                 <img
                   src={imageUrl}
                   alt={cryptid.imageAlt || cryptid.name}
-                  className="w-full h-full object-cover sepia-light hover:sepia-0 transition-all duration-300"
+                  className="w-full h-full object-cover object-top sepia-light hover:sepia-0 transition-all duration-300"
                   loading="lazy"
                 />
               </div>
@@ -123,7 +115,7 @@ const FieldGuideEntry = ({
           <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
             <div>
               <Link
-                to={`/cryptid/${cryptid.slug?.current}`}
+                href={`/cryptid/${cryptid.slug?.current}`}
                 className="group inline-flex items-baseline gap-2"
               >
                 <h3 className="text-base sm:text-lg font-display font-bold text-foreground group-hover:text-primary transition-colors">
@@ -131,7 +123,7 @@ const FieldGuideEntry = ({
                 </h3>
               </Link>
               {cryptid.scientificName && (
-                <p className="text-[10px] font-typewriter italic text-muted-foreground mt-0.5">
+                <p className="text-xs font-typewriter italic text-muted-foreground mt-0.5">
                   {cryptid.scientificName}
                 </p>
               )}
@@ -139,7 +131,7 @@ const FieldGuideEntry = ({
 
             <span
               className={cn(
-                "inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium border rounded",
+                "inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium border rounded",
                 dangerColors[cryptid.dangerLevel] || dangerColors.Low
               )}
             >
@@ -148,7 +140,7 @@ const FieldGuideEntry = ({
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground mb-1.5">
+          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground mb-1.5">
             <span className="inline-flex items-center gap-1">
               <MapPin className="w-2.5 h-2.5" />
               {cryptid.location}
@@ -169,7 +161,7 @@ const FieldGuideEntry = ({
               {cryptid.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="px-1 py-0.5 text-[9px] font-typewriter uppercase tracking-wide text-muted-foreground/70"
+                  className="px-1 py-0.5 text-xs font-typewriter uppercase tracking-wide text-muted-foreground/70"
                 >
                   {tag}
                 </span>
@@ -178,8 +170,8 @@ const FieldGuideEntry = ({
           )}
 
           <Link
-            to={`/cryptid/${cryptid.slug?.current}`}
-            className="inline-flex items-center gap-1 mt-1.5 text-[10px] text-primary hover:text-primary/80 font-medium transition-colors"
+            href={`/cryptid/${cryptid.slug?.current}`}
+            className="inline-flex items-center gap-1 mt-1.5 text-xs text-primary hover:text-primary/80 font-medium transition-colors"
           >
             <BookOpen className="w-2.5 h-2.5" />
             Full case file
@@ -218,7 +210,7 @@ const AnomalyEntry = ({
       }}
     >
       <div className="absolute -left-6 top-4 hidden lg:block">
-        <span className="text-[10px] font-typewriter text-muted-foreground/40">
+        <span className="text-xs font-typewriter text-muted-foreground/40">
           A{String(index + 1).padStart(2, "0")}
         </span>
       </div>
@@ -226,12 +218,12 @@ const AnomalyEntry = ({
       <div className="flex gap-4 sm:gap-5">
         {imageUrl && (
           <div className="flex-shrink-0">
-            <Link to={`/anomaly/${anomaly.slug?.current}`}>
+            <Link href={`/anomaly/${anomaly.slug?.current}`}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded overflow-hidden bg-muted border border-border/50">
                 <img
                   src={imageUrl}
                   alt={anomaly.imageAlt || anomaly.name}
-                  className="w-full h-full object-cover sepia-light hover:sepia-0 transition-all duration-300"
+                  className="w-full h-full object-cover object-top sepia-light hover:sepia-0 transition-all duration-300"
                   loading="lazy"
                 />
               </div>
@@ -243,7 +235,7 @@ const AnomalyEntry = ({
           <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
             <div>
               <Link
-                to={`/anomaly/${anomaly.slug?.current}`}
+                href={`/anomaly/${anomaly.slug?.current}`}
                 className="group inline-flex items-baseline gap-2"
               >
                 <h3 className="text-base sm:text-lg font-display font-bold text-foreground group-hover:text-accent transition-colors">
@@ -251,7 +243,7 @@ const AnomalyEntry = ({
                 </h3>
               </Link>
               {anomaly.subhead && (
-                <p className="text-[10px] font-typewriter italic text-muted-foreground mt-0.5">
+                <p className="text-xs font-typewriter italic text-muted-foreground mt-0.5">
                   {anomaly.subhead}
                 </p>
               )}
@@ -259,7 +251,7 @@ const AnomalyEntry = ({
 
             <span
               className={cn(
-                "inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium border rounded",
+                "inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium border rounded",
                 statusColors[anomaly.status] || statusColors["Open File"]
               )}
             >
@@ -268,7 +260,7 @@ const AnomalyEntry = ({
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-muted-foreground mb-1.5">
+          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground mb-1.5">
             <span className="inline-flex items-center gap-1">
               <MapPin className="w-2.5 h-2.5" />
               {anomaly.location}
@@ -289,7 +281,7 @@ const AnomalyEntry = ({
               {anomaly.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="px-1 py-0.5 text-[9px] font-typewriter uppercase tracking-wide text-muted-foreground/70"
+                  className="px-1 py-0.5 text-xs font-typewriter uppercase tracking-wide text-muted-foreground/70"
                 >
                   {tag}
                 </span>
@@ -298,8 +290,8 @@ const AnomalyEntry = ({
           )}
 
           <Link
-            to={`/anomaly/${anomaly.slug?.current}`}
-            className="inline-flex items-center gap-1 mt-1.5 text-[10px] text-accent hover:text-accent/80 font-medium transition-colors"
+            href={`/anomaly/${anomaly.slug?.current}`}
+            className="inline-flex items-center gap-1 mt-1.5 text-xs text-accent hover:text-accent/80 font-medium transition-colors"
           >
             <BookOpen className="w-2.5 h-2.5" />
             View anomaly file
@@ -309,19 +301,6 @@ const AnomalyEntry = ({
     </article>
   );
 };
-
-// Skeleton for loading state
-const FieldGuideEntrySkeleton = () => (
-  <div className="flex gap-4 sm:gap-5 py-4 px-3">
-    <Skeleton className="w-16 h-16 sm:w-20 sm:h-20 rounded" />
-    <div className="flex-1 space-y-2">
-      <Skeleton className="h-5 w-40" />
-      <Skeleton className="h-3 w-28" />
-      <Skeleton className="h-3 w-full" />
-      <Skeleton className="h-3 w-2/3" />
-    </div>
-  </div>
-);
 
 // Subtle divider between entries
 const JournalDivider = () => (
@@ -372,12 +351,12 @@ const TableOfContents = ({
 }) => {
   return (
     <nav className="space-y-3">
-      <div className="font-typewriter text-[10px] uppercase tracking-widest text-muted-foreground/70">
+      <div className="font-typewriter text-xs uppercase tracking-widest text-muted-foreground/70">
         Index
       </div>
 
       {/* Group by toggle */}
-      <div className="flex gap-1 p-0.5 bg-muted/30 rounded text-[10px]">
+      <div className="flex gap-1 p-0.5 bg-muted/30 rounded text-xs">
         <button
           onClick={() => onGroupByChange("alpha")}
           className={cn(
@@ -403,7 +382,7 @@ const TableOfContents = ({
       </div>
 
       {/* Cryptids section */}
-      <div className="text-[9px] font-typewriter uppercase tracking-wider text-primary/60 pt-1">
+      <div className="text-xs font-typewriter uppercase tracking-wider text-primary/60 pt-1">
         Cryptids
       </div>
 
@@ -446,7 +425,7 @@ const TableOfContents = ({
       {/* Anomalies section */}
       {hasAnomalies && (
         <>
-          <div className="text-[9px] font-typewriter uppercase tracking-wider text-accent/60 pt-3 border-t border-border/30">
+          <div className="text-xs font-typewriter uppercase tracking-wider text-accent/60 pt-3 border-t border-border/30">
             Anomalies
           </div>
           <div className="flex flex-col gap-0.5">
@@ -471,27 +450,17 @@ const TableOfContents = ({
   );
 };
 
-// Main Field Guide Page Component
-const FieldGuide = () => {
+// Main Field Guide Content Component
+export function FieldGuideContent({
+  cryptids = [],
+  anomalies = [],
+}: {
+  cryptids: SanityCryptidListItem[];
+  anomalies: SanityAnomalyListItem[];
+}) {
   const [groupBy, setGroupBy] = useState<"alpha" | "region">("alpha");
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-
-  // Fetch all cryptids and anomalies
-  const { data: cryptids = [], isLoading: cryptidsLoading, error: cryptidsError } = useCryptids();
-  const { data: anomalies = [], isLoading: anomaliesLoading, error: anomaliesError } = useAnomalies();
-
-  const isLoading = cryptidsLoading || anomaliesLoading;
-  const error = cryptidsError || anomaliesError;
-
-  // SEO
-  useSEO({
-    title: "Field Guide - Complete Reference",
-    description:
-      "A naturalist's field guide to the cryptids, creatures, anomalies, and strange phenomena of the Appalachian Mountains and American South. Browse documented sightings and local legends.",
-    url: "https://appalachiancryptid.com/field-guide",
-    type: "article",
-  });
 
   // Sort cryptids alphabetically by name
   const sortedCryptids = useMemo(
@@ -552,18 +521,6 @@ const FieldGuide = () => {
 
   return (
     <div className="min-h-screen bg-background paper-texture">
-      {/* Structured Data */}
-      <StructuredData type="website" data={createWebSiteSchema()} />
-      <StructuredData
-        type="breadcrumb"
-        data={createBreadcrumbSchema([
-          { name: "Home", url: "/" },
-          { name: "Field Guide" },
-        ])}
-      />
-
-      <Header badge="Field Journal" />
-
       {/* Field Journal Cover Header - Bureau Memo Style */}
       <section className="relative py-8 sm:py-12 px-4 border-b border-border">
         <div className="container mx-auto max-w-3xl">
@@ -591,7 +548,7 @@ const FieldGuide = () => {
                   text="Reference"
                   variant="muted"
                   rotation={-8}
-                  className="text-[10px] px-3 py-1 opacity-60 border-2"
+                  className="text-xs px-3 py-1 opacity-60 border-2"
                 />
               </div>
 
@@ -626,23 +583,21 @@ const FieldGuide = () => {
 
               {/* Main Title */}
               <div className="mt-4 mb-2">
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground font-display">
+                <h1 className="text-[28px] font-bold text-foreground font-display">
                   Field Guide: Complete Reference
                 </h1>
               </div>
 
               {/* Entry counts - integrated into memo */}
-              {!isLoading && (
-                <div className="flex gap-6 mt-4 pt-3 border-t border-dashed border-border/30">
-                  <div className="memo-meta-line flex-1">
-                    <span className="memo-meta-label">Entries:</span>
-                    <span className="memo-meta-value">
-                      {totalCryptids} Cryptid{totalCryptids !== 1 ? "s" : ""}
-                      {totalAnomalies > 0 && `, ${totalAnomalies} Anomal${totalAnomalies !== 1 ? "ies" : "y"}`}
-                    </span>
-                  </div>
+              <div className="flex gap-6 mt-4 pt-3 border-t border-dashed border-border/30">
+                <div className="memo-meta-line flex-1">
+                  <span className="memo-meta-label">Entries:</span>
+                  <span className="memo-meta-value">
+                    {totalCryptids} Cryptid{totalCryptids !== 1 ? "s" : ""}
+                    {totalAnomalies > 0 && `, ${totalAnomalies} Anomal${totalAnomalies !== 1 ? "ies" : "y"}`}
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
@@ -655,14 +610,14 @@ const FieldGuide = () => {
             {/* Sticky TOC - Mobile (top) */}
             <div className="lg:hidden sticky top-16 z-30 -mx-4 px-4 py-2.5 bg-background/95 backdrop-blur border-b border-border/50">
               <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-hide">
-                <span className="text-[10px] font-typewriter text-muted-foreground/70 whitespace-nowrap">
+                <span className="text-xs font-typewriter text-muted-foreground/70 whitespace-nowrap">
                   Jump:
                 </span>
                 <div className="flex gap-0.5 p-0.5 bg-muted/30 rounded">
                   <button
                     onClick={() => setGroupBy("alpha")}
                     className={cn(
-                      "px-2 py-0.5 text-[10px] rounded",
+                      "px-2 py-0.5 text-xs rounded",
                       groupBy === "alpha"
                         ? "bg-card"
                         : "text-muted-foreground"
@@ -673,7 +628,7 @@ const FieldGuide = () => {
                   <button
                     onClick={() => setGroupBy("region")}
                     className={cn(
-                      "px-2 py-0.5 text-[10px] rounded",
+                      "px-2 py-0.5 text-xs rounded",
                       groupBy === "region"
                         ? "bg-card"
                         : "text-muted-foreground"
@@ -688,7 +643,7 @@ const FieldGuide = () => {
                         key={letter}
                         href={`#section-${letter}`}
                         className={cn(
-                          "w-5 h-5 flex-shrink-0 flex items-center justify-center text-[10px] font-display rounded",
+                          "w-5 h-5 flex-shrink-0 flex items-center justify-center text-xs font-display rounded",
                           activeSection === letter
                             ? "bg-primary/80 text-primary-foreground"
                             : "bg-muted/30 hover:bg-muted/50"
@@ -702,7 +657,7 @@ const FieldGuide = () => {
                         key={region}
                         href={`#section-${region}`}
                         className={cn(
-                          "px-1.5 py-0.5 flex-shrink-0 text-[10px] rounded whitespace-nowrap",
+                          "px-1.5 py-0.5 flex-shrink-0 text-xs rounded whitespace-nowrap",
                           activeSection === region
                             ? "bg-primary/80 text-primary-foreground"
                             : "bg-muted/30 hover:bg-muted/50"
@@ -714,7 +669,7 @@ const FieldGuide = () => {
                 {anomalies.length > 0 && (
                   <a
                     href="#anomalies-section"
-                    className="px-1.5 py-0.5 flex-shrink-0 text-[10px] rounded whitespace-nowrap bg-accent/15 text-accent hover:bg-accent/25"
+                    className="px-1.5 py-0.5 flex-shrink-0 text-xs rounded whitespace-nowrap bg-accent/15 text-accent hover:bg-accent/25"
                   >
                     Anomalies
                   </a>
@@ -738,11 +693,11 @@ const FieldGuide = () => {
                 </div>
 
                 {/* Field notes quote */}
-                <div className="mt-4 p-2.5 bg-amber-50/30 border border-amber-200/30 rounded text-[10px] text-amber-900/50 italic">
+                <div className="mt-4 p-2.5 bg-amber-50/30 border border-amber-200/30 rounded text-xs text-amber-900/50 italic">
                   <p>
                     "The mountains keep their secrets."
                   </p>
-                  <p className="mt-1 text-right font-typewriter not-italic text-[9px]">
+                  <p className="mt-1 text-right font-typewriter not-italic text-xs">
                     — Field Notes, 1947
                   </p>
                 </div>
@@ -761,26 +716,8 @@ const FieldGuide = () => {
               </div>
 
               <div className="lg:pl-6">
-                {/* Loading State */}
-                {isLoading && (
-                  <div className="space-y-4">
-                    {[...Array(6)].map((_, i) => (
-                      <FieldGuideEntrySkeleton key={i} />
-                    ))}
-                  </div>
-                )}
-
-                {/* Error State */}
-                {error && (
-                  <div className="text-center py-12">
-                    <p className="text-destructive font-typewriter text-sm">
-                      Error loading entries. Please try again.
-                    </p>
-                  </div>
-                )}
-
                 {/* Empty State */}
-                {!isLoading && !error && totalCryptids === 0 && totalAnomalies === 0 && (
+                {totalCryptids === 0 && totalAnomalies === 0 && (
                   <div className="text-center py-12">
                     <p className="text-muted-foreground font-typewriter text-sm">
                       No entries documented yet.
@@ -789,7 +726,7 @@ const FieldGuide = () => {
                 )}
 
                 {/* CRYPTIDS SECTION */}
-                {!isLoading && !error && cryptids.length > 0 && (
+                {cryptids.length > 0 && (
                   <>
                     {/* Content - Grouped by Letter */}
                     {groupBy === "alpha" && (
@@ -806,7 +743,7 @@ const FieldGuide = () => {
                                   {letter}
                                 </span>
                                 <div className="flex-1 h-px bg-border/30" />
-                                <span className="text-[9px] font-typewriter text-muted-foreground/50">
+                                <span className="text-xs font-typewriter text-muted-foreground/50">
                                   {groupedByLetter[letter].length}
                                 </span>
                               </div>
@@ -850,7 +787,7 @@ const FieldGuide = () => {
                                   {region}
                                 </span>
                                 <div className="flex-1 h-px bg-border/30" />
-                                <span className="text-[9px] font-typewriter text-muted-foreground/50">
+                                <span className="text-xs font-typewriter text-muted-foreground/50">
                                   {groupedByRegion[region].length}
                                 </span>
                               </div>
@@ -883,7 +820,7 @@ const FieldGuide = () => {
                 )}
 
                 {/* ANOMALIES SECTION */}
-                {!isLoading && !error && anomalies.length > 0 && (
+                {anomalies.length > 0 && (
                   <div id="anomalies-section">
                     <SectionDivider title="Anomalies" />
 
@@ -901,7 +838,7 @@ const FieldGuide = () => {
                                 {type}
                               </span>
                               <div className="flex-1 h-px bg-border/30" />
-                              <span className="text-[9px] font-typewriter text-muted-foreground/50">
+                              <span className="text-xs font-typewriter text-muted-foreground/50">
                                 {groupedAnomaliesByType[type].length}
                               </span>
                             </div>
@@ -934,9 +871,9 @@ const FieldGuide = () => {
                 )}
 
                 {/* End of guide marker */}
-                {!isLoading && !error && (totalCryptids > 0 || totalAnomalies > 0) && (
+                {(totalCryptids > 0 || totalAnomalies > 0) && (
                   <div className="mt-12 pt-6 border-t border-dashed border-border/30 text-center">
-                    <div className="font-typewriter text-[10px] text-muted-foreground/40 tracking-wider">
+                    <div className="font-typewriter text-xs text-muted-foreground/40 tracking-wider">
                       — END OF FIELD GUIDE —
                     </div>
                   </div>
@@ -952,6 +889,4 @@ const FieldGuide = () => {
       <BackToTop />
     </div>
   );
-};
-
-export default FieldGuide;
+}

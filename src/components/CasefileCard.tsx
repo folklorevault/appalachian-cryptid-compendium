@@ -1,10 +1,11 @@
+"use client";
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
-import { FavoriteButton } from "@/components/FavoriteButton";
-import { LabelTape, ManilaTab } from "@/components/EvidenceChip";
+import { LabelTape } from "@/components/EvidenceChip";
 import type { SanityCryptidListItem, SanityAnomalyListItem } from "@/types/sanity";
 
 type CasefileType = "cryptid" | "anomaly";
@@ -37,14 +38,10 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
     gridImage,
   } = data;
 
-  // Get type-specific fields
-  const category = isCryptid(data) ? data.dangerLevel : isAnomaly(data) ? data.anomalyType : '';
   const region = isCryptid(data) ? data.region : isAnomaly(data) ? data.region : '';
 
   // Determine link and favorite slug
   const linkTo = type === "cryptid" ? `/cryptid/${slug.current}` : `/anomaly/${slug.current}`;
-  const favoriteSlug = type === "cryptid" ? slug.current : `anomaly-${slug.current}`;
-
   const cardWidths = [320, 400, 480] as const;
 
   if (!gridImage) {
@@ -76,19 +73,17 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
   const fileNumber = `${slug.current?.slice(0, 3).toUpperCase() || 'UNK'}-${String(slug.current?.length || 0).padStart(3, '0')}`;
 
   return (
-    <Link to={linkTo} className="group">
-      <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg cursor-pointer bg-card">
+    <Link href={linkTo} className="group">
+      <Card className="overflow-hidden border-2 border-border hover:border-[hsl(var(--bureau-border))] hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(42,42,42,0.12)] transition-all duration-200 ease-out cursor-pointer bg-card">
         {/* Image Section - Square aspect */}
-        <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-primary transition-colors duration-300">
-          <FavoriteButton slug={favoriteSlug} name={name} variant="overlay" />
-
+        <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-[hsl(var(--bureau-border))] transition-colors duration-200">
           {/* Blur placeholder */}
           {!imageLoaded && (
             <img
               src={blurUrl}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm"
+              className="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-sm"
             />
           )}
           <img
@@ -102,15 +97,10 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
             width="400"
             height="400"
             onLoad={() => setImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover ${
+            className={`w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
           />
-
-          {/* Category tab - top right */}
-          <div className="absolute top-2 right-2">
-            <ManilaTab>{category}</ManilaTab>
-          </div>
 
           {/* File number - bottom left */}
           <div className="absolute bottom-2 left-2">
@@ -123,10 +113,10 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
           {/* Header with case type indicator */}
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-typewriter mb-1">
+              <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-1">
                 {type === "cryptid" ? "Creature File" : "Case File"}
               </div>
-              <h3 className="text-lg font-bold text-foreground leading-tight truncate">
+              <h3 className="text-xl font-bold text-foreground leading-tight truncate group-hover:text-[hsl(var(--bureau-ink))] transition-colors duration-200">
                 {name}
               </h3>
             </div>

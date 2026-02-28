@@ -29,7 +29,7 @@ export const EvidenceChip = ({
       // DYMO label maker aesthetic - embossed black on colored tape
       "px-2.5 py-1 rounded-sm",
       "bg-[hsl(var(--bureau-manila))] text-[hsl(var(--bureau-ink))]",
-      "font-typewriter uppercase tracking-[0.15em] text-[10px]",
+      "font-typewriter uppercase tracking-[0.15em] text-xs",
       "shadow-[inset_0_1px_0_rgba(255,255,255,0.3),inset_0_-1px_0_rgba(0,0,0,0.1)]",
       "border border-[hsl(var(--bureau-border))]",
       // Slight embossed/debossed effect
@@ -39,7 +39,7 @@ export const EvidenceChip = ({
       // Manila folder tab
       "px-3 py-1 rounded-t-md rounded-b-none",
       "bg-[hsl(var(--bureau-manila))] text-[hsl(var(--bureau-ink))]",
-      "font-typewriter text-[11px]",
+      "font-typewriter text-xs",
       "border-x border-t border-[hsl(var(--bureau-border))]",
       "shadow-[0_2px_0_hsl(var(--bureau-manila-dark))]",
       // Tab shape with notched bottom
@@ -49,11 +49,11 @@ export const EvidenceChip = ({
       // IBM punch card aesthetic
       "px-2 py-0.5 rounded-none",
       "bg-[hsl(var(--bureau-paper))] text-[hsl(var(--bureau-ink))]",
-      "font-typewriter uppercase text-[9px] tracking-[0.2em]",
+      "font-typewriter uppercase text-xs tracking-[0.2em]",
       "border border-[hsl(var(--bureau-border))]",
       // Punch holes effect on sides
-      "before:content-['◯'] before:text-[6px] before:text-[hsl(var(--bureau-ink-muted))] before:mr-1",
-      "after:content-['◯'] after:text-[6px] after:text-[hsl(var(--bureau-ink-muted))] after:ml-1"
+      "before:content-['◯'] before:text-xs before:text-[hsl(var(--bureau-ink-muted))] before:mr-1",
+      "after:content-['◯'] after:text-xs after:text-[hsl(var(--bureau-ink-muted))] after:ml-1"
     ),
   };
 

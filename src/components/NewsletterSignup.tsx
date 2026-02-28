@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Stamp } from "@/components/Stamp";
 import { Send, CheckCircle } from "lucide-react";
@@ -85,7 +87,7 @@ const CompactSignup = () => {
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         {/* Honeypot — visually hidden, traps bots */}
-        <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", tabIndex: -1 }}>
+        <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
           <label htmlFor="website-compact">Website</label>
           <input id="website-compact" type="text" name="website" autoComplete="off" tabIndex={-1} value={website} onChange={(e) => setWebsite(e.target.value)} />
         </div>
@@ -106,7 +108,7 @@ const CompactSignup = () => {
             disabled={state === "submitting"}
           />
           {state === "error" && errorMsg && (
-            <p id="newsletter-compact-error" role="alert" className="text-[10px] text-destructive font-typewriter mt-1 uppercase tracking-wider">
+            <p id="newsletter-compact-error" role="alert" className="text-xs text-destructive font-typewriter mt-1 uppercase tracking-wider">
               {errorMsg}
             </p>
           )}
@@ -239,7 +241,7 @@ const FullSignup = () => {
               text="Form 104: Roster Addition"
               variant="danger"
               rotation={-6}
-              className="text-[8px] px-2 py-0.5 opacity-50 border-2"
+              className="text-xs px-2 py-0.5 opacity-50 border-2"
             />
           </div>
 
@@ -249,7 +251,7 @@ const FullSignup = () => {
               text="File Copy"
               variant="muted"
               rotation={-15}
-              className="text-[8px] px-2 py-0.5 opacity-30 border-2"
+              className="text-xs px-2 py-0.5 opacity-30 border-2"
             />
           </div>
 
@@ -266,13 +268,13 @@ const FullSignup = () => {
 
           {/* Directive title */}
           <div className="mt-4 mb-3 relative z-[2]">
-            <h3 className="text-base md:text-lg font-bold text-foreground font-display uppercase tracking-wide">
+            <h3 className="text-xl font-bold text-foreground font-display uppercase tracking-wide">
               Standing Order: Register for Bureau Dispatches
             </h3>
           </div>
 
           {/* Body text */}
-          <div className="memo-body text-[11px] leading-relaxed mb-5">
+          <div className="memo-body text-xs leading-relaxed mb-5">
             All field operatives and interested civilians are directed to register
             their transmission address with the Bureau. You will be notified of new
             case file additions, updated threat assessments, field advisories, and
@@ -282,7 +284,7 @@ const FullSignup = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="relative z-[2]">
             {/* Honeypot — visually hidden, traps bots */}
-            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", tabIndex: -1 }}>
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
               <label htmlFor="website-full">Website</label>
               <input id="website-full" type="text" name="website" autoComplete="off" tabIndex={-1} value={website} onChange={(e) => setWebsite(e.target.value)} />
             </div>

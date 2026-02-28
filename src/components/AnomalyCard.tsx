@@ -1,10 +1,11 @@
+"use client";
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Zap, Ghost, Skull, Eye, Volume2, Cloud, Clock, MapPinned } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
-import { FavoriteButton } from "@/components/FavoriteButton";
 import type { SanityAnomalyListItem, AnomalyType, AnomalyStatus } from "@/types/sanity";
 
 interface AnomalyCardProps {
@@ -84,17 +85,16 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
   const TypeIcon = typeIcons[anomalyType] || Zap;
 
   return (
-    <Link to={`/anomaly/${slug.current}`}>
+    <Link href={`/anomaly/${slug.current}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
         <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
-          <FavoriteButton slug={`anomaly-${slug.current}`} name={name} variant="overlay" />
           {/* Blur placeholder */}
           {!imageLoaded && (
             <img
               src={blurUrl}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm"
+              className="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-sm"
             />
           )}
           <img
@@ -107,7 +107,7 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
             width="400"
             height="600"
             onLoad={() => setImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover ${
+            className={`w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
           />
@@ -124,7 +124,7 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
 
         <CardContent className="p-4 space-y-3">
           <div className="border-b border-border pb-3">
-            <h3 className="text-xl font-bold text-foreground">{name}</h3>
+            <h3 className="text-xl font-bold text-foreground font-display">{name}</h3>
             <p className="text-sm text-muted-foreground font-typewriter uppercase tracking-wide">
               Case File
             </p>

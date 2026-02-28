@@ -1,0 +1,850 @@
+/* Fonts are loaded via next/font/local in layout.tsx */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Cream Paper Mode - Aged field guide aesthetic */
+    --background: 40 33% 94%;
+    --foreground: 25 30% 20%;
+
+    --card: 40 30% 97%;
+    --card-foreground: 25 30% 20%;
+
+    --popover: 40 30% 97%;
+    --popover-foreground: 25 30% 20%;
+
+    --primary: 152 35% 28%;
+    --primary-foreground: 40 33% 96%;
+
+    --secondary: 25 45% 88%;
+    --secondary-foreground: 25 30% 20%;
+
+    --muted: 35 20% 90%;
+    --muted-foreground: 25 15% 45%;
+
+    --accent: 28 60% 55%;
+    --accent-foreground: 40 33% 96%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 40 33% 96%;
+
+    --border: 35 25% 82%;
+    --input: 35 25% 82%;
+    --ring: 152 35% 28%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 40 33% 94%;
+
+    --sidebar-foreground: 25 30% 25%;
+
+    --sidebar-primary: 152 35% 28%;
+
+    --sidebar-primary-foreground: 40 33% 96%;
+
+    --sidebar-accent: 35 20% 90%;
+
+    --sidebar-accent-foreground: 25 30% 20%;
+
+    --sidebar-border: 35 25% 82%;
+
+    --sidebar-ring: 35 15% 70%;
+
+    --chart-1: 152 35% 35%;
+
+    --chart-2: 28 60% 55%;
+
+    --chart-3: 25 30% 30%;
+
+    --chart-4: 180 30% 45%;
+
+    --chart-5: 45 70% 50%;
+
+    --sidebar: 40 33% 96%;
+
+    --font-sans: "Work Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    
+    --font-display: "Rokkitt", "Georgia", "Times New Roman", serif;
+
+    --font-typewriter: "Special Elite", "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* Bureau Artifact Colors — manila & aged paper family */
+    --bureau-manila: 40 40% 78%;
+    --bureau-manila-dark: 40 35% 68%;
+    --bureau-manila-light: 40 35% 88%;
+    --bureau-paper: 40 30% 96%;
+    --bureau-ink: 25 30% 22%;
+    --bureau-ink-muted: 25 20% 38%;
+    --bureau-border: 35 30% 72%;
+    --bureau-stamp: 8 45% 28%;
+
+    --shadow-2xs: 0 1px 3px 0px hsl(25 30% 20% / 0.05);
+
+    --shadow-xs: 0 1px 3px 0px hsl(25 30% 20% / 0.05);
+
+    --shadow-sm: 0 1px 3px 0px hsl(25 30% 20% / 0.08), 0 1px 2px -1px hsl(25 30% 20% / 0.08);
+
+    --shadow: 0 1px 3px 0px hsl(25 30% 20% / 0.1), 0 1px 2px -1px hsl(25 30% 20% / 0.1);
+
+    --shadow-md: 0 1px 3px 0px hsl(25 30% 20% / 0.1), 0 2px 4px -1px hsl(25 30% 20% / 0.1);
+
+    --shadow-lg: 0 1px 3px 0px hsl(25 30% 20% / 0.1), 0 4px 6px -1px hsl(25 30% 20% / 0.1);
+
+    --shadow-xl: 0 1px 3px 0px hsl(25 30% 20% / 0.1), 0 8px 10px -1px hsl(25 30% 20% / 0.1);
+
+    --shadow-2xl: 0 1px 3px 0px hsl(25 30% 20% / 0.2);
+
+    --tracking-normal: 0em;
+
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    /* Dark mode - forest evening aesthetic */
+    --background: 150 15% 10%;
+    --foreground: 40 20% 88%;
+
+    --card: 150 12% 14%;
+    --card-foreground: 40 20% 88%;
+
+    --popover: 150 12% 14%;
+    --popover-foreground: 40 20% 88%;
+
+    --primary: 152 50% 50%;
+    --primary-foreground: 150 15% 10%;
+
+    --secondary: 28 50% 50%;
+    --secondary-foreground: 150 15% 10%;
+
+    --muted: 150 10% 22%;
+    --muted-foreground: 40 12% 60%;
+
+    --accent: 28 60% 55%;
+    --accent-foreground: 150 15% 10%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 150 15% 10%;
+
+    --border: 150 10% 25%;
+    --input: 150 10% 25%;
+    --ring: 152 50% 50%;
+    --sidebar-background: 150 15% 10%;
+    --sidebar-foreground: 40 20% 88%;
+    --sidebar-primary: 152 50% 50%;
+    --sidebar-primary-foreground: 150 15% 10%;
+    --sidebar-accent: 150 12% 14%;
+    --sidebar-accent-foreground: 40 20% 88%;
+    --sidebar-border: 150 10% 25%;
+    --sidebar-ring: 152 50% 50%;
+    --chart-1: 152 50% 50%;
+    --chart-2: 28 60% 55%;
+    --chart-3: 40 30% 60%;
+    --chart-4: 180 40% 45%;
+    --chart-5: 45 70% 50%;
+    --sidebar: 150 15% 10%;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.3);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.3);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.4), 0 1px 2px -1px hsl(0 0% 0% / 0.4);
+    --shadow: 0 1px 3px 0px hsl(152 50% 50% / 0.15), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 1px 3px 0px hsl(152 50% 50% / 0.2), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
+    --shadow-lg: 0 1px 3px 0px hsl(152 50% 50% / 0.25), 0 4px 6px -1px hsl(0 0% 0% / 0.3);
+    --shadow-xl: 0 1px 3px 0px hsl(152 50% 50% / 0.3), 0 8px 10px -1px hsl(0 0% 0% / 0.3);
+    --shadow-2xl: 0 1px 3px 0px hsl(152 50% 50% / 0.35);
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+}
+
+/* Nav paper texture (subtle, on bg) */
+.paper-texture-nav {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-blend-mode: soft-light;
+  background-size: 200px 200px;
+}
+
+/* Active nav link wavy underline */
+.nav-link-active::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: hsl(var(--primary));
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 2 Q10 0.5 20 2 T40 1.8 T60 2.2 T80 1.5 T100 2' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 2 Q10 0.5 20 2 T40 1.8 T60 2.2 T80 1.5 T100 2' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+}
+
+/* Paper texture overlay */
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+/* Sepia filter for images */
+.sepia-hover {
+  transition: filter 0.3s ease;
+}
+
+.sepia-hover:hover {
+  filter: sepia(30%) contrast(1.05) brightness(0.95);
+}
+
+.sepia-light {
+  filter: sepia(15%) contrast(1.02);
+}
+
+/* Torn/worn edge effect */
+.torn-edge {
+  position: relative;
+  --torn-color: hsl(var(--card));
+}
+
+.torn-edge::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: var(--torn-color);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 10' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 Q5 8 10 2 T20 3 T30 1 T40 4 T50 2 T60 5 T70 1 T80 4 T90 2 T100 3 L100 10 L0 10 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 10' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 Q5 8 10 2 T20 3 T30 1 T40 4 T50 2 T60 5 T70 1 T80 4 T90 2 T100 3 L100 10 L0 10 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+}
+
+.torn-edge-top::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: var(--torn-color);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 10' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q5 2 10 8 T20 7 T30 9 T40 6 T50 8 T60 5 T70 9 T80 6 T90 8 T100 7 L100 0 L0 0 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 10' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q5 2 10 8 T20 7 T30 9 T40 6 T50 8 T60 5 T70 9 T80 6 T90 8 T100 7 L100 0 L0 0 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+}
+
+/* Typewriter animation */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: currentColor; }
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 2s steps(30, end) forwards;
+}
+
+.typewriter-caret {
+  border-right: 2px solid currentColor;
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+/* Aged paper card effect */
+.aged-card {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--card)) 0%,
+    hsl(40 30% 95%) 50%,
+    hsl(35 25% 92%) 100%
+  );
+  box-shadow: 
+    inset 0 0 30px rgba(139, 115, 85, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Vintage photo frame */
+.vintage-frame {
+  box-shadow:
+    inset 0 0 20px rgba(139, 115, 85, 0.15),
+    inset 0 0 3px rgba(0, 0, 0, 0.1);
+  border: 3px solid hsl(35 20% 85%);
+}
+
+/* Screen reader only - for accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible utility */
+.focus-visible-ring:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Bureau Memo Styles
+   Internal memorandum / government document aesthetic
+   ============================================ */
+
+/* Main memo paper with aged texture */
+.memo-paper {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    hsl(40 28% 96%) 0%,
+    hsl(42 30% 95%) 50%,
+    hsl(38 26% 94%) 100%
+  );
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 0 40px rgba(139, 115, 85, 0.04),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Paper grain texture overlay */
+.memo-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='memo-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23memo-noise)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* Paper clip at top */
+.paper-clip {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 20px;
+  background: linear-gradient(
+    180deg,
+    hsl(0 0% 78%) 0%,
+    hsl(0 0% 68%) 50%,
+    hsl(0 0% 58%) 100%
+  );
+  border-radius: 3px 3px 0 0;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.paper-clip::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: hsl(0 0% 48%);
+  border-radius: 1px;
+  box-shadow: 0 5px 0 hsl(0 0% 48%);
+}
+
+/* Three-hole punch marks */
+.hole-punch {
+  position: absolute;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(
+    circle,
+    hsl(35 20% 88%) 0%,
+    hsl(35 20% 90%) 40%,
+    hsl(40 30% 95%) 70%,
+    transparent 71%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.12),
+    0 1px 1px rgba(255, 255, 255, 0.5);
+  z-index: 5;
+}
+
+/* Memo header styling */
+.memo-header {
+  font-family: var(--font-typewriter);
+  border-bottom: 2px solid hsl(25 30% 25%);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.memo-letterhead {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(25 20% 35%);
+  text-align: center;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.memo-title {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(25 30% 25%);
+  text-align: center;
+  margin-bottom: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.memo-meta-line {
+  font-size: 10px;
+  font-family: var(--font-typewriter);
+  color: hsl(25 20% 30%);
+  margin-bottom: 3px;
+  display: flex;
+  gap: 8px;
+}
+
+.memo-meta-label {
+  text-transform: uppercase;
+  min-width: 50px;
+  letter-spacing: 0.05em;
+}
+
+.memo-meta-value {
+  flex: 1;
+  border-bottom: 1px dotted hsl(25 15% 65%);
+  letter-spacing: 0.02em;
+  padding-bottom: 1px;
+}
+
+/* Memo body text */
+.memo-body {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  line-height: 1.8;
+  color: hsl(25 20% 28%);
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 2;
+  white-space: pre-line;
+}
+
+/* Form reference number */
+.memo-form-ref {
+  font-family: var(--font-typewriter);
+  font-size: 8px;
+  color: hsl(25 15% 55%);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+}
+
+/* Classification footer */
+.memo-footer {
+  font-family: var(--font-typewriter);
+  font-size: 8px;
+  color: hsl(25 15% 50%);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+/* Dark mode adjustments */
+.dark .memo-paper {
+  background: linear-gradient(
+    180deg,
+    hsl(150 12% 16%) 0%,
+    hsl(150 10% 15%) 50%,
+    hsl(150 12% 14%) 100%
+  );
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 0 40px rgba(100, 120, 100, 0.05);
+}
+
+.dark .memo-paper::before {
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+.dark .paper-clip {
+  background: linear-gradient(
+    180deg,
+    hsl(150 5% 45%) 0%,
+    hsl(150 5% 35%) 50%,
+    hsl(150 5% 28%) 100%
+  );
+}
+
+.dark .paper-clip::before {
+  background: hsl(150 5% 22%);
+  box-shadow: 0 5px 0 hsl(150 5% 22%);
+}
+
+.dark .hole-punch {
+  background: radial-gradient(
+    circle,
+    hsl(150 10% 12%) 0%,
+    hsl(150 10% 10%) 40%,
+    hsl(150 12% 14%) 70%,
+    transparent 71%
+  );
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.dark .memo-header {
+  border-bottom-color: hsl(40 20% 70%);
+}
+
+.dark .memo-letterhead {
+  color: hsl(40 15% 65%);
+}
+
+.dark .memo-title {
+  color: hsl(40 20% 75%);
+}
+
+.dark .memo-meta-line {
+  color: hsl(40 15% 70%);
+}
+
+.dark .memo-meta-value {
+  border-bottom-color: hsl(150 10% 35%);
+}
+
+.dark .memo-body {
+  color: hsl(40 15% 75%);
+}
+
+.dark .memo-form-ref {
+  color: hsl(40 10% 50%);
+}
+
+.dark .memo-footer {
+  color: hsl(40 10% 45%);
+}
+
+/* Hover lift effect */
+.memo-paper {
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.memo-paper:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    0 12px 28px rgba(0, 0, 0, 0.1),
+    inset 0 0 40px rgba(139, 115, 85, 0.04);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .paper-clip {
+    width: 40px;
+    height: 16px;
+  }
+
+  .paper-clip::before {
+    top: 4px;
+    left: 10px;
+    right: 10px;
+    box-shadow: 0 4px 0 hsl(0 0% 48%);
+  }
+
+  .hole-punch {
+    display: none;
+  }
+
+  .memo-body {
+    font-size: 10px;
+  }
+
+  .memo-letterhead {
+    font-size: 8px;
+  }
+
+  .memo-title {
+    font-size: 11px;
+  }
+}
+
+/* ============================================
+   Newsletter Signup - Input & Button Styles
+   ============================================ */
+
+/* Typewriter-style input with dotted underline */
+.newsletter-input::placeholder {
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* Disable hover-lift on newsletter paper so it reads as a static form */
+.newsletter-paper.memo-paper:hover {
+  transform: none;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 0 40px rgba(139, 115, 85, 0.04),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Stamp-styled submit button */
+.newsletter-stamp-btn {
+  position: relative;
+}
+
+.newsletter-stamp-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: hsl(var(--primary));
+  transition: opacity 0.2s;
+}
+
+.newsletter-stamp-btn:hover::after {
+  opacity: 0.05;
+}
+
+/* Dark mode input adjustments */
+.dark .newsletter-input {
+  border-bottom-color: hsl(40 15% 50%);
+}
+
+.dark .newsletter-input:focus {
+  border-bottom-color: hsl(152 50% 50%);
+}
+
+/* ============================================
+   FILE FOLDER & INDEX CARD STYLES (About Page)
+   ============================================ */
+
+/* File folder tab styling for desk cards */
+.file-folder-card {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    hsl(40 35% 88%) 0%,
+    hsl(40 32% 85%) 100%
+  );
+  border: 1px solid hsl(40 20% 70%);
+  border-radius: 0 0 4px 4px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  overflow: visible;
+}
+
+/* Tab at top of folder */
+.file-folder-card::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 12px;
+  width: 100px;
+  height: 18px;
+  background: linear-gradient(
+    180deg,
+    hsl(40 40% 75%) 0%,
+    hsl(40 35% 82%) 100%
+  );
+  border: 1px solid hsl(40 20% 65%);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Index card ruled lines */
+.index-card-lines {
+  background-image:
+    repeating-linear-gradient(
+      transparent,
+      transparent 23px,
+      hsl(40 20% 70% / 0.3) 23px,
+      hsl(40 20% 70% / 0.3) 24px
+    );
+  background-position: 0 8px;
+}
+
+/* Red margin line for index cards */
+.index-card-margin::after {
+  content: "";
+  position: absolute;
+  left: 50px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: hsl(0 60% 60% / 0.15);
+}
+
+/* Field notice card - yellow sticky note style */
+.field-notice-card {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    hsl(48 95% 88%) 0%,
+    hsl(48 90% 82%) 100%
+  );
+  border: 1px solid hsl(48 50% 70%);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: rotate(-0.5deg);
+}
+
+/* Staple effect for field notice */
+.field-notice-card::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(
+    circle,
+    hsl(0 0% 70%) 0%,
+    hsl(0 0% 50%) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Second staple */
+.field-notice-card::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(
+    circle,
+    hsl(0 0% 70%) 0%,
+    hsl(0 0% 50%) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Filing tab button styling for sidebar */
+.filing-tab {
+  position: relative;
+  background: hsl(40 25% 75%);
+  border: 1px solid hsl(40 15% 60%);
+  border-left: 3px solid hsl(40 15% 60%);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);
+  transition: all 0.2s ease;
+}
+
+.filing-tab:hover {
+  background: hsl(40 30% 78%);
+  transform: translateX(4px);
+}
+
+.filing-tab.active {
+  background: hsl(40 40% 82%);
+  border-left-color: hsl(25 80% 55%);
+  border-left-width: 4px;
+  transform: translateX(8px);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode adjustments */
+.dark .file-folder-card {
+  background: linear-gradient(
+    180deg,
+    hsl(40 15% 25%) 0%,
+    hsl(40 12% 22%) 100%
+  );
+  border-color: hsl(40 10% 35%);
+}
+
+.dark .file-folder-card::before {
+  background: linear-gradient(
+    180deg,
+    hsl(40 18% 30%) 0%,
+    hsl(40 15% 28%) 100%
+  );
+  border-color: hsl(40 10% 38%);
+}
+
+.dark .field-notice-card {
+  background: linear-gradient(
+    180deg,
+    hsl(48 40% 35%) 0%,
+    hsl(48 35% 30%) 100%
+  );
+  border-color: hsl(48 25% 45%);
+}
+
+.dark .filing-tab {
+  background: hsl(40 15% 28%);
+  border-color: hsl(40 10% 35%);
+}
+
+.dark .filing-tab:hover {
+  background: hsl(40 20% 32%);
+}
+
+.dark .filing-tab.active {
+  background: hsl(40 25% 35%);
+  border-left-color: hsl(25 60% 45%);
+}

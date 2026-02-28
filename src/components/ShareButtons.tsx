@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Twitter, Facebook, Link2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,6 +7,7 @@ import { analytics } from "@/lib/analytics";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -54,6 +57,7 @@ export const ShareButtons = ({ title, url }: ShareButtonsProps) => {
   };
 
   return (
+    <TooltipProvider>
     <div className="flex items-center gap-1">
       <span className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mr-2">
         Share:
@@ -107,5 +111,6 @@ export const ShareButtons = ({ title, url }: ShareButtonsProps) => {
         <TooltipContent>{copied ? "Copied!" : "Copy link"}</TooltipContent>
       </Tooltip>
     </div>
+    </TooltipProvider>
   );
 };
