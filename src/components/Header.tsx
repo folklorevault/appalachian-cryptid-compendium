@@ -43,7 +43,7 @@ export const Header = () => {
             {navItems.map((item, i) => (
               <span key={item.href} className="flex items-center">
                 {i > 0 && (
-                  <span className="text-border text-sm select-none mx-[-2px]">
+                  <span className="text-border text-sm select-none mx-[-2px]" aria-hidden="true">
                     |
                   </span>
                 )}

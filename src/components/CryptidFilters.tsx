@@ -107,6 +107,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                 key={region.value}
                 onClick={() => handleFilterChange(region.value)}
                 aria-pressed={selectedRegion === region.value}
+                aria-label={`Filter by region: ${region.label}`}
                 className={`font-typewriter text-xs tracking-wide px-2.5 py-1 rounded-sm border transition-colors duration-150 ${
                   selectedRegion === region.value
                     ? "bg-primary text-primary-foreground border-primary"

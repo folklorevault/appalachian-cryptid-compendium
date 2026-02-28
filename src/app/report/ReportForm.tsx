@@ -224,6 +224,7 @@ export function ReportForm() {
 
   return (
     <div className="min-h-screen bg-background">
+      <main id="main-content">
       {/* Back Button */}
       <div className="container mx-auto px-4 py-6">
         <Link href="/">
@@ -273,10 +274,11 @@ export function ReportForm() {
               <form onSubmit={handleSubmit} className="space-y-6">
             {/* Witness Information */}
             <Card className="border-2 border-border">
+              <fieldset>
               <CardContent className="p-6 space-y-4">
-                <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+                <legend className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
                   WITNESS INFORMATION
-                </div>
+                </legend>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="witnessName">Your Name *</Label>
@@ -287,10 +289,11 @@ export function ReportForm() {
                       onBlur={() => handleBlur("witnessName")}
                       placeholder="Enter your name"
                       aria-invalid={touched.witnessName && !!errors.witnessName}
+                      aria-describedby={touched.witnessName && errors.witnessName ? "witnessName-error" : undefined}
                       className={`bg-background border-border ${touched.witnessName && errors.witnessName ? "border-destructive" : ""}`}
                     />
                     {touched.witnessName && errors.witnessName && (
-                      <p className="text-xs text-destructive">{errors.witnessName}</p>
+                      <p id="witnessName-error" role="alert" className="text-xs text-destructive">{errors.witnessName}</p>
                     )}
                   </div>
                   <div className="space-y-2">
@@ -303,23 +306,26 @@ export function ReportForm() {
                       onBlur={() => handleBlur("email")}
                       placeholder="your@email.com"
                       aria-invalid={touched.email && !!errors.email}
+                      aria-describedby={touched.email && errors.email ? "email-error" : undefined}
                       className={`bg-background border-border ${touched.email && errors.email ? "border-destructive" : ""}`}
                     />
                     {touched.email && errors.email && (
-                      <p className="text-xs text-destructive">{errors.email}</p>
+                      <p id="email-error" role="alert" className="text-xs text-destructive">{errors.email}</p>
                     )}
                   </div>
                 </div>
               </CardContent>
+              </fieldset>
             </Card>
 
             {/* Sighting Details */}
             <Card className="border-2 border-border">
+              <fieldset>
               <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <Calendar className="h-4 w-4" />
+                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+                  <Calendar className="h-4 w-4" aria-hidden="true" />
                   SIGHTING DATE & TIME
-                </div>
+                </legend>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="date">Date of Sighting *</Label>
@@ -331,10 +337,11 @@ export function ReportForm() {
                       onBlur={() => handleBlur("date")}
                       max={new Date().toISOString().split('T')[0]}
                       aria-invalid={touched.date && !!errors.date}
+                      aria-describedby={touched.date && errors.date ? "date-error" : undefined}
                       className={`bg-background border-border ${touched.date && errors.date ? "border-destructive" : ""}`}
                     />
                     {touched.date && errors.date && (
-                      <p className="text-xs text-destructive">{errors.date}</p>
+                      <p id="date-error" role="alert" className="text-xs text-destructive">{errors.date}</p>
                     )}
                   </div>
                   <div className="space-y-2">
@@ -349,15 +356,17 @@ export function ReportForm() {
                   </div>
                 </div>
               </CardContent>
+              </fieldset>
             </Card>
 
             {/* Location */}
             <Card className="border-2 border-border">
+              <fieldset>
               <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <MapPin className="h-4 w-4" />
+                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
                   LOCATION DETAILS
-                </div>
+                </legend>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="location">Specific Location *</Label>
@@ -368,10 +377,11 @@ export function ReportForm() {
                       onBlur={() => handleBlur("location")}
                       placeholder="e.g., Near Pine Creek Trail"
                       aria-invalid={touched.location && !!errors.location}
+                      aria-describedby={touched.location && errors.location ? "location-error" : undefined}
                       className={`bg-background border-border ${touched.location && errors.location ? "border-destructive" : ""}`}
                     />
                     {touched.location && errors.location && (
-                      <p className="text-xs text-destructive">{errors.location}</p>
+                      <p id="location-error" role="alert" className="text-xs text-destructive">{errors.location}</p>
                     )}
                   </div>
                   <div className="space-y-2">
@@ -386,6 +396,7 @@ export function ReportForm() {
                       <SelectTrigger
                         className={`bg-background border-border ${touched.state && errors.state ? "border-destructive" : ""}`}
                         aria-invalid={touched.state && !!errors.state}
+                        aria-describedby={touched.state && errors.state ? "state-error" : undefined}
                       >
                         <SelectValue placeholder="Select state" />
                       </SelectTrigger>
@@ -398,20 +409,22 @@ export function ReportForm() {
                       </SelectContent>
                     </Select>
                     {touched.state && errors.state && (
-                      <p className="text-xs text-destructive">{errors.state}</p>
+                      <p id="state-error" role="alert" className="text-xs text-destructive">{errors.state}</p>
                     )}
                   </div>
                 </div>
               </CardContent>
+              </fieldset>
             </Card>
 
             {/* Creature Description */}
             <Card className="border-2 border-border">
+              <fieldset>
               <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <FileText className="h-4 w-4" />
+                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+                  <FileText className="h-4 w-4" aria-hidden="true" />
                   CREATURE DESCRIPTION
-                </div>
+                </legend>
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="creatureName">Known Cryptid Name (if identifiable)</Label>
@@ -433,15 +446,16 @@ export function ReportForm() {
                       placeholder="Describe what happened in as much detail as possible..."
                       rows={5}
                       aria-invalid={touched.description && !!errors.description}
+                      aria-describedby={touched.description && errors.description ? "description-error" : "description-hint"}
                       className={`bg-background border-border resize-none ${touched.description && errors.description ? "border-destructive" : ""}`}
                     />
                     <div className="flex justify-between">
                       {touched.description && errors.description ? (
-                        <p className="text-xs text-destructive">{errors.description}</p>
+                        <p id="description-error" role="alert" className="text-xs text-destructive">{errors.description}</p>
                       ) : (
                         <span />
                       )}
-                      <p className="text-xs text-muted-foreground">{formData.description.length} / 50 min</p>
+                      <p id="description-hint" className="text-xs text-muted-foreground">{formData.description.length} / 50 min</p>
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -454,15 +468,16 @@ export function ReportForm() {
                       placeholder="Describe the creature's appearance: size, color, features..."
                       rows={4}
                       aria-invalid={touched.physicalDescription && !!errors.physicalDescription}
+                      aria-describedby={touched.physicalDescription && errors.physicalDescription ? "physicalDescription-error" : "physicalDescription-hint"}
                       className={`bg-background border-border resize-none ${touched.physicalDescription && errors.physicalDescription ? "border-destructive" : ""}`}
                     />
                     <div className="flex justify-between">
                       {touched.physicalDescription && errors.physicalDescription ? (
-                        <p className="text-xs text-destructive">{errors.physicalDescription}</p>
+                        <p id="physicalDescription-error" role="alert" className="text-xs text-destructive">{errors.physicalDescription}</p>
                       ) : (
                         <span />
                       )}
-                      <p className="text-xs text-muted-foreground">{formData.physicalDescription.length} / 20 min</p>
+                      <p id="physicalDescription-hint" className="text-xs text-muted-foreground">{formData.physicalDescription.length} / 20 min</p>
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -478,6 +493,7 @@ export function ReportForm() {
                   </div>
                 </div>
               </CardContent>
+              </fieldset>
             </Card>
 
             {/* Submit */}
@@ -490,6 +506,7 @@ export function ReportForm() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
+                    aria-busy={isSubmitting}
                     className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[150px] justify-center"
                     style={{ transform: "rotate(-1deg)", filter: "url(#stamp-texture)" }}
                   >
@@ -514,6 +531,7 @@ export function ReportForm() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

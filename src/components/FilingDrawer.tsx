@@ -155,7 +155,7 @@ export const FilingDrawer = ({
             "hover:bg-[hsl(var(--bureau-manila-light))]",
             "transition-colors duration-75",
             // Focus state
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
             // Open state styling
             "group-data-[state=open]:bg-[hsl(var(--bureau-manila-light))]",
             "group-data-[state=open]:border-b-[hsl(var(--bureau-border))]/60"
@@ -299,7 +299,7 @@ export const FilingCabinetControls = ({ className }: { className?: string }) => 
           "border border-[hsl(var(--bureau-border))]/50",
           "rounded-sm",
           "transition-colors duration-75",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
         )}
       >
         {allOpen ? "Close All Drawers" : "Open All Drawers"}

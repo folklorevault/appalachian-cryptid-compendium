@@ -102,19 +102,29 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
             transition: transform 0.2s;
           `;
-          el.addEventListener("mouseenter", () => {
-            el.style.transform = "scale(1.2)";
-          });
-          el.addEventListener("mouseleave", () => {
-            el.style.transform = "scale(1)";
-          });
-          el.addEventListener("click", () => {
+          el.setAttribute("tabindex", "0");
+          el.setAttribute("role", "button");
+          el.setAttribute("aria-label", `${cryptid.name} — ${cryptid.location}`);
+          const selectMarker = () => {
             setSelectedCryptidId(cryptid._id);
             map.current?.flyTo({
               center: [cryptid.coordinates!.lng, cryptid.coordinates!.lat],
               zoom: 8,
               duration: 1500,
             });
+          };
+          el.addEventListener("mouseenter", () => {
+            el.style.transform = "scale(1.2)";
+          });
+          el.addEventListener("mouseleave", () => {
+            el.style.transform = "scale(1)";
+          });
+          el.addEventListener("click", selectMarker);
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              selectMarker();
+            }
           });
 
           new mapboxLib.Marker(el)
@@ -219,18 +229,22 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
         <div className="relative">
           <div
             ref={mapContainer}
+            role="application"
+            aria-label="Interactive sighting map"
             className="w-full h-[500px] lg:h-[600px] rounded-lg border-2 border-border bg-card"
           />
-          {!isMapLoaded && !mapError && (
-            <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-lg">
-              <div className="text-center space-y-2">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto animate-pulse" />
-                <p className="text-muted-foreground font-typewriter">
-                  Loading sighting map...
-                </p>
+          <div role="status" aria-live="polite" aria-atomic="true">
+            {!isMapLoaded && !mapError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-lg">
+                <div className="text-center space-y-2">
+                  <MapPin className="h-12 w-12 text-muted-foreground mx-auto animate-pulse" aria-hidden="true" />
+                  <p className="text-muted-foreground font-typewriter">
+                    Loading sighting map...
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
           {!isMapLoaded && mapError && (
             <div className="absolute inset-0 flex items-center justify-center bg-card/80 rounded-lg">
               <div className="text-center space-y-2">
@@ -250,19 +264,19 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-destructive" />
+                  <div className="w-4 h-4 rounded-full bg-destructive" aria-hidden="true" />
                   <span className="text-sm text-foreground">
                     Advisory: Elevated
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-secondary" />
+                  <div className="w-4 h-4 rounded-full bg-secondary" aria-hidden="true" />
                   <span className="text-sm text-foreground">
                     Advisory: Moderate
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-accent" />
+                  <div className="w-4 h-4 rounded-full bg-accent" aria-hidden="true" />
                   <span className="text-sm text-foreground">Advisory: Low</span>
                 </div>
               </div>
@@ -355,6 +369,7 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
                     <div className="flex items-center gap-2">
                       <div
                         className="w-3 h-3 rounded-full"
+                        aria-hidden="true"
                         style={{
                           backgroundColor: getDangerColor(cryptid.dangerLevel),
                         }}

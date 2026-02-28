@@ -69,9 +69,9 @@ const CompactSignup = () => {
 
   if (state === "success") {
     return (
-      <div className="newsletter-paper memo-paper border border-border/40 rounded-sm px-5 py-4">
+      <div role="status" aria-live="polite" className="newsletter-paper memo-paper border border-border/40 rounded-sm px-5 py-4">
         <div className="flex items-center gap-3">
-          <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+          <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" aria-hidden="true" />
           <p className="text-sm font-typewriter text-foreground/80">
             Registered. You'll get an email when new case files drop.
           </p>
@@ -184,8 +184,8 @@ const FullSignup = () => {
             </div>
 
             {/* Confirmation content */}
-            <div className="flex items-start gap-3 mt-4 mb-4">
-              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+            <div role="status" aria-live="polite" className="flex items-start gap-3 mt-4 mb-4">
+              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
               <div className="memo-body text-sm leading-relaxed">
                 Your transmission address has been logged with the Bureau.
                 You will receive dispatches as new case files are processed
