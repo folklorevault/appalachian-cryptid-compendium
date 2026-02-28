@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
@@ -29,6 +29,15 @@ function isAnomaly(data: SanityCryptidListItem | SanityAnomalyListItem): data is
 
 export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // If the image loaded before React hydrated, onLoad never fires.
+  // Check img.complete on mount to catch this race condition.
+  useEffect(() => {
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setImageLoaded(true);
+    }
+  }, []);
 
   const {
     name,
@@ -87,6 +96,7 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
             />
           )}
           <img
+            ref={imgRef}
             src={imageUrl}
             srcSet={srcSet}
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
