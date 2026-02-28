@@ -16,7 +16,7 @@ const workSans = localFont({
 });
 
 const rokkitt = localFont({
-  src: [{ path: "../../public/fonts/rokkitt-700-latin.woff", weight: "700" }],
+  src: [{ path: "../../public/fonts/rokkitt-700-latin.woff2", weight: "700" }],
   variable: "--font-display",
   display: "swap",
 });
@@ -96,7 +96,7 @@ export default function RootLayout({
         <Script
           src="https://rybbit.folklorevault.com/api/script.js"
           data-site-id="0a6c699fadfc"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>

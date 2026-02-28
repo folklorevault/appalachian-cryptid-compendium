@@ -50,6 +50,7 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
     .height(600)
     .fit("crop")
     .quality(60)
+    .auto("format")
     .url();
 
   const srcSet = cardWidths
@@ -60,12 +61,13 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
         .height(h)
         .fit("crop")
         .quality(60)
+        .auto("format")
         .url();
       return `${u} ${w}w`;
     })
     .join(", ");
 
-  const blurUrl = urlFor(gridImage).width(24).height(36).blur(12).quality(30).url();
+  const blurUrl = urlFor(gridImage).width(24).height(36).blur(12).quality(30).auto("format").url();
 
   const getStatusColor = (caseStatus: AnomalyStatus) => {
     switch (caseStatus) {

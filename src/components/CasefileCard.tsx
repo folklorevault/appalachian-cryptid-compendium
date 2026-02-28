@@ -62,6 +62,7 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
     .height(400)
     .fit("crop")
     .quality(60)
+    .auto("format")
     .url();
 
   const srcSet = cardWidths
@@ -71,12 +72,13 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
         .height(w)
         .fit("crop")
         .quality(60)
+        .auto("format")
         .url();
       return `${u} ${w}w`;
     })
     .join(", ");
 
-  const blurUrl = urlFor(gridImage).width(24).height(24).blur(12).quality(30).url();
+  const blurUrl = urlFor(gridImage).width(24).height(24).blur(12).quality(30).auto("format").url();
 
   // File number based on slug
   const fileNumber = `${slug.current?.slice(0, 3).toUpperCase() || 'UNK'}-${String(slug.current?.length || 0).padStart(3, '0')}`;

@@ -60,7 +60,7 @@ export async function generateMetadata({
   const description = `${cryptid.subhead || cryptid.description || `Learn about the ${cryptid.name}`} Sightings reported near ${cryptid.location}. Part of the Appalachian Cryptid Field Guide.`;
 
   const ogImageUrl = cryptid.image
-    ? urlFor(cryptid.image).width(1200).height(630).fit("crop").quality(80).url()
+    ? urlFor(cryptid.image).width(1200).height(630).fit("crop").quality(80).auto("format").url()
     : "https://appalachiancryptid.com/og-image.jpg";
 
   return {
@@ -108,6 +108,7 @@ export default async function CryptidDetailPage({
         .height(1200)
         .fit("crop")
         .quality(70)
+        .auto("format")
         .url()
     : "";
 
@@ -383,6 +384,7 @@ export default async function CryptidDetailPage({
                     const relatedImageUrl = urlFor(related.gridImage)
                       .width(400)
                       .height(400)
+                      .auto("format")
                       .url();
                     return (
                       <Link

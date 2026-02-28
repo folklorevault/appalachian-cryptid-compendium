@@ -71,7 +71,7 @@ const FieldGuideEntry = ({
 }) => {
   const imageSource = cryptid.gridImage || cryptid.image;
   const imageUrl = imageSource
-    ? urlFor(imageSource).width(200).height(200).fit("crop").quality(75).url()
+    ? urlFor(imageSource).width(200).height(200).fit("crop").quality(75).auto("format").url()
     : null;
 
   return (
@@ -192,7 +192,7 @@ const AnomalyEntry = ({
 }) => {
   const imageSource = anomaly.gridImage || anomaly.image;
   const imageUrl = imageSource
-    ? urlFor(imageSource).width(200).height(200).fit("crop").quality(75).url()
+    ? urlFor(imageSource).width(200).height(200).fit("crop").quality(75).auto("format").url()
     : null;
 
   return (

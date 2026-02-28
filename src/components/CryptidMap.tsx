@@ -182,6 +182,7 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
           .height(64)
           .fit("crop")
           .quality(55)
+          .auto("format")
           .url()
       : "";
 

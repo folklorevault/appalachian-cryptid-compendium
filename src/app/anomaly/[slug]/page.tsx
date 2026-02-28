@@ -90,6 +90,7 @@ export async function generateMetadata({
         .height(630)
         .fit("crop")
         .quality(80)
+        .auto("format")
         .url()
     : "https://appalachiancryptid.com/og-image.jpg";
 
@@ -153,6 +154,7 @@ export default async function AnomalyDetailPage({
         .height(1200)
         .fit("crop")
         .quality(70)
+        .auto("format")
         .url()
     : "";
 
@@ -441,6 +443,7 @@ export default async function AnomalyDetailPage({
                     const relatedImageUrl = urlFor(related.gridImage)
                       .width(400)
                       .height(400)
+                      .auto("format")
                       .url();
                     const RelatedIcon =
                       typeIcons[related.anomalyType] || Zap;
