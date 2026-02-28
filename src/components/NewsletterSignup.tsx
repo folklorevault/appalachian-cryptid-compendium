@@ -120,7 +120,7 @@ const CompactSignup = () => {
         >
           <span
             className="flex items-center gap-1.5"
-            style={{ filter: "url(#stamp-texture)" }}
+            style={{ filter: "url(#__svg-stamp-texture)" }}
           >
             {state === "submitting" ? (
               <>Processing...</>
@@ -325,7 +325,7 @@ const FullSignup = () => {
             >
               <span
                 className="block"
-                style={{ filter: "url(#stamp-texture)" }}
+                style={{ filter: "url(#__svg-stamp-texture)" }}
               >
                 {state === "submitting" ? (
                   <>Processing...</>

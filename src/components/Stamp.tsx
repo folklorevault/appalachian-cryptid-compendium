@@ -29,7 +29,7 @@ export const Stamp = ({ text, variant = "primary", className, rotation = -5 }: S
       }}
     >
       <span className="block" style={{ 
-        filter: "url(#stamp-texture)" 
+        filter: "url(#__svg-stamp-texture)"
       }}>
         {text}
       </span>
@@ -41,7 +41,7 @@ export const Stamp = ({ text, variant = "primary", className, rotation = -5 }: S
 export const StampFilter = () => (
   <svg className="hidden">
     <defs>
-      <filter id="stamp-texture">
+      <filter id="__svg-stamp-texture">
         <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
       </filter>

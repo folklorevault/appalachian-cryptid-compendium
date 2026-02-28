@@ -381,7 +381,7 @@ export function AboutContent() {
                   <Link
                     href="/report"
                     className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200"
-                    style={{ transform: "rotate(-1deg)", filter: "url(#stamp-texture)" }}
+                    style={{ transform: "rotate(-1deg)", filter: "url(#__svg-stamp-texture)" }}
                   >
                     File a Report
                   </Link>

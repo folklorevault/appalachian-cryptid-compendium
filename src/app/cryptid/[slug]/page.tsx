@@ -57,14 +57,17 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
-  const description = `${cryptid.subhead || cryptid.description || `Learn about the ${cryptid.name}`} Sightings reported near ${cryptid.location}. Part of the Appalachian Cryptid Field Guide.`;
+  const rawDesc = cryptid.subhead || cryptid.description || `Learn about the ${cryptid.name}`;
+  const description = rawDesc.length > 120
+    ? rawDesc.slice(0, 117) + '...'
+    : `${rawDesc} Sightings near ${cryptid.location}.`;
 
   const ogImageUrl = cryptid.image
     ? urlFor(cryptid.image).width(1200).height(630).fit("crop").quality(80).auto("format").url()
     : "https://appalachiancryptid.com/og-image.jpg";
 
   return {
-    title: `${cryptid.name} - ${cryptid.location} Cryptid`,
+    title: cryptid.name,
     description,
     openGraph: {
       title: `${cryptid.name} - Appalachian Cryptid Case File`,
@@ -171,7 +174,11 @@ export default async function CryptidDetailPage({
                 <div className="relative aspect-[3/4] overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
                   <Image
                     src={imageUrl}
-                    alt={cryptid.imageAlt || cryptid.name}
+                    alt={
+                      (cryptid.imageAlt || cryptid.name).length > 125
+                        ? (cryptid.imageAlt || cryptid.name).slice(0, 122) + '...'
+                        : (cryptid.imageAlt || cryptid.name)
+                    }
                     fill
                     priority
                     sizes="(max-width: 640px) 220px, (max-width: 1024px) 280px, 320px"

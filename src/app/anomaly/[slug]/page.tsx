@@ -82,7 +82,10 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
-  const description = `${anomaly.subhead || anomaly.description || `Learn about ${anomaly.name}`} Reported near ${anomaly.location}. Part of the Anomalies Desk.`;
+  const rawDesc = anomaly.subhead || anomaly.description || `Learn about ${anomaly.name}`;
+  const description = rawDesc.length > 120
+    ? rawDesc.slice(0, 117) + '...'
+    : `${rawDesc} Reported near ${anomaly.location}.`;
 
   const ogImageUrl = anomaly.image
     ? urlFor(anomaly.image)
@@ -95,7 +98,7 @@ export async function generateMetadata({
     : "https://appalachiancryptid.com/og-image.jpg";
 
   return {
-    title: `${anomaly.name} - ${anomaly.location} | Anomalies Desk`,
+    title: anomaly.name,
     description,
     openGraph: {
       title: `${anomaly.name} - Anomalies Desk`,
@@ -225,7 +228,11 @@ export default async function AnomalyDetailPage({
                 {imageUrl ? (
                   <Image
                     src={imageUrl}
-                    alt={anomaly.imageAlt || anomaly.name}
+                    alt={
+                      (anomaly.imageAlt || anomaly.name).length > 125
+                        ? (anomaly.imageAlt || anomaly.name).slice(0, 122) + '...'
+                        : (anomaly.imageAlt || anomaly.name)
+                    }
                     fill
                     priority
                     sizes="(max-width: 640px) 220px, (max-width: 1024px) 280px, 320px"
