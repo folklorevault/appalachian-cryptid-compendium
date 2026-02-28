@@ -19,7 +19,7 @@ export const Stamp = ({ text, variant = "primary", className, rotation = -5 }: S
     <div
       className={cn(
         "inline-block px-4 py-2 border-4 rounded-sm font-bold uppercase tracking-widest text-sm font-display opacity-80",
-        "shadow-[inset_0_0_0_2px_currentColor]",
+        "bg-[hsl(var(--bureau-manila)/0.85)] shadow-[inset_0_0_0_2px_currentColor]",
         variantClasses[variant],
         className
       )}

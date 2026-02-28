@@ -264,10 +264,10 @@ export function AboutContent() {
                   We do not invent monsters. We file reports.
                 </h3>
 
-                <div className="space-y-8">
+                <div className="space-y-6">
                   <div>
-                    <h4 className="font-bold text-foreground text-lg uppercase tracking-wide font-typewriter mb-2">
-                      01. Indigenous Primacy
+                    <h4 className="text-base font-bold text-foreground font-display mb-2">
+                      Indigenous Primacy
                     </h4>
                     <p className="text-foreground/80 leading-relaxed">
                       We acknowledge that 90% of what modern cryptozoology "discovers" was mapped,
@@ -279,8 +279,8 @@ export function AboutContent() {
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-foreground text-lg uppercase tracking-wide font-typewriter mb-2">
-                      02. The "Uncle" Factor
+                    <h4 className="text-base font-bold text-foreground font-display mb-2">
+                      The "Uncle" Factor
                     </h4>
                     <p className="text-foreground/80 leading-relaxed">
                       Academic folklore is valuable, but "Oral History" is vital. If a story was told
@@ -290,8 +290,8 @@ export function AboutContent() {
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-foreground text-lg uppercase tracking-wide font-typewriter mb-2">
-                      03. High Strangeness
+                    <h4 className="text-base font-bold text-foreground font-display mb-2">
+                      High Strangeness
                     </h4>
                     <p className="text-foreground/80 leading-relaxed">
                       We embrace the glitch. If a sighting involves a creature that walks through a
@@ -371,17 +371,19 @@ export function AboutContent() {
 
                 {/* CTA to Report */}
                 <div className="mt-8 p-6 bg-primary/10 border-2 border-primary/30 text-center">
-                  <h4 className="text-xl font-bold text-foreground mb-2 font-display">
+                  <h4 className="text-base font-bold text-foreground mb-2 font-display">
                     Seen Something You Can't Explain?
                   </h4>
                   <p className="text-sm text-foreground/80 mb-4">
                     Your account could help fill in the map. All submissions are reviewed and treated
                     with discretion.
                   </p>
-                  <Link href="/report">
-                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                      Submit Your Account
-                    </Button>
+                  <Link
+                    href="/report"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200"
+                    style={{ transform: "rotate(-1deg)", filter: "url(#stamp-texture)" }}
+                  >
+                    File a Report
                   </Link>
                 </div>
               </section>
