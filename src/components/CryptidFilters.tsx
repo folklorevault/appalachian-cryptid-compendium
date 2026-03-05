@@ -27,30 +27,20 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
   const [selectedRegion, setSelectedRegion] = useState("all");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
-  // Pin Mothman to top, then filter
+  // Preserve Sanity's _createdAt desc order, then apply client-side filters
   const filteredCryptids = useMemo(() => {
-    let sorted = [...cryptids].sort((a, b) => {
-      const aIsMothman =
-        a.slug?.current === "mothman" ||
-        a.name.toLowerCase() === "mothman";
-      const bIsMothman =
-        b.slug?.current === "mothman" ||
-        b.name.toLowerCase() === "mothman";
-      if (aIsMothman && !bIsMothman) return -1;
-      if (bIsMothman && !aIsMothman) return 1;
-      return 0;
-    });
+    let results = cryptids;
 
     if (selectedRegion !== "all") {
-      sorted = sorted.filter(
+      results = results.filter(
         (c) => c.region?.toLowerCase() === selectedRegion.toLowerCase()
       );
     }
 
-    if (!searchQuery) return sorted;
+    if (!searchQuery) return results;
 
     const query = searchQuery.toLowerCase();
-    return sorted.filter(
+    return results.filter(
       (c) =>
         c.name.toLowerCase().includes(query) ||
         c.location.toLowerCase().includes(query) ||

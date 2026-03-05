@@ -30,10 +30,13 @@ import type {
 
 async function sanityFetch<T>(
   query: string,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
+  tags?: string[]
 ): Promise<T | null> {
   try {
-    return await sanityClient.fetch<T>(query, params);
+    return await sanityClient.fetch<T>(query, params, {
+      next: { tags: tags ?? ["sanity"] },
+    });
   } catch (error) {
     console.error("Sanity fetch failed, falling back to static data:", error);
     return null;
@@ -134,13 +137,14 @@ export async function fetchCryptids(filters?: {
         region: filters.region || "all",
         dangerLevel: filters.dangerLevel || "all",
         search: filters.search ? `*${filters.search}*` : "",
-      }
+      },
+      ["cryptids"]
     );
     return result ?? getStaticCryptids(filters);
   }
 
   const result =
-    await sanityFetch<SanityCryptidListItem[]>(cryptidsListQuery);
+    await sanityFetch<SanityCryptidListItem[]>(cryptidsListQuery, undefined, ["cryptids"]);
   return result ?? getStaticCryptids();
 }
 
@@ -149,7 +153,7 @@ export async function fetchCryptidBySlug(
 ): Promise<SanityCryptid | null> {
   const result = await sanityFetch<SanityCryptid>(cryptidBySlugQuery, {
     slug,
-  });
+  }, ["cryptids", `cryptid-${slug}`]);
   if (result) return result;
 
   const cryptid = staticCryptids.find((c) => c.id === slug);
@@ -157,12 +161,12 @@ export async function fetchCryptidBySlug(
 }
 
 export async function fetchCryptidSlugs(): Promise<string[]> {
-  const result = await sanityFetch<string[]>(cryptidSlugsQuery);
+  const result = await sanityFetch<string[]>(cryptidSlugsQuery, undefined, ["cryptids"]);
   return result ?? staticCryptids.map((c) => c.id);
 }
 
 export async function fetchMapCryptids(): Promise<SanityCryptidMapItem[]> {
-  const result = await sanityFetch<SanityCryptidMapItem[]>(mapCryptidsQuery);
+  const result = await sanityFetch<SanityCryptidMapItem[]>(mapCryptidsQuery, undefined, ["cryptids"]);
   if (result) return result;
 
   return staticCryptids
@@ -193,7 +197,8 @@ export async function fetchRelatedCryptids(
 ): Promise<SanityCryptidListItem[]> {
   const result = await sanityFetch<SanityCryptidListItem[]>(
     relatedCryptidsQuery,
-    { slug, region, dangerLevel }
+    { slug, region, dangerLevel },
+    ["cryptids"]
   );
   if (result) return result;
 
@@ -227,28 +232,28 @@ export async function fetchAnomalies(filters?: {
         status: filters.status || "all",
         region: filters.region || "all",
         search: filters.search ? `*${filters.search}*` : "",
-      })) ?? []
+      }, ["anomalies"])) ?? []
     );
   }
 
   return (
-    (await sanityFetch<SanityAnomalyListItem[]>(anomaliesListQuery)) ?? []
+    (await sanityFetch<SanityAnomalyListItem[]>(anomaliesListQuery, undefined, ["anomalies"])) ?? []
   );
 }
 
 export async function fetchAnomalyBySlug(
   slug: string
 ): Promise<SanityAnomaly | null> {
-  return sanityFetch<SanityAnomaly>(anomalyBySlugQuery, { slug });
+  return sanityFetch<SanityAnomaly>(anomalyBySlugQuery, { slug }, ["anomalies", `anomaly-${slug}`]);
 }
 
 export async function fetchAnomalySlugs(): Promise<string[]> {
-  return (await sanityFetch<string[]>(anomalySlugsQuery)) ?? [];
+  return (await sanityFetch<string[]>(anomalySlugsQuery, undefined, ["anomalies"])) ?? [];
 }
 
 export async function fetchMapAnomalies(): Promise<SanityAnomalyMapItem[]> {
   return (
-    (await sanityFetch<SanityAnomalyMapItem[]>(mapAnomaliesQuery)) ?? []
+    (await sanityFetch<SanityAnomalyMapItem[]>(mapAnomaliesQuery, undefined, ["anomalies"])) ?? []
   );
 }
 
@@ -262,6 +267,6 @@ export async function fetchRelatedAnomalies(
       slug,
       anomalyType,
       region,
-    })) ?? []
+    }, ["anomalies"])) ?? []
   );
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 // Sanity webhook handler — revalidates affected pages when content changes
 export async function POST(request: NextRequest) {
@@ -15,23 +15,19 @@ export async function POST(request: NextRequest) {
     const type = body._type;
     const slug = body.slug?.current;
 
-    // Revalidate based on document type
     if (type === "cryptid") {
-      revalidatePath("/");
-      revalidatePath("/field-guide");
-      revalidatePath("/map");
+      revalidateTag("cryptids");
       if (slug) {
-        revalidatePath(`/cryptid/${slug}`);
+        revalidateTag(`cryptid-${slug}`);
       }
     } else if (type === "anomaly") {
-      revalidatePath("/anomalies");
-      revalidatePath("/field-guide");
+      revalidateTag("anomalies");
       if (slug) {
-        revalidatePath(`/anomaly/${slug}`);
+        revalidateTag(`anomaly-${slug}`);
       }
     } else {
       // For unknown types, revalidate everything
-      revalidatePath("/");
+      revalidateTag("sanity");
     }
 
     return NextResponse.json({
