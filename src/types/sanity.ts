@@ -157,6 +157,32 @@ export interface SanityAnomalyListItem {
   tags?: string[]
 }
 
+// ── Bulletin types ──────────────────────────────────────────
+
+export type BulletinCategory =
+  | 'field-terminology'
+  | 'regional-analysis'
+  | 'cultural-brief'
+  | 'operational-notice'
+
+export interface SanityBulletinListItem {
+  _id: string
+  title: string
+  slug: SanitySlug
+  bulletinNumber: string
+  date: string
+  category: BulletinCategory
+  summary: string
+  readTime?: string
+  relatedCryptids?: Array<{ _id: string; name: string; slug: SanitySlug }>
+}
+
+export interface SanityBulletin extends SanityBulletinListItem {
+  _type: 'bulletin'
+  body?: unknown[]
+  relatedAnomalies?: Array<{ _id: string; name: string; slug: SanitySlug }>
+}
+
 // Type for anomaly map queries
 export interface SanityAnomalyMapItem {
   _id: string

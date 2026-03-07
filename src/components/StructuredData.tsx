@@ -71,6 +71,57 @@ interface FAQPageSchema {
   }>;
 }
 
+interface BlogSchema {
+  "@context": "https://schema.org";
+  "@type": "Blog";
+  name: string;
+  description: string;
+  url: string;
+  publisher?: {
+    "@type": "Organization";
+    name: string;
+    url: string;
+  };
+  blogPost: Array<{
+    "@type": "BlogPosting";
+    headline: string;
+    description: string;
+    datePublished: string;
+    url: string;
+    author?: {
+      "@type": "Organization";
+      name: string;
+    };
+  }>;
+}
+
+interface BlogPostingSchema {
+  "@context": "https://schema.org";
+  "@type": "BlogPosting";
+  headline: string;
+  description: string;
+  datePublished: string;
+  url: string;
+  author?: {
+    "@type": "Organization";
+    name: string;
+  };
+  publisher?: {
+    "@type": "Organization";
+    name: string;
+    url: string;
+    logo?: {
+      "@type": "ImageObject";
+      url: string;
+    };
+  };
+  mainEntityOfPage?: {
+    "@type": "WebPage";
+    "@id": string;
+  };
+  wordCount?: number;
+}
+
 interface CollectionPageSchema {
   "@context": "https://schema.org";
   "@type": "CollectionPage";
@@ -96,8 +147,8 @@ interface CollectionPageSchema {
 }
 
 type StructuredDataProps = {
-  type: "website" | "article" | "breadcrumb" | "collection" | "faq";
-  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema;
+  type: "website" | "article" | "breadcrumb" | "collection" | "faq" | "blog" | "blogPosting";
+  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema | BlogSchema | BlogPostingSchema;
 };
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -199,6 +250,75 @@ export function createFAQPageSchema(
         text: faq.answer,
       },
     })),
+  };
+}
+
+export function createBlogSchema(
+  bulletins: Array<{ title: string; summary: string; date: string; slug: string }>
+): BlogSchema {
+  const baseUrl = "https://appalachiancryptid.com";
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Bureau Bulletins — Appalachian Cryptid Field Guide",
+    description:
+      "Official communications from the Bureau of Appalachian Cryptid Documentation. Field primers, regional analysis, and operational guidance.",
+    url: `${baseUrl}/bulletins`,
+    publisher: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+      url: baseUrl,
+    },
+    blogPost: bulletins.map((b) => ({
+      "@type": "BlogPosting",
+      headline: b.title,
+      description: b.summary,
+      datePublished: b.date,
+      url: `${baseUrl}/bulletin/${b.slug}`,
+      author: {
+        "@type": "Organization",
+        name: "Appalachian Cryptid Field Guide",
+      },
+    })),
+  };
+}
+
+export function createBlogPostingSchema(bulletin: {
+  title: string;
+  summary: string;
+  date: string;
+  slug: string;
+  readTime?: string;
+}): BlogPostingSchema {
+  const baseUrl = "https://appalachiancryptid.com";
+  const wordCount = bulletin.readTime
+    ? parseInt(bulletin.readTime) * 200
+    : undefined;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: bulletin.title,
+    description: bulletin.summary,
+    datePublished: bulletin.date,
+    url: `${baseUrl}/bulletin/${bulletin.slug}`,
+    author: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+      url: baseUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${baseUrl}/og-image.jpg`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${baseUrl}/bulletin/${bulletin.slug}`,
+    },
+    wordCount,
   };
 }
 

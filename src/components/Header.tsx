@@ -13,6 +13,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: "/", label: "Field Guide" },
   { href: "/anomalies", label: "Anomalies Desk" },
+  { href: "/bulletins", label: "Bureau Bulletins" },
   { href: "/map", label: "Sighting Map" },
   { href: "/about", label: "About" },
 ];
@@ -39,7 +40,7 @@ export const Header = () => {
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden xl:flex items-center">
             {navItems.map((item, i) => (
               <span key={item.href} className="flex items-center">
                 {i > 0 && (
@@ -49,7 +50,7 @@ export const Header = () => {
                 )}
                 <Link
                   href={item.href}
-                  className={`font-typewriter text-sm tracking-[0.02em] px-4 py-2 relative transition-colors ${
+                  className={`font-typewriter text-sm tracking-[0.02em] px-3 py-2 whitespace-nowrap relative transition-colors ${
                     isActive(item.href)
                       ? "text-primary nav-link-active"
                       : "text-foreground hover:text-primary"
@@ -62,7 +63,7 @@ export const Header = () => {
           </div>
 
           {/* Desktop Right */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden xl:flex items-center gap-4">
             <a
               href="https://ko-fi.com/appalachiancryptidkeeper"
               target="_blank"
@@ -84,7 +85,7 @@ export const Header = () => {
           {/* Mobile Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-foreground p-2"
+            className="xl:hidden text-foreground p-2"
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
@@ -99,7 +100,7 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-card border-b-2 border-border px-6 py-4">
+        <div className="xl:hidden bg-card border-b-2 border-border px-6 py-4">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -114,19 +115,21 @@ export const Header = () => {
               {item.label}
             </Link>
           ))}
-          <a
-            href="https://ko-fi.com/appalachiancryptidkeeper"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] py-2 mt-3 inline-flex items-center gap-1.5 hover:text-accent transition-colors"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <Heart className="h-3.5 w-3.5" />
-            Support the Field Guide
-          </a>
+          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
+            <a
+              href="https://ko-fi.com/appalachiancryptidkeeper"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] inline-flex items-center gap-1.5 hover:text-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Heart className="h-3.5 w-3.5" />
+              Support
+            </a>
+          </div>
           <Link
             href="/report"
-            className="inline-block mt-3 font-typewriter text-xs tracking-[0.12em] uppercase text-[hsl(var(--bureau-stamp))] py-1.5 px-3.5 border-2 border-[hsl(var(--bureau-stamp))] rounded-sm bg-transparent opacity-85 hover:opacity-100 transition-all"
+            className="inline-block mt-4 font-typewriter text-xs tracking-[0.12em] uppercase text-[hsl(var(--bureau-stamp))] py-1.5 px-3.5 border-2 border-[hsl(var(--bureau-stamp))] rounded-sm bg-transparent opacity-85 hover:opacity-100 transition-all"
             style={{ transform: "rotate(-1.5deg)" }}
             onClick={() => setMobileMenuOpen(false)}
           >

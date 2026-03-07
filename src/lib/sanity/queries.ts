@@ -194,3 +194,38 @@ export const relatedAnomaliesQuery = `*[_type == "anomaly" && slug.current != $s
 
 // Get all anomaly slugs (for generateStaticParams)
 export const anomalySlugsQuery = `*[_type == "anomaly"].slug.current`;
+
+// ── BULLETIN QUERIES ──────────────────────────────────────────
+
+const bulletinListFields = `
+  _id,
+  title,
+  slug,
+  bulletinNumber,
+  date,
+  category,
+  summary,
+  readTime,
+  relatedCryptids[]-> { _id, name, slug }
+`;
+
+export const bulletinsListQuery = `*[_type == "bulletin"] | order(date desc) {
+  ${bulletinListFields}
+}`;
+
+export const bulletinBySlugQuery = `*[_type == "bulletin" && slug.current == $slug][0] {
+  _id,
+  _type,
+  title,
+  slug,
+  bulletinNumber,
+  date,
+  category,
+  summary,
+  readTime,
+  body,
+  relatedCryptids[]-> { _id, name, slug },
+  relatedAnomalies[]-> { _id, name, slug }
+}`;
+
+export const bulletinSlugsQuery = `*[_type == "bulletin"].slug.current`;

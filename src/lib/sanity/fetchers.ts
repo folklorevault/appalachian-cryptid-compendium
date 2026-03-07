@@ -15,6 +15,9 @@ import {
   anomalySlugsQuery,
   mapAnomaliesQuery,
   relatedAnomaliesQuery,
+  bulletinsListQuery,
+  bulletinBySlugQuery,
+  bulletinSlugsQuery,
 } from "./queries";
 import { cryptids as staticCryptids } from "@/data/cryptids";
 import type {
@@ -24,7 +27,10 @@ import type {
   SanityAnomaly,
   SanityAnomalyListItem,
   SanityAnomalyMapItem,
+  SanityBulletinListItem,
+  SanityBulletin,
 } from "@/types/sanity";
+import { bulletins as staticBulletins, bulletinToListItem } from "@/data/bulletins";
 
 // ── Sanity fetch with fallback ───────────────────────────────
 
@@ -269,4 +275,40 @@ export async function fetchRelatedAnomalies(
       region,
     }, ["anomalies"])) ?? []
   );
+}
+
+// ── Bulletin fetchers ─────────────────────────────────────────
+
+export async function fetchBulletins(): Promise<SanityBulletinListItem[]> {
+  const result = await sanityFetch<SanityBulletinListItem[]>(
+    bulletinsListQuery,
+    undefined,
+    ["bulletins"]
+  );
+  if (result && result.length > 0) return result;
+  return staticBulletins.map(bulletinToListItem);
+}
+
+export async function fetchBulletinBySlug(
+  slug: string
+): Promise<SanityBulletin | null> {
+  const result = await sanityFetch<SanityBulletin>(
+    bulletinBySlugQuery,
+    { slug },
+    ["bulletins", `bulletin-${slug}`]
+  );
+  if (result) return result;
+
+  const bulletin = staticBulletins.find((b) => b.slug.current === slug);
+  return bulletin ?? null;
+}
+
+export async function fetchBulletinSlugs(): Promise<string[]> {
+  const result = await sanityFetch<string[]>(
+    bulletinSlugsQuery,
+    undefined,
+    ["bulletins"]
+  );
+  if (result && result.length > 0) return result;
+  return staticBulletins.map((b) => b.slug.current);
 }
