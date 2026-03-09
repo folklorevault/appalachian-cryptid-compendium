@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
 const cspDirectives = [
   "default-src 'self'",
   // Next.js requires 'unsafe-inline' for hydration scripts; 'unsafe-eval' needed in dev only
-  `script-src 'self' 'unsafe-inline' https://rybbit.folklorevault.com`,
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''} https://rybbit.folklorevault.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.sanity.io https://*.mapbox.com",
   "font-src 'self'",

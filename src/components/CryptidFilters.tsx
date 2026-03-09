@@ -63,6 +63,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
       {/* Search & Filters — seamless with page background */}
       <section id="field-guide" className="pt-6 pb-2 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-4">
+          <h2 className="sr-only">Cryptid Case Files</h2>
           {/* Search Bar */}
           <div className="max-w-xl mx-auto">
             <label

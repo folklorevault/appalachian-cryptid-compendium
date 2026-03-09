@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { fetchMapCryptids } from "@/lib/sanity/fetchers";
-import { CryptidMap } from "@/components/CryptidMap";
+import { MapShell } from "./MapShell";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default async function MapPage() {
     <div className="min-h-screen bg-background paper-texture">
       <main id="main-content" className="py-16 px-6 lg:py-20 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <CryptidMap cryptids={cryptids} />
+          <MapShell cryptids={cryptids} />
         </div>
       </main>
       <Footer />
