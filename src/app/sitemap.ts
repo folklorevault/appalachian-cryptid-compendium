@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next";
-import { fetchCryptidSlugs, fetchAnomalySlugs } from "@/lib/sanity/fetchers";
+import { fetchCryptidSlugs, fetchAnomalySlugs, fetchBulletinSlugs } from "@/lib/sanity/fetchers";
 
 const BASE_URL = "https://appalachiancryptid.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [cryptidSlugs, anomalySlugs] = await Promise.all([
+  const [cryptidSlugs, anomalySlugs, bulletinSlugs] = await Promise.all([
     fetchCryptidSlugs(),
     fetchAnomalySlugs(),
+    fetchBulletinSlugs(),
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -24,6 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/anomalies`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/bulletins`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
@@ -62,5 +69,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...cryptidPages, ...anomalyPages];
+  const bulletinPages: MetadataRoute.Sitemap = bulletinSlugs.map((slug) => ({
+    url: `${BASE_URL}/bulletin/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...cryptidPages, ...anomalyPages, ...bulletinPages];
 }

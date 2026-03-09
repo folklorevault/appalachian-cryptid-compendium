@@ -41,9 +41,6 @@ export const metadata: Metadata = {
   description:
     "Complete list of Appalachian cryptids, monsters, and strange creatures. Browse documented sightings of Mothman, Wampus Cat, and more from the mountains and hollers of the American South.",
   metadataBase: new URL("https://appalachiancryptid.com"),
-  alternates: {
-    canonical: "./",
-  },
   openGraph: {
     siteName: "Appalachian Cryptids List",
     type: "website",
