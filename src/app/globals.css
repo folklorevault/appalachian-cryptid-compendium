@@ -670,6 +670,72 @@ All colors MUST be HSL.
 }
 
 /* ============================================
+   Supply Drop Card
+   Compact field-supply label / reference card
+   ============================================ */
+
+.supply-card-inner {
+  background: linear-gradient(
+    135deg,
+    hsl(40 35% 92%) 0%,
+    hsl(42 30% 90%) 50%,
+    hsl(38 28% 88%) 100%
+  );
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.06),
+    inset 0 0 20px rgba(139, 115, 85, 0.04),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.supply-card-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='supply-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23supply-noise)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.dark .supply-card-inner {
+  background: linear-gradient(
+    135deg,
+    hsl(150 10% 18%) 0%,
+    hsl(150 8% 16%) 50%,
+    hsl(150 10% 15%) 100%
+  );
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.25),
+    inset 0 0 20px rgba(100, 120, 100, 0.04);
+}
+
+.dark .supply-card-inner::before {
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+}
+
+/* Stamp-style buy button hover ink wash */
+.supply-stamp-btn {
+  position: relative;
+}
+
+.supply-stamp-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: hsl(var(--accent));
+  transition: opacity 0.2s;
+}
+
+.supply-stamp-btn:hover::after {
+  opacity: 0.05;
+}
+
+/* ============================================
    FILE FOLDER & INDEX CARD STYLES (About Page)
    ============================================ */
 

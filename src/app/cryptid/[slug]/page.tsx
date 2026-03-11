@@ -28,6 +28,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { FieldSupplyDrop } from "@/components/FieldSupplyDrop";
 import { Footer } from "@/components/Footer";
 import {
   fetchCryptidBySlug,
@@ -367,16 +368,21 @@ export default async function CryptidDetailPage({
             </div>
           )}
 
-          {/* Bureau Memo */}
-          {cryptid.bureauNotes && (
-            <div className="mb-8 max-w-2xl">
-              <BureauMemo
-                content={cryptid.bureauNotes}
-                cryptidName={cryptid.name}
-                caseNumber={caseNumber}
-              />
+          {/* Bureau Memo + Field Supply Drop */}
+          <div className="mb-8 flex flex-col md:flex-row gap-10 items-start">
+            {cryptid.bureauNotes && (
+              <div className="flex-1 min-w-0 max-w-2xl">
+                <BureauMemo
+                  content={cryptid.bureauNotes}
+                  cryptidName={cryptid.name}
+                  caseNumber={caseNumber}
+                />
+              </div>
+            )}
+            <div className="flex-shrink-0">
+              <FieldSupplyDrop variant="detail" />
             </div>
-          )}
+          </div>
 
           {/* Related Cryptids */}
           {relatedCryptids.length > 0 && (
