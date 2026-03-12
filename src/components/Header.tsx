@@ -1,143 +1,197 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, Menu, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 interface NavItem {
   href: string;
   label: string;
 }
 
-const navItems: NavItem[] = [
+const desktopNavItems: NavItem[] = [
   { href: "/", label: "Field Guide" },
-  { href: "/anomalies", label: "Anomalies Desk" },
-  { href: "/bulletins", label: "Bureau Bulletins" },
-  { href: "/map", label: "Sighting Map" },
-  { href: "/about", label: "About" },
+  { href: "/anomalies", label: "Anomalies" },
+  { href: "/map", label: "Sightings Map" },
+  { href: "/bulletins", label: "Bulletins" },
+  { href: "/shop", label: "Shop" },
+];
+
+const mobileMainItems: NavItem[] = [
+  { href: "/", label: "Guide" },
+  { href: "/shop", label: "Shop" },
+  { href: "/map", label: "Map" },
+];
+
+const mobileMoreItems: NavItem[] = [
+  { href: "/anomalies", label: "Anomalies" },
+  { href: "/bulletins", label: "Bulletins" },
+  { href: "/report", label: "File a Report" },
 ];
 
 export const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/" || pathname === "/field-guide";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
+
+  // Close dropdown on outside click or Escape
+  useEffect(() => {
+    if (!moreOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMoreOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [moreOpen]);
+
+  const moreHasActive = mobileMoreItems.some((item) => isActive(item.href));
 
   return (
-    <>
-      {/* Main Nav */}
-      <nav className="sticky top-0 z-50 bg-card border-b-2 border-border paper-texture-nav">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-between h-[60px]">
-          {/* Logo */}
-          <Link href="/" className="flex items-baseline gap-2.5 no-underline">
-            <span className="font-display text-[1.35rem] font-bold text-primary leading-none tracking-tight">
-              Appalachian Cryptid
-            </span>
-            <span className="hidden sm:inline font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] tracking-[0.08em] uppercase relative -top-px">
-              Field Guide
-            </span>
-          </Link>
+    <header className="sticky top-0 z-50 bg-card border-b-2 border-border paper-texture-nav">
+      {/* Row 1: Centered title */}
+      <div className="py-1.5 px-4">
+        <Link
+          href="/"
+          className="block text-center no-underline"
+        >
+          <span className="hidden md:inline font-display text-[1.7rem] font-bold text-primary leading-none tracking-tight">
+            Appalachian Cryptid Field Guide
+          </span>
+          <span className="md:hidden font-display text-[1.35rem] font-bold text-primary leading-none tracking-tight">
+            Appalachian Cryptid
+          </span>
+        </Link>
+      </div>
 
-          {/* Desktop Links */}
-          <div className="hidden xl:flex items-center">
-            {navItems.map((item, i) => (
-              <span key={item.href} className="flex items-center">
-                {i > 0 && (
-                  <span className="text-border text-sm select-none mx-[-2px]" aria-hidden="true">
-                    |
-                  </span>
-                )}
-                <Link
-                  href={item.href}
-                  className={`font-typewriter text-sm tracking-[0.02em] px-3 py-2 whitespace-nowrap relative transition-colors ${
-                    isActive(item.href)
-                      ? "text-primary nav-link-active"
-                      : "text-foreground hover:text-primary"
-                  }`}
+      {/* Decorative rule */}
+      <div className="flex items-center justify-center gap-3 px-6" aria-hidden="true">
+        <span className="block w-12 h-px bg-border" />
+        <span className="text-border text-[8px]">◆</span>
+        <span className="block w-12 h-px bg-border" />
+      </div>
+
+      {/* Row 2: Nav links */}
+      <nav className="py-1 px-4">
+        {/* Desktop nav */}
+        <div className="hidden md:flex justify-center items-center">
+          {desktopNavItems.map((item, i) => (
+            <span key={item.href} className="flex items-center">
+              {i > 0 && (
+                <span
+                  className="text-border text-xs select-none mx-[-2px]"
+                  aria-hidden="true"
                 >
-                  {item.label}
-                </Link>
-              </span>
-            ))}
-          </div>
+                  |
+                </span>
+              )}
+              <Link
+                href={item.href}
+                className={`font-typewriter text-xs tracking-[0.06em] px-3 py-1.5 whitespace-nowrap relative transition-colors ${
+                  isActive(item.href)
+                    ? "text-primary nav-link-active"
+                    : "text-foreground/70 hover:text-primary"
+                }`}
+              >
+                {item.label}
+              </Link>
+            </span>
+          ))}
+        </div>
 
-          {/* Desktop Right */}
-          <div className="hidden xl:flex items-center gap-4">
-            <a
-              href="https://ko-fi.com/appalachiancryptidkeeper"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] no-underline px-2.5 py-1 inline-flex items-center gap-1.5 transition-colors hover:text-accent"
-            >
-              <Heart className="h-3.5 w-3.5" />
-              Support
-            </a>
-            <Link
-              href="/report"
-              className="font-typewriter text-xs tracking-[0.12em] uppercase text-[hsl(var(--bureau-stamp))] no-underline py-1.5 px-3.5 border-2 border-[hsl(var(--bureau-stamp))] rounded-sm inline-block bg-transparent opacity-85 hover:opacity-100 hover:bg-[hsl(var(--bureau-stamp)/0.06)] transition-all"
-              style={{ transform: "rotate(-1.5deg)" }}
-            >
-              ► File a Report
-            </Link>
-          </div>
+        {/* Mobile nav */}
+        <div className="flex md:hidden justify-center items-center">
+          {mobileMainItems.map((item, i) => (
+            <span key={item.href} className="flex items-center">
+              {i > 0 && (
+                <span
+                  className="text-border text-xs select-none mx-[-2px]"
+                  aria-hidden="true"
+                >
+                  |
+                </span>
+              )}
+              <Link
+                href={item.href}
+                className={`font-typewriter text-xs tracking-[0.06em] px-3 py-1.5 whitespace-nowrap relative transition-colors ${
+                  isActive(item.href)
+                    ? "text-primary nav-link-active"
+                    : "text-foreground/70 hover:text-primary"
+                }`}
+              >
+                {item.label}
+              </Link>
+            </span>
+          ))}
 
-          {/* Mobile Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden text-foreground p-2"
-            aria-label="Toggle menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
+          {/* More dropdown */}
+          <span className="flex items-center">
+            <span
+              className="text-border text-xs select-none mx-[-2px]"
+              aria-hidden="true"
+            >
+              |
+            </span>
+            <div ref={moreRef} className="relative">
+              <button
+                onClick={() => setMoreOpen(!moreOpen)}
+                className={`font-typewriter text-xs tracking-[0.06em] px-3 py-1.5 whitespace-nowrap relative transition-colors inline-flex items-center gap-1 ${
+                  moreHasActive
+                    ? "text-primary"
+                    : "text-foreground/70 hover:text-primary"
+                }`}
+                aria-expanded={moreOpen}
+                aria-haspopup="true"
+              >
+                More
+                <ChevronDown
+                  className={`h-3.5 w-3.5 transition-transform ${
+                    moreOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {moreOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full mt-1 bg-card border border-border shadow-md rounded-sm min-w-[160px] py-1 z-50"
+                >
+                  {mobileMoreItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      role="menuitem"
+                      className={`block px-4 py-2.5 font-typewriter text-sm transition-colors ${
+                        isActive(item.href)
+                          ? "text-primary"
+                          : "text-foreground hover:text-primary hover:bg-primary/5"
+                      }`}
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </span>
         </div>
       </nav>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden bg-card border-b-2 border-border px-6 py-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`block font-typewriter text-sm py-2.5 transition-colors ${
-                isActive(item.href)
-                  ? "text-primary"
-                  : "text-foreground hover:text-primary"
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
-            <a
-              href="https://ko-fi.com/appalachiancryptidkeeper"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] inline-flex items-center gap-1.5 hover:text-accent transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Heart className="h-3.5 w-3.5" />
-              Support
-            </a>
-          </div>
-          <Link
-            href="/report"
-            className="inline-block mt-4 font-typewriter text-xs tracking-[0.12em] uppercase text-[hsl(var(--bureau-stamp))] py-1.5 px-3.5 border-2 border-[hsl(var(--bureau-stamp))] rounded-sm bg-transparent opacity-85 hover:opacity-100 transition-all"
-            style={{ transform: "rotate(-1.5deg)" }}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            ► File a Report
-          </Link>
-        </div>
-      )}
-    </>
+    </header>
   );
 };
 

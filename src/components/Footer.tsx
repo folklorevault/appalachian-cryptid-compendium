@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Heart } from "lucide-react";
 
 interface FooterProps {
   variant?: "simple" | "full";
@@ -23,7 +24,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
   return (
     <footer className="border-t border-border bg-card py-16 px-6 lg:py-20 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
             <h4 className="text-xl font-bold text-foreground font-display mb-3">
               Appalachian Cryptid
@@ -48,6 +49,45 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
               </li>
               <li>
                 <Link
+                  href="/anomalies"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Anomalies
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/map"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Sightings Map
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/bulletins"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Bulletins
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/shop"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Gift Shop
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
+              Bureau
+            </h5>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
                   href="/about"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
@@ -63,12 +103,15 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/map"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                <a
+                  href="https://ko-fi.com/appalachiancryptidkeeper"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-accent transition-colors inline-flex items-center gap-1.5"
                 >
-                  Sighting Map
-                </Link>
+                  <Heart className="h-3.5 w-3.5" />
+                  Support This Project
+                </a>
               </li>
             </ul>
           </div>
