@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Bureau Bulletins",
   description:
     "Official communications from the Bureau of Appalachian Cryptid Documentation. Field primers, regional analysis, and operational guidance released to the public record.",
+  alternates: {
+    canonical: "/bulletins",
+  },
   openGraph: {
     title: "Bureau Bulletins | Appalachian Cryptid Field Guide",
     description:

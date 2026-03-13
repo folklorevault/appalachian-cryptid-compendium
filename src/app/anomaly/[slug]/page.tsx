@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import {
   StructuredData,
-  createCryptidArticleSchema,
+  createAnomalyArticleSchema,
   createBreadcrumbSchema,
   createFAQPageSchema,
 } from "@/components/StructuredData";
@@ -47,7 +47,8 @@ import {
   fetchRelatedAnomalies,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity";
-import type { AnomalyType, AnomalyStatus } from "@/types/sanity";
+import { getAnomalyStatusColor } from "@/lib/caseUtils";
+import type { AnomalyType } from "@/types/sanity";
 
 // Icon mapping for anomaly types
 const typeIcons: Record<AnomalyType, typeof Zap> = {
@@ -73,7 +74,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string } & Record<string, string | string[]>>;
 }): Promise<Metadata> {
   const { slug } = await params;
   const anomaly = await fetchAnomalyBySlug(slug);
@@ -83,9 +84,10 @@ export async function generateMetadata({
   }
 
   const rawDesc = anomaly.subhead || anomaly.description || `Learn about ${anomaly.name}`;
-  const description = rawDesc.length > 120
-    ? rawDesc.slice(0, 117) + '...'
-    : `${rawDesc} Reported near ${anomaly.location}.`;
+  const withLocation = `${rawDesc} Reported near ${anomaly.location}.`;
+  const description = withLocation.length > 160
+    ? rawDesc.slice(0, 157) + '...'
+    : withLocation;
 
   const ogImageUrl = anomaly.image
     ? urlFor(anomaly.image)
@@ -100,6 +102,9 @@ export async function generateMetadata({
   return {
     title: anomaly.name,
     description,
+    alternates: {
+      canonical: `/anomaly/${slug}`,
+    },
     openGraph: {
       title: `${anomaly.name} - Anomalies Desk`,
       description,
@@ -118,25 +123,10 @@ export async function generateMetadata({
 
 // ── Page ─────────────────────────────────────────────────
 
-function getStatusColor(status: AnomalyStatus) {
-  switch (status) {
-    case "Active":
-      return "bg-destructive text-destructive-foreground";
-    case "Open File":
-      return "bg-secondary text-secondary-foreground";
-    case "Cold":
-      return "bg-muted text-muted-foreground";
-    case "Seasonal":
-      return "bg-accent text-accent-foreground";
-    default:
-      return "bg-muted text-muted-foreground";
-  }
-}
-
 export default async function AnomalyDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string } & Record<string, string | string[]>>;
 }) {
   const { slug } = await params;
   const anomaly = await fetchAnomalyBySlug(slug);
@@ -171,7 +161,7 @@ export default async function AnomalyDetailPage({
     <div className="min-h-screen bg-background paper-texture">
       <StructuredData
         type="article"
-        data={createCryptidArticleSchema({
+        data={createAnomalyArticleSchema({
           name: anomaly.name,
           description: anomaly.subhead || anomaly.description || "",
           image: imageUrl,
@@ -183,7 +173,7 @@ export default async function AnomalyDetailPage({
       <StructuredData
         type="breadcrumb"
         data={createBreadcrumbSchema([
-          { name: "Cryptid Directory", url: "/" },
+          { name: "Directory", url: "/" },
           { name: "Anomalies Desk", url: "/anomalies" },
           { name: anomaly.name },
         ])}
@@ -276,7 +266,7 @@ export default async function AnomalyDetailPage({
                 <div className="flex items-center gap-2 text-sm">
                   <span className="h-4 w-4 flex-shrink-0" />
                   <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Status</span>
-                  <Badge className={`${getStatusColor(anomaly.status)} text-xs px-1.5 py-0`}>
+                  <Badge className={`${getAnomalyStatusColor(anomaly.status)} text-xs px-1.5 py-0`}>
                     {anomaly.status}
                   </Badge>
                 </div>
@@ -438,7 +428,7 @@ export default async function AnomalyDetailPage({
           )}
 
           {/* Related Anomalies */}
-          {relatedAnomalies.length > 0 && (
+          {relatedAnomalies.filter((r) => r.gridImage).length > 0 && (
             <div className="mb-8 border-t border-border pt-8">
               <h2 className="text-xl font-bold text-foreground font-display mb-6">
                 Related Case Files
@@ -447,7 +437,7 @@ export default async function AnomalyDetailPage({
                 {relatedAnomalies
                   .filter((related) => related.gridImage)
                   .map((related) => {
-                    const relatedImageUrl = urlFor(related.gridImage)
+                    const relatedImageUrl = urlFor(related.gridImage!)
                       .width(400)
                       .height(400)
                       .auto("format")

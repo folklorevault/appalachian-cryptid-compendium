@@ -1,11 +1,10 @@
-"use client";
-
-import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
+import { getDangerLevelColor, getDangerLevelLabel } from "@/lib/caseUtils";
 import type { SanityCryptidListItem } from "@/types/sanity";
 
 interface CryptidCardProps {
@@ -13,9 +12,7 @@ interface CryptidCardProps {
 }
 
 export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const {
-    _id,
     name,
     slug,
     scientificName,
@@ -27,97 +24,35 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
     tags,
   } = cryptid;
 
-  // Responsive card image:
-  // - Keep bytes low on mobile by using srcset/sizes
-  // - Let Sanity serve modern formats via urlFor().auto('format') in src/lib/sanity.ts
-  // - Grid is 1 col mobile, 2 cols tablet, 3 cols desktop
-  const cardWidths = [320, 400, 480] as const;
-
-  // Only render if gridImage is available from Sanity
   if (!gridImage) {
     return null;
   }
 
   const imageUrl = urlFor(gridImage)
-    .width(400)
-    .height(600)
+    .width(480)
+    .height(720)
     .fit("crop")
     .quality(60)
     .auto("format")
     .url();
 
-  const srcSet = cardWidths
-    .map((w) => {
-      const h = Math.round(w * 1.5); // 2:3 aspect
-      const u = urlFor(gridImage)
-        .width(w)
-        .height(h)
-        .fit("crop")
-        .quality(60)
-        .auto("format")
-        .url();
-      return `${u} ${w}w`;
-    })
-    .join(", ");
-
-  // Low quality placeholder for blur-up effect
   const blurUrl = urlFor(gridImage).width(24).height(36).blur(12).quality(30).auto("format").url();
-
-  const getDangerColor = () => {
-    switch (dangerLevel) {
-      case "High":
-        return "bg-destructive text-destructive-foreground";
-      case "Medium":
-        return "bg-secondary text-secondary-foreground";
-      case "Low":
-        return "bg-accent text-accent-foreground";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
-  };
-
-  const getAdvisoryLabel = () => {
-    switch (dangerLevel) {
-      case "High":
-        return "Elevated";
-      case "Medium":
-        return "Moderate";
-      case "Low":
-        return "Low";
-      default:
-        return dangerLevel;
-    }
-  };
 
   return (
     <Link href={`/cryptid/${slug.current}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
       <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
-        {/* Blur placeholder */}
-        {!imageLoaded && (
-          <img
-            src={blurUrl}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-sm"
-          />
-        )}
-        <img
+        <Image
           src={imageUrl}
-          srcSet={srcSet}
-          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
           alt={imageAlt || name}
-          loading="lazy"
-          decoding="async"
-          width="400"
-          height="600"
-          onLoad={() => setImageLoaded(true)}
-          className={`w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+          fill
+          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
+          placeholder="blur"
+          blurDataURL={blurUrl}
+          className="object-cover object-top transition-all duration-500 group-hover:scale-110 sepia-light sepia-hover"
         />
         <div className="absolute top-2 right-2">
-          <Badge className={getDangerColor()}>Advisory: {getAdvisoryLabel()}</Badge>
+          <Badge className={getDangerLevelColor(dangerLevel)}>Advisory: {getDangerLevelLabel(dangerLevel)}</Badge>
         </div>
       </div>
 
@@ -142,7 +77,7 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
 
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 pt-2">
-            {tags.map((tag) => (
+            {tags.slice(0, 3).map((tag) => (
               <Badge
                 key={tag}
                 variant="outline"

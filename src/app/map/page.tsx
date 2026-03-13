@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Sighting Map",
   description:
     "Interactive map of cryptid sightings across Appalachia and the American South.",
+  alternates: {
+    canonical: "/map",
+  },
 };
 
 export default async function MapPage() {

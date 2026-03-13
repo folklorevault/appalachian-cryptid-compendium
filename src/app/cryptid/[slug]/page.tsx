@@ -49,7 +49,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string } & Record<string, string | string[]>>;
 }): Promise<Metadata> {
   const { slug } = await params;
   const cryptid = await fetchCryptidBySlug(slug);
@@ -59,9 +59,10 @@ export async function generateMetadata({
   }
 
   const rawDesc = cryptid.subhead || cryptid.description || `Learn about the ${cryptid.name}`;
-  const description = rawDesc.length > 120
-    ? rawDesc.slice(0, 117) + '...'
-    : `${rawDesc} Sightings near ${cryptid.location}.`;
+  const withLocation = `${rawDesc} Sightings near ${cryptid.location}.`;
+  const description = withLocation.length > 160
+    ? rawDesc.slice(0, 157) + '...'
+    : withLocation;
 
   const ogImageUrl = cryptid.image
     ? urlFor(cryptid.image).width(1200).height(630).fit("crop").quality(80).auto("format").url()
@@ -70,6 +71,9 @@ export async function generateMetadata({
   return {
     title: cryptid.name,
     description,
+    alternates: {
+      canonical: `/cryptid/${slug}`,
+    },
     openGraph: {
       title: `${cryptid.name} - Appalachian Cryptid Case File`,
       description,
@@ -91,7 +95,7 @@ export async function generateMetadata({
 export default async function CryptidDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string } & Record<string, string | string[]>>;
 }) {
   const { slug } = await params;
   const cryptid = await fetchCryptidBySlug(slug);
@@ -385,7 +389,7 @@ export default async function CryptidDetailPage({
           </div>
 
           {/* Related Cryptids */}
-          {relatedCryptids.length > 0 && (
+          {relatedCryptids.filter((r) => r.gridImage).length > 0 && (
             <div className="mb-8 border-t border-border pt-8">
               <h2 className="text-xl font-bold text-foreground font-display mb-6">
                 Related Case Files
@@ -394,7 +398,7 @@ export default async function CryptidDetailPage({
                 {relatedCryptids
                   .filter((related) => related.gridImage)
                   .map((related) => {
-                    const relatedImageUrl = urlFor(related.gridImage)
+                    const relatedImageUrl = urlFor(related.gridImage!)
                       .width(400)
                       .height(400)
                       .auto("format")

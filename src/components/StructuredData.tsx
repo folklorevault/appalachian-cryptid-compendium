@@ -223,6 +223,48 @@ export function createCryptidArticleSchema(cryptid: {
   };
 }
 
+export function createAnomalyArticleSchema(anomaly: {
+  name: string;
+  description: string;
+  image?: string;
+  slug?: string;
+  tags?: string[];
+  location?: string;
+}): ArticleSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${anomaly.name} - Appalachian Anomaly Case File`,
+    description: anomaly.description,
+    image: anomaly.image
+      ? (anomaly.image.startsWith('http') ? anomaly.image : `https://appalachiancryptid.com${anomaly.image}`)
+      : undefined,
+    author: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Appalachian Cryptid Field Guide",
+      url: "https://appalachiancryptid.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://appalachiancryptid.com/og-image.jpg",
+      },
+    },
+    mainEntityOfPage: anomaly.slug ? {
+      "@type": "WebPage",
+      "@id": `https://appalachiancryptid.com/anomaly/${anomaly.slug}`,
+    } : undefined,
+    keywords: anomaly.tags,
+    about: {
+      "@type": "Thing",
+      name: anomaly.name,
+      description: `${anomaly.name} anomaly sightings and reports${anomaly.location ? ` near ${anomaly.location}` : ''}.`,
+    },
+  };
+}
+
 export function createBreadcrumbSchema(items: Array<{ name: string; url?: string }>): BreadcrumbSchema {
   return {
     "@context": "https://schema.org",

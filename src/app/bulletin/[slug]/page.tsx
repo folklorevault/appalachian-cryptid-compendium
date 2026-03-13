@@ -44,7 +44,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string } & Record<string, string | string[]>>;
 }): Promise<Metadata> {
   const { slug } = await params;
   const bulletin = await fetchBulletinBySlug(slug);
@@ -53,14 +53,18 @@ export async function generateMetadata({
     return { title: "Bulletin Not Found" };
   }
 
+  const rawSummary = bulletin.summary || "";
   const description =
-    bulletin.summary.length > 120
-      ? bulletin.summary.slice(0, 117) + "..."
-      : bulletin.summary;
+    rawSummary.length > 160
+      ? rawSummary.slice(0, 157) + "..."
+      : rawSummary;
 
   return {
     title: `${bulletin.title} | Bureau Bulletins`,
     description,
+    alternates: {
+      canonical: `/bulletin/${slug}`,
+    },
     openGraph: {
       title: `${bulletin.title} — Bureau Bulletin ${bulletin.bulletinNumber}`,
       description,
@@ -75,7 +79,7 @@ export async function generateMetadata({
 export default async function BulletinDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string } & Record<string, string | string[]>>;
 }) {
   const { slug } = await params;
   const bulletin = await fetchBulletinBySlug(slug);
@@ -101,7 +105,6 @@ export default async function BulletinDetailPage({
       <StructuredData
         type="breadcrumb"
         data={createBreadcrumbSchema([
-          { name: "Field Guide", url: "/" },
           { name: "Bureau Bulletins", url: "/bulletins" },
           { name: bulletin.title },
         ])}
@@ -153,9 +156,11 @@ export default async function BulletinDetailPage({
             {bulletin.title}
           </h1>
 
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
-            {bulletin.summary}
-          </p>
+          {bulletin.summary && (
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+              {bulletin.summary}
+            </p>
+          )}
         </div>
 
         {/* Divider */}

@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
@@ -17,28 +15,7 @@ interface CasefileCardProps {
   priority?: boolean;
 }
 
-// Type guard for cryptid
-function isCryptid(data: SanityCryptidListItem | SanityAnomalyListItem): data is SanityCryptidListItem {
-  return 'dangerLevel' in data;
-}
-
-// Type guard for anomaly
-function isAnomaly(data: SanityCryptidListItem | SanityAnomalyListItem): data is SanityAnomalyListItem {
-  return 'anomalyType' in data;
-}
-
 export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  // If the image loaded before React hydrated, onLoad never fires.
-  // Check img.complete on mount to catch this race condition.
-  useEffect(() => {
-    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
-      setImageLoaded(true);
-    }
-  }, []);
-
   const {
     name,
     slug,
@@ -47,36 +24,21 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
     gridImage,
   } = data;
 
-  const region = isCryptid(data) ? data.region : isAnomaly(data) ? data.region : '';
+  const region = data.region;
 
-  // Determine link and favorite slug
   const linkTo = type === "cryptid" ? `/cryptid/${slug.current}` : `/anomaly/${slug.current}`;
-  const cardWidths = [320, 400, 480] as const;
 
   if (!gridImage) {
     return null;
   }
 
   const imageUrl = urlFor(gridImage)
-    .width(400)
-    .height(400)
+    .width(480)
+    .height(480)
     .fit("crop")
     .quality(60)
     .auto("format")
     .url();
-
-  const srcSet = cardWidths
-    .map((w) => {
-      const u = urlFor(gridImage)
-        .width(w)
-        .height(w)
-        .fit("crop")
-        .quality(60)
-        .auto("format")
-        .url();
-      return `${u} ${w}w`;
-    })
-    .join(", ");
 
   const blurUrl = urlFor(gridImage).width(24).height(24).blur(12).quality(30).auto("format").url();
 
@@ -88,30 +50,15 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
       <Card className="overflow-hidden border-2 border-border hover:border-[hsl(var(--bureau-border))] hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(42,42,42,0.12)] transition-all duration-200 ease-out cursor-pointer bg-card">
         {/* Image Section - Square aspect */}
         <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-[hsl(var(--bureau-border))] transition-colors duration-200">
-          {/* Blur placeholder */}
-          {!imageLoaded && (
-            <img
-              src={blurUrl}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-sm"
-            />
-          )}
-          <img
-            ref={imgRef}
+          <Image
             src={imageUrl}
-            srcSet={srcSet}
-            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
             alt={name}
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            fetchPriority={priority ? "high" : undefined}
-            width="400"
-            height="400"
-            onLoad={() => setImageLoaded(true)}
-            className={`w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            fill
+            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
+            priority={priority}
+            placeholder="blur"
+            blurDataURL={blurUrl}
+            className="object-cover object-top transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover"
           />
 
           {/* File number - bottom left */}

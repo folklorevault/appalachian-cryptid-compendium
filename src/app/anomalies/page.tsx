@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Anomalies Desk",
   description:
     "Lights, hauntings, curses, and other unresolved Appalachian incidents, cataloged like field reports. Browse the Bureau's catalog of unexplained phenomena.",
+  alternates: {
+    canonical: "/anomalies",
+  },
   openGraph: {
     title: "Anomalies Desk | Appalachian Cryptid Field Guide",
     description:

@@ -1,6 +1,7 @@
 // Server-side data fetchers for Sanity CMS with static fallback
 // Used in Server Components — no client-side caching needed.
 
+import { cache } from "react";
 import { sanityClient } from "./client";
 import {
   cryptidsListQuery,
@@ -78,6 +79,8 @@ function convertStaticToSanityFormat(
     coordinates: coords
       ? { _type: "geopoint", lat: coords.lat, lng: coords.lng }
       : undefined,
+    // Cast is safe only if static data uses exact casing matching the union type.
+    // If a new region is added to static data, update the union in src/types/sanity.ts.
     region: cryptid.region as "Appalachia" | "Southeast" | "Southern",
     dangerLevel: cryptid.dangerLevel,
     firstDocumented: cryptid.firstDocumented,
@@ -154,9 +157,13 @@ export async function fetchCryptids(filters?: {
   return result ?? getStaticCryptids();
 }
 
-export async function fetchCryptidBySlug(
+// Note: React.cache() deduplicates within a single render tree, but Next.js App Router
+// runs generateMetadata and the page component in separate async contexts, so a second
+// Sanity fetch will still occur for the same slug. Full deduplication would require
+// next/cache unstable_cache, which is a larger refactor.
+export const fetchCryptidBySlug = cache(async (
   slug: string
-): Promise<SanityCryptid | null> {
+): Promise<SanityCryptid | null> => {
   const result = await sanityFetch<SanityCryptid>(cryptidBySlugQuery, {
     slug,
   }, ["cryptids", `cryptid-${slug}`]);
@@ -164,7 +171,7 @@ export async function fetchCryptidBySlug(
 
   const cryptid = staticCryptids.find((c) => c.id === slug);
   return cryptid ? convertStaticToSanityFormat(cryptid) : null;
-}
+});
 
 export async function fetchCryptidSlugs(): Promise<string[]> {
   const result = await sanityFetch<string[]>(cryptidSlugsQuery, undefined, ["cryptids"]);
@@ -219,6 +226,10 @@ export async function fetchRelatedCryptids(
 }
 
 // ── Anomaly fetchers ─────────────────────────────────────────
+// Note: Unlike cryptids, there is no static fallback data for anomalies. All anomaly
+// content is Sanity-only. If Sanity is unavailable, anomaly pages will be empty and
+// generateStaticParams will produce no anomaly routes. To add resilience, create a
+// src/data/anomalies.ts seed file (mirroring src/data/cryptids.ts) and wire it in here.
 
 export async function fetchAnomalies(filters?: {
   anomalyType?: string;
@@ -247,11 +258,11 @@ export async function fetchAnomalies(filters?: {
   );
 }
 
-export async function fetchAnomalyBySlug(
+export const fetchAnomalyBySlug = cache(async (
   slug: string
-): Promise<SanityAnomaly | null> {
+): Promise<SanityAnomaly | null> => {
   return sanityFetch<SanityAnomaly>(anomalyBySlugQuery, { slug }, ["anomalies", `anomaly-${slug}`]);
-}
+});
 
 export async function fetchAnomalySlugs(): Promise<string[]> {
   return (await sanityFetch<string[]>(anomalySlugsQuery, undefined, ["anomalies"])) ?? [];
@@ -289,9 +300,9 @@ export async function fetchBulletins(): Promise<SanityBulletinListItem[]> {
   return staticBulletins.map(bulletinToListItem);
 }
 
-export async function fetchBulletinBySlug(
+export const fetchBulletinBySlug = cache(async (
   slug: string
-): Promise<SanityBulletin | null> {
+): Promise<SanityBulletin | null> => {
   const result = await sanityFetch<SanityBulletin>(
     bulletinBySlugQuery,
     { slug },
@@ -301,7 +312,7 @@ export async function fetchBulletinBySlug(
 
   const bulletin = staticBulletins.find((b) => b.slug.current === slug);
   return bulletin ?? null;
-}
+});
 
 export async function fetchBulletinSlugs(): Promise<string[]> {
   const result = await sanityFetch<string[]>(

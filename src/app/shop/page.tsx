@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Gift Shop",
   description:
     "Official merchandise from Field Office No. 7. Designs inspired by Appalachian folklore and the Bureau's archive.",
+  alternates: {
+    canonical: "/shop",
+  },
   openGraph: {
     title: "Gift Shop | Appalachian Cryptid Field Guide",
     description: "Official merchandise from Field Office No. 7.",
