@@ -112,9 +112,8 @@ export default async function CryptidDetailPage({
 
   const imageUrl = cryptid.image
     ? urlFor(cryptid.image)
-        .width(800)
-        .height(1200)
-        .fit("crop")
+        .width(640)
+        .fit("max")
         .quality(70)
         .auto("format")
         .url()
@@ -176,7 +175,7 @@ export default async function CryptidDetailPage({
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 items-start">
             {imageUrl && (
               <div className="relative flex-shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
+                <div className="relative overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
                   <Image
                     src={imageUrl}
                     alt={
@@ -184,10 +183,11 @@ export default async function CryptidDetailPage({
                         ? (cryptid.imageAlt || cryptid.name).slice(0, 122) + '...'
                         : (cryptid.imageAlt || cryptid.name)
                     }
-                    fill
+                    width={640}
+                    height={853}
                     priority
                     sizes="(max-width: 640px) 220px, (max-width: 1024px) 280px, 320px"
-                    className="object-cover object-top sepia-light"
+                    className="w-full h-auto sepia-light"
                   />
                 </div>
                 <div className="absolute -bottom-2 -right-2">

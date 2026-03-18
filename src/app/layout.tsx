@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import { ClassificationStripe } from "@/components/ClassificationStripe";
 import { Header } from "@/components/Header";
-import { StampFilter } from "@/components/Stamp";
 import "./globals.css";
 
 const workSans = localFont({
@@ -89,7 +88,6 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <StampFilter />
         <ClassificationStripe />
         <Header />
         {children}
