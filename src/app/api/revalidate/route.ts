@@ -16,18 +16,18 @@ export async function POST(request: NextRequest) {
     const slug = body.slug?.current;
 
     if (type === "cryptid") {
-      revalidateTag("cryptids");
+      revalidateTag("cryptids", "max");
       if (slug) {
-        revalidateTag(`cryptid-${slug}`);
+        revalidateTag(`cryptid-${slug}`, "max");
       }
     } else if (type === "anomaly") {
-      revalidateTag("anomalies");
+      revalidateTag("anomalies", "max");
       if (slug) {
-        revalidateTag(`anomaly-${slug}`);
+        revalidateTag(`anomaly-${slug}`, "max");
       }
     } else {
       // For unknown types, revalidate everything
-      revalidateTag("sanity");
+      revalidateTag("sanity", "max");
     }
 
     return NextResponse.json({

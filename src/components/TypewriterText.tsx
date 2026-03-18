@@ -21,8 +21,8 @@ export const TypewriterText = ({
   onComplete,
 }: TypewriterTextProps) => {
   const [displayedText, setDisplayedText] = useState("");
-  const [isComplete, setIsComplete] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const isComplete = hasStarted && displayedText.length >= text.length;
 
   useEffect(() => {
     const startTimer = setTimeout(() => {
@@ -41,7 +41,6 @@ export const TypewriterText = ({
       }, speed);
       return () => clearTimeout(timer);
     } else {
-      setIsComplete(true);
       onComplete?.();
     }
   }, [displayedText, text, speed, hasStarted, onComplete]);
