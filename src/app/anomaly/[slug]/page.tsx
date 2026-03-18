@@ -213,8 +213,8 @@ export default async function AnomalyDetailPage({
         <div className="max-w-6xl mx-auto px-6 pb-8">
           {/* Cover Sheet — photo clipped to left, identifying info on right */}
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 items-start">
-            <div className="relative flex-shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
+            <div className="relative shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
+              <div className="relative aspect-3/4 overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
                 {imageUrl ? (
                   <Image
                     src={imageUrl}
@@ -254,40 +254,40 @@ export default async function AnomalyDetailPage({
 
               <div className="space-y-2 pt-3 border-t border-dashed border-[hsl(var(--bureau-border)/0.5)]">
                 <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Location</span>
+                  <MapPin className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Location</span>
                   <span className="text-foreground">{anomaly.location}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  <TypeIcon className="h-4 w-4 text-accent flex-shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Type</span>
+                  <TypeIcon className="h-4 w-4 text-accent shrink-0" />
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Type</span>
                   <span className="text-foreground">{anomaly.anomalyType}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Status</span>
+                  <span className="h-4 w-4 shrink-0" />
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Status</span>
                   <Badge className={`${getAnomalyStatusColor(anomaly.status)} text-xs px-1.5 py-0`}>
                     {anomaly.status}
                   </Badge>
                 </div>
                 {anomaly.firstDocumented && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="h-4 w-4 text-accent flex-shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">First Doc.</span>
+                    <Calendar className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">First Doc.</span>
                     <span className="text-foreground">{anomaly.firstDocumented}</span>
                   </div>
                 )}
                 {anomaly.frequency && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Frequency</span>
+                    <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Frequency</span>
                     <span className="text-foreground">{anomaly.frequency}</span>
                   </div>
                 )}
                 {anomaly.region && (
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="h-4 w-4 flex-shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Region</span>
+                    <span className="h-4 w-4 shrink-0" />
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Region</span>
                     <span className="text-foreground">{anomaly.region}</span>
                   </div>
                 )}
@@ -462,7 +462,7 @@ export default async function AnomalyDetailPage({
                             <div className="absolute bottom-2 left-2">
                               <Badge
                                 variant="outline"
-                                className="bg-background/80 backdrop-blur-sm text-xs"
+                                className="bg-background/80 backdrop-blur-xs text-xs"
                               >
                                 <RelatedIcon className="h-3 w-3 mr-1" />
                                 {related.anomalyType}

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export const CryptidCardSkeleton = () => {
   return (
     <Card className="overflow-hidden border-2 border-border">
-      <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border animate-pulse">
+      <div className="relative aspect-2/3 overflow-hidden bg-muted border-4 border-border animate-pulse">
         <div className="absolute top-2 right-2 h-6 w-24 bg-muted-foreground/20 rounded" />
       </div>
 

@@ -60,7 +60,7 @@ export const EvidenceChip = ({
   const chipClasses = cn(
     baseStyles,
     variantStyles[variant],
-    onRemove && "cursor-pointer hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
+    onRemove && "cursor-pointer hover:opacity-80 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
     className
   );
 

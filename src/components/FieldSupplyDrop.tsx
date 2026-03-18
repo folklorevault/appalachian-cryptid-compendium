@@ -28,19 +28,19 @@ export const FieldSupplyDrop = ({
     >
       <div className="supply-card-inner border border-border/40 rounded-sm p-4 relative overflow-hidden">
         {/* Form reference */}
-        <span className="absolute top-2 right-3 font-typewriter text-[8px] text-muted-foreground tracking-wider z-[3]">
+        <span className="absolute top-2 right-3 font-typewriter text-[8px] text-muted-foreground tracking-wider z-3">
           Form SRD-09
         </span>
 
         {/* Header */}
-        <div className="border-b-[3px] border-double border-foreground/40 pb-2 mb-3 relative z-[2]">
+        <div className="border-b-[3px] border-double border-foreground/40 pb-2 mb-3 relative z-2">
           <p className="font-typewriter text-[9px] tracking-[0.18em] uppercase text-muted-foreground text-center">
             Field Supply Drop
           </p>
         </div>
 
         {/* Product image — hero */}
-        <div className="relative z-[2] mb-3 flex justify-center">
+        <div className="relative z-2 mb-3 flex justify-center">
           <div className="relative w-48 h-48 rounded-sm border border-border overflow-hidden">
             <Image
               src="/products/sticker.png"
@@ -53,7 +53,7 @@ export const FieldSupplyDrop = ({
         </div>
 
         {/* Title + item number */}
-        <div className="text-center mb-3 relative z-[2]">
+        <div className="text-center mb-3 relative z-2">
           <h3 className="font-display font-bold text-sm text-foreground leading-tight">
             Appalachian Cryptid Decal
           </h3>
@@ -63,10 +63,10 @@ export const FieldSupplyDrop = ({
         </div>
 
         {/* Specs */}
-        <div className="space-y-1 mb-3 relative z-[2]">
+        <div className="space-y-1 mb-3 relative z-2">
           {SPECS.map(([label, value]) => (
             <div key={label} className="flex gap-2 font-typewriter text-[10px]">
-              <span className="uppercase tracking-wider text-muted-foreground flex-shrink-0 w-12">
+              <span className="uppercase tracking-wider text-muted-foreground shrink-0 w-12">
                 {label}
               </span>
               <span className="text-foreground/80 border-b border-dotted border-foreground/20 flex-1">
@@ -77,7 +77,7 @@ export const FieldSupplyDrop = ({
         </div>
 
         {/* Price + Buy */}
-        <div className="pt-2 border-t border-dashed border-foreground/15 relative z-[2] text-center">
+        <div className="pt-2 border-t border-dashed border-foreground/15 relative z-2 text-center">
           <div className="mb-2">
             <span className="font-display font-bold text-lg text-foreground">
               $4.00

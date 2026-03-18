@@ -77,7 +77,7 @@ export const IncidentLog = ({
 
               return (
                 <div key={idx} className="flex gap-3">
-                  <span className="text-[hsl(var(--bureau-ink-muted))] flex-shrink-0 tabular-nums">
+                  <span className="text-[hsl(var(--bureau-ink-muted))] shrink-0 tabular-nums">
                     {timestamp} HRS -
                   </span>
                   <span className="uppercase tracking-wide">
@@ -111,7 +111,7 @@ export const IncidentLog = ({
 
       {/* Slight paper curl shadow */}
       <div
-        className="absolute -bottom-1 left-4 right-4 h-2 bg-gradient-to-b from-black/5 to-transparent rounded-full"
+        className="absolute -bottom-1 left-4 right-4 h-2 bg-linear-to-b from-black/5 to-transparent rounded-full"
         aria-hidden="true"
       />
     </div>

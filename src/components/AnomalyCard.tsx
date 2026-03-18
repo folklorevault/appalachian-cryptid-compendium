@@ -54,7 +54,7 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
   return (
     <Link href={`/anomaly/${slug.current}`}>
       <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
-        <div className="relative aspect-[2/3] overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
+        <div className="relative aspect-2/3 overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
           <Image
             src={imageUrl}
             alt={imageAlt || name}
@@ -68,7 +68,7 @@ export const AnomalyCard = ({ anomaly }: AnomalyCardProps) => {
             <Badge className={getAnomalyStatusColor(status)}>{status}</Badge>
           </div>
           <div className="absolute bottom-2 left-2">
-            <Badge variant="outline" className="bg-background/80 backdrop-blur-sm border-primary/50">
+            <Badge variant="outline" className="bg-background/80 backdrop-blur-xs border-primary/50">
               <TypeIcon className="h-3 w-3 mr-1" />
               {anomalyType}
             </Badge>

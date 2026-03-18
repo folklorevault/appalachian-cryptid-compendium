@@ -64,7 +64,7 @@ export function AboutContent() {
 
         <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 relative">
           {/* LEFT SIDE: INDEX TABS (Sticky Sidebar) */}
-          <nav className="hidden md:block w-64 flex-shrink-0 z-10">
+          <nav className="hidden md:block w-64 shrink-0 z-10">
             <div className="sticky top-24">
               <div className="text-xs font-typewriter text-muted-foreground mb-4 tracking-widest uppercase border-b border-border pb-2">
                 Index: Directive 001
@@ -96,7 +96,7 @@ export function AboutContent() {
           </nav>
 
           {/* RIGHT SIDE: THE CONTENT */}
-          <div className="flex-1 bg-card p-8 md:p-12 shadow-sm min-h-screen border-l border-border relative vintage-frame">
+          <div className="flex-1 bg-card p-8 md:p-12 shadow-xs min-h-screen border-l border-border relative vintage-frame">
             {/* Directive Header - Memo Style */}
             <div className="relative mb-12" style={{ transform: "rotate(-0.5deg)" }}>
               {/* Paper Clip */}

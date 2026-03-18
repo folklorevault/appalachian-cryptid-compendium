@@ -97,7 +97,7 @@ const FieldGuideEntry = ({
 
       <div className="flex gap-4 sm:gap-5">
         {imageUrl && (
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link href={`/cryptid/${cryptid.slug?.current}`}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded overflow-hidden bg-muted border border-border/50">
                 <img
@@ -217,7 +217,7 @@ const AnomalyEntry = ({
 
       <div className="flex gap-4 sm:gap-5">
         {imageUrl && (
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link href={`/anomaly/${anomaly.slug?.current}`}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded overflow-hidden bg-muted border border-border/50">
                 <img
@@ -608,7 +608,7 @@ export function FieldGuideContent({
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Sticky TOC - Mobile (top) */}
-            <div className="lg:hidden sticky top-16 z-30 -mx-4 px-4 py-2.5 bg-background/95 backdrop-blur border-b border-border/50">
+            <div className="lg:hidden sticky top-16 z-30 -mx-4 px-4 py-2.5 bg-background/95 backdrop-blur-sm border-b border-border/50">
               <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-hide">
                 <span className="text-xs font-typewriter text-muted-foreground/70 whitespace-nowrap">
                   Jump:
@@ -643,7 +643,7 @@ export function FieldGuideContent({
                         key={letter}
                         href={`#section-${letter}`}
                         className={cn(
-                          "w-5 h-5 flex-shrink-0 flex items-center justify-center text-xs font-display rounded",
+                          "w-5 h-5 shrink-0 flex items-center justify-center text-xs font-display rounded",
                           activeSection === letter
                             ? "bg-primary/80 text-primary-foreground"
                             : "bg-muted/30 hover:bg-muted/50"
@@ -657,7 +657,7 @@ export function FieldGuideContent({
                         key={region}
                         href={`#section-${region}`}
                         className={cn(
-                          "px-1.5 py-0.5 flex-shrink-0 text-xs rounded whitespace-nowrap",
+                          "px-1.5 py-0.5 shrink-0 text-xs rounded whitespace-nowrap",
                           activeSection === region
                             ? "bg-primary/80 text-primary-foreground"
                             : "bg-muted/30 hover:bg-muted/50"
@@ -669,7 +669,7 @@ export function FieldGuideContent({
                 {anomalies.length > 0 && (
                   <a
                     href="#anomalies-section"
-                    className="px-1.5 py-0.5 flex-shrink-0 text-xs rounded whitespace-nowrap bg-accent/15 text-accent hover:bg-accent/25"
+                    className="px-1.5 py-0.5 shrink-0 text-xs rounded whitespace-nowrap bg-accent/15 text-accent hover:bg-accent/25"
                   >
                     Anomalies
                   </a>
@@ -678,7 +678,7 @@ export function FieldGuideContent({
             </div>
 
             {/* Sticky TOC - Desktop (sidebar) */}
-            <aside className="hidden lg:block w-44 flex-shrink-0">
+            <aside className="hidden lg:block w-44 shrink-0">
               <div className="sticky top-24">
                 <div className="bg-card/50 p-3 rounded border border-border/30">
                   <TableOfContents

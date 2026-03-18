@@ -155,7 +155,7 @@ export const FilingDrawer = ({
             "hover:bg-[hsl(var(--bureau-manila-light))]",
             "transition-colors duration-75",
             // Focus state
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
+            "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
             // Open state styling
             "group-data-[state=open]:bg-[hsl(var(--bureau-manila-light))]",
             "group-data-[state=open]:border-b-[hsl(var(--bureau-border))]/60"
@@ -234,7 +234,7 @@ export const FilingDrawer = ({
         <div className="relative">
           {/* Slotted-in notch effect - darker line where tab meets content */}
           <div
-            className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(var(--bureau-manila-dark))]/40 to-transparent"
+            className="absolute top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-[hsl(var(--bureau-manila-dark))]/40 to-transparent"
             aria-hidden="true"
           />
 
@@ -258,7 +258,7 @@ export const FilingDrawer = ({
                 "bg-[hsl(var(--bureau-stamp))]/10",
                 "border border-[hsl(var(--bureau-stamp))]/30",
                 "rounded-sm",
-                "transform rotate-[-2deg]"
+                "transform -rotate-2"
               )}
             >
               <span
@@ -299,7 +299,7 @@ export const FilingCabinetControls = ({ className }: { className?: string }) => 
           "border border-[hsl(var(--bureau-border))]/50",
           "rounded-sm",
           "transition-colors duration-75",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
+          "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
         )}
       >
         {allOpen ? "Close All Drawers" : "Open All Drawers"}

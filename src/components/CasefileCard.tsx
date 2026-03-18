@@ -83,10 +83,10 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
 
           {/* Location with region chip */}
           <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+            <MapPin className="h-4 w-4 text-primary shrink-0" />
             <span className="text-foreground truncate">{location}</span>
             {region && (
-              <LabelTape className="ml-auto flex-shrink-0">{region}</LabelTape>
+              <LabelTape className="ml-auto shrink-0">{region}</LabelTape>
             )}
           </div>
 

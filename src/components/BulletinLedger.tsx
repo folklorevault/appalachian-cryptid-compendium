@@ -36,7 +36,7 @@ function CategoryTag({ category }: { category: BulletinCategory }) {
   const cat = CATEGORIES[category];
   return (
     <span
-      className="font-typewriter text-xs tracking-[0.1em] uppercase pb-px"
+      className="font-typewriter text-xs tracking-widest uppercase pb-px"
       style={{
         color: `hsl(var(${cat.cssVar}))`,
         borderBottom: `1.5px solid hsl(var(${cat.cssVar}) / 0.25)`,
@@ -178,7 +178,7 @@ export function BulletinLedger({
       : "";
 
   return (
-    <section className="max-w-[960px] mx-auto px-6 pb-20 relative z-[2]">
+    <section className="max-w-[960px] mx-auto px-6 pb-20 relative z-2">
       {/* Ledger book binding */}
       <div
         className="bg-card border border-[hsl(var(--bureau-border))] border-t-[3px] border-t-[hsl(var(--bureau-ink-muted))] relative overflow-hidden"
@@ -190,7 +190,7 @@ export function BulletinLedger({
       >
         {/* Red margin line */}
         <div
-          className="absolute top-0 bottom-0 z-[3]"
+          className="absolute top-0 bottom-0 z-3"
           style={{
             left: "32px",
             width: "1.5px",
@@ -215,7 +215,7 @@ export function BulletinLedger({
         </div>
 
         {/* ── Desktop table ── */}
-        <div className="hidden md:block relative z-[2]">
+        <div className="hidden md:block relative z-2">
           {/* Column headings */}
           <div className="border-b-2 border-[hsl(var(--bureau-ink-muted))] mb-1 pb-1.5">
             <table className="w-full border-collapse table-auto">
@@ -259,14 +259,14 @@ export function BulletinLedger({
         </div>
 
         {/* ── Mobile stacked entries ── */}
-        <div className="md:hidden relative z-[2]">
+        <div className="md:hidden relative z-2">
           {bulletins.map((bulletin) => (
             <MobileLedgerEntry key={bulletin._id} bulletin={bulletin} />
           ))}
         </div>
 
         {/* Ledger footer */}
-        <div className="relative z-[2] border-t-2 border-[hsl(var(--bureau-ink-muted))] mt-4 pt-2.5 flex justify-between items-center flex-wrap gap-2">
+        <div className="relative z-2 border-t-2 border-[hsl(var(--bureau-ink-muted))] mt-4 pt-2.5 flex justify-between items-center flex-wrap gap-2">
           <span className="font-typewriter text-xs text-muted-foreground tracking-[0.08em] uppercase">
             Ledger contains {bulletins.length} entries
           </span>

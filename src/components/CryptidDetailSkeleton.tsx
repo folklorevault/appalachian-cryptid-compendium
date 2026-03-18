@@ -19,7 +19,7 @@ export const CryptidDetailSkeleton = () => {
         {/* Hero Image & Basic Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-start">
           {/* Image Skeleton */}
-          <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted animate-pulse">
+          <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-muted animate-pulse">
             <div className="absolute top-4 right-4 h-6 w-28 bg-muted-foreground/20 rounded" />
             <div className="absolute bottom-4 left-4 h-16 w-24 bg-muted-foreground/20 rounded rotate-[-8deg]" />
           </div>

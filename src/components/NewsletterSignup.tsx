@@ -71,7 +71,7 @@ const CompactSignup = () => {
     return (
       <div role="status" aria-live="polite" className="newsletter-paper memo-paper border border-border/40 rounded-sm px-5 py-4">
         <div className="flex items-center gap-3">
-          <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" aria-hidden="true" />
+          <CheckCircle className="h-4 w-4 text-primary shrink-0" aria-hidden="true" />
           <p className="text-sm font-typewriter text-foreground/80">
             Registered. You'll get an email when new case files drop.
           </p>
@@ -104,7 +104,7 @@ const CompactSignup = () => {
             placeholder="your email address"
             aria-invalid={state === "error" || undefined}
             aria-describedby={state === "error" && errorMsg ? "newsletter-compact-error" : undefined}
-            className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-1.5 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 transition-colors"
+            className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-1.5 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-hidden focus:border-primary/60 transition-colors"
             disabled={state === "submitting"}
           />
           {state === "error" && errorMsg && (
@@ -116,7 +116,7 @@ const CompactSignup = () => {
         <button
           type="submit"
           disabled={state === "submitting"}
-          className="newsletter-stamp-btn self-end sm:self-auto inline-flex items-center gap-1.5 px-4 py-1.5 border-[3px] border-primary rounded-sm font-bold uppercase tracking-widest text-xs font-display text-primary shadow-[inset_0_0_0_1.5px_hsl(var(--primary))] hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+          className="newsletter-stamp-btn self-end sm:self-auto inline-flex items-center gap-1.5 px-4 py-1.5 border-[3px] border-primary rounded-sm font-bold uppercase tracking-widest text-xs font-display text-primary shadow-[inset_0_0_0_1.5px_hsl(var(--primary))] hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         >
           <span
             className="flex items-center gap-1.5"
@@ -185,7 +185,7 @@ const FullSignup = () => {
 
             {/* Confirmation content */}
             <div role="status" aria-live="polite" className="flex items-start gap-3 mt-4 mb-4">
-              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
               <div className="memo-body text-sm leading-relaxed">
                 Your transmission address has been logged with the Bureau.
                 You will receive dispatches as new case files are processed
@@ -267,7 +267,7 @@ const FullSignup = () => {
           </div>
 
           {/* Directive title */}
-          <div className="mt-4 mb-3 relative z-[2]">
+          <div className="mt-4 mb-3 relative z-2">
             <h3 className="text-xl font-bold text-foreground font-display uppercase tracking-wide">
               Standing Order: Register for Bureau Dispatches
             </h3>
@@ -282,7 +282,7 @@ const FullSignup = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="relative z-[2]">
+          <form onSubmit={handleSubmit} className="relative z-2">
             {/* Honeypot — visually hidden, traps bots */}
             <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
               <label htmlFor="website-full">Website</label>
@@ -305,7 +305,7 @@ const FullSignup = () => {
                   placeholder="operative.email@field-office.gov"
                   aria-invalid={state === "error" || undefined}
                   aria-describedby={state === "error" && errorMsg ? "newsletter-full-error" : undefined}
-                  className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-2 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 transition-colors"
+                  className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-2 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-hidden focus:border-primary/60 transition-colors"
                   disabled={state === "submitting"}
                 />
               </div>

@@ -137,7 +137,7 @@ export default async function BulletinDetailPage({
               {formatLongDate(bulletin.date)}
             </span>
             <span
-              className="font-typewriter text-xs tracking-[0.1em] uppercase pb-px"
+              className="font-typewriter text-xs tracking-widest uppercase pb-px"
               style={{
                 color: `hsl(var(--bulletin-${bulletin.category}))`,
                 borderBottom: `1.5px solid hsl(var(--bulletin-${bulletin.category}) / 0.25)`,

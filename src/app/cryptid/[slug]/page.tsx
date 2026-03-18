@@ -174,7 +174,7 @@ export default async function CryptidDetailPage({
           {/* Cover Sheet — photo clipped to left, identifying info on right */}
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 items-start">
             {imageUrl && (
-              <div className="relative flex-shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
+              <div className="relative shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
                 <div className="relative overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
                   <Image
                     src={imageUrl}
@@ -216,21 +216,21 @@ export default async function CryptidDetailPage({
 
               <div className="space-y-2 pt-3 border-t border-dashed border-[hsl(var(--bureau-border)/0.5)]">
                 <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Location</span>
+                  <MapPin className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Location</span>
                   <span className="text-foreground">{cryptid.location}</span>
                 </div>
                 {cryptid.firstDocumented && (
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="h-4 w-4 text-accent flex-shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">First Doc.</span>
+                    <Calendar className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">First Doc.</span>
                     <span className="text-foreground">{cryptid.firstDocumented}</span>
                   </div>
                 )}
                 {cryptid.region && (
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="h-4 w-4 flex-shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 flex-shrink-0">Region</span>
+                    <span className="h-4 w-4 shrink-0" />
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Region</span>
                     <span className="text-foreground">{cryptid.region}</span>
                   </div>
                 )}
@@ -383,7 +383,7 @@ export default async function CryptidDetailPage({
                 />
               </div>
             )}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <FieldSupplyDrop variant="detail" />
             </div>
           </div>

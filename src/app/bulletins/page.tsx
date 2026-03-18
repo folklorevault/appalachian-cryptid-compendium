@@ -55,7 +55,7 @@ export default async function BulletinsPage() {
       <main id="main-content">
         {/* Ledger Header */}
         <section className="relative py-20 px-6 lg:py-24 lg:px-8 text-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent pointer-events-none" />
           <div className="relative z-10 max-w-3xl mx-auto space-y-4">
             <div className="flex items-center justify-center gap-3.5 mb-6">
               <span className="block w-10 h-px bg-border" aria-hidden="true" />
