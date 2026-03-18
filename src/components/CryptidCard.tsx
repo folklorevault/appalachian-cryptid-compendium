@@ -40,7 +40,7 @@ export const CryptidCard = ({ cryptid }: CryptidCardProps) => {
 
   return (
     <Link href={`/cryptid/${slug.current}`}>
-      <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-lg group cursor-pointer">
+      <Card className="overflow-hidden border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-md group cursor-pointer">
       <div className="relative aspect-2/3 overflow-hidden bg-muted border-4 border-border group-hover:border-primary transition-colors duration-300">
         <Image
           src={imageUrl}

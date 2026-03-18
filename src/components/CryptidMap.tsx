@@ -265,19 +265,19 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-destructive" aria-hidden="true" />
+                  <div className="w-4 h-4 rounded-full bg-[#ef4444]" aria-hidden="true" />
                   <span className="text-sm text-foreground">
                     Advisory: Elevated
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-secondary" aria-hidden="true" />
+                  <div className="w-4 h-4 rounded-full bg-[#f59e0b]" aria-hidden="true" />
                   <span className="text-sm text-foreground">
                     Advisory: Moderate
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-accent" aria-hidden="true" />
+                  <div className="w-4 h-4 rounded-full bg-[#22c55e]" aria-hidden="true" />
                   <span className="text-sm text-foreground">Advisory: Low</span>
                 </div>
               </div>

@@ -12,7 +12,7 @@ import {
   FilingDrawer,
   FilingCabinetControls,
 } from "@/components/FilingDrawer";
-import { MapPin, Calendar } from "lucide-react";
+import { MapPin, Calendar, Globe } from "lucide-react";
 import {
   StructuredData,
   createCryptidArticleSchema,
@@ -229,7 +229,7 @@ export default async function CryptidDetailPage({
                 )}
                 {cryptid.region && (
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="h-4 w-4 shrink-0" />
+                    <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
                     <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Region</span>
                     <span className="text-foreground">{cryptid.region}</span>
                   </div>
