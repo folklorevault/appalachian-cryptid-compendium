@@ -33,12 +33,11 @@ const specialElite = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default:
-      "Appalachian Cryptids List | Field Guide to Monsters of the Mountains & American South",
-    template: "%s | Appalachian Cryptid Field Guide",
+    default: "Appalachian Cryptids List | Most Reported Sightings",
+    template: "%s | Appalachian Cryptids List",
   },
   description:
-    "Complete list of Appalachian cryptids, monsters, and strange creatures. Browse documented sightings of Mothman, Wampus Cat, and more from the mountains and hollers of the American South.",
+    "Appalachian cryptids list featuring the most reported sightings, including Mothman, Not Deer, Wampus Cat, and more.",
   metadataBase: new URL("https://appalachiancryptid.com"),
   openGraph: {
     siteName: "Appalachian Cryptids List",
@@ -62,7 +61,6 @@ export const metadata: Metadata = {
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
   },
-  manifest: "/site.webmanifest",
   other: {
     "theme-color": "#3a5a47",
   },
