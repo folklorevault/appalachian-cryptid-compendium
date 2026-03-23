@@ -85,7 +85,7 @@ const CompactSignup = () => {
       <p className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">
         Get notified when new cryptids are added to the guide
       </p>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      <form action="/api/newsletter" method="POST" onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         {/* Honeypot — visually hidden, traps bots */}
         <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
           <label htmlFor="website-compact">Website</label>
@@ -95,6 +95,7 @@ const CompactSignup = () => {
           <label htmlFor="newsletter-email-compact" className="sr-only">Email address</label>
           <input
             id="newsletter-email-compact"
+            name="email"
             type="email"
             value={email}
             onChange={(e) => {
@@ -282,7 +283,7 @@ const FullSignup = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="relative z-2">
+          <form action="/api/newsletter" method="POST" onSubmit={handleSubmit} className="relative z-2">
             {/* Honeypot — visually hidden, traps bots */}
             <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
               <label htmlFor="website-full">Website</label>
@@ -296,6 +297,7 @@ const FullSignup = () => {
               <div className="relative">
                 <input
                   id="newsletter-email-full"
+                  name="email"
                   type="email"
                   value={email}
                   onChange={(e) => {
