@@ -58,34 +58,28 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
-  const rawDesc = cryptid.subhead || cryptid.description || `Learn about the ${cryptid.name}`;
-  const withLocation = `${rawDesc} Sightings near ${cryptid.location}.`;
-  const description = withLocation.length > 160
-    ? rawDesc.slice(0, 157) + '...'
-    : withLocation;
-
-  const ogImageUrl = cryptid.image
-    ? urlFor(cryptid.image).width(1200).height(630).fit("crop").quality(80).auto("format").url()
-    : "https://appalachiancryptid.com/og-image.jpg";
+  // Build a CTR-optimized description: name + location + subhead/description
+  const detail = cryptid.subhead || cryptid.description || "";
+  const firstDoc = cryptid.firstDocumented ? ` First documented ${cryptid.firstDocumented}.` : "";
+  const candidate = `${cryptid.name} — ${cryptid.location}.${firstDoc} ${detail}`.trim();
+  const description = candidate.length > 160 ? candidate.slice(0, 157) + "..." : candidate;
 
   return {
-    title: cryptid.name,
+    title: `${cryptid.name} | Sightings & Case File`,
     description,
     alternates: {
       canonical: `/cryptid/${slug}`,
     },
     openGraph: {
-      title: `${cryptid.name} - Appalachian Cryptid Case File`,
+      title: `${cryptid.name} — Appalachian Cryptid Sightings`,
       description,
-      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
       type: "article",
       url: `https://appalachiancryptid.com/cryptid/${slug}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${cryptid.name} - Appalachian Cryptid`,
+      title: `${cryptid.name} — Appalachian Cryptid Sightings`,
       description,
-      images: [ogImageUrl],
     },
   };
 }
