@@ -38,6 +38,9 @@ async function addToLoops(email: string): Promise<boolean> {
     body: JSON.stringify({
       email,
       source: "appalachian-cryptid-compendium",
+      mailingLists: {
+        cmlwtpmz40dhh0iyf479cb0jr: true,
+      },
     }),
   });
 
