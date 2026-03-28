@@ -35,6 +35,13 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Use webpack for production — mapbox-gl's pre-built worker bundle breaks
+  // under Turbopack's module processing (ReferenceError: w is not defined)
+  webpack: (config) => {
+    config.module.noParse = /mapbox-gl\/dist\/mapbox-gl\.js$/;
+    return config;
+  },
+  turbopack: {},
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200],
