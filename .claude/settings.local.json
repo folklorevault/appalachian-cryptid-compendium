@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Sanity__create_document_from_json",
+      "mcp__Sanity__list_sanity_rules",
+      "mcp__Sanity__get_sanity_rules",
+      "mcp__Sanity__get_schema",
+      "Bash(grep:*)",
+      "Bash(head:*)"
+    ]
+  }
+}
