@@ -21,6 +21,9 @@
     "sanity": "^5.7.0",
     "styled-components": "^6.1.18"
   },
+  "overrides": {
+    "js-yaml": ">=3.14.2"
+  },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.2",
     "@types/react": "^19.1",
