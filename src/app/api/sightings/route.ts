@@ -14,6 +14,23 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Honeypot check: if the hidden field is filled, it's a bot.
+    // Return fake success so bots don't retry.
+    if (body.website) {
+      return NextResponse.json(
+        { success: true, id: "ok", message: "Sighting report submitted successfully" },
+        { status: 201 }
+      );
+    }
+
+    // Timing check: if submitted less than 3 seconds after page load, likely a bot
+    if (body._t && Date.now() - body._t < 3000) {
+      return NextResponse.json(
+        { success: true, id: "ok", message: "Sighting report submitted successfully" },
+        { status: 201 }
+      );
+    }
+
     // Validate required fields
     const required = [
       "witness_name",

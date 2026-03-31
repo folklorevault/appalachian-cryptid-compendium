@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Parse email from either JSON or form-encoded body
-async function parseEmail(request: NextRequest): Promise<{ email: string; loadedAt?: number; isFormSubmission: boolean }> {
+async function parseEmail(request: NextRequest): Promise<{ email: string; loadedAt?: number; honeypot?: string; isFormSubmission: boolean }> {
   const contentType = request.headers.get("content-type") || "";
 
   if (contentType.includes("application/x-www-form-urlencoded")) {
     const formData = await request.formData();
     return {
       email: formData.get("email") as string || "",
+      honeypot: formData.get("website") as string || "",
       loadedAt: undefined,
       isFormSubmission: true,
     };
@@ -16,6 +17,7 @@ async function parseEmail(request: NextRequest): Promise<{ email: string; loaded
   const body = await request.json();
   return {
     email: body.email || "",
+    honeypot: body.website || "",
     loadedAt: body._t,
     isFormSubmission: false,
   };
@@ -108,7 +110,13 @@ function successResponse(isFormSubmission: boolean, request: NextRequest) {
 // Newsletter signup handler — adds to Loops.so + creates Sanity subscriber record
 export async function POST(request: NextRequest) {
   try {
-    const { email, loadedAt, isFormSubmission } = await parseEmail(request);
+    const { email, loadedAt, honeypot, isFormSubmission } = await parseEmail(request);
+
+    // Honeypot check: if the hidden field is filled, it's a bot.
+    // Return fake success so bots don't retry.
+    if (honeypot) {
+      return successResponse(isFormSubmission, request);
+    }
 
     // Basic validation
     if (!email || !email.includes("@")) {

@@ -44,6 +44,10 @@ export function ReportForm() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submissionData, setSubmissionData] = useState<SubmissionData | null>(null);
+  // Anti-bot: honeypot field and timing
+  const [honeypot, setHoneypot] = useState("");
+  const [loadedAt] = useState(() => Date.now());
+
   const [formData, setFormData] = useState({
     witnessName: "",
     email: "",
@@ -142,6 +146,19 @@ export function ReportForm() {
       return;
     }
 
+    // Honeypot check — silently "succeed" so bots don't retry
+    if (honeypot) {
+      setSubmissionData({
+        witnessName: formData.witnessName,
+        date: formData.date,
+        location: formData.location,
+        state: formData.state,
+        creatureName: formData.creatureName || undefined,
+      });
+      setSubmitted(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -161,6 +178,7 @@ export function ReportForm() {
           description: formData.description,
           physical_description: formData.physicalDescription,
           behavior: formData.behavior || undefined,
+          _t: loadedAt,
         }),
       });
 
@@ -272,6 +290,12 @@ export function ReportForm() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot — visually hidden, traps bots */}
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
+              <label htmlFor="website-report">Website</label>
+              <input id="website-report" type="text" name="website" autoComplete="off" tabIndex={-1} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            </div>
+
             {/* Witness Information */}
             <Card className="border-2 border-border">
               <fieldset>
