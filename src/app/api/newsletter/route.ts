@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 
 // Parse email from either JSON or form-encoded body
 async function parseEmail(request: NextRequest): Promise<{ email: string; loadedAt?: number; honeypot?: string; isFormSubmission: boolean }> {
@@ -110,6 +111,12 @@ function successResponse(isFormSubmission: boolean, request: NextRequest) {
 // Newsletter signup handler — adds to Loops.so + creates Sanity subscriber record
 export async function POST(request: NextRequest) {
   try {
+    // BotID check — blocks automated bots at the platform level
+    const verification = await checkBotId();
+    if (verification.isBot) {
+      return NextResponse.json({ success: true });
+    }
+
     const { email, loadedAt, honeypot, isFormSubmission } = await parseEmail(request);
 
     // Honeypot check: if the hidden field is filled, it's a bot.

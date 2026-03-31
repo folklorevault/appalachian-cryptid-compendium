@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 
 const SANITY_PROJECT_ID = "8thljucm";
 const SANITY_DATASET = "production";
@@ -12,6 +13,15 @@ function generateId() {
 
 export async function POST(request: NextRequest) {
   try {
+    // BotID check — blocks automated bots at the platform level
+    const verification = await checkBotId();
+    if (verification.isBot) {
+      return NextResponse.json(
+        { success: true, id: "ok", message: "Sighting report submitted successfully" },
+        { status: 201 }
+      );
+    }
+
     const body = await request.json();
 
     // Honeypot check: if the hidden field is filled, it's a bot.
