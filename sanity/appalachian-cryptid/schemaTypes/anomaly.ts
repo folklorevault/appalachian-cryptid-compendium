@@ -211,11 +211,18 @@ export default defineType({
       description: 'Other nearby places where similar phenomena have been reported',
     }),
     defineField({
+      name: 'noteOnRecord',
+      title: 'Note on the Record',
+      type: 'text',
+      rows: 4,
+      description: 'An editorial or archival note appended to the case file',
+    }),
+    defineField({
       name: 'bureauNotes',
-      title: 'Bureau Notes',
+      title: 'Field Transmission',
       type: 'text',
       rows: 6,
-      description: 'Internal notes from Bureau field agents',
+      description: 'Field transmission from Bureau agents on the ground',
     }),
     defineField({
       name: 'safetyAdvisory',

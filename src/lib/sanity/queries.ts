@@ -160,6 +160,7 @@ export const anomalyBySlugQuery = `*[_type == "anomaly" && slug.current == $slug
     account
   },
   relatedLocations,
+  noteOnRecord,
   bureauNotes,
   safetyAdvisory,
   declassifiedBriefings[] {

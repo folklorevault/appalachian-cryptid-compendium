@@ -133,6 +133,7 @@ export interface SanityAnomaly {
   frequency?: string
   witnesses?: SanityWitnessAccount[]
   relatedLocations?: string
+  noteOnRecord?: string
   bureauNotes?: string
   safetyAdvisory?: string
   declassifiedBriefings?: SanityDeclassifiedBriefing[]

@@ -343,7 +343,7 @@ export default async function AnomalyDetailPage({
                 <FilingCabinet defaultOpen={[]}>
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-foreground font-display">
-                      Declassified Briefings
+                      Transmissions Received
                     </h2>
                     <FilingCabinetControls />
                   </div>
@@ -405,6 +405,22 @@ export default async function AnomalyDetailPage({
                   );
                 })}
               </FilingCabinet>
+            </div>
+          )}
+
+          {/* Note on the Record */}
+          {anomaly.noteOnRecord && (
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-foreground font-display mb-4">
+                Note on the Record
+              </h2>
+              <Card className="border-2 border-dashed border-[hsl(var(--bureau-border)/0.5)]">
+                <CardContent className="p-5">
+                  <p className="whitespace-pre-line text-foreground/80 leading-relaxed italic">
+                    {anomaly.noteOnRecord}
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           )}
 
