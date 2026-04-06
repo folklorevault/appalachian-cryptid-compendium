@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Stamp } from '@/components/Stamp';
+import styles from '@/components/AboutContent.module.css';
 
 const SECTIONS = [
   { id: 'mandate', label: '01. MANDATE', title: 'Operational Mandate' },
@@ -59,8 +60,8 @@ export function AboutContent() {
                     <button
                       onClick={() => scrollTo(section.id)}
                       className={`
-                        filing-tab w-full text-left py-3 px-4 pr-6 font-typewriter text-xs uppercase tracking-wider
-                        ${activeSection === section.id ? 'active text-foreground font-bold' : 'text-foreground/70'}
+                        ${styles.filingTab} w-full text-left py-3 px-4 pr-6 font-typewriter text-xs uppercase tracking-wider
+                        ${activeSection === section.id ? `${styles.filingTabActive} text-foreground font-bold` : 'text-foreground/70'}
                       `}
                     >
                       {section.label}
@@ -216,7 +217,7 @@ export function AboutContent() {
                 </ul>
 
                 {/* FIELD NOTICE - Purple Paint Warning */}
-                <div className="field-notice-card mt-12 p-6 pt-8 text-sm relative">
+                <div className={`${styles.fieldNoticeCard} mt-12 p-6 pt-8 text-sm relative`}>
                   <div className="absolute top-2 right-3 opacity-40">
                     <Stamp
                       text="Advisory"
@@ -300,7 +301,7 @@ export function AboutContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 ">
                   {/* Desk 01 - File Folder Card */}
-                  <div className="file-folder-card index-card-lines index-card-margin p-6 pt-8 mt-4">
+                  <div className={`${styles.fileFolderCard} ${styles.indexCardLines} ${styles.indexCardMargin} p-6 pt-8 mt-4`}>
                     <span className="text-xs font-typewriter font-bold text-foreground/60 block mb-2 relative z-10">
                       DESK 01 // BIOLOGICAL
                     </span>
@@ -317,7 +318,7 @@ export function AboutContent() {
                   </div>
 
                   {/* Desk 02 - File Folder Card */}
-                  <div className="file-folder-card index-card-lines index-card-margin p-6 pt-8 mt-4">
+                  <div className={`${styles.fileFolderCard} ${styles.indexCardLines} ${styles.indexCardMargin} p-6 pt-8 mt-4`}>
                     <span className="text-xs font-typewriter font-bold text-foreground/60 block mb-2 relative z-10">
                       DESK 02 // ENVIRONMENTAL
                     </span>
