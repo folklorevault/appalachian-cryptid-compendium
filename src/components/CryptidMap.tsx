@@ -6,7 +6,7 @@ import type mapboxgl from "mapbox-gl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Key, Loader2 } from "lucide-react";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 import type { SanityCryptidMapItem } from "@/types/sanity";
 import "mapbox-gl/dist/mapbox-gl.css";
 

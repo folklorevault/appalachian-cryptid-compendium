@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 import { LabelTape } from "@/components/EvidenceChip";
 import type { SanityCryptidListItem, SanityAnomalyListItem } from "@/types/sanity";
 

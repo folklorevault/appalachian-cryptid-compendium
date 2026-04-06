@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { BackToTop } from "@/components/BackToTop";
+import { Footer } from "@/components/Footer";
 import { fetchCryptids, fetchAnomalies } from "@/lib/sanity/fetchers";
 import { FieldGuideContent } from "@/components/FieldGuideContent";
 
@@ -17,5 +19,11 @@ export default async function FieldGuidePage() {
     fetchAnomalies(),
   ]);
 
-  return <FieldGuideContent cryptids={cryptids} anomalies={anomalies} />;
+  return (
+    <div className="min-h-screen bg-background paper-texture">
+      <FieldGuideContent cryptids={cryptids} anomalies={anomalies} />
+      <Footer variant="full" />
+      <BackToTop />
+    </div>
+  );
 }

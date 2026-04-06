@@ -46,7 +46,7 @@ import {
   fetchAnomalySlugs,
   fetchRelatedAnomalies,
 } from "@/lib/sanity/fetchers";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 import { getAnomalyStatusColor } from "@/lib/caseUtils";
 import type { AnomalyType } from "@/types/sanity";
 

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Zap, Ghost, Skull, Eye, Volume2, Cloud, Clock, MapPinned } from "lucide-react";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 import { getAnomalyStatusColor } from "@/lib/caseUtils";
 import type { SanityAnomalyListItem, AnomalyType } from "@/types/sanity";
 

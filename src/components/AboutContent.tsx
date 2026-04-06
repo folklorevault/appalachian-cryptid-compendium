@@ -1,12 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Stamp } from '@/components/Stamp';
-import { BackToTop } from '@/components/BackToTop';
-import { Footer } from '@/components/Footer';
-import { ArrowLeft } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'mandate', label: '01. MANDATE', title: 'Operational Mandate' },
@@ -50,19 +45,7 @@ export function AboutContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background paper-texture">
-      <main id="main-content">
-        {/* Back Button */}
-        <div className="container mx-auto px-4 py-4">
-          <Link href="/">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Directory
-            </Button>
-          </Link>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 relative">
+    <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 relative">
           {/* LEFT SIDE: INDEX TABS (Sticky Sidebar) */}
           <nav className="hidden md:block w-64 shrink-0 z-10">
             <div className="sticky top-24">
@@ -378,13 +361,13 @@ export function AboutContent() {
                     Your account could help fill in the map. All submissions are reviewed and treated
                     with discretion.
                   </p>
-                  <Link
+                  <a
                     href="/report"
                     className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200"
                     style={{ transform: "rotate(-1deg)", filter: "url(#__svg-stamp-texture)" }}
                   >
                     File a Report
-                  </Link>
+                  </a>
                 </div>
               </section>
             </div>
@@ -395,10 +378,5 @@ export function AboutContent() {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer variant="full" />
-      <BackToTop />
-    </div>
   );
 }

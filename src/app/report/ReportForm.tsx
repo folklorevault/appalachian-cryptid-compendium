@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import Link from "next/link";
-import { Footer } from "@/components/Footer";
 import { SightingReceipt } from "@/components/SightingReceipt";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
+import { MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface FormErrors {
@@ -241,20 +239,7 @@ export function ReportForm() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <main id="main-content">
-      {/* Back Button */}
-      <div className="container mx-auto px-4 py-6">
-        <Link href="/">
-          <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Directory
-          </Button>
-        </Link>
-      </div>
-
-      {/* Form Section */}
-      <section className="pb-16 px-4">
+    <section className="pb-16 px-4">
         <div className="container mx-auto max-w-3xl">
           {submitted && submissionData ? (
             <>
@@ -554,9 +539,5 @@ export function ReportForm() {
           )}
         </div>
       </section>
-
-      </main>
-      <Footer />
-    </div>
   );
 }

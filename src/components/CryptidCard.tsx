@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 import { getDangerLevelColor, getDangerLevelLabel } from "@/lib/caseUtils";
 import type { SanityCryptidListItem } from "@/types/sanity";
 

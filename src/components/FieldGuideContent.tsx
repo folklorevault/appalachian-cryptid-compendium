@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import Link from "next/link";
-import { Footer } from "@/components/Footer";
-import { BackToTop } from "@/components/BackToTop";
 import { Stamp } from "@/components/Stamp";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 import type { SanityCryptidListItem, SanityAnomalyListItem } from "@/types/sanity";
 import { MapPin, AlertTriangle, BookOpen, Zap, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -98,7 +95,7 @@ const FieldGuideEntry = ({
       <div className="flex gap-4 sm:gap-5">
         {imageUrl && (
           <div className="shrink-0">
-            <Link href={`/cryptid/${cryptid.slug?.current}`}>
+            <a href={`/cryptid/${cryptid.slug?.current}`}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded overflow-hidden bg-muted border border-border/50">
                 <img
                   src={imageUrl}
@@ -107,21 +104,21 @@ const FieldGuideEntry = ({
                   loading="lazy"
                 />
               </div>
-            </Link>
+            </a>
           </div>
         )}
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
             <div>
-              <Link
+              <a
                 href={`/cryptid/${cryptid.slug?.current}`}
                 className="group inline-flex items-baseline gap-2"
               >
                 <h3 className="text-base sm:text-lg font-display font-bold text-foreground group-hover:text-primary transition-colors">
                   {cryptid.name}
                 </h3>
-              </Link>
+              </a>
               {cryptid.scientificName && (
                 <p className="text-xs font-typewriter italic text-muted-foreground mt-0.5">
                   {cryptid.scientificName}
@@ -169,13 +166,13 @@ const FieldGuideEntry = ({
             </div>
           )}
 
-          <Link
+          <a
             href={`/cryptid/${cryptid.slug?.current}`}
             className="inline-flex items-center gap-1 mt-1.5 text-xs text-primary hover:text-primary/80 font-medium transition-colors"
           >
             <BookOpen className="w-2.5 h-2.5" />
             Full case file
-          </Link>
+          </a>
         </div>
       </div>
     </article>
@@ -218,7 +215,7 @@ const AnomalyEntry = ({
       <div className="flex gap-4 sm:gap-5">
         {imageUrl && (
           <div className="shrink-0">
-            <Link href={`/anomaly/${anomaly.slug?.current}`}>
+            <a href={`/anomaly/${anomaly.slug?.current}`}>
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded overflow-hidden bg-muted border border-border/50">
                 <img
                   src={imageUrl}
@@ -227,21 +224,21 @@ const AnomalyEntry = ({
                   loading="lazy"
                 />
               </div>
-            </Link>
+            </a>
           </div>
         )}
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
             <div>
-              <Link
+              <a
                 href={`/anomaly/${anomaly.slug?.current}`}
                 className="group inline-flex items-baseline gap-2"
               >
                 <h3 className="text-base sm:text-lg font-display font-bold text-foreground group-hover:text-accent transition-colors">
                   {anomaly.name}
                 </h3>
-              </Link>
+              </a>
               {anomaly.subhead && (
                 <p className="text-xs font-typewriter italic text-muted-foreground mt-0.5">
                   {anomaly.subhead}
@@ -289,13 +286,13 @@ const AnomalyEntry = ({
             </div>
           )}
 
-          <Link
+          <a
             href={`/anomaly/${anomaly.slug?.current}`}
             className="inline-flex items-center gap-1 mt-1.5 text-xs text-accent hover:text-accent/80 font-medium transition-colors"
           >
             <BookOpen className="w-2.5 h-2.5" />
             View anomaly file
-          </Link>
+          </a>
         </div>
       </div>
     </article>
@@ -520,7 +517,7 @@ export function FieldGuideContent({
   const totalAnomalies = anomalies.length;
 
   return (
-    <div className="min-h-screen bg-background paper-texture">
+    <>
       {/* Field Journal Cover Header - Bureau Memo Style */}
       <section className="relative py-8 sm:py-12 px-4 border-b border-border">
         <div className="container mx-auto max-w-3xl">
@@ -884,9 +881,6 @@ export function FieldGuideContent({
         </div>
       </section>
 
-      {/* Footer */}
-      <Footer variant="full" />
-      <BackToTop />
-    </div>
+    </>
   );
 }

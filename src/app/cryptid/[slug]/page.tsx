@@ -35,7 +35,7 @@ import {
   fetchCryptidSlugs,
   fetchRelatedCryptids,
 } from "@/lib/sanity/fetchers";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity/image";
 
 // ── Static params for build-time generation ──────────────
 
