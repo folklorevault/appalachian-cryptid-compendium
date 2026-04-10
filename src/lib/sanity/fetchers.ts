@@ -8,17 +8,20 @@ import {
   filteredCryptidsQuery,
   cryptidBySlugQuery,
   cryptidSlugsQuery,
+  cryptidSlugsWithDatesQuery,
   mapCryptidsQuery,
   relatedCryptidsQuery,
   anomaliesListQuery,
   filteredAnomaliesQuery,
   anomalyBySlugQuery,
   anomalySlugsQuery,
+  anomalySlugsWithDatesQuery,
   mapAnomaliesQuery,
   relatedAnomaliesQuery,
   bulletinsListQuery,
   bulletinBySlugQuery,
   bulletinSlugsQuery,
+  bulletinSlugsWithDatesQuery,
 } from "./queries";
 import { cryptids as staticCryptids } from "@/data/cryptids";
 import type {
@@ -225,6 +228,13 @@ export async function fetchRelatedCryptids(
     .map(convertStaticToSanityFormat);
 }
 
+export type SlugWithDate = { slug: string; _updatedAt: string };
+
+export async function fetchCryptidSlugsWithDates(): Promise<SlugWithDate[]> {
+  const result = await sanityFetch<SlugWithDate[]>(cryptidSlugsWithDatesQuery, undefined, ["cryptids"]);
+  return result ?? staticCryptids.map((c) => ({ slug: c.id, _updatedAt: new Date().toISOString() }));
+}
+
 // ── Anomaly fetchers ─────────────────────────────────────────
 // Note: Unlike cryptids, there is no static fallback data for anomalies. All anomaly
 // content is Sanity-only. If Sanity is unavailable, anomaly pages will be empty and
@@ -288,6 +298,10 @@ export async function fetchRelatedAnomalies(
   );
 }
 
+export async function fetchAnomalySlugsWithDates(): Promise<SlugWithDate[]> {
+  return (await sanityFetch<SlugWithDate[]>(anomalySlugsWithDatesQuery, undefined, ["anomalies"])) ?? [];
+}
+
 // ── Bulletin fetchers ─────────────────────────────────────────
 
 export async function fetchBulletins(): Promise<SanityBulletinListItem[]> {
@@ -322,4 +336,10 @@ export async function fetchBulletinSlugs(): Promise<string[]> {
   );
   if (result && result.length > 0) return result;
   return staticBulletins.map((b) => b.slug.current);
+}
+
+export async function fetchBulletinSlugsWithDates(): Promise<SlugWithDate[]> {
+  const result = await sanityFetch<SlugWithDate[]>(bulletinSlugsWithDatesQuery, undefined, ["bulletins"]);
+  if (result && result.length > 0) return result;
+  return staticBulletins.map((b) => ({ slug: b.slug.current, _updatedAt: new Date().toISOString() }));
 }

@@ -61,6 +61,16 @@ const nextConfig: NextConfig = {
         destination: '/anomaly/the-greenbrier-ghost',
         permanent: true,
       },
+      {
+        source: '/cryptid/Devil%20Monkey',
+        destination: '/cryptid/devil-monkey',
+        permanent: true,
+      },
+      {
+        source: '/cryptid/brown-mountain-lights',
+        destination: '/anomaly/brown-mountain-lights',
+        permanent: true,
+      },
     ];
   },
   async headers() {

@@ -1,13 +1,17 @@
 import type { MetadataRoute } from "next";
-import { fetchCryptidSlugs, fetchAnomalySlugs, fetchBulletinSlugs } from "@/lib/sanity/fetchers";
+import {
+  fetchCryptidSlugsWithDates,
+  fetchAnomalySlugsWithDates,
+  fetchBulletinSlugsWithDates,
+} from "@/lib/sanity/fetchers";
 
 const BASE_URL = "https://appalachiancryptid.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [cryptidSlugs, anomalySlugs, bulletinSlugs] = await Promise.all([
-    fetchCryptidSlugs(),
-    fetchAnomalySlugs(),
-    fetchBulletinSlugs(),
+  const [cryptids, anomalies, bulletins] = await Promise.all([
+    fetchCryptidSlugsWithDates(),
+    fetchAnomalySlugsWithDates(),
+    fetchBulletinSlugsWithDates(),
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -61,23 +65,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const cryptidPages: MetadataRoute.Sitemap = cryptidSlugs.map((slug) => ({
-    url: `${BASE_URL}/cryptid/${slug}`,
-    lastModified: new Date(),
+  const cryptidPages: MetadataRoute.Sitemap = cryptids.map((c) => ({
+    url: `${BASE_URL}/cryptid/${c.slug}`,
+    lastModified: new Date(c._updatedAt),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
 
-  const anomalyPages: MetadataRoute.Sitemap = anomalySlugs.map((slug) => ({
-    url: `${BASE_URL}/anomaly/${slug}`,
-    lastModified: new Date(),
+  const anomalyPages: MetadataRoute.Sitemap = anomalies.map((a) => ({
+    url: `${BASE_URL}/anomaly/${a.slug}`,
+    lastModified: new Date(a._updatedAt),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  const bulletinPages: MetadataRoute.Sitemap = bulletinSlugs.map((slug) => ({
-    url: `${BASE_URL}/bulletin/${slug}`,
-    lastModified: new Date(),
+  const bulletinPages: MetadataRoute.Sitemap = bulletins.map((b) => ({
+    url: `${BASE_URL}/bulletin/${b.slug}`,
+    lastModified: new Date(b._updatedAt),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));

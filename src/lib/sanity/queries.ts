@@ -100,6 +100,9 @@ export const relatedCryptidsQuery = `*[_type == "cryptid" && slug.current != $sl
 // Get all cryptid slugs (for generateStaticParams)
 export const cryptidSlugsQuery = `*[_type == "cryptid"].slug.current`;
 
+// Slugs with _updatedAt (for sitemap)
+export const cryptidSlugsWithDatesQuery = `*[_type == "cryptid"]{ "slug": slug.current, _updatedAt }`;
+
 // ── ANOMALY QUERIES ──────────────────────────────────────────
 
 const anomalyListFields = `
@@ -196,6 +199,9 @@ export const relatedAnomaliesQuery = `*[_type == "anomaly" && slug.current != $s
 // Get all anomaly slugs (for generateStaticParams)
 export const anomalySlugsQuery = `*[_type == "anomaly"].slug.current`;
 
+// Slugs with _updatedAt (for sitemap)
+export const anomalySlugsWithDatesQuery = `*[_type == "anomaly"]{ "slug": slug.current, _updatedAt }`;
+
 // ── BULLETIN QUERIES ──────────────────────────────────────────
 
 const bulletinListFields = `
@@ -230,3 +236,6 @@ export const bulletinBySlugQuery = `*[_type == "bulletin" && slug.current == $sl
 }`;
 
 export const bulletinSlugsQuery = `*[_type == "bulletin"].slug.current`;
+
+// Slugs with _updatedAt (for sitemap)
+export const bulletinSlugsWithDatesQuery = `*[_type == "bulletin"]{ "slug": slug.current, _updatedAt }`;
