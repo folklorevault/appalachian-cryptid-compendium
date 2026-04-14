@@ -33,11 +33,11 @@ const specialElite = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Appalachian Cryptids List | Most Reported Sightings",
+    default: "Appalachian Cryptids List | Appalachian Cryptid Bureau",
     template: "%s | Appalachian Cryptids List",
   },
   description:
-    "Appalachian cryptids list featuring the most reported sightings, including Mothman, Not Deer, Wampus Cat, and more.",
+    "A list of cryptids associated with the Appalachian region, cataloged and documented by the Appalachian Cryptid Bureau.",
   metadataBase: new URL("https://appalachiancryptid.com"),
   openGraph: {
     siteName: "Appalachian Cryptids List",
