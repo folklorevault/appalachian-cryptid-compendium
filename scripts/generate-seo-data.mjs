@@ -67,12 +67,6 @@ async function main() {
     type: 'website',
   };
 
-  seoData['/field-guide'] = {
-    title: 'Field Guide - Complete Reference | Appalachian Cryptids List',
-    description: "A naturalist's field guide to the cryptids, creatures, anomalies, and strange phenomena of the Appalachian Mountains and American South.",
-    type: 'website',
-  };
-
   seoData['/anomalies'] = {
     title: 'Anomalies Desk | Appalachian Cryptids List',
     description: 'Lights, hauntings, curses, and other unresolved Appalachian incidents, cataloged like field reports.',

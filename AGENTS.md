@@ -30,7 +30,6 @@ npm run lint       # ESLint
 Pages live in `src/app/` using Next.js file-based routing:
 
 - `page.tsx` — Homepage (cryptid directory with filters)
-- `field-guide/page.tsx` — Full field guide
 - `cryptid/[slug]/page.tsx` — Cryptid detail (SSG with `generateStaticParams`)
 - `anomalies/page.tsx` — Anomalies directory
 - `anomaly/[slug]/page.tsx` — Anomaly detail (SSG)

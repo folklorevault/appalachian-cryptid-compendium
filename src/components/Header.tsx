@@ -36,7 +36,7 @@ export const Header = () => {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/" || pathname === "/field-guide";
+    if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
   };
 

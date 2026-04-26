@@ -55,6 +55,13 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  --color-bureau-stamp: hsl(var(--bureau-stamp));
+  --color-bureau-manila: hsl(var(--bureau-manila));
+  --color-bureau-manila-dark: hsl(var(--bureau-manila-dark));
+  --color-bureau-manila-light: hsl(var(--bureau-manila-light));
+  --color-bureau-ink: hsl(var(--bureau-ink));
+  --color-bureau-ink-muted: hsl(var(--bureau-ink-muted));
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);

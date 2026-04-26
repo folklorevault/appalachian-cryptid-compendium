@@ -57,6 +57,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/field-guide',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/anomaly/the-greenbriar-ghost',
         destination: '/anomaly/the-greenbrier-ghost',
         permanent: true,

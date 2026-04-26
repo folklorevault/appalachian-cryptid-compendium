@@ -15,7 +15,8 @@ const listFields = `
   image,
   imageAlt,
   gridImage,
-  tags
+  tags,
+  featured
 `;
 
 const detailFields = `

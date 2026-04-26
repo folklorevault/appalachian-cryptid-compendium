@@ -1,25 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { fetchCryptids } from "@/lib/sanity/fetchers";
+import { fetchCryptids, fetchBulletins } from "@/lib/sanity/fetchers";
 import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { FeaturedCryptid } from "@/components/FeaturedCryptid";
+import { BulletinTeaser } from "@/components/BulletinTeaser";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
+  title: "Appalachian Cryptid Field Guide — Creatures of the Mountains & the American South",
+  description:
+    "A catalog of cryptids, monsters, and unexplained mysteries from West Virginia, Tennessee, Virginia, North Carolina, and the greater American South. Documented by the Appalachian Cryptid Bureau.",
   alternates: {
     canonical: "/",
   },
 };
 
 export default async function Home() {
-  const cryptids = await fetchCryptids();
+  const [cryptids, bulletins] = await Promise.all([
+    fetchCryptids(),
+    fetchBulletins(),
+  ]);
+
+  const featuredCryptid =
+    cryptids.find((c) => c.featured) ?? cryptids[0] ?? null;
 
   return (
     <div className="min-h-screen bg-background paper-texture">
       <main id="main-content">
-        {/* ── Hero ─────────────────────────────────── */}
-        <section className="relative py-20 px-6 lg:py-24 lg:px-8 text-center overflow-hidden">
-          {/* Subtle green gradient overlay */}
+
+        {/* ── Hero ─────────────────────────────────────────────────── */}
+        <section className="relative py-16 px-6 lg:py-20 lg:px-8 text-center overflow-hidden border-b border-border">
+          {/* Subtle top gradient */}
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden="true"
@@ -30,63 +42,94 @@ export default async function Home() {
           />
 
           <div className="relative z-10 max-w-[680px] mx-auto">
-            {/* Classification label with decorative rules */}
-            <div className="flex items-center justify-center gap-3.5 mb-6">
-              <span
-                className="block w-10 h-px bg-border"
-                aria-hidden="true"
-              />
+            {/* Classification label */}
+            <div className="flex items-center justify-center gap-3.5 mb-6" aria-hidden="true">
+              <span className="block w-10 h-px bg-border" />
               <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-[hsl(var(--bureau-ink-muted))]">
                 Appalachian Cryptid Division — Working Document
               </span>
-              <span
-                className="block w-10 h-px bg-border"
-                aria-hidden="true"
-              />
+              <span className="block w-10 h-px bg-border" />
             </div>
 
             {/* Heading */}
-            <h1 className="font-display font-bold text-foreground leading-[1.08] tracking-tight mb-7 text-[clamp(2.2rem,5.5vw,3.75rem)]">
+            <h1 className="font-display font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-[clamp(2.2rem,5.5vw,3.75rem)]">
               Creatures of the Mountains
               <br />
-              <span className="text-primary block">
-                &amp; the American South
-              </span>
+              <span className="text-primary block">and the American South</span>
             </h1>
 
-            {/* Typewriter description */}
-            <p className="font-typewriter text-sm text-muted-foreground leading-relaxed max-w-[480px] mx-auto mb-3 tracking-wide">
-              Front-porch stories, backroad sightings, and local legends from
-              the mountains and hollers of Appalachia and the American South.
+            {/* SEO description */}
+            <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-[520px] mx-auto mb-2">
+              The <strong className="text-foreground font-semibold">Appalachian Cryptid Field Guide</strong> documents cryptids, monsters, unexplained mysteries and lore from the hollers of{" "}
+              <strong className="text-foreground font-semibold">West Virginia</strong>,{" "}
+              <strong className="text-foreground font-semibold">Tennessee</strong>,{" "}
+              <strong className="text-foreground font-semibold">Virginia</strong>,{" "}
+              <strong className="text-foreground font-semibold">North Carolina</strong> and the greater American South.
             </p>
 
-            {/* Provenance line */}
-            <p className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] tracking-wider opacity-65">
-              Compiled from witness reports and ongoing field research
+            {/* Typewriter tagline */}
+            <p className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] tracking-wider opacity-70 mb-10">
+              Each entry is documented, cross-referenced, and filed.
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap justify-center gap-4 mt-10">
+            {/* Quick links */}
+            <div className="flex flex-wrap justify-center gap-3">
               <Link
                 href="#field-guide"
-                className="font-typewriter text-sm tracking-[0.08em] uppercase text-primary-foreground bg-primary px-7 py-3 hover:bg-primary/90 transition-colors"
+                className="font-display font-bold uppercase tracking-widest text-xs text-primary-foreground bg-primary border-[3px] border-primary rounded-sm px-6 py-3 shadow-[inset_0_0_0_2px_hsl(var(--primary-foreground)/0.25)] hover:bg-primary/90 transition-colors"
               >
                 Explore the Guide
               </Link>
-              <Link
-                href="/report"
-                className="font-typewriter text-sm tracking-[0.08em] uppercase text-[hsl(var(--bureau-stamp))] border-2 border-[hsl(var(--bureau-stamp))] px-6 py-2.5 opacity-85 hover:opacity-100 hover:bg-[hsl(var(--bureau-stamp)/0.05)] transition-all -rotate-1"
-              >
-                Report a Sighting
-              </Link>
+              {[
+                { href: "/map", label: "Sightings Map" },
+                { href: "/bulletins", label: "Bureau Bulletins" },
+              ].map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="font-display font-bold uppercase tracking-widest text-xs text-bureau-stamp border-[3px] border-bureau-stamp rounded-sm bg-bureau-manila/85 px-6 py-3 shadow-[inset_0_0_0_2px_hsl(var(--bureau-stamp))] hover:bg-bureau-stamp/10 transition-colors"
+                >
+                  {label}
+                </Link>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ── Filters + Card Grid ─────────────────── */}
-        <CryptidFilters cryptids={cryptids} />
+        {/* ── Editorial Row: Featured Cryptid + Bulletin Teasers ────── */}
+        {(featuredCryptid || bulletins.length > 0) && (
+          <section className="border-b border-border" aria-label="Featured case file and recent bulletins">
+            <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                {featuredCryptid && (
+                  <FeaturedCryptid cryptid={featuredCryptid} />
+                )}
+                {bulletins.length > 0 && (
+                  <BulletinTeaser bulletins={bulletins} />
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
-        {/* ── Newsletter ──────────────────────────── */}
+        {/* ── Cryptid Directory ─────────────────────────────────────── */}
+        <section
+          id="field-guide"
+          className="py-8 border-b border-border"
+          aria-label="Cryptid directory"
+        >
+          <div className="max-w-6xl mx-auto px-6 lg:px-8 mb-6">
+            <p className="font-typewriter text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+              Bureau Active Case Files — {cryptids.length} Entries
+            </p>
+            <h2 className="font-display font-bold text-2xl text-foreground">
+              The Case Drawers
+            </h2>
+          </div>
+          <CryptidFilters cryptids={cryptids} />
+        </section>
+
+        {/* ── Newsletter ────────────────────────────────────────────── */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">
           <div className="max-w-6xl mx-auto text-center">
             <p className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">
@@ -102,6 +145,7 @@ export default async function Home() {
             <NewsletterSignup />
           </div>
         </section>
+
       </main>
 
       <Footer variant="full" />

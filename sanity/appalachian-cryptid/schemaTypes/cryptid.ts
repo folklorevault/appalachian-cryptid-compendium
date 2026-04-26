@@ -18,6 +18,13 @@ export default defineType({
       description: 'A one to two sentence micro intro displayed under the name',
     }),
     defineField({
+      name: 'featured',
+      title: 'Featured on Homepage',
+      type: 'boolean',
+      description: 'Show this cryptid in the "Featured Case File" slot on the homepage. If multiple are flagged, the most recently added wins.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',

@@ -29,6 +29,7 @@ export interface Cryptid {
   testimonies: Testimony[];
   notableSightings: string;
   bureauNotes: string;
+  featured?: boolean;
 }
 
 export const cryptids: Cryptid[] = [

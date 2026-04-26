@@ -22,12 +22,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${BASE_URL}/field-guide`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
       url: `${BASE_URL}/anomalies`,
       lastModified: new Date(),
       changeFrequency: "weekly",

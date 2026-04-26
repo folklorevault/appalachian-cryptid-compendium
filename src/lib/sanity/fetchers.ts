@@ -104,6 +104,7 @@ function convertStaticToSanityFormat(
     })),
     notableSightings: cryptid.notableSightings,
     bureauNotes: cryptid.bureauNotes,
+    featured: cryptid.featured,
   };
 }
 

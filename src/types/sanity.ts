@@ -65,6 +65,7 @@ export interface SanityCryptid {
   notableSightings?: string
   bureauNotes?: string
   declassifiedBriefings?: SanityDeclassifiedBriefing[]
+  featured?: boolean
 }
 
 // Type for list queries (less data)
@@ -83,6 +84,7 @@ export interface SanityCryptidListItem {
   imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
+  featured?: boolean
 }
 
 // Type for map queries (minimal data with coordinates)
