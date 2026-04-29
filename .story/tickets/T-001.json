@@ -1,0 +1,12 @@
+{
+  "blockedBy": [],
+  "completedDate": null,
+  "createdDate": "2026-04-29",
+  "description": "The `featured` boolean was added to the cryptid schema last session but the studio at appalachian-cryptid.sanity.studio hasn't been redeployed. Until it is, editors can't tick the checkbox in the CMS.\n\nSteps:\n1. cd sanity/appalachian-cryptid\n2. npm run deploy\n3. Open the studio, tick \"Featured on Homepage\" on a cryptid, publish\n4. Confirm the homepage 'Featured Case File' slot updates after the revalidation webhook fires",
+  "id": "T-001",
+  "order": 10,
+  "phase": "homepage-polish",
+  "status": "open",
+  "title": "Deploy Sanity studio so 'Featured on Homepage' checkbox is editable",
+  "type": "chore"
+}

@@ -1,0 +1,14 @@
+{
+  "blockers": [],
+  "date": "2026-04-29",
+  "phases": [
+    {
+      "description": "Wrap the homepage redesign and the deferred sightings map teaser; deploy CMS schema changes.",
+      "id": "homepage-polish",
+      "label": "PHASE 1",
+      "name": "Homepage Polish",
+      "summary": "Finish the field-guide-to-homepage migration"
+    }
+  ],
+  "title": "appalachian-cryptid-compendium"
+}

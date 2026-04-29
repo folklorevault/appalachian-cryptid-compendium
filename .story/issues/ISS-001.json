@@ -1,0 +1,14 @@
+{
+  "components": [],
+  "discoveredDate": "2026-04-29",
+  "id": "ISS-001",
+  "impact": "While building T-002 (sightings map teaser), discovered the live Sanity data contains cryptid entries with positive longitudes (e.g. lng=+83 instead of -83) or swapped lat/lng pairs. The teaser projects them to x≈10000+ and clips them off-grid, but the /map page may show them in the wrong hemisphere or fail to display them. Likely affects multiple entries beyond the static fallback set. Editor should audit the cryptid coordinates field in the studio and ensure all entries use Western-hemisphere negative longitudes (between roughly -94 and -75 for the Appalachian region). Static fallbacks in src/lib/sanity/fetchers.ts are correct.",
+  "location": [],
+  "phase": null,
+  "relatedTickets": [],
+  "resolution": null,
+  "resolvedDate": null,
+  "severity": "medium",
+  "status": "open",
+  "title": "Some cryptid coordinates in Sanity have inverted/positive longitudes"
+}

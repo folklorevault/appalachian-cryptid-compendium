@@ -1,0 +1,12 @@
+{
+  "blockedBy": [],
+  "completedDate": null,
+  "createdDate": "2026-04-29",
+  "description": "Discovered last session: memo-paper styling is duplicated in src/app/globals.css and src/index.css. The Next.js App Router only loads globals.css, so the index.css copy is dead weight (likely Vite-era leftover).\n\nTasks:\n- Confirm src/index.css is not imported anywhere active\n- Remove the duplicate memo-paper rules (or delete src/index.css entirely if unused)\n- Verify visually that memo-paper components (FeaturedCryptid, BulletinTeaser pre-redesign references) still render correctly — though both have been redesigned to drawer-index style, so memo-paper may now be unused everywhere",
+  "id": "T-003",
+  "order": 30,
+  "phase": "homepage-polish",
+  "status": "open",
+  "title": "Dedupe memo-paper CSS classes across globals.css and index.css",
+  "type": "chore"
+}

@@ -5,6 +5,7 @@ import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { FeaturedCryptid } from "@/components/FeaturedCryptid";
 import { BulletinTeaser } from "@/components/BulletinTeaser";
+import { SightingsMapTeaser } from "@/components/SightingsMapTeaser";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -128,6 +129,9 @@ export default async function Home() {
           </div>
           <CryptidFilters cryptids={cryptids} />
         </section>
+
+        {/* ── Sightings Map Teaser ──────────────────────────────────── */}
+        <SightingsMapTeaser />
 
         {/* ── Newsletter ────────────────────────────────────────────── */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">

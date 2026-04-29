@@ -1,0 +1,21 @@
+{
+  "features": {
+    "handovers": true,
+    "issues": true,
+    "reviews": true,
+    "roadmap": true,
+    "tickets": true
+  },
+  "language": "typescript",
+  "project": "appalachian-cryptid-compendium",
+  "type": "webapp",
+  "version": 2,
+  "recipeOverrides": {
+    "handoverInterval": 3,
+    "maxTicketsPerSession": 0,
+    "reviewBackends": [
+      "lenses",
+      "agent"
+    ]
+  }
+}

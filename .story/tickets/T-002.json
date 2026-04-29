@@ -1,0 +1,12 @@
+{
+  "blockedBy": [],
+  "completedDate": "2026-04-29",
+  "createdDate": "2026-04-29",
+  "description": "Add a vintage SVG sightings teaser to the homepage between the Featured/Bulletins row and the Cryptid Directory. Replaces the removed MapCTA. Pure SSR, no Mapbox.\n\n## Component\n- New: `src/components/SightingsMapTeaser.tsx` (server component, ~150 lines)\n- New: `src/data/appalachian-borders.ts` — pre-generated SVG path strings for TN/NC/VA/WV/KY/GA/SC/AL state borders, baked once from public-domain GeoJSON. Zero runtime mapping deps.\n- Data: `fetchMapCryptids()` from `src/lib/sanity/fetchers.ts` (already exists; returns SanityCryptidMapItem[] with real lat/lng)\n- Mounted in `src/app/page.tsx` between the editorial row and `#field-guide`\n\n## Border data approach\n- Source: us-atlas TopoJSON (CC0) or Natural Earth state borders\n- One-time conversion during implementation: TopoJSON → GeoJSON → simplified SVG paths via Mapshaper (~200-500 vertices per state)\n- Output committed as a TS module exporting per-state path strings + a unified projection viewBox\n- No runtime dependencies on d3-geo, topojson-client, or us-atlas\n\n## Visual layers (back to front)\n1. **Graph paper grid** — inline SVG `<pattern>` of dotted lines, bureau-ink at low opacity\n2. **State borders** — real geographic outlines for the 8 Appalachian states, dashed stamp-ink stroke. Looks survey-grade but still aesthetically aged.\n3. **Coordinate ticks** — lat/lng tick marks along the edges in typewriter font\n4. **Sighting dots** — one per cryptid, positioned via equirectangular projection matching the border data's projection. Color by dangerLevel (red/amber/green). Faint crosshair around each.\n5. **Stamp overlay** — \"CLASSIFIED — SIGHTING GRID\" diagonal text in a corner\n6. **CTA** — Stamp button \"Open Full Sightings Map →\" linking to `/map`, reuses existing `border-bureau-stamp` styling\n\n## Out of scope\n- Hover tooltips on dots\n- Click-through to individual cryptids from teaser\n- Mobile interactivity / haptics\n\n## Acceptance\n- Renders on homepage above the case drawers\n- All ~36 cryptid coordinates plot inside their correct state borders\n- Looks like a vintage USGS survey chart, not a screenshot of a map app\n- Zero new client-side JS; works with JS disabled\n- No CLS (fixed aspect ratio)\n\n",
+  "id": "T-002",
+  "order": 20,
+  "phase": "homepage-polish",
+  "status": "complete",
+  "title": "Homepage sightings map teaser (vintage SVG surveillance grid)",
+  "type": "feature"
+}
