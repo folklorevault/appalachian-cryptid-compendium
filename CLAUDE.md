@@ -15,13 +15,22 @@ The Appalachian Cryptid Compendium is a Next.js web application for cataloging c
 
 ## Development Commands
 
+This project uses [mise](https://mise.jdx.dev) to pin Node and drive tasks. `mise.toml` at the repo root declares the toolchain (Node 22) and tasks. Prefer `mise <task>` over `npm run` so the right Node version and `.env.local` are always loaded.
+
 ```bash
-npm i              # Install dependencies
-npm run dev        # Start dev server (http://localhost:3000)
-npm run build      # Production build
-npm run start      # Serve production build
-npm run lint       # ESLint
+mise install          # Install pinned Node version (one-time, on fresh checkout)
+mise dev              # Start the Next.js dev server (http://localhost:3000)
+mise build            # Production build
+mise start            # Serve the production build
+mise lint             # ESLint
+mise typecheck        # tsc --noEmit
+mise borders:generate # Re-run the Appalachian state-borders generator
+mise studio:dev       # Run the Sanity studio locally
+mise studio:deploy    # Deploy the Sanity studio
+mise tasks ls         # List all tasks
 ```
+
+The underlying npm scripts (`npm run dev`, etc.) still work, but `mise` activation handles Node version + env file loading automatically when you `cd` into the directory.
 
 ## Architecture
 

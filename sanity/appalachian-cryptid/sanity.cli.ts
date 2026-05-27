@@ -5,7 +5,9 @@ export default defineCliConfig({
     projectId: '8thljucm',
     dataset: 'production'
   },
+  studioHost: 'appalachian-cryptid',
   deployment: {
+    appId: 'ihdin7jjf6rhagit49j0gpys',
     /**
      * Enable auto-updates for studios.
      * Learn more at https://www.sanity.io/docs/cli#auto-updates
