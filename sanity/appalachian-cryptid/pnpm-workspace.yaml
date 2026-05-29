@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: true
+overrides:
+  js-yaml: ">=3.14.2"
+  # Security overrides — transitive vulnerabilities flagged by pnpm audit / Dependabot
+  "uuid@<11.1.1": ">=11.1.1"
+  "uuid@>=13.0.0 <13.0.1": ">=13.0.1"
+  "dompurify@<3.4.0": ">=3.4.0"

@@ -2,6 +2,7 @@
   "name": "appalachian-cryptid-compendium",
   "private": true,
   "version": "2.0.0",
+  "packageManager": "pnpm@11.4.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -53,9 +54,5 @@
     "topojson-client": "^3.1.0",
     "typescript": "^6.0.0",
     "us-atlas": "^3.0.1"
-  },
-  "overrides": {
-    "@types/react": "19.2.15",
-    "@types/react-dom": "19.2.3"
   }
 }
