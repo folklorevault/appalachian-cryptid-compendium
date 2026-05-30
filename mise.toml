@@ -1,28 +1,29 @@
 [tools]
 node = "24"
+pnpm = "11"
 
 [env]
 _.file = ".env.local"
 
 [tasks.dev]
 description = "Start the Next.js dev server"
-run = "next dev"
+run = "pnpm exec next dev"
 
 [tasks.build]
 description = "Production build"
-run = "next build --webpack"
+run = "pnpm exec next build --webpack"
 
 [tasks.start]
 description = "Serve the production build"
-run = "next start"
+run = "pnpm exec next start"
 
 [tasks.lint]
 description = "Run ESLint"
-run = "eslint ."
+run = "pnpm exec eslint ."
 
 [tasks.typecheck]
 description = "TypeScript check (no emit)"
-run = "tsc --noEmit"
+run = "pnpm exec tsc --noEmit"
 
 [tasks."borders:generate"]
 description = "Regenerate src/data/appalachian-borders.ts from us-atlas TopoJSON"
@@ -31,9 +32,9 @@ run = "node scripts/generate-appalachian-borders.mjs"
 [tasks."studio:dev"]
 description = "Run the Sanity studio locally"
 dir = "sanity/appalachian-cryptid"
-run = "npm run dev"
+run = "pnpm run dev"
 
 [tasks."studio:deploy"]
 description = "Deploy the Sanity studio to appalachian-cryptid.sanity.studio"
 dir = "sanity/appalachian-cryptid"
-run = "npm run deploy"
+run = "pnpm run deploy"

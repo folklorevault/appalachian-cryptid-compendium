@@ -2,6 +2,7 @@
   "name": "appalachian-cryptid-compendium",
   "private": true,
   "version": "2.0.0",
+  "packageManager": "pnpm@11.4.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -22,8 +23,8 @@
     "botid": "^1.5.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.0.0",
-    "mapbox-gl": "^3.16.0",
+    "lucide-react": "^1.17.0",
+    "mapbox-gl": "^3.24.0",
     "next": "^16.2.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
@@ -53,9 +54,5 @@
     "topojson-client": "^3.1.0",
     "typescript": "^6.0.0",
     "us-atlas": "^3.0.1"
-  },
-  "overrides": {
-    "@types/react": "19.2.15",
-    "@types/react-dom": "19.2.3"
   }
 }

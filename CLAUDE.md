@@ -15,10 +15,11 @@ The Appalachian Cryptid Compendium is a Next.js web application for cataloging c
 
 ## Development Commands
 
-This project uses [mise](https://mise.jdx.dev) to pin Node and drive tasks. `mise.toml` at the repo root declares the toolchain (Node 22) and tasks. Prefer `mise <task>` over `npm run` so the right Node version and `.env.local` are always loaded.
+This project uses [mise](https://mise.jdx.dev) to pin Node + pnpm and drive tasks. `mise.toml` at the repo root declares the toolchain (Node 24, pnpm 11) and tasks. Prefer `mise <task>` over running binaries directly so the right Node version and `.env.local` are always loaded.
 
 ```bash
-mise install          # Install pinned Node version (one-time, on fresh checkout)
+mise install          # Install pinned Node + pnpm versions (one-time, on fresh checkout)
+pnpm install          # Install dependencies
 mise dev              # Start the Next.js dev server (http://localhost:3000)
 mise build            # Production build
 mise start            # Serve the production build
@@ -30,7 +31,7 @@ mise studio:deploy    # Deploy the Sanity studio
 mise tasks ls         # List all tasks
 ```
 
-The underlying npm scripts (`npm run dev`, etc.) still work, but `mise` activation handles Node version + env file loading automatically when you `cd` into the directory.
+The project uses **pnpm** as its package manager. Lockfiles are `pnpm-lock.yaml` at both the root and inside `sanity/appalachian-cryptid/`. pnpm settings (overrides, allowed build scripts) live in `pnpm-workspace.yaml` files alongside each `package.json`.
 
 ## Architecture
 
@@ -112,9 +113,9 @@ CSP and security headers are configured in `next.config.ts` via the `headers()` 
 ## Sanity Studio Setup
 
 ```bash
-cd sanity/appalachian-cryptid && npm install
-npm run dev       # Local studio
-npm run deploy    # Deploy to sanity.studio
+cd sanity/appalachian-cryptid && pnpm install
+pnpm run dev       # Local studio
+pnpm run deploy    # Deploy to sanity.studio
 ```
 
 ## Security Practices
