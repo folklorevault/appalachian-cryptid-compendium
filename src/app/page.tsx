@@ -113,6 +113,19 @@ export default async function Home() {
           </section>
         )}
 
+        {/* ── Newsletter (slim, inline) ─────────────────────────────── */}
+        <section
+          className="border-b border-border bg-card/30"
+          aria-label="Email newsletter signup"
+        >
+          <div className="max-w-3xl mx-auto px-6 lg:px-8 py-6">
+            <p className="font-typewriter text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3 text-center">
+              Bureau Dispatches — Standing Order
+            </p>
+            <NewsletterSignup variant="compact" />
+          </div>
+        </section>
+
         {/* ── Cryptid Directory ─────────────────────────────────────── */}
         <section
           id="field-guide"
