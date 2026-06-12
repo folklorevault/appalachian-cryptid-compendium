@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The Appalachian Cryptid Compendium is a Next.js web application for cataloging cryptid sightings in the Appalachian region. Built with a "forgotten bureau field guide" aesthetic.
 
-- **Framework**: Next.js 15 (App Router) + React 18 + TypeScript
+- **Framework**: Next.js 16 (App Router) + React 19 + TypeScript
 - **Styling**: Tailwind CSS + shadcn/ui
 - **CMS**: Sanity CMS (project ID: `8thljucm`, dataset: `production`)
 - **Hosting**: Vercel

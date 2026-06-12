@@ -22,6 +22,7 @@ dist
 # Next.js
 .next/
 out/
+tsconfig.tsbuildinfo
 
 # Generated at build time
 public/seo-data.json
@@ -43,3 +44,6 @@ dist-ssr
 .cursor/rules/snyk_rules.mdc
 .vercel
 gitleaks-baseline.json
+
+# Local session-handoff buffer (claude-mem / remember plugin)
+.remember/
