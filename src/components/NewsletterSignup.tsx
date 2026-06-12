@@ -8,10 +8,11 @@ type SignupState = "idle" | "submitting" | "success" | "error";
 
 interface NewsletterSignupProps {
   variant?: "full" | "compact";
+  initialEmail?: string;
 }
 
-function useNewsletterForm() {
-  const [email, setEmail] = useState("");
+function useNewsletterForm(initialEmail = "") {
+  const [email, setEmail] = useState(initialEmail);
   const [state, setState] = useState<SignupState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   // Honeypot: hidden field that bots auto-fill
@@ -64,8 +65,8 @@ function useNewsletterForm() {
 // ─── COMPACT VARIANT ───────────────────────────────────────
 // Slim inline strip for detail pages - no clips, stamps, or letterhead
 
-const CompactSignup = () => {
-  const { email, setEmail, state, setState, errorMsg, website, setWebsite, handleSubmit } = useNewsletterForm();
+const CompactSignup = ({ initialEmail }: { initialEmail?: string }) => {
+  const { email, setEmail, state, setState, errorMsg, website, setWebsite, handleSubmit } = useNewsletterForm(initialEmail);
 
   if (state === "success") {
     return (
@@ -355,7 +356,7 @@ const FullSignup = () => {
 
 // ─── EXPORT ────────────────────────────────────────────────
 
-export const NewsletterSignup = ({ variant = "full" }: NewsletterSignupProps) => {
-  if (variant === "compact") return <CompactSignup />;
+export const NewsletterSignup = ({ variant = "full", initialEmail }: NewsletterSignupProps) => {
+  if (variant === "compact") return <CompactSignup initialEmail={initialEmail} />;
   return <FullSignup />;
 };

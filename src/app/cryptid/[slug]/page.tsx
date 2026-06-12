@@ -28,6 +28,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { FieldSupplyDrop } from "@/components/FieldSupplyDrop";
 import { Footer } from "@/components/Footer";
 import {
@@ -381,6 +382,12 @@ export default async function CryptidDetailPage({
               <FieldSupplyDrop variant="detail" />
             </div>
           </div>
+
+          {/* Inline conversion: file a sighting for THIS cryptid */}
+          <ReportSightingCTA
+            cryptidName={cryptid.name}
+            cryptidSlug={cryptid.slug?.current}
+          />
 
           {/* Related Cryptids */}
           {relatedCryptids.filter((r) => r.gridImage).length > 0 && (

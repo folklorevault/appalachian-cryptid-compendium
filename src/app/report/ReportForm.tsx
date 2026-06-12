@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { SightingReceipt } from "@/components/SightingReceipt";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,17 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MapPin, Calendar, FileText, Send, Loader2 } from "lucide-react";
+import { MapPin, FileText, Send, Loader2, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface FormErrors {
-  witnessName?: string;
-  email?: string;
-  date?: string;
-  location?: string;
-  state?: string;
   description?: string;
-  physicalDescription?: string;
+  email?: string;
 }
 
 interface SubmissionData {
@@ -33,16 +28,36 @@ interface SubmissionData {
   location: string;
   state: string;
   creatureName?: string;
+  email?: string;
 }
+
+// Appalachian Regional Commission's 13 states, plus the catch-all so people
+// outside the region don't bounce off a rigid dropdown.
+const APPALACHIAN_STATES = [
+  "Alabama",
+  "Georgia",
+  "Kentucky",
+  "Maryland",
+  "Mississippi",
+  "New York",
+  "North Carolina",
+  "Ohio",
+  "Pennsylvania",
+  "South Carolina",
+  "Tennessee",
+  "Virginia",
+  "West Virginia",
+  "Other / Unsure",
+];
 
 export function ReportForm() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submissionData, setSubmissionData] = useState<SubmissionData | null>(null);
-  // Anti-bot: honeypot field and timing
   const [honeypot, setHoneypot] = useState("");
   const [loadedAt] = useState(() => Date.now());
 
@@ -59,34 +74,24 @@ export function ReportForm() {
     behavior: "",
   });
 
+  // Pre-fill creature name from ?cryptid=... query (set by detail-page CTA).
+  useEffect(() => {
+    const cryptidParam = searchParams.get("cryptid");
+    if (cryptidParam) {
+      setFormData((prev) => ({ ...prev, creatureName: cryptidParam }));
+    }
+  }, [searchParams]);
+
   const validateField = useCallback((field: string, value: string): string | undefined => {
     switch (field) {
-      case "witnessName":
-        if (!value.trim()) return "Name is required";
-        if (value.trim().length < 2) return "Name must be at least 2 characters";
+      case "description":
+        if (!value.trim()) return "Please tell us what you saw.";
         return undefined;
       case "email":
-        if (!value.trim()) return "Email is required";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email";
-        return undefined;
-      case "date":
-        if (!value) return "Date is required";
-        if (new Date(value) > new Date()) return "Date cannot be in the future";
-        return undefined;
-      case "location":
-        if (!value.trim()) return "Location is required";
-        if (value.trim().length < 5) return "Please provide more location detail";
-        return undefined;
-      case "state":
-        if (!value) return "State is required";
-        return undefined;
-      case "description":
-        if (!value.trim()) return "Description is required";
-        if (value.trim().length < 50) return "Please provide at least 50 characters";
-        return undefined;
-      case "physicalDescription":
-        if (!value.trim()) return "Physical description is required";
-        if (value.trim().length < 20) return "Please provide at least 20 characters";
+        // Email is optional, but if provided it should look like an email.
+        if (value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return "That email address looks off.";
+        }
         return undefined;
       default:
         return undefined;
@@ -95,28 +100,16 @@ export function ReportForm() {
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
-    const requiredFields = ["witnessName", "email", "date", "location", "state", "description", "physicalDescription"];
-
-    requiredFields.forEach((field) => {
-      const error = validateField(field, formData[field as keyof typeof formData]);
-      if (error) {
-        newErrors[field as keyof FormErrors] = error;
-      }
-    });
-
+    const descError = validateField("description", formData.description);
+    if (descError) newErrors.description = descError;
+    const emailError = validateField("email", formData.email);
+    if (emailError) newErrors.email = emailError;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData, validateField]);
-
-  const states = [
-    "Alabama", "Arkansas", "Florida", "Georgia", "Kentucky",
-    "Louisiana", "Mississippi", "North Carolina", "South Carolina",
-    "Tennessee", "Texas", "Virginia", "West Virginia"
-  ];
+  }, [formData.description, formData.email, validateField]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (errors[field as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -128,32 +121,35 @@ export function ReportForm() {
     setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
+  const finalizeSubmission = () => {
+    setSubmissionData({
+      witnessName: formData.witnessName.trim() || "Anonymous",
+      date: formData.date,
+      location: formData.location.trim(),
+      state: formData.state || "Other / Unsure",
+      creatureName: formData.creatureName.trim() || undefined,
+      email: formData.email.trim() || undefined,
+    });
+    setSubmitted(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Mark all fields as touched
-    const allTouched = Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {});
-    setTouched(allTouched);
+    setTouched({ description: true, email: true });
 
     if (!validateForm()) {
       toast({
-        title: "Validation Error",
-        description: "Please fix the errors in the form before submitting.",
+        title: "Almost there.",
+        description: "Please add a description of what you saw.",
         variant: "destructive",
       });
       return;
     }
 
-    // Honeypot check — silently "succeed" so bots don't retry
+    // Honeypot: bots fill the hidden field. Fake success and bail.
     if (honeypot) {
-      setSubmissionData({
-        witnessName: formData.witnessName,
-        date: formData.date,
-        location: formData.location,
-        state: formData.state,
-        creatureName: formData.creatureName || undefined,
-      });
-      setSubmitted(true);
+      finalizeSubmission();
       return;
     }
 
@@ -162,53 +158,36 @@ export function ReportForm() {
     try {
       const response = await fetch("/api/sightings", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           witness_name: formData.witnessName,
           email: formData.email,
-          date: formData.date,
+          date: formData.date || undefined,
           time: formData.time || undefined,
           location: formData.location,
           state: formData.state,
-          creature_name: formData.creatureName || undefined,
+          creature_name: formData.creatureName,
           description: formData.description,
           physical_description: formData.physicalDescription,
-          behavior: formData.behavior || undefined,
+          behavior: formData.behavior,
           _t: loadedAt,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Failed to submit report" }));
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Failed to submit report" }));
         throw new Error(errorData.error || "Failed to submit report");
       }
 
-      // Store submission data and show receipt
-      setSubmissionData({
-        witnessName: formData.witnessName,
-        date: formData.date,
-        location: formData.location,
-        state: formData.state,
-        creatureName: formData.creatureName || undefined,
-      });
-      setSubmitted(true);
+      finalizeSubmission();
     } catch (error) {
-      // In dev mode, show the receipt anyway so we can test the UI
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === "development") {
         console.warn("[DEV MODE] API failed, showing receipt anyway:", error);
-        setSubmissionData({
-          witnessName: formData.witnessName,
-          date: formData.date,
-          location: formData.location,
-          state: formData.state,
-          creatureName: formData.creatureName || undefined,
-        });
-        setSubmitted(true);
+        finalizeSubmission();
         return;
       }
-
       toast({
         title: "Submission Failed",
         description: (error as Error).message || "Please try again later.",
@@ -229,7 +208,7 @@ export function ReportForm() {
       time: "",
       location: "",
       state: "",
-      creatureName: "",
+      creatureName: searchParams.get("cryptid") || "",
       description: "",
       physicalDescription: "",
       behavior: "",
@@ -238,306 +217,318 @@ export function ReportForm() {
     setErrors({});
   };
 
-  return (
-    <section className="pb-16 px-4">
+  if (submitted && submissionData) {
+    return (
+      <section className="pb-16 px-4">
         <div className="container mx-auto max-w-3xl">
-          {submitted && submissionData ? (
-            <>
-              <div className="text-center space-y-4 mb-8">
-                <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
-                  Report Submitted
-                </div>
-                <h1 className="text-[28px] font-bold text-foreground font-display">
-                  Report Filed Successfully
-                </h1>
-                <p className="text-muted-foreground max-w-xl mx-auto">
-                  Your sighting has been logged in the official record. Please retain this receipt for your files.
-                </p>
-              </div>
-              <SightingReceipt
-                submissionData={submissionData}
-                onFileAnother={handleFileAnother}
-              />
-            </>
-          ) : (
-            <>
-              <div className="text-center space-y-4 mb-8">
-                <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
-                  Submit Field Report
-                </div>
-                <h1 className="text-[28px] font-bold text-foreground font-display">
-                  Report a Sighting
-                </h1>
-                <p className="text-muted-foreground max-w-xl mx-auto">
-                  Your encounter could be vital to our research. Please provide as much detail as possible.
-                  All submissions are reviewed by our team and treated with confidentiality.
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Honeypot — visually hidden, traps bots */}
-            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} tabIndex={-1}>
-              <label htmlFor="website-report">Website</label>
-              <input id="website-report" type="text" name="website" autoComplete="off" tabIndex={-1} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+          <div className="text-center space-y-4 mb-8">
+            <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
+              Report Submitted
             </div>
-
-            {/* Witness Information */}
-            <Card className="border-2 border-border">
-              <fieldset>
-              <CardContent className="p-6 space-y-4">
-                <legend className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  WITNESS INFORMATION
-                </legend>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="witnessName">Your Name *</Label>
-                    <Input
-                      id="witnessName"
-                      value={formData.witnessName}
-                      onChange={(e) => handleInputChange("witnessName", e.target.value)}
-                      onBlur={() => handleBlur("witnessName")}
-                      placeholder="Enter your name"
-                      aria-invalid={touched.witnessName && !!errors.witnessName}
-                      aria-describedby={touched.witnessName && errors.witnessName ? "witnessName-error" : undefined}
-                      className={`bg-background border-border ${touched.witnessName && errors.witnessName ? "border-destructive" : ""}`}
-                    />
-                    {touched.witnessName && errors.witnessName && (
-                      <p id="witnessName-error" role="alert" className="text-xs text-destructive">{errors.witnessName}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      onBlur={() => handleBlur("email")}
-                      placeholder="your@email.com"
-                      aria-invalid={touched.email && !!errors.email}
-                      aria-describedby={touched.email && errors.email ? "email-error" : undefined}
-                      className={`bg-background border-border ${touched.email && errors.email ? "border-destructive" : ""}`}
-                    />
-                    {touched.email && errors.email && (
-                      <p id="email-error" role="alert" className="text-xs text-destructive">{errors.email}</p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-              </fieldset>
-            </Card>
-
-            {/* Sighting Details */}
-            <Card className="border-2 border-border">
-              <fieldset>
-              <CardContent className="p-6 space-y-4">
-                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <Calendar className="h-4 w-4" aria-hidden="true" />
-                  SIGHTING DATE & TIME
-                </legend>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="date">Date of Sighting *</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => handleInputChange("date", e.target.value)}
-                      onBlur={() => handleBlur("date")}
-                      max={new Date().toISOString().split('T')[0]}
-                      aria-invalid={touched.date && !!errors.date}
-                      aria-describedby={touched.date && errors.date ? "date-error" : undefined}
-                      className={`bg-background border-border ${touched.date && errors.date ? "border-destructive" : ""}`}
-                    />
-                    {touched.date && errors.date && (
-                      <p id="date-error" role="alert" className="text-xs text-destructive">{errors.date}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="time">Approximate Time</Label>
-                    <Input
-                      id="time"
-                      type="time"
-                      value={formData.time}
-                      onChange={(e) => handleInputChange("time", e.target.value)}
-                      className="bg-background border-border"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-              </fieldset>
-            </Card>
-
-            {/* Location */}
-            <Card className="border-2 border-border">
-              <fieldset>
-              <CardContent className="p-6 space-y-4">
-                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <MapPin className="h-4 w-4" aria-hidden="true" />
-                  LOCATION DETAILS
-                </legend>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Specific Location *</Label>
-                    <Input
-                      id="location"
-                      value={formData.location}
-                      onChange={(e) => handleInputChange("location", e.target.value)}
-                      onBlur={() => handleBlur("location")}
-                      placeholder="e.g., Near Pine Creek Trail"
-                      aria-invalid={touched.location && !!errors.location}
-                      aria-describedby={touched.location && errors.location ? "location-error" : undefined}
-                      className={`bg-background border-border ${touched.location && errors.location ? "border-destructive" : ""}`}
-                    />
-                    {touched.location && errors.location && (
-                      <p id="location-error" role="alert" className="text-xs text-destructive">{errors.location}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="state">State *</Label>
-                    <Select
-                      value={formData.state}
-                      onValueChange={(value) => {
-                        handleInputChange("state", value);
-                        setTouched((prev) => ({ ...prev, state: true }));
-                      }}
-                    >
-                      <SelectTrigger
-                        className={`bg-background border-border ${touched.state && errors.state ? "border-destructive" : ""}`}
-                        aria-invalid={touched.state && !!errors.state}
-                        aria-describedby={touched.state && errors.state ? "state-error" : undefined}
-                      >
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {states.map((state) => (
-                          <SelectItem key={state} value={state}>
-                            {state}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {touched.state && errors.state && (
-                      <p id="state-error" role="alert" className="text-xs text-destructive">{errors.state}</p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-              </fieldset>
-            </Card>
-
-            {/* Creature Description */}
-            <Card className="border-2 border-border">
-              <fieldset>
-              <CardContent className="p-6 space-y-4">
-                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
-                  <FileText className="h-4 w-4" aria-hidden="true" />
-                  CREATURE DESCRIPTION
-                </legend>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="creatureName">Known Cryptid Name (if identifiable)</Label>
-                    <Input
-                      id="creatureName"
-                      value={formData.creatureName}
-                      onChange={(e) => handleInputChange("creatureName", e.target.value)}
-                      placeholder="e.g., Mothman, Skunk Ape, Unknown"
-                      className="bg-background border-border"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Account of the Encounter *</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      onBlur={() => handleBlur("description")}
-                      placeholder="Describe what happened in as much detail as possible..."
-                      rows={5}
-                      aria-invalid={touched.description && !!errors.description}
-                      aria-describedby={touched.description && errors.description ? "description-error" : "description-hint"}
-                      className={`bg-background border-border resize-none ${touched.description && errors.description ? "border-destructive" : ""}`}
-                    />
-                    <div className="flex justify-between">
-                      {touched.description && errors.description ? (
-                        <p id="description-error" role="alert" className="text-xs text-destructive">{errors.description}</p>
-                      ) : (
-                        <span />
-                      )}
-                      <p id="description-hint" className="text-xs text-muted-foreground">{formData.description.length} / 50 min</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="physicalDescription">Physical Description of Creature *</Label>
-                    <Textarea
-                      id="physicalDescription"
-                      value={formData.physicalDescription}
-                      onChange={(e) => handleInputChange("physicalDescription", e.target.value)}
-                      onBlur={() => handleBlur("physicalDescription")}
-                      placeholder="Describe the creature's appearance: size, color, features..."
-                      rows={4}
-                      aria-invalid={touched.physicalDescription && !!errors.physicalDescription}
-                      aria-describedby={touched.physicalDescription && errors.physicalDescription ? "physicalDescription-error" : "physicalDescription-hint"}
-                      className={`bg-background border-border resize-none ${touched.physicalDescription && errors.physicalDescription ? "border-destructive" : ""}`}
-                    />
-                    <div className="flex justify-between">
-                      {touched.physicalDescription && errors.physicalDescription ? (
-                        <p id="physicalDescription-error" role="alert" className="text-xs text-destructive">{errors.physicalDescription}</p>
-                      ) : (
-                        <span />
-                      )}
-                      <p id="physicalDescription-hint" className="text-xs text-muted-foreground">{formData.physicalDescription.length} / 20 min</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="behavior">Observed Behavior</Label>
-                    <Textarea
-                      id="behavior"
-                      value={formData.behavior}
-                      onChange={(e) => handleInputChange("behavior", e.target.value)}
-                      placeholder="Describe how the creature behaved, movements, sounds..."
-                      rows={3}
-                      className="bg-background border-border resize-none"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-              </fieldset>
-            </Card>
-
-            {/* Submit */}
-            <Card className="border-2 border-[hsl(var(--bureau-border))] bg-card">
-              <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <p className="text-sm text-muted-foreground">
-                    By submitting, you confirm this report is truthful and accurate.
-                  </p>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    aria-busy={isSubmitting}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[150px] justify-center"
-                    style={{ transform: "rotate(-1deg)", filter: "url(#__svg-stamp-texture)" }}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Filing...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4" />
-                        File Report
-                      </>
-                    )}
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          </form>
-            </>
-          )}
+            <h1 className="text-[28px] font-bold text-foreground font-display">
+              Report Filed Successfully
+            </h1>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Your sighting has been logged in the official record. Please retain this receipt for your files.
+            </p>
+          </div>
+          <SightingReceipt
+            submissionData={submissionData}
+            onFileAnother={handleFileAnother}
+          />
         </div>
       </section>
+    );
+  }
+
+  return (
+    <section className="pb-16 px-4">
+      <div className="container mx-auto max-w-3xl">
+        <div className="text-center space-y-4 mb-8">
+          <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
+            Citizen Tipline
+          </div>
+          <h1 className="text-[28px] font-bold text-foreground font-display">
+            Tell the Bureau what you saw
+          </h1>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Anonymous reports welcome. No account needed. Share whatever detail
+            you&apos;re comfortable with — even &ldquo;something weird in the woods&rdquo;
+            is useful.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Honeypot — visually hidden, traps bots */}
+          <div
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-9999px" }}
+            tabIndex={-1}
+          >
+            <label htmlFor="website-report">Website</label>
+            <input
+              id="website-report"
+              type="text"
+              name="website"
+              autoComplete="off"
+              tabIndex={-1}
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
+
+          {/* PRIMARY: Just the essentials. */}
+          <Card className="border-2 border-border">
+            <fieldset>
+              <CardContent className="p-6 space-y-5">
+                <legend className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-2">
+                  <FileText className="h-4 w-4" aria-hidden="true" />
+                  The Encounter
+                </legend>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">
+                    What happened? <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleInputChange("description", e.target.value)}
+                    onBlur={() => handleBlur("description")}
+                    placeholder="Tell us what you saw, heard, or felt — in your own words."
+                    rows={6}
+                    aria-invalid={touched.description && !!errors.description}
+                    aria-describedby={
+                      touched.description && errors.description
+                        ? "description-error"
+                        : "description-hint"
+                    }
+                    className={`bg-background border-border resize-none ${
+                      touched.description && errors.description
+                        ? "border-destructive"
+                        : ""
+                    }`}
+                  />
+                  {touched.description && errors.description ? (
+                    <p
+                      id="description-error"
+                      role="alert"
+                      className="text-xs text-destructive"
+                    >
+                      {errors.description}
+                    </p>
+                  ) : (
+                    <p
+                      id="description-hint"
+                      className="text-xs text-muted-foreground"
+                    >
+                      A sentence is fine. A paragraph is better. Long is welcome.
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="state" className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4" aria-hidden="true" />
+                    Which state?
+                  </Label>
+                  <Select
+                    value={formData.state}
+                    onValueChange={(value) => handleInputChange("state", value)}
+                  >
+                    <SelectTrigger className="bg-background border-border">
+                      <SelectValue placeholder="Select state (or pick 'Other / Unsure')" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {APPALACHIAN_STATES.map((state) => (
+                        <SelectItem key={state} value={state}>
+                          {state}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </fieldset>
+          </Card>
+
+          {/* OPTIONAL DETAIL — collapsed by default to keep the form short. */}
+          <details className="group border-2 border-dashed border-border rounded-md bg-card/40">
+            <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 select-none">
+              <div>
+                <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-0.5">
+                  Optional
+                </div>
+                <div className="text-sm font-bold text-foreground font-display">
+                  Add more detail (date, location, your name…)
+                </div>
+              </div>
+              <ChevronDown
+                className="h-5 w-5 text-muted-foreground shrink-0 transition-transform duration-200 group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </summary>
+
+            <div className="px-5 pb-5 space-y-5 border-t border-dashed border-border pt-5">
+              {/* Identification */}
+              <div className="space-y-2">
+                <Label htmlFor="creatureName">
+                  Did it match a known cryptid?
+                </Label>
+                <Input
+                  id="creatureName"
+                  value={formData.creatureName}
+                  onChange={(e) => handleInputChange("creatureName", e.target.value)}
+                  placeholder="e.g., Not Deer, Mothman, Sheepsquatch — or leave blank"
+                  className="bg-background border-border"
+                />
+              </div>
+
+              {/* When */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="date">Date of sighting</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => handleInputChange("date", e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="time">Approximate time</Label>
+                  <Input
+                    id="time"
+                    type="time"
+                    value={formData.time}
+                    onChange={(e) => handleInputChange("time", e.target.value)}
+                    className="bg-background border-border"
+                  />
+                </div>
+              </div>
+
+              {/* Where */}
+              <div className="space-y-2">
+                <Label htmlFor="location">Specific location</Label>
+                <Input
+                  id="location"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange("location", e.target.value)}
+                  placeholder="e.g., Near Pine Creek Trail, Pocahontas County"
+                  className="bg-background border-border"
+                />
+              </div>
+
+              {/* Physical / behavior */}
+              <div className="space-y-2">
+                <Label htmlFor="physicalDescription">
+                  What did it look like?
+                </Label>
+                <Textarea
+                  id="physicalDescription"
+                  value={formData.physicalDescription}
+                  onChange={(e) =>
+                    handleInputChange("physicalDescription", e.target.value)
+                  }
+                  placeholder="Size, color, features — anything you noticed."
+                  rows={3}
+                  className="bg-background border-border resize-none"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="behavior">How did it behave?</Label>
+                <Textarea
+                  id="behavior"
+                  value={formData.behavior}
+                  onChange={(e) => handleInputChange("behavior", e.target.value)}
+                  placeholder="Movements, sounds, how it reacted to you."
+                  rows={3}
+                  className="bg-background border-border resize-none"
+                />
+              </div>
+
+              {/* Witness info — last, lowest pressure */}
+              <div className="grid md:grid-cols-2 gap-4 pt-2 border-t border-dashed border-border">
+                <div className="space-y-2">
+                  <Label htmlFor="witnessName">Your name or pseudonym</Label>
+                  <Input
+                    id="witnessName"
+                    value={formData.witnessName}
+                    onChange={(e) =>
+                      handleInputChange("witnessName", e.target.value)
+                    }
+                    placeholder="Anonymous if left blank"
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email (for follow-up only)</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    onBlur={() => handleBlur("email")}
+                    placeholder="your@email.com"
+                    aria-invalid={touched.email && !!errors.email}
+                    aria-describedby={
+                      touched.email && errors.email ? "email-error" : undefined
+                    }
+                    className={`bg-background border-border ${
+                      touched.email && errors.email ? "border-destructive" : ""
+                    }`}
+                  />
+                  {touched.email && errors.email && (
+                    <p
+                      id="email-error"
+                      role="alert"
+                      className="text-xs text-destructive"
+                    >
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </details>
+
+          {/* Submit */}
+          <Card className="border-2 border-[hsl(var(--bureau-border))] bg-card">
+            <CardContent className="p-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p className="text-sm text-muted-foreground">
+                  Submissions are reviewed before publishing. Honest reports only.
+                </p>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  aria-busy={isSubmitting}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[150px] justify-center"
+                  style={{
+                    transform: "rotate(-1deg)",
+                    filter: "url(#__svg-stamp-texture)",
+                  }}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Filing...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" />
+                      File Report
+                    </>
+                  )}
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </form>
+      </div>
+    </section>
   );
 }

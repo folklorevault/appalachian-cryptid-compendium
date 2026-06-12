@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Stamp } from "@/components/Stamp";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { FileText, RotateCcw } from "lucide-react";
 
 interface SubmissionData {
@@ -8,6 +9,7 @@ interface SubmissionData {
   location: string;
   state: string;
   creatureName?: string;
+  email?: string;
 }
 
 interface SightingReceiptProps {
@@ -31,11 +33,14 @@ function generateCaseNumber(): string {
 /**
  * Redacts a name to show first initial + last name
  * e.g., "Kathryn Welborn" -> "K. Welborn"
+ * Anonymous submissions render as-is.
  */
 function redactName(name: string): string {
-  const parts = name.trim().split(/\s+/);
+  const trimmed = name.trim();
+  if (!trimmed || trimmed.toLowerCase() === "anonymous") return "Anonymous";
+  const parts = trimmed.split(/\s+/);
   if (parts.length === 1) {
-    return `${parts[0].charAt(0)}.`;
+    return `${parts[0].charAt(0).toUpperCase()}.`;
   }
   const firstInitial = parts[0].charAt(0).toUpperCase();
   const lastName = parts[parts.length - 1];
@@ -46,14 +51,17 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
   const caseNumber = generateCaseNumber();
   const redactedName = redactName(submissionData.witnessName);
 
-  // Format the date for display
   const formattedDate = submissionData.date
     ? new Date(submissionData.date + "T00:00:00").toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
       })
-    : "[DATE PENDING]";
+    : "Date not specified";
+
+  const formattedLocation = [submissionData.location, submissionData.state]
+    .filter((piece) => piece && piece.trim())
+    .join(", ") || "Location not specified";
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -131,7 +139,7 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
               <span className="text-foreground">{formattedDate}</span>
 
               <span className="text-muted-foreground">Location:</span>
-              <span className="text-foreground">{submissionData.location}, {submissionData.state}</span>
+              <span className="text-foreground">{formattedLocation}</span>
 
               <span className="text-muted-foreground">Subject:</span>
               <span className="text-foreground">
@@ -170,7 +178,15 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
         </div>
       </div>
 
-      {/* Action Buttons - outside the paper for cleaner styling */}
+      {/* Stay-in-touch ask — capture the email while trust is highest */}
+      <div className="mt-8">
+        <p className="text-center text-xs uppercase tracking-[0.2em] text-muted-foreground font-typewriter mb-3">
+          Want Bureau dispatches when new case files drop?
+        </p>
+        <NewsletterSignup variant="compact" initialEmail={submissionData.email} />
+      </div>
+
+      {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
         <Button
           onClick={onFileAnother}

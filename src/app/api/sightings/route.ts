@@ -41,28 +41,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate required fields
-    const required = [
-      "witness_name",
-      "email",
-      "date",
-      "location",
-      "state",
-      "description",
-      "physical_description",
-    ];
-    for (const field of required) {
-      if (!body[field]) {
-        return NextResponse.json(
-          { error: `Missing required field: ${field}` },
-          { status: 400 }
-        );
-      }
+    // Only the encounter description is required — everything else is
+    // optional so we don't scare off witnesses who just want to leave a note.
+    if (!body.description || !body.description.trim()) {
+      return NextResponse.json(
+        { error: "Please tell us what you saw." },
+        { status: 400 }
+      );
     }
 
-    if (!body.email.includes("@")) {
+    if (body.email && !body.email.includes("@")) {
       return NextResponse.json(
-        { error: "Invalid email address" },
+        { error: "That email address looks off." },
         { status: 400 }
       );
     }
@@ -82,16 +72,16 @@ export async function POST(request: NextRequest) {
       _id: documentId,
       _type: "sightingReport",
       status: "pending",
-      witnessName: body.witness_name,
-      email: body.email,
-      date: body.date,
+      witnessName: body.witness_name?.trim() || "Anonymous",
+      email: body.email?.trim() || undefined,
+      date: body.date || undefined,
       time: body.time || undefined,
-      location: body.location,
-      state: body.state,
-      creatureName: body.creature_name || undefined,
-      description: body.description,
-      physicalDescription: body.physical_description,
-      behavior: body.behavior || undefined,
+      location: body.location?.trim() || undefined,
+      state: body.state || "Other / Unsure",
+      creatureName: body.creature_name?.trim() || undefined,
+      description: body.description.trim(),
+      physicalDescription: body.physical_description?.trim() || undefined,
+      behavior: body.behavior?.trim() || undefined,
     };
 
     const sanityUrl = `https://${SANITY_PROJECT_ID}.api.sanity.io/v${SANITY_API_VERSION}/data/mutate/${SANITY_DATASET}`;

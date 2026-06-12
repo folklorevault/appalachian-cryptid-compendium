@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -7,7 +8,8 @@ import { ReportForm } from "./ReportForm";
 
 export const metadata: Metadata = {
   title: "Report a Sighting",
-  description: "Submit your cryptid sighting report to the Appalachian Cryptid Field Guide.",
+  description:
+    "Tell the Bureau what you saw. Anonymous Appalachian-cryptid sighting reports — no account needed.",
   alternates: {
     canonical: "/report",
   },
@@ -26,7 +28,9 @@ export default function ReportPage() {
           </Link>
         </div>
 
-        <ReportForm />
+        <Suspense fallback={null}>
+          <ReportForm />
+        </Suspense>
       </main>
 
       <Footer />

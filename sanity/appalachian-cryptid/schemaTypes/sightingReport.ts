@@ -24,19 +24,20 @@ export default defineType({
       name: 'witnessName',
       title: 'Witness Name',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      description: 'Optional. Anonymous if left blank.',
     }),
     defineField({
       name: 'email',
       title: 'Email',
       type: 'string',
-      validation: (Rule) => Rule.required().email(),
+      description: 'Optional. Used for follow-up only.',
+      validation: (Rule) => Rule.email(),
     }),
     defineField({
       name: 'date',
       title: 'Date of Sighting',
       type: 'date',
-      validation: (Rule) => Rule.required(),
+      description: 'Optional.',
     }),
     defineField({
       name: 'time',
@@ -48,7 +49,7 @@ export default defineType({
       name: 'location',
       title: 'Location',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      description: 'Optional specific location.',
     }),
     defineField({
       name: 'state',
@@ -56,12 +57,12 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          'Alabama', 'Arkansas', 'Florida', 'Georgia', 'Kentucky',
-          'Louisiana', 'Mississippi', 'North Carolina', 'South Carolina',
-          'Tennessee', 'Texas', 'Virginia', 'West Virginia',
+          'Alabama', 'Georgia', 'Kentucky', 'Maryland', 'Mississippi',
+          'New York', 'North Carolina', 'Ohio', 'Pennsylvania',
+          'South Carolina', 'Tennessee', 'Virginia', 'West Virginia',
+          'Other / Unsure',
         ],
       },
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'creatureName',
@@ -88,7 +89,7 @@ export default defineType({
       title: 'Physical Description',
       type: 'text',
       rows: 4,
-      validation: (Rule) => Rule.required(),
+      description: 'Optional.',
     }),
     defineField({
       name: 'behavior',
@@ -114,7 +115,7 @@ export default defineType({
     prepare({title, subtitle, status, date}) {
       const statusEmoji = status === 'pending' ? '⏳' : status === 'approved' ? '✅' : '❌'
       return {
-        title: `${statusEmoji} ${title}`,
+        title: `${statusEmoji} ${title || 'Anonymous'}`,
         subtitle: `${subtitle || 'Unknown creature'} — ${date || 'No date'}`,
       }
     },
