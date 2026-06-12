@@ -7,6 +7,8 @@ A field guide to Appalachian cryptids, styled as a forgotten government bureau's
 
 ![Appalachian Cryptid Compendium](public/og-image.jpg)
 
+> Ranks #3 organically on Google for "appalachian cryptid," "appalachian cryptids list," and "appalachian dogman" — plus top-10 results on a dozen-plus related terms. Built, designed, written, and operated solo.
+
 ## What this is
 
 A Next.js site cataloging the cryptids, anomalies, and unexplained phenomena of Appalachia — Mothman, the Flatwoods Monster, Sheepsquatch, and dozens of lesser-known regional sightings — presented as if you'd stumbled onto a half-declassified field manual from a defunct federal bureau. The chrome (manila tabs, ruled labels, typewriter bulletins) is part of the storytelling; the content is original writing and research.
