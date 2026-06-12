@@ -33,6 +33,11 @@ export async function POST(request: NextRequest) {
       }
     } else if (type === "linkInBio") {
       revalidateTag("linkInBio", "max");
+    } else if (type === "bulletin") {
+      revalidateTag("bulletins", "max");
+      if (slug) {
+        revalidateTag(`bulletin-${slug}`, "max");
+      }
     } else {
       // For unknown types, revalidate everything
       revalidateTag("sanity", "max");
