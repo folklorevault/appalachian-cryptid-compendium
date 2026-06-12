@@ -240,3 +240,24 @@ export const bulletinSlugsQuery = `*[_type == "bulletin"].slug.current`;
 
 // Slugs with _updatedAt (for sitemap)
 export const bulletinSlugsWithDatesQuery = `*[_type == "bulletin"]{ "slug": slug.current, _updatedAt }`;
+
+// ── LINK IN BIO QUERY ─────────────────────────────────────────
+
+export const linkInBioQuery = `*[_type == "linkInBio"][0] {
+  _id,
+  _type,
+  tagline,
+  pinnedNote,
+  links[] {
+    _key,
+    label,
+    url,
+    description,
+    badge
+  },
+  socials[] {
+    _key,
+    platform,
+    url
+  }
+}`;

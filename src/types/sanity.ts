@@ -198,3 +198,36 @@ export interface SanityAnomalyMapItem {
   description?: string
   gridImage?: SanityImage
 }
+
+export type SocialPlatform =
+  | 'instagram'
+  | 'tiktok'
+  | 'bluesky'
+  | 'youtube'
+  | 'threads'
+  | 'x'
+  | 'email'
+  | 'rss'
+
+export interface LinkInBioLink {
+  _key?: string
+  label: string
+  url: string
+  description?: string
+  badge?: string
+}
+
+export interface LinkInBioSocial {
+  _key?: string
+  platform: SocialPlatform
+  url: string
+}
+
+export interface SanityLinkInBio {
+  _id: string
+  _type: 'linkInBio'
+  tagline: string
+  pinnedNote?: string
+  links: LinkInBioLink[]
+  socials?: LinkInBioSocial[]
+}

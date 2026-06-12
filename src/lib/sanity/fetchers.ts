@@ -22,6 +22,7 @@ import {
   bulletinBySlugQuery,
   bulletinSlugsQuery,
   bulletinSlugsWithDatesQuery,
+  linkInBioQuery,
 } from "./queries";
 import { cryptids as staticCryptids } from "@/data/cryptids";
 import type {
@@ -33,6 +34,7 @@ import type {
   SanityAnomalyMapItem,
   SanityBulletinListItem,
   SanityBulletin,
+  SanityLinkInBio,
 } from "@/types/sanity";
 import { bulletins as staticBulletins, bulletinToListItem } from "@/data/bulletins";
 
@@ -343,4 +345,47 @@ export async function fetchBulletinSlugsWithDates(): Promise<SlugWithDate[]> {
   const result = await sanityFetch<SlugWithDate[]>(bulletinSlugsWithDatesQuery, undefined, ["bulletins"]);
   if (result && result.length > 0) return result;
   return staticBulletins.map((b) => ({ slug: b.slug.current, _updatedAt: new Date().toISOString() }));
+}
+
+// ── Link in Bio fetcher ──────────────────────────────────────
+
+const fallbackLinkInBio: SanityLinkInBio = {
+  _id: "linkInBio-fallback",
+  _type: "linkInBio",
+  tagline:
+    "Documenting the unexplained in the Appalachian region.",
+  links: [
+    {
+      label: "The Field Guide",
+      url: "/",
+      description: "Catalogued cryptid case files from the Bureau archives.",
+    },
+    {
+      label: "Anomalies Desk",
+      url: "/anomalies",
+      description: "Hauntings, omen events, and unclassified phenomena.",
+    },
+    {
+      label: "Bureau Bulletins",
+      url: "/bulletins",
+      description: "Field primers and regional analysis from the Records Division.",
+    },
+    {
+      label: "Sighting Map",
+      url: "/map",
+      description: "Plotted encounters across the region.",
+    },
+    {
+      label: "Report a Sighting",
+      url: "/report",
+      description: "Submit a witness account to the Bureau.",
+    },
+  ],
+};
+
+export async function fetchLinkInBio(): Promise<SanityLinkInBio> {
+  const result = await sanityFetch<SanityLinkInBio>(linkInBioQuery, undefined, [
+    "linkInBio",
+  ]);
+  return result ?? fallbackLinkInBio;
 }
