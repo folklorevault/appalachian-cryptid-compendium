@@ -31,6 +31,8 @@ export async function POST(request: NextRequest) {
       if (slug) {
         revalidateTag(`anomaly-${slug}`, "max");
       }
+    } else if (type === "linkInBio") {
+      revalidateTag("linkInBio", "max");
     } else {
       // For unknown types, revalidate everything
       revalidateTag("sanity", "max");
