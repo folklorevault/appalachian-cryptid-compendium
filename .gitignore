@@ -47,3 +47,9 @@ gitleaks-baseline.json
 
 # Local session-handoff buffer (claude-mem / remember plugin)
 .remember/
+
+# Claude Code local-only settings (project settings live in .claude/settings.json)
+.claude/settings.local.json
+
+# Superset local workspace
+.superset/
