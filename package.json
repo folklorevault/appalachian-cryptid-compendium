@@ -2,7 +2,7 @@
   "name": "appalachian-cryptid-compendium",
   "private": true,
   "version": "2.0.0",
-  "packageManager": "pnpm@11.5.3",
+  "packageManager": "pnpm@11.6.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -38,7 +38,7 @@
     "last 2 Edge versions"
   ],
   "devDependencies": {
-    "@tailwindcss/postcss": "4.3.0",
+    "@tailwindcss/postcss": "4.3.1",
     "@tailwindcss/typography": "0.5.20",
     "@types/d3-geo": "3.1.0",
     "@types/node": "24.13.2",
@@ -46,10 +46,10 @@
     "@types/react-dom": "19.2.3",
     "@types/topojson-client": "3.1.5",
     "d3-geo": "3.1.1",
-    "eslint": "10.4.1",
+    "eslint": "10.5.0",
     "eslint-config-next": "16.2.9",
     "postcss": "8.5.15",
-    "tailwindcss": "4.3.0",
+    "tailwindcss": "4.3.1",
     "topojson-client": "3.1.0",
     "typescript": "6.0.3",
     "us-atlas": "3.0.1"
