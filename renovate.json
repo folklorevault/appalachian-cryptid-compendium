@@ -6,5 +6,12 @@
     ":pinDevDependencies"
   ],
   "minimumReleaseAge": "3 days",
-  "internalChecksFilter": "strict"
+  "internalChecksFilter": "strict",
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null,
+    "labels": ["security"]
+  },
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10
 }

@@ -1,0 +1,25 @@
+version: 2
+
+triggerPaths:
+  - "package.json"
+  - "pnpm-lock.yaml"
+  - "sanity/appalachian-cryptid/package.json"
+  - "sanity/appalachian-cryptid/pnpm-lock.yaml"
+
+issueRules:
+  malware: true
+  telemetry: true
+  installScripts: true
+  shellScriptOverride: true
+  hasNativeCode: true
+  gitDependency: true
+  httpDependency: true
+  troll: true
+  didYouMean: true
+  invalidPackageJSON: true
+
+githubApp:
+  enabled: true
+  dependencyOverviewEnabled: true
+  pullRequestAlertsEnabled: true
+  projectReportsEnabled: true
