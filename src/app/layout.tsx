@@ -39,6 +39,13 @@ export const metadata: Metadata = {
   description:
     "A list of cryptids associated with the Appalachian region, cataloged and documented by the Appalachian Cryptid Bureau.",
   metadataBase: new URL("https://appalachiancryptid.com"),
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/rss.xml", title: "Appalachian Cryptid Bureau — Field Dispatches" },
+      ],
+    },
+  },
   openGraph: {
     siteName: "Appalachian Cryptids List",
     type: "website",
