@@ -241,6 +241,19 @@ export const bulletinSlugsQuery = `*[_type == "bulletin"].slug.current`;
 // Slugs with _updatedAt (for sitemap)
 export const bulletinSlugsWithDatesQuery = `*[_type == "bulletin"]{ "slug": slug.current, _updatedAt }`;
 
+// ── RSS FEED QUERY ────────────────────────────────────────────
+// Combined feed of all published content, newest first. Cryptids and
+// anomalies have no `date` field, so we fall back to `_createdAt`.
+export const feedItemsQuery = `*[_type in ["cryptid", "anomaly", "bulletin"] && defined(slug.current)]
+  | order(coalesce(date, _createdAt) desc)[0...30] {
+  _type,
+  _id,
+  "title": coalesce(title, name),
+  "slug": slug.current,
+  "summary": coalesce(summary, description),
+  "publishedAt": coalesce(date, _createdAt)
+}`;
+
 // ── LINK IN BIO QUERY ─────────────────────────────────────────
 
 export const linkInBioQuery = `*[_type == "linkInBio"][0] {

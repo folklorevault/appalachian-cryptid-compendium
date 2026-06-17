@@ -87,6 +87,7 @@ export default defineType({
               options: {
                 list: [
                   {title: 'Instagram', value: 'instagram'},
+                  {title: 'Facebook', value: 'facebook'},
                   {title: 'TikTok', value: 'tiktok'},
                   {title: 'Bluesky', value: 'bluesky'},
                   {title: 'YouTube', value: 'youtube'},

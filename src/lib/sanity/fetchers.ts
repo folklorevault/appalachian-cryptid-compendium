@@ -22,6 +22,7 @@ import {
   bulletinBySlugQuery,
   bulletinSlugsQuery,
   bulletinSlugsWithDatesQuery,
+  feedItemsQuery,
   linkInBioQuery,
 } from "./queries";
 import { cryptids as staticCryptids } from "@/data/cryptids";
@@ -35,6 +36,7 @@ import type {
   SanityBulletinListItem,
   SanityBulletin,
   SanityLinkInBio,
+  FeedItem,
 } from "@/types/sanity";
 import { bulletins as staticBulletins, bulletinToListItem } from "@/data/bulletins";
 
@@ -388,4 +390,41 @@ export async function fetchLinkInBio(): Promise<SanityLinkInBio> {
     "linkInBio",
   ]);
   return result ?? fallbackLinkInBio;
+}
+
+// ── RSS feed fetcher ─────────────────────────────────────────
+
+export async function fetchFeedItems(): Promise<FeedItem[]> {
+  const result = await sanityFetch<FeedItem[]>(feedItemsQuery, undefined, [
+    "cryptids",
+    "anomalies",
+    "bulletins",
+  ]);
+  if (result && result.length > 0) return result;
+
+  // Static fallback (Sanity unavailable): cryptids + bulletins only —
+  // there is no static anomaly data. Static cryptids have no real timestamp,
+  // so they sort beneath dated bulletins.
+  const now = new Date().toISOString();
+  const fallback: FeedItem[] = [
+    ...staticBulletins.map((b) => ({
+      _type: "bulletin" as const,
+      _id: b.slug.current,
+      title: b.title,
+      slug: b.slug.current,
+      summary: b.summary,
+      publishedAt: b.date,
+    })),
+    ...staticCryptids.map((c) => ({
+      _type: "cryptid" as const,
+      _id: c.id,
+      title: c.name,
+      slug: c.id,
+      summary: c.description,
+      publishedAt: now,
+    })),
+  ];
+  return fallback
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    .slice(0, 30);
 }

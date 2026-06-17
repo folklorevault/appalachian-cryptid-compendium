@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 
 const SOCIAL_LABELS: Record<SocialPlatform, string> = {
   instagram: "Instagram",
+  facebook: "Facebook",
   tiktok: "TikTok",
   bluesky: "Bluesky",
   youtube: "YouTube",

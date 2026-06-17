@@ -201,6 +201,7 @@ export interface SanityAnomalyMapItem {
 
 export type SocialPlatform =
   | 'instagram'
+  | 'facebook'
   | 'tiktok'
   | 'bluesky'
   | 'youtube'
@@ -208,6 +209,17 @@ export type SocialPlatform =
   | 'x'
   | 'email'
   | 'rss'
+
+// ── RSS feed ─────────────────────────────────────────────────
+
+export interface FeedItem {
+  _type: 'cryptid' | 'anomaly' | 'bulletin'
+  _id: string
+  title: string
+  slug: string
+  summary?: string
+  publishedAt: string
+}
 
 export interface LinkInBioLink {
   _key?: string
