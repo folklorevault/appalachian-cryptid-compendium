@@ -10,7 +10,14 @@ const eslintConfig = [
     },
   },
   {
-    ignores: ["functions/", "sanity/", "dist/", "_pages_old/"],
+    ignores: [
+      "functions/",
+      "sanity/",
+      "dist/",
+      "_pages_old/",
+      ".next/",
+      ".claude/",
+    ],
   },
 ];
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Stamp } from "@/components/Stamp";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
@@ -196,11 +197,12 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
           <RotateCcw className="mr-2 h-4 w-4" />
           File Another Report
         </Button>
-        <a href="/" className="w-full sm:w-auto">
-          <Button className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90">
-            Return to Directory
-          </Button>
-        </a>
+        <Button
+          asChild
+          className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          <Link href="/">Return to Directory</Link>
+        </Button>
       </div>
     </div>
   );
