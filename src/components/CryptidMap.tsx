@@ -58,10 +58,12 @@ export function CryptidMap({ cryptids }: CryptidMapProps) {
       "Initializing map with token:",
       mapboxToken.substring(0, 15) + "..."
     );
-    mapboxLib.accessToken = mapboxToken;
 
     try {
+      // Pass the token per-map instead of mutating the shared mapbox-gl module
+      // (mapboxLib.accessToken = ...), which the react-hooks immutability rule flags.
       map.current = new mapboxLib.Map({
+        accessToken: mapboxToken,
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/outdoors-v12",
         center: [-84.5, 35.5], // Center on Appalachia

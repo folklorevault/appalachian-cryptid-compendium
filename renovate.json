@@ -7,6 +7,13 @@
   ],
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "strict",
+  "packageRules": [
+    {
+      "description": "Pin ESLint to the v9 maintenance line until eslint-config-next's bundled plugins (eslint-plugin-react, typescript-eslint) support ESLint 10's breaking context/scope-manager API changes.",
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "<10.0.0"
+    }
+  ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null,

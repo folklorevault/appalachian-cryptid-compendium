@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { SightingReceipt } from "@/components/SightingReceipt";
 import { Input } from "@/components/ui/input";
@@ -61,26 +61,19 @@ export function ReportForm() {
   const [honeypot, setHoneypot] = useState("");
   const [loadedAt] = useState(() => Date.now());
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     witnessName: "",
     email: "",
     date: "",
     time: "",
     location: "",
     state: "",
-    creatureName: "",
+    // Pre-fill creature name from ?cryptid=... query (set by detail-page CTA).
+    creatureName: searchParams.get("cryptid") ?? "",
     description: "",
     physicalDescription: "",
     behavior: "",
-  });
-
-  // Pre-fill creature name from ?cryptid=... query (set by detail-page CTA).
-  useEffect(() => {
-    const cryptidParam = searchParams.get("cryptid");
-    if (cryptidParam) {
-      setFormData((prev) => ({ ...prev, creatureName: cryptidParam }));
-    }
-  }, [searchParams]);
+  }));
 
   const validateField = useCallback((field: string, value: string): string | undefined => {
     switch (field) {
