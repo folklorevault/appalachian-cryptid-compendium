@@ -1,0 +1,35 @@
+name: CSP Guard
+
+# Ensures the Content-Security-Policy never again drops the directives BotID's
+# bot-detection challenge needs. Without them, checkBotId() flags every real
+# visitor as a bot and /api/newsletter + /api/sightings silently stop working.
+# See scripts/check-csp.mjs for the full backstory (2026-03-31 incident).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Every 6 hours, re-check the live production CSP as a runtime tripwire.
+    - cron: "0 */6 * * *"
+
+jobs:
+  csp-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # Pre-merge: inspect this branch's next.config.ts. Fails the PR if a
+      # change would ship a BotID-breaking CSP.
+      - name: Check CSP source invariants
+        if: github.event_name == 'pull_request'
+        run: node scripts/check-csp.mjs
+
+      # Post-deploy / scheduled: inspect the live header on production.
+      - name: Check live production CSP
+        if: github.event_name != 'pull_request'
+        run: node scripts/check-csp.mjs --url https://appalachiancryptid.com/report
