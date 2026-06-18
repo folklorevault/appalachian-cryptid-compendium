@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
 import { fetchLinkInBio } from "@/lib/sanity/fetchers";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { Stamp } from "@/components/Stamp";
+import { cn } from "@/lib/utils";
 import type { SocialPlatform } from "@/types/sanity";
 
 export const metadata: Metadata = {
@@ -44,7 +46,7 @@ export default async function LinksPage() {
         className="mx-auto flex min-h-screen max-w-md flex-col px-6 py-12 sm:py-16"
       >
         {/* Masthead */}
-        <header className="text-center">
+        <header className="relative text-center">
           <div className="mb-5 flex items-center justify-center gap-3">
             <span className="block h-px w-8 bg-border" aria-hidden="true" />
             <span className="font-typewriter text-[10px] uppercase tracking-[0.22em] text-[hsl(var(--bureau-ink-muted))]">
@@ -65,57 +67,91 @@ export default async function LinksPage() {
             aria-hidden="true"
           />
 
-          <p className="mt-5 font-typewriter text-sm leading-relaxed text-muted-foreground">
+          {/* Stamped across the masthead — these files have been cleared for the public */}
+          <div className="mt-5 flex justify-center">
+            <Stamp
+              text="Declassified"
+              variant="danger"
+              rotation={-7}
+              className="text-xs px-3 py-1 opacity-90"
+            />
+          </div>
+
+          <p className="mt-4 font-typewriter text-sm leading-relaxed text-muted-foreground">
             {data.tagline}
           </p>
         </header>
 
-        {/* Pinned dispatch */}
+        {/* Pinned dispatch — clipped memo */}
         {data.pinnedNote && (
-          <aside className="mt-8 border border-dashed border-foreground/40 bg-card/60 p-4">
-            <div className="mb-2 font-typewriter text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--bureau-ink-muted))]">
-              ◆ Current Dispatch
-            </div>
-            <p className="font-typewriter text-sm leading-relaxed text-foreground">
-              {data.pinnedNote}
-            </p>
-          </aside>
+          <div className="relative mt-10">
+            <div className="paper-clip" aria-hidden="true" />
+            <aside className="border border-dashed border-accent/60 bg-accent/[0.06] p-4 pt-5">
+              <div className="mb-2 font-typewriter text-[10px] uppercase tracking-[0.2em] text-accent">
+                ◆ Current Dispatch
+              </div>
+              <p className="font-typewriter text-sm leading-relaxed text-foreground">
+                {data.pinnedNote}
+              </p>
+            </aside>
+          </div>
         )}
 
-        {/* Link list */}
-        <nav aria-label="Bureau directory" className="mt-8 space-y-3">
+        {/* Case files */}
+        <nav aria-label="Bureau directory" className="mt-8 space-y-4">
           {data.links.map((link, idx) => {
             const external = isExternal(link.url);
             const key = link._key ?? `${link.url}-${idx}`;
+            const caseNo = String(idx + 1).padStart(2, "0");
+            const isFeatured = link.badge?.toUpperCase() === "FEATURED";
 
             const inner = (
-              <>
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="font-display text-lg font-bold leading-tight text-foreground transition-colors group-hover:text-primary">
+              <div className="relative z-[1]">
+                {/* File header: case number + stamp badge */}
+                <div className="mb-2.5 flex items-center justify-between gap-3">
+                  <span className="font-typewriter text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--bureau-ink-muted))]">
+                    Case No. {caseNo}
+                  </span>
+                  {link.badge ? (
+                    <span
+                      style={{ transform: "rotate(2.5deg)" }}
+                      className={cn(
+                        "shrink-0 border-2 px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-[0.18em] shadow-[inset_0_0_0_1px_currentColor]",
+                        isFeatured
+                          ? "border-destructive text-destructive"
+                          : "border-accent text-accent"
+                      )}
+                    >
+                      {link.badge}
+                    </span>
+                  ) : (
+                    <span className="font-typewriter text-[10px] uppercase tracking-[0.18em] text-muted-foreground/40">
+                      ◆ Open File
+                    </span>
+                  )}
+                </div>
+
+                {/* Title + outbound arrow */}
+                <div className="flex items-start justify-between gap-3">
+                  <span className="font-display text-xl font-bold leading-tight text-foreground transition-colors group-hover:text-primary">
                     {link.label}
                   </span>
-                  <span className="flex items-center gap-2">
-                    {link.badge && (
-                      <span className="border border-foreground/60 px-1.5 py-0.5 font-typewriter text-[9px] uppercase tracking-[0.16em] text-foreground">
-                        {link.badge}
-                      </span>
-                    )}
-                    <ArrowUpRight
-                      className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
-                      aria-hidden="true"
-                    />
-                  </span>
+                  <ArrowUpRight
+                    className="mt-0.5 h-5 w-5 shrink-0 text-primary/50 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
+                    aria-hidden="true"
+                  />
                 </div>
+
                 {link.description && (
                   <p className="mt-1.5 font-typewriter text-xs leading-relaxed text-muted-foreground">
                     {link.description}
                   </p>
                 )}
-              </>
+              </div>
             );
 
             const className =
-              "group block border border-foreground/30 bg-card/80 px-4 py-3.5 transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+              "group case-file-card block rounded-[2px] px-4 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
             return external ? (
               <a
@@ -136,7 +172,7 @@ export default async function LinksPage() {
         </nav>
 
         {/* Newsletter */}
-        <div className="mt-8">
+        <div className="mt-10">
           <NewsletterSignup variant="compact" />
         </div>
 
@@ -161,7 +197,7 @@ export default async function LinksPage() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block border border-foreground/30 px-3 py-1.5 font-typewriter text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="block border border-accent/40 px-3 py-1.5 font-typewriter text-[11px] uppercase tracking-[0.16em] text-[hsl(var(--bureau-ink-muted))] transition-colors hover:border-accent hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       {label}
                     </a>

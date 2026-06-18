@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { ClassificationStripe } from "@/components/ClassificationStripe";
 import { Header } from "@/components/Header";
+import { SiteHeaderGate } from "@/components/SiteHeaderGate";
 import "./globals.css";
 
 const workSans = localFont({
@@ -95,7 +96,9 @@ export default function RootLayout({
           Skip to main content
         </a>
         <ClassificationStripe />
-        <Header />
+        <SiteHeaderGate>
+          <Header />
+        </SiteHeaderGate>
         {children}
         <Analytics />
         <Script
