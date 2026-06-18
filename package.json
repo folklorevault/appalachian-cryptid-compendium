@@ -20,6 +20,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@sanity/client": "^7.13.1",
     "@sanity/image-url": "^2.0.2",
+    "@vercel/analytics": "^2.0.1",
     "botid": "^1.5.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
