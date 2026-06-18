@@ -842,6 +842,58 @@ All colors MUST be HSL.
 }
 
 /* ============================================
+   Link-in-bio — Case File cards
+   Stamped dossier rows for the /links directory
+   ============================================ */
+.case-file-card {
+  position: relative;
+  isolation: isolate;
+  background: hsl(var(--card));
+  border: 2px solid hsl(var(--primary) / 0.5);
+  box-shadow:
+    inset 0 0 0 1.5px hsl(var(--primary) / 0.22),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Faint paper grain so the manila reads as real stock, not a flat fill */
+.case-file-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='cf-n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cf-n)'/%3E%3C/svg%3E");
+}
+
+/* Subtle alternating tilt — the "stack of pulled files" look */
+.case-file-card:nth-child(odd) {
+  transform: rotate(-0.4deg);
+}
+.case-file-card:nth-child(even) {
+  transform: rotate(0.4deg);
+}
+
+/* Hover/focus: the card straightens, lifts, and the green stamp ink presses in.
+   The ink wash is a large inset shadow so it tints behind the text with no extra DOM. */
+.case-file-card:hover,
+.case-file-card:focus-visible {
+  border-color: hsl(var(--primary));
+  box-shadow:
+    inset 0 0 0 1.5px hsl(var(--primary) / 0.55),
+    inset 0 0 0 999px hsl(var(--primary) / 0.07),
+    0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: rotate(0deg) translateY(-2px);
+}
+
+.dark .case-file-card::before {
+  mix-blend-mode: overlay;
+  opacity: 0.04;
+}
+
+/* ============================================
    Reduced Motion
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
