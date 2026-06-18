@@ -25,6 +25,10 @@ run = "pnpm exec eslint ."
 description = "TypeScript check (no emit)"
 run = "pnpm exec tsc --noEmit"
 
+[tasks."check:csp"]
+description = "Verify the CSP allows BotID's challenge (source, or --url <url> for live)"
+run = "node scripts/check-csp.mjs"
+
 [tasks."borders:generate"]
 description = "Regenerate src/data/appalachian-borders.ts from us-atlas TopoJSON"
 run = "node scripts/generate-appalachian-borders.mjs"

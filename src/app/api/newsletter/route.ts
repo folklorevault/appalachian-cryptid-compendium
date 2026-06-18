@@ -113,6 +113,10 @@ export async function POST(request: NextRequest) {
   try {
     // BotID check — blocks automated bots at the platform level
     const verification = await checkBotId();
+    // Log every verdict so a mass-block (e.g. a CSP change starving the BotID
+    // challenge, as happened 2026-03-31) is visible in logs. If this only ever
+    // prints "BLOCKED", real users are being silently dropped — investigate.
+    console.log(`[botid] /api/newsletter verdict: ${verification.isBot ? "BLOCKED" : "allowed"}`);
     if (verification.isBot) {
       return NextResponse.json({ success: true });
     }
