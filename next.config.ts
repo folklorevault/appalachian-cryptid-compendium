@@ -18,7 +18,11 @@ const cspDirectives = [
     "https://rybbit.folklorevault.com",
   ].join(" "),
   "worker-src 'self' blob:",
-  "child-src blob:",
+  // BotID's challenge loads a same-origin fingerprint iframe (/…/fp). Without an
+  // explicit frame-src, the browser falls back to child-src and blocks it, which
+  // makes checkBotId() treat every real visitor as a bot. See next.config CSP notes.
+  "child-src 'self' blob:",
+  "frame-src 'self' blob:",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",
