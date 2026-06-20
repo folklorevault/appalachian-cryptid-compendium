@@ -2,7 +2,7 @@
   "name": "appalachian-cryptid-compendium",
   "private": true,
   "version": "2.0.0",
-  "packageManager": "pnpm@11.6.0",
+  "packageManager": "pnpm@11.7.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
