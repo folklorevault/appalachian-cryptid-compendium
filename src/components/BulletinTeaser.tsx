@@ -48,10 +48,10 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
     <div className="bg-card border-2 border-foreground/70 rounded-sm overflow-hidden h-full flex flex-col shadow-[2px_2px_0_hsl(var(--foreground)/0.15)]">
       {/* Catalog tab */}
       <div className="bg-bureau-manila border-b-2 border-foreground/70 px-4 py-1.5 flex items-baseline justify-between gap-3">
-        <span className="font-typewriter text-[10px] tracking-[0.18em] uppercase text-bureau-ink">
+        <span className="font-typewriter text-[10px] tracking-eyebrow uppercase text-bureau-ink">
           Bulletin Index
         </span>
-        <span className="font-typewriter text-[10px] tracking-[0.15em] uppercase text-bureau-ink-muted">
+        <span className="font-typewriter text-[10px] tracking-label uppercase text-bureau-ink-muted">
           Recent Dispatches
         </span>
       </div>
@@ -73,7 +73,7 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
                   className="group block py-2.5"
                 >
                   {/* Meta row */}
-                  <div className="flex items-baseline gap-2 mb-1 font-typewriter text-[10px] tracking-[0.05em] text-bureau-ink-muted">
+                  <div className="flex items-baseline gap-2 mb-1 font-typewriter text-[10px] tracking-type text-bureau-ink-muted">
                     <span className="font-bold text-bureau-ink">
                       {bulletin.bulletinNumber}
                     </span>

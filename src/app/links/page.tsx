@@ -49,7 +49,7 @@ export default async function LinksPage() {
         <header className="relative text-center">
           <div className="mb-5 flex items-center justify-center gap-3">
             <span className="block h-px w-8 bg-border" aria-hidden="true" />
-            <span className="font-typewriter text-[10px] uppercase tracking-[0.22em] text-[hsl(var(--bureau-ink-muted))]">
+            <span className="font-typewriter text-[10px] uppercase tracking-eyebrow text-bureau-ink-muted">
               Bureau ◆ Directory
             </span>
             <span className="block h-px w-8 bg-border" aria-hidden="true" />
@@ -87,7 +87,7 @@ export default async function LinksPage() {
           <div className="relative mt-10">
             <div className="paper-clip" aria-hidden="true" />
             <aside className="border border-dashed border-accent/60 bg-accent/[0.06] p-4 pt-5">
-              <div className="mb-2 font-typewriter text-[10px] uppercase tracking-[0.2em] text-accent">
+              <div className="mb-2 font-typewriter text-[10px] uppercase tracking-eyebrow text-accent">
                 ◆ Current Dispatch
               </div>
               <p className="font-typewriter text-sm leading-relaxed text-foreground">
@@ -109,14 +109,14 @@ export default async function LinksPage() {
               <div className="relative z-[1]">
                 {/* File header: case number + stamp badge */}
                 <div className="mb-2.5 flex items-center justify-between gap-3">
-                  <span className="font-typewriter text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--bureau-ink-muted))]">
+                  <span className="font-typewriter text-[10px] uppercase tracking-eyebrow text-bureau-ink-muted">
                     Case No. {caseNo}
                   </span>
                   {link.badge ? (
                     <span
                       style={{ transform: "rotate(2.5deg)" }}
                       className={cn(
-                        "shrink-0 border-2 px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-[0.18em] shadow-[inset_0_0_0_1px_currentColor]",
+                        "shrink-0 border-2 px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-eyebrow shadow-[inset_0_0_0_1px_currentColor]",
                         isFeatured
                           ? "border-destructive text-destructive"
                           : "border-accent text-accent"
@@ -125,7 +125,7 @@ export default async function LinksPage() {
                       {link.badge}
                     </span>
                   ) : (
-                    <span className="font-typewriter text-[10px] uppercase tracking-[0.18em] text-muted-foreground/40">
+                    <span className="font-typewriter text-[10px] uppercase tracking-eyebrow text-muted-foreground/40">
                       ◆ Open File
                     </span>
                   )}
@@ -181,7 +181,7 @@ export default async function LinksPage() {
           <div className="mt-10 flex flex-col items-center gap-3">
             <div className="flex items-center gap-3">
               <span className="block h-px w-6 bg-border" aria-hidden="true" />
-              <span className="font-typewriter text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--bureau-ink-muted))]">
+              <span className="font-typewriter text-[10px] uppercase tracking-eyebrow text-bureau-ink-muted">
                 Field Channels
               </span>
               <span className="block h-px w-6 bg-border" aria-hidden="true" />
@@ -197,7 +197,7 @@ export default async function LinksPage() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block border border-accent/40 px-3 py-1.5 font-typewriter text-[11px] uppercase tracking-[0.16em] text-[hsl(var(--bureau-ink-muted))] transition-colors hover:border-accent hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="block border border-accent/40 px-3 py-1.5 font-typewriter text-[11px] uppercase tracking-label text-bureau-ink-muted transition-colors hover:border-accent hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       {label}
                     </a>
@@ -210,7 +210,7 @@ export default async function LinksPage() {
 
         {/* Bureau seal */}
         <footer className="mt-auto pt-12 text-center">
-          <p className="font-typewriter text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--bureau-ink-muted))]">
+          <p className="font-typewriter text-[10px] uppercase tracking-eyebrow text-bureau-ink-muted">
             Filed ◆ Appalachian Region ◆ {new Date().getFullYear()}
           </p>
         </footer>

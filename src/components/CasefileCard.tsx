@@ -47,9 +47,9 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
 
   return (
     <Link href={linkTo} className="group">
-      <Card className="overflow-hidden border-2 border-border hover:border-[hsl(var(--bureau-border))] hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(42,42,42,0.1)] transition-all duration-200 ease-out cursor-pointer bg-card">
+      <Card className="overflow-hidden border-2 border-border hover:border-bureau-border hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(42,42,42,0.1)] transition-all duration-200 ease-out cursor-pointer bg-card">
         {/* Image Section - Square aspect */}
-        <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-[hsl(var(--bureau-border))] transition-colors duration-200">
+        <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-bureau-border transition-colors duration-200">
           <Image
             src={imageUrl}
             alt={name}
@@ -75,7 +75,7 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-1">
                 {type === "cryptid" ? "Creature File" : "Case File"}
               </div>
-              <h3 className="text-xl font-bold text-foreground leading-tight truncate group-hover:text-[hsl(25,30%,12%)] transition-colors duration-200">
+              <h3 className="text-xl font-bold text-foreground leading-tight truncate group-hover:text-bureau-ink-dark transition-colors duration-200">
                 {name}
               </h3>
             </div>

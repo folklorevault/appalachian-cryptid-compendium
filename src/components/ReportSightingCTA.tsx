@@ -38,13 +38,13 @@ export const ReportSightingCTA = ({ cryptidName, cryptidSlug }: ReportSightingCT
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-5 relative z-2">
             <div className="shrink-0">
-              <div className="w-12 h-12 rounded-sm border-2 border-[hsl(var(--bureau-border))] bg-muted/30 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-sm border-2 border-bureau-border bg-muted/30 flex items-center justify-center">
                 <FileText className="h-6 w-6 text-foreground/70" aria-hidden="true" />
               </div>
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-typewriter mb-1">
+              <div className="text-[10px] uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-1">
                 Witness Report Requested
               </div>
               <h2 id="report-cta-heading" className="text-lg sm:text-xl font-bold text-foreground font-display leading-tight">

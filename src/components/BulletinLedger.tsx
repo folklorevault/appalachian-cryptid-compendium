@@ -72,7 +72,7 @@ function LedgerRow({
       <td className="py-3 pr-3 align-top whitespace-nowrap border-b border-border/60">
         <Link
           href={`/bulletin/${bulletin.slug.current}`}
-          className="font-typewriter text-sm font-bold tracking-[0.05em] text-[hsl(var(--bureau-ink))] no-underline"
+          className="font-typewriter text-sm font-bold tracking-type text-bureau-ink no-underline"
         >
           {bulletin.bulletinNumber}
         </Link>
@@ -82,7 +82,7 @@ function LedgerRow({
       <td className="py-3 pr-4 align-top whitespace-nowrap border-b border-border/60">
         <Link
           href={`/bulletin/${bulletin.slug.current}`}
-          className="font-typewriter text-sm tracking-[0.03em] text-[hsl(var(--bureau-ink-muted))] no-underline"
+          className="font-typewriter text-sm tracking-type text-bureau-ink-muted no-underline"
         >
           {formatLedgerDate(bulletin.date)}
         </Link>
@@ -117,7 +117,7 @@ function LedgerRow({
       <td className="py-3 pr-3 align-top text-right border-b border-border/60 whitespace-nowrap">
         <Link
           href={`/bulletin/${bulletin.slug.current}`}
-          className="font-typewriter text-sm text-muted-foreground/80 tracking-[0.03em] no-underline"
+          className="font-typewriter text-sm text-muted-foreground/80 tracking-type no-underline"
         >
           {bulletin.readTime}
         </Link>
@@ -138,10 +138,10 @@ function MobileLedgerEntry({
     >
       {/* Top line: ID, date, category */}
       <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-        <span className="font-typewriter text-sm font-bold tracking-[0.05em] text-[hsl(var(--bureau-ink))]">
+        <span className="font-typewriter text-sm font-bold tracking-type text-bureau-ink">
           {bulletin.bulletinNumber}
         </span>
-        <span className="font-typewriter text-sm text-[hsl(var(--bureau-ink-muted))]">
+        <span className="font-typewriter text-sm text-bureau-ink-muted">
           {formatLedgerDate(bulletin.date)}
         </span>
         <CategoryTag category={bulletin.category} />
@@ -181,7 +181,7 @@ export function BulletinLedger({
     <section className="max-w-[960px] mx-auto px-6 pb-20 relative z-2">
       {/* Ledger book binding */}
       <div
-        className="bg-card border border-[hsl(var(--bureau-border))] border-t-[3px] border-t-[hsl(var(--bureau-ink-muted))] relative overflow-hidden"
+        className="bg-card border border-bureau-border border-t-[3px] border-t-bureau-ink-muted relative overflow-hidden"
         style={{
           padding: "24px 28px 28px 44px",
           boxShadow:
@@ -210,30 +210,30 @@ export function BulletinLedger({
         />
 
         {/* Page number */}
-        <div className="absolute top-2 right-4 font-typewriter text-xs text-muted-foreground/60 tracking-[0.08em]">
+        <div className="absolute top-2 right-4 font-typewriter text-xs text-muted-foreground/60 tracking-type">
           PAGE 1 OF 1
         </div>
 
         {/* ── Desktop table ── */}
         <div className="hidden md:block relative z-2">
           {/* Column headings */}
-          <div className="border-b-2 border-[hsl(var(--bureau-ink-muted))] mb-1 pb-1.5">
+          <div className="border-b-2 border-bureau-ink-muted mb-1 pb-1.5">
             <table className="w-full border-collapse table-auto">
               <thead>
                 <tr>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-[hsl(var(--bureau-ink-muted))] pr-3 whitespace-nowrap">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-3 whitespace-nowrap">
                     No.
                   </th>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-[hsl(var(--bureau-ink-muted))] pr-4 whitespace-nowrap">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-4 whitespace-nowrap">
                     Filed
                   </th>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-[hsl(var(--bureau-ink-muted))] pr-4 whitespace-nowrap">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-4 whitespace-nowrap">
                     Dept.
                   </th>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-[hsl(var(--bureau-ink-muted))] pr-4">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-4">
                     Subject
                   </th>
-                  <th className="text-right font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-[hsl(var(--bureau-ink-muted))] pr-3 whitespace-nowrap">
+                  <th className="text-right font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-3 whitespace-nowrap">
                     Est. Read
                   </th>
                 </tr>
@@ -266,12 +266,12 @@ export function BulletinLedger({
         </div>
 
         {/* Ledger footer */}
-        <div className="relative z-2 border-t-2 border-[hsl(var(--bureau-ink-muted))] mt-4 pt-2.5 flex justify-between items-center flex-wrap gap-2">
-          <span className="font-typewriter text-xs text-muted-foreground tracking-[0.08em] uppercase">
+        <div className="relative z-2 border-t-2 border-bureau-ink-muted mt-4 pt-2.5 flex justify-between items-center flex-wrap gap-2">
+          <span className="font-typewriter text-xs text-muted-foreground tracking-type uppercase">
             Ledger contains {bulletins.length} entries
           </span>
           {lastDate && (
-            <span className="font-typewriter text-xs text-muted-foreground/80 tracking-[0.05em]">
+            <span className="font-typewriter text-xs text-muted-foreground/80 tracking-type">
               Last updated: {lastDate}
             </span>
           )}
@@ -279,7 +279,7 @@ export function BulletinLedger({
       </div>
 
       {/* Bottom note — outside ledger */}
-      <div className="text-center mt-6 font-typewriter text-xs text-muted-foreground/80 tracking-[0.08em] uppercase">
+      <div className="text-center mt-6 font-typewriter text-xs text-muted-foreground/80 tracking-type uppercase">
         Additional entries released on a rolling schedule ◆ Bureau of
         Appalachian Cryptid Documentation
       </div>

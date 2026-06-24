@@ -30,38 +30,38 @@ export const IncidentLog = ({
   return (
     <div className={cn("relative", className)}>
       {/* Teletype paper with perforated edges */}
-      <div className="bg-[hsl(var(--bureau-paper))] border border-[hsl(var(--bureau-border))] rounded-none overflow-hidden shadow-md">
+      <div className="bg-bureau-paper border border-bureau-border rounded-none overflow-hidden shadow-md">
         {/* Perforated edge top */}
-        <div className="h-4 bg-[hsl(var(--bureau-manila-light))] border-b border-dashed border-[hsl(var(--bureau-border))] flex items-center justify-between px-2">
+        <div className="h-4 bg-bureau-manila-light border-b border-dashed border-bureau-border flex items-center justify-between px-2">
           <div className="flex gap-1">
             {[...Array(20)].map((_, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--bureau-border))]" />
+              <div key={i} className="w-1.5 h-1.5 rounded-full bg-bureau-border" />
             ))}
           </div>
         </div>
 
         {/* Main content */}
-        <div className="p-4 font-typewriter text-xs leading-relaxed text-[hsl(var(--bureau-ink))]">
+        <div className="p-4 font-typewriter text-xs leading-relaxed text-bureau-ink">
           {/* Header block */}
-          <div className="border-b-2 border-double border-[hsl(var(--bureau-border))] pb-3 mb-4">
-            <div className="text-center tracking-[0.3em] text-xs text-[hsl(var(--bureau-ink-muted))]">
+          <div className="border-b-2 border-double border-bureau-border pb-3 mb-4">
+            <div className="text-center tracking-[0.3em] text-xs text-bureau-ink-muted">
               ══════════ INCIDENT LOG ══════════
             </div>
             <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
               <div>
-                <span className="text-[hsl(var(--bureau-ink-muted))]">STATION:</span>{" "}
+                <span className="text-bureau-ink-muted">STATION:</span>{" "}
                 <span className="tracking-wider">{station.toUpperCase()}</span>
               </div>
               <div>
-                <span className="text-[hsl(var(--bureau-ink-muted))]">CASE:</span>{" "}
+                <span className="text-bureau-ink-muted">CASE:</span>{" "}
                 <span className="tracking-wider">{caseNumber || "PENDING"}</span>
               </div>
               <div>
-                <span className="text-[hsl(var(--bureau-ink-muted))]">SUBJECT:</span>{" "}
+                <span className="text-bureau-ink-muted">SUBJECT:</span>{" "}
                 <span className="tracking-wider">{anomalyName.toUpperCase()}</span>
               </div>
               <div>
-                <span className="text-[hsl(var(--bureau-ink-muted))]">DATE:</span>{" "}
+                <span className="text-bureau-ink-muted">DATE:</span>{" "}
                 <span className="tracking-wider">[REDACTED]</span>
               </div>
             </div>
@@ -77,7 +77,7 @@ export const IncidentLog = ({
 
               return (
                 <div key={idx} className="flex gap-3">
-                  <span className="text-[hsl(var(--bureau-ink-muted))] shrink-0 tabular-nums">
+                  <span className="text-bureau-ink-muted shrink-0 tabular-nums">
                     {timestamp} HRS -
                   </span>
                   <span className="uppercase tracking-wide">
@@ -89,8 +89,8 @@ export const IncidentLog = ({
           </div>
 
           {/* End transmission */}
-          <div className="mt-6 pt-3 border-t-2 border-double border-[hsl(var(--bureau-border))]">
-            <div className="text-center text-xs tracking-[0.2em] text-[hsl(var(--bureau-ink-muted))]">
+          <div className="mt-6 pt-3 border-t-2 border-double border-bureau-border">
+            <div className="text-center text-xs tracking-eyebrow text-bureau-ink-muted">
               ─── END TRANSMISSION ───
             </div>
             <div className="text-center text-xs mt-2 text-muted-foreground">
@@ -100,10 +100,10 @@ export const IncidentLog = ({
         </div>
 
         {/* Perforated edge bottom */}
-        <div className="h-4 bg-[hsl(var(--bureau-manila-light))] border-t border-dashed border-[hsl(var(--bureau-border))] flex items-center justify-between px-2">
+        <div className="h-4 bg-bureau-manila-light border-t border-dashed border-bureau-border flex items-center justify-between px-2">
           <div className="flex gap-1">
             {[...Array(20)].map((_, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--bureau-border))]" />
+              <div key={i} className="w-1.5 h-1.5 rounded-full bg-bureau-border" />
             ))}
           </div>
         </div>

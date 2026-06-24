@@ -61,6 +61,9 @@
   --color-bureau-manila-light: hsl(var(--bureau-manila-light));
   --color-bureau-ink: hsl(var(--bureau-ink));
   --color-bureau-ink-muted: hsl(var(--bureau-ink-muted));
+  --color-bureau-ink-dark: hsl(var(--bureau-ink-dark));
+  --color-bureau-border: hsl(var(--bureau-border));
+  --color-bureau-paper: hsl(var(--bureau-paper));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -73,6 +76,17 @@
   --font-display: var(--font-display), Georgia, Times New Roman, serif;
   --font-typewriter:
     var(--font-typewriter), Courier New, ui-monospace, monospace;
+
+  /* Typewriter tracking scale. eyebrow = prominent uppercase section/card
+     kickers; label = secondary uppercase sub-labels, table headers, chips;
+     type = subtle breathing room on running/UI typewriter text (nav, rows,
+     tags, captions). Named so values can't drift back to one-offs. */
+  --tracking-eyebrow: 0.2em;
+  --tracking-label: 0.15em;
+  --tracking-type: 0.05em;
+
+  /* Detail-page H1 size (was the ad-hoc text-[28px] used across 8 pages). */
+  --text-title: 1.75rem;
 
   @keyframes accordion-down {
     from {
@@ -192,6 +206,7 @@ All colors MUST be HSL.
     --bureau-paper: 40 30% 96%;
     --bureau-ink: 25 30% 22%;
     --bureau-ink-muted: 25 20% 38%;
+    --bureau-ink-dark: 25 30% 12%;
     --bureau-border: 35 30% 72%;
     --bureau-stamp: 8 45% 28%;
 

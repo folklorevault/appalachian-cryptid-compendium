@@ -150,7 +150,7 @@ export function AboutContent() {
 
                 {/* Directive Title */}
                 <div className="mt-4 mb-2 relative z-2">
-                  <h1 className="text-[28px] font-bold text-foreground font-display">
+                  <h1 className="text-title font-bold text-foreground font-display">
                     DIRECTIVE 001: Operational Mandate
                   </h1>
                 </div>
@@ -364,7 +364,7 @@ export function AboutContent() {
                   </p>
                   <a
                     href="/report"
-                    className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-[hsl(var(--bureau-stamp))] rounded-sm font-bold uppercase tracking-widest text-sm font-display text-[hsl(var(--bureau-stamp))] shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 border-[3px] border-bureau-stamp rounded-sm font-bold uppercase tracking-widest text-sm font-display text-bureau-stamp shadow-[inset_0_0_0_1.5px_hsl(var(--bureau-stamp))] hover:bg-[hsl(var(--bureau-stamp)/0.06)] active:bg-[hsl(var(--bureau-stamp)/0.12)] transition-all duration-200"
                     style={{ transform: "rotate(-1deg)", filter: "url(#__svg-stamp-texture)" }}
                   >
                     File a Report
