@@ -90,7 +90,7 @@ export const IncidentLog = ({
 
           {/* End transmission */}
           <div className="mt-6 pt-3 border-t-2 border-double border-bureau-border">
-            <div className="text-center text-xs tracking-[0.2em] text-bureau-ink-muted">
+            <div className="text-center text-xs tracking-eyebrow text-bureau-ink-muted">
               ─── END TRANSMISSION ───
             </div>
             <div className="text-center text-xs mt-2 text-muted-foreground">

@@ -46,7 +46,7 @@ export default async function Home() {
             {/* Classification label */}
             <div className="flex items-center justify-center gap-3.5 mb-6" aria-hidden="true">
               <span className="block w-10 h-px bg-border" />
-              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-bureau-ink-muted">
+              <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted">
                 Appalachian Cryptid Division — Working Document
               </span>
               <span className="block w-10 h-px bg-border" />
@@ -119,7 +119,7 @@ export default async function Home() {
           aria-label="Email newsletter signup"
         >
           <div className="max-w-3xl mx-auto px-6 lg:px-8 py-6">
-            <p className="font-typewriter text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3 text-center">
+            <p className="font-typewriter text-[10px] tracking-eyebrow uppercase text-muted-foreground mb-3 text-center">
               Bureau Dispatches — Standing Order
             </p>
             <NewsletterSignup variant="compact" />
@@ -133,7 +133,7 @@ export default async function Home() {
           aria-label="Cryptid directory"
         >
           <div className="max-w-6xl mx-auto px-6 lg:px-8 mb-6">
-            <p className="font-typewriter text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+            <p className="font-typewriter text-[10px] tracking-label uppercase text-muted-foreground mb-1">
               Bureau Active Case Files — {cryptids.length} Entries
             </p>
             <h2 className="font-display font-bold text-2xl text-foreground">
@@ -149,7 +149,7 @@ export default async function Home() {
         {/* ── Newsletter ────────────────────────────────────────────── */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">
           <div className="max-w-6xl mx-auto text-center">
-            <p className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">
+            <p className="font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground mb-2">
               Email Newsletter
             </p>
             <h2 className="font-display text-xl font-bold text-foreground mb-3">

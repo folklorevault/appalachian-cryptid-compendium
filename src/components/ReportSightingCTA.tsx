@@ -44,7 +44,7 @@ export const ReportSightingCTA = ({ cryptidName, cryptidSlug }: ReportSightingCT
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-typewriter mb-1">
+              <div className="text-[10px] uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-1">
                 Witness Report Requested
               </div>
               <h2 id="report-cta-heading" className="text-lg sm:text-xl font-bold text-foreground font-display leading-tight">

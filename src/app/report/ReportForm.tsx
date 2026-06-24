@@ -215,10 +215,10 @@ export function ReportForm() {
       <section className="pb-16 px-4">
         <div className="container mx-auto max-w-3xl">
           <div className="text-center space-y-4 mb-8">
-            <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
+            <div className="font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground">
               Report Submitted
             </div>
-            <h1 className="text-[28px] font-bold text-foreground font-display">
+            <h1 className="text-title font-bold text-foreground font-display">
               Report Filed Successfully
             </h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -238,10 +238,10 @@ export function ReportForm() {
     <section className="pb-16 px-4">
       <div className="container mx-auto max-w-3xl">
         <div className="text-center space-y-4 mb-8">
-          <div className="font-typewriter text-xs tracking-[0.2em] uppercase text-muted-foreground">
+          <div className="font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground">
             Citizen Tipline
           </div>
-          <h1 className="text-[28px] font-bold text-foreground font-display">
+          <h1 className="text-title font-bold text-foreground font-display">
             Tell the Bureau what you saw
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">

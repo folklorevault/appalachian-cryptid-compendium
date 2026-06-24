@@ -181,7 +181,7 @@ export const SightingReceipt = ({ submissionData, onFileAnother }: SightingRecei
 
       {/* Stay-in-touch ask — capture the email while trust is highest */}
       <div className="mt-8">
-        <p className="text-center text-xs uppercase tracking-[0.2em] text-muted-foreground font-typewriter mb-3">
+        <p className="text-center text-xs uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-3">
           Want Bureau dispatches when new case files drop?
         </p>
         <NewsletterSignup variant="compact" initialEmail={submissionData.email} />

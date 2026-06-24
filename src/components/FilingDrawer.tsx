@@ -263,7 +263,7 @@ export const FilingDrawer = ({
             >
               <span
                 className={cn(
-                  "font-typewriter text-xs font-bold tracking-[0.15em] uppercase",
+                  "font-typewriter text-xs font-bold tracking-label uppercase",
                   "text-bureau-stamp/70"
                 )}
               >

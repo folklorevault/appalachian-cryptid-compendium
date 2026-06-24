@@ -20,7 +20,7 @@ export default function NewsletterSuccess() {
           <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-4">
             Roster Addition Confirmed
           </div>
-          <h1 className="text-[28px] font-bold text-foreground font-display mb-4">
+          <h1 className="text-title font-bold text-foreground font-display mb-4">
             Registered
           </h1>
           <p className="text-muted-foreground mb-8">

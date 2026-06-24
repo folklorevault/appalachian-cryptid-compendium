@@ -150,7 +150,7 @@ export function AboutContent() {
 
                 {/* Directive Title */}
                 <div className="mt-4 mb-2 relative z-2">
-                  <h1 className="text-[28px] font-bold text-foreground font-display">
+                  <h1 className="text-title font-bold text-foreground font-display">
                     DIRECTIVE 001: Operational Mandate
                   </h1>
                 </div>

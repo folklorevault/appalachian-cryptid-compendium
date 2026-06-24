@@ -28,10 +28,10 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
     >
       {/* Catalog tab */}
       <div className="bg-bureau-manila border-b-2 border-foreground/70 px-4 py-1.5 flex items-baseline justify-between gap-3">
-        <span className="font-typewriter text-[10px] tracking-[0.18em] uppercase text-bureau-ink">
+        <span className="font-typewriter text-[10px] tracking-eyebrow uppercase text-bureau-ink">
           Case File
         </span>
-        <span className="font-typewriter text-[10px] tracking-[0.15em] uppercase text-bureau-ink-muted">
+        <span className="font-typewriter text-[10px] tracking-label uppercase text-bureau-ink-muted">
           No. ACB-{slug.current.slice(0, 4).toUpperCase()}
         </span>
       </div>

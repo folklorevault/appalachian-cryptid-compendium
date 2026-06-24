@@ -34,7 +34,7 @@ export const FieldSupplyDrop = ({
 
         {/* Header */}
         <div className="border-b-[3px] border-double border-foreground/40 pb-2 mb-3 relative z-2">
-          <p className="font-typewriter text-[9px] tracking-[0.18em] uppercase text-muted-foreground text-center">
+          <p className="font-typewriter text-[9px] tracking-eyebrow uppercase text-muted-foreground text-center">
             Field Supply Drop
           </p>
         </div>

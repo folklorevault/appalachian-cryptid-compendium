@@ -240,10 +240,10 @@ export default async function AnomalyDetailPage({
             </div>
 
             <div className="flex-1 min-w-0 pt-1">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-typewriter mb-2">
+              <div className="text-xs uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-2">
                 Case File #{caseNumber}
               </div>
-              <h1 className="text-[28px] font-bold text-foreground font-display mb-2 leading-tight">
+              <h1 className="text-title font-bold text-foreground font-display mb-2 leading-tight">
                 {anomaly.name}
               </h1>
               {anomaly.subhead && (

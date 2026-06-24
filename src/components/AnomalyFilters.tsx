@@ -132,7 +132,7 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
           <div className="max-w-xl mx-auto">
             <label
               htmlFor="anomaly-search"
-              className="block text-center font-typewriter text-xs tracking-[0.18em] uppercase text-muted-foreground mb-2"
+              className="block text-center font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground mb-2"
             >
               Search the Case Files
             </label>
@@ -182,7 +182,7 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
           {/* Status & State Filters — compact row */}
           <div className="flex flex-wrap gap-3 justify-center items-center">
             <div className="flex flex-wrap gap-1.5 items-center">
-              <span className="font-typewriter text-xs tracking-[0.15em] uppercase text-muted-foreground/70">
+              <span className="font-typewriter text-xs tracking-label uppercase text-muted-foreground/70">
                 Status:
               </span>
               {statuses.map((status) => (
@@ -206,7 +206,7 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
             <span className="hidden md:block h-4 w-px bg-border/50" />
 
             <div className="flex flex-wrap gap-1.5 items-center">
-              <span className="font-typewriter text-xs tracking-[0.15em] uppercase text-muted-foreground/70">
+              <span className="font-typewriter text-xs tracking-label uppercase text-muted-foreground/70">
                 State:
               </span>
               {regions.map((region) => (

@@ -221,19 +221,19 @@ export function BulletinLedger({
             <table className="w-full border-collapse table-auto">
               <thead>
                 <tr>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-bureau-ink-muted pr-3 whitespace-nowrap">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-3 whitespace-nowrap">
                     No.
                   </th>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-bureau-ink-muted pr-4 whitespace-nowrap">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-4 whitespace-nowrap">
                     Filed
                   </th>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-bureau-ink-muted pr-4 whitespace-nowrap">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-4 whitespace-nowrap">
                     Dept.
                   </th>
-                  <th className="text-left font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-bureau-ink-muted pr-4">
+                  <th className="text-left font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-4">
                     Subject
                   </th>
-                  <th className="text-right font-typewriter text-xs font-bold tracking-[0.15em] uppercase text-bureau-ink-muted pr-3 whitespace-nowrap">
+                  <th className="text-right font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted pr-3 whitespace-nowrap">
                     Est. Read
                   </th>
                 </tr>

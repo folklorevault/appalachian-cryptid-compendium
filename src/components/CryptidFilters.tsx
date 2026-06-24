@@ -68,7 +68,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
           <div className="max-w-xl mx-auto">
             <label
               htmlFor="cryptid-search"
-              className="block text-center font-typewriter text-xs tracking-[0.18em] uppercase text-muted-foreground mb-2"
+              className="block text-center font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground mb-2"
             >
               Search the Case Files
             </label>

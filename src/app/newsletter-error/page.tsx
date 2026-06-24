@@ -18,7 +18,7 @@ export default function NewsletterError() {
           <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-4">
             Transmission Failed
           </div>
-          <h1 className="text-[28px] font-bold text-foreground font-display mb-4">
+          <h1 className="text-title font-bold text-foreground font-display mb-4">
             Registration Error
           </h1>
           <p className="text-muted-foreground mb-8">

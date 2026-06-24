@@ -29,7 +29,7 @@ export const EvidenceChip = ({
       // DYMO label maker aesthetic - embossed black on colored tape
       "px-2.5 py-1 rounded-sm",
       "bg-bureau-manila text-bureau-ink",
-      "font-typewriter uppercase tracking-[0.15em] text-xs",
+      "font-typewriter uppercase tracking-label text-xs",
       "shadow-[inset_0_1px_0_rgba(255,255,255,0.3),inset_0_-1px_0_rgba(0,0,0,0.1)]",
       "border border-bureau-border",
       // Slight embossed/debossed effect
@@ -49,7 +49,7 @@ export const EvidenceChip = ({
       // IBM punch card aesthetic
       "px-2 py-0.5 rounded-none",
       "bg-bureau-paper text-bureau-ink",
-      "font-typewriter uppercase text-xs tracking-[0.2em]",
+      "font-typewriter uppercase text-xs tracking-eyebrow",
       "border border-bureau-border",
       // Punch holes effect on sides
       "before:content-['◯'] before:text-xs before:text-bureau-ink-muted before:mr-1",
