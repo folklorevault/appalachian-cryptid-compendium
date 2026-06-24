@@ -180,7 +180,7 @@ export const FilingDrawer = ({
           >
             <span
               className={cn(
-                "font-typewriter text-xs font-bold tracking-[0.08em] uppercase",
+                "font-typewriter text-xs font-bold tracking-type uppercase",
                 "text-foreground"
               )}
             >

@@ -77,11 +77,13 @@
   --font-typewriter:
     var(--font-typewriter), Courier New, ui-monospace, monospace;
 
-  /* Uppercase label tracking — two-step scale.
-     eyebrow = prominent section/card kickers; label = secondary sub-labels,
-     table headers, chips. Named so values can't drift back to one-offs. */
+  /* Typewriter tracking scale. eyebrow = prominent uppercase section/card
+     kickers; label = secondary uppercase sub-labels, table headers, chips;
+     type = subtle breathing room on running/UI typewriter text (nav, rows,
+     tags, captions). Named so values can't drift back to one-offs. */
   --tracking-eyebrow: 0.2em;
   --tracking-label: 0.15em;
+  --tracking-type: 0.05em;
 
   /* Detail-page H1 size (was the ad-hoc text-[28px] used across 8 pages). */
   --text-title: 1.75rem;

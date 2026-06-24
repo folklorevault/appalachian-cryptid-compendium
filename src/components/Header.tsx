@@ -101,7 +101,7 @@ export const Header = () => {
               )}
               <Link
                 href={item.href}
-                className={`font-typewriter text-xs tracking-[0.06em] px-3 py-1.5 whitespace-nowrap relative transition-colors ${
+                className={`font-typewriter text-xs tracking-type px-3 py-1.5 whitespace-nowrap relative transition-colors ${
                   isActive(item.href)
                     ? "text-primary nav-link-active"
                     : "text-foreground/70 hover:text-primary"
@@ -127,7 +127,7 @@ export const Header = () => {
               )}
               <Link
                 href={item.href}
-                className={`font-typewriter text-xs tracking-[0.06em] px-3 py-1.5 whitespace-nowrap relative transition-colors ${
+                className={`font-typewriter text-xs tracking-type px-3 py-1.5 whitespace-nowrap relative transition-colors ${
                   isActive(item.href)
                     ? "text-primary nav-link-active"
                     : "text-foreground/70 hover:text-primary"
@@ -149,7 +149,7 @@ export const Header = () => {
             <div ref={moreRef} className="relative">
               <button
                 onClick={() => setMoreOpen(!moreOpen)}
-                className={`font-typewriter text-xs tracking-[0.06em] px-3 py-1.5 whitespace-nowrap relative transition-colors inline-flex items-center gap-1 ${
+                className={`font-typewriter text-xs tracking-type px-3 py-1.5 whitespace-nowrap relative transition-colors inline-flex items-center gap-1 ${
                   moreHasActive
                     ? "text-primary"
                     : "text-foreground/70 hover:text-primary"
