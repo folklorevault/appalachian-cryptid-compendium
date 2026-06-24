@@ -86,7 +86,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                   setSearchQuery(e.target.value);
                   setVisibleCount(INITIAL_VISIBLE);
                 }}
-                className="pl-10 h-11 font-typewriter text-sm bg-[hsl(var(--bureau-manila)/0.3)] border border-[hsl(var(--bureau-border))] focus:border-primary placeholder:font-typewriter placeholder:text-muted-foreground/50"
+                className="pl-10 h-11 font-typewriter text-sm bg-[hsl(var(--bureau-manila)/0.3)] border border-bureau-border focus:border-primary placeholder:font-typewriter placeholder:text-muted-foreground/50"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                 className={`font-typewriter text-xs tracking-wide px-2.5 py-1 rounded-sm border transition-colors duration-150 ${
                   selectedRegion === region.value
                     ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-transparent text-muted-foreground border-[hsl(var(--bureau-border)/0.5)] hover:border-[hsl(var(--bureau-border))] hover:text-foreground"
+                    : "bg-transparent text-muted-foreground border-[hsl(var(--bureau-border)/0.5)] hover:border-bureau-border hover:text-foreground"
                 }`}
               >
                 {region.label}
@@ -198,7 +198,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                     }
                     size="lg"
                     variant="outline"
-                    className="border-2 border-[hsl(var(--bureau-border))] text-foreground hover:bg-muted/50 gap-2"
+                    className="border-2 border-bureau-border text-foreground hover:bg-muted/50 gap-2"
                   >
                     <FolderOpen className="h-4 w-4" />
                     Next Drawer

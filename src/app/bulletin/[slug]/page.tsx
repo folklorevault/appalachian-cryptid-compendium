@@ -130,10 +130,10 @@ export default async function BulletinDetailPage({
         {/* Header */}
         <div className="max-w-3xl mx-auto px-6 pb-6">
           <div className="flex items-center gap-3 flex-wrap mb-3">
-            <span className="font-typewriter text-xs font-bold tracking-[0.05em] text-[hsl(var(--bureau-ink))]">
+            <span className="font-typewriter text-xs font-bold tracking-[0.05em] text-bureau-ink">
               {bulletin.bulletinNumber}
             </span>
-            <span className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))]">
+            <span className="font-typewriter text-xs text-bureau-ink-muted">
               {formatLongDate(bulletin.date)}
             </span>
             <span
@@ -165,7 +165,7 @@ export default async function BulletinDetailPage({
 
         {/* Divider */}
         <div className="max-w-3xl mx-auto px-6">
-          <hr className="border-t-2 border-[hsl(var(--bureau-ink-muted))] mb-8" />
+          <hr className="border-t-2 border-bureau-ink-muted mb-8" />
         </div>
 
         {/* Body */}

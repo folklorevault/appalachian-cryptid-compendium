@@ -28,32 +28,32 @@ export const EvidenceChip = ({
     "label-tape": cn(
       // DYMO label maker aesthetic - embossed black on colored tape
       "px-2.5 py-1 rounded-sm",
-      "bg-[hsl(var(--bureau-manila))] text-[hsl(var(--bureau-ink))]",
+      "bg-bureau-manila text-bureau-ink",
       "font-typewriter uppercase tracking-[0.15em] text-xs",
       "shadow-[inset_0_1px_0_rgba(255,255,255,0.3),inset_0_-1px_0_rgba(0,0,0,0.1)]",
-      "border border-[hsl(var(--bureau-border))]",
+      "border border-bureau-border",
       // Slight embossed/debossed effect
       "[text-shadow:0_1px_0_rgba(255,255,255,0.3)]"
     ),
     "manila-tab": cn(
       // Manila folder tab
       "px-3 py-1 rounded-t-md rounded-b-none",
-      "bg-[hsl(var(--bureau-manila))] text-[hsl(var(--bureau-ink))]",
+      "bg-bureau-manila text-bureau-ink",
       "font-typewriter text-xs",
-      "border-x border-t border-[hsl(var(--bureau-border))]",
+      "border-x border-t border-bureau-border",
       "shadow-[0_2px_0_hsl(var(--bureau-manila-dark))]",
       // Tab shape with notched bottom
-      "relative before:absolute before:bottom-0 before:left-0 before:right-0 before:h-[2px] before:bg-[hsl(var(--bureau-border))]"
+      "relative before:absolute before:bottom-0 before:left-0 before:right-0 before:h-[2px] before:bg-bureau-border"
     ),
     "punch-card": cn(
       // IBM punch card aesthetic
       "px-2 py-0.5 rounded-none",
-      "bg-[hsl(var(--bureau-paper))] text-[hsl(var(--bureau-ink))]",
+      "bg-bureau-paper text-bureau-ink",
       "font-typewriter uppercase text-xs tracking-[0.2em]",
-      "border border-[hsl(var(--bureau-border))]",
+      "border border-bureau-border",
       // Punch holes effect on sides
-      "before:content-['◯'] before:text-xs before:text-[hsl(var(--bureau-ink-muted))] before:mr-1",
-      "after:content-['◯'] after:text-xs after:text-[hsl(var(--bureau-ink-muted))] after:ml-1"
+      "before:content-['◯'] before:text-xs before:text-bureau-ink-muted before:mr-1",
+      "after:content-['◯'] after:text-xs after:text-bureau-ink-muted after:ml-1"
     ),
   };
 

@@ -136,8 +136,8 @@ export const FilingDrawer = ({
       className={cn(
         "group",
         "rounded-sm overflow-hidden",
-        "border-2 border-[hsl(var(--bureau-border))]/60",
-        "bg-[hsl(var(--bureau-manila-light))]",
+        "border-2 border-bureau-border/60",
+        "bg-bureau-manila-light",
         // Subtle shadow for depth
         "shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]",
         className
@@ -149,16 +149,16 @@ export const FilingDrawer = ({
           className={cn(
             "flex flex-1 items-center gap-3 w-full text-left",
             "px-4 py-3",
-            "bg-[hsl(var(--bureau-manila))]",
-            "border-b-2 border-[hsl(var(--bureau-border))]/40",
+            "bg-bureau-manila",
+            "border-b-2 border-bureau-border/40",
             // Hover state - tab "lifts"
-            "hover:bg-[hsl(var(--bureau-manila-light))]",
+            "hover:bg-bureau-manila-light",
             "transition-colors duration-75",
             // Focus state
             "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
             // Open state styling
-            "group-data-[state=open]:bg-[hsl(var(--bureau-manila-light))]",
-            "group-data-[state=open]:border-b-[hsl(var(--bureau-border))]/60"
+            "group-data-[state=open]:bg-bureau-manila-light",
+            "group-data-[state=open]:border-b-bureau-border/60"
           )}
         >
           {/* Tab shape - sits above the line */}
@@ -166,8 +166,8 @@ export const FilingDrawer = ({
             className={cn(
               "relative",
               "px-3 py-1",
-              "bg-[hsl(var(--bureau-manila-dark))]",
-              "border border-[hsl(var(--bureau-border))]",
+              "bg-bureau-manila-dark",
+              "border border-bureau-border",
               "rounded-t-md rounded-b-none",
               "-mb-1",
               // Shadow under tab
@@ -196,7 +196,7 @@ export const FilingDrawer = ({
             className={cn(
               "flex items-center justify-center",
               "w-6 h-6",
-              "text-[hsl(var(--bureau-ink-muted))]",
+              "text-bureau-ink-muted",
               "transition-transform duration-75"
             )}
           >
@@ -234,7 +234,7 @@ export const FilingDrawer = ({
         <div className="relative">
           {/* Slotted-in notch effect - darker line where tab meets content */}
           <div
-            className="absolute top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-[hsl(var(--bureau-manila-dark))]/40 to-transparent"
+            className="absolute top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-bureau-manila-dark/40 to-transparent"
             aria-hidden="true"
           />
 
@@ -242,11 +242,11 @@ export const FilingDrawer = ({
             className={cn(
               "px-5 py-4 pt-5 pr-24",
               // Interior paper - slightly different texture
-              "bg-[hsl(var(--bureau-paper))]",
+              "bg-bureau-paper",
               // Inset shadow for depth - "looking into folder"
               "shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]",
               // Content typography
-              "text-[hsl(var(--bureau-ink))]",
+              "text-bureau-ink",
               "text-sm leading-relaxed"
             )}
           >
@@ -255,8 +255,8 @@ export const FilingDrawer = ({
               className={cn(
                 "absolute top-3 right-4",
                 "px-2 py-0.5",
-                "bg-[hsl(var(--bureau-stamp))]/10",
-                "border border-[hsl(var(--bureau-stamp))]/30",
+                "bg-bureau-stamp/10",
+                "border border-bureau-stamp/30",
                 "rounded-sm",
                 "transform -rotate-2"
               )}
@@ -264,7 +264,7 @@ export const FilingDrawer = ({
               <span
                 className={cn(
                   "font-typewriter text-xs font-bold tracking-[0.15em] uppercase",
-                  "text-[hsl(var(--bureau-stamp))]/70"
+                  "text-bureau-stamp/70"
                 )}
               >
                 In Review
@@ -294,9 +294,9 @@ export const FilingCabinetControls = ({ className }: { className?: string }) => 
           "inline-flex items-center gap-1.5",
           "px-2.5 py-1",
           "text-xs font-typewriter uppercase tracking-wider",
-          "text-[hsl(var(--bureau-ink-muted))]",
-          "bg-[hsl(var(--bureau-manila))] hover:bg-[hsl(var(--bureau-manila-dark))]",
-          "border border-[hsl(var(--bureau-border))]/50",
+          "text-bureau-ink-muted",
+          "bg-bureau-manila hover:bg-bureau-manila-dark",
+          "border border-bureau-border/50",
           "rounded-sm",
           "transition-colors duration-75",
           "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"

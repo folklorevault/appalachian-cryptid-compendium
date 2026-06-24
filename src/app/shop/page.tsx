@@ -34,7 +34,7 @@ export default function ShopPage() {
                 className="block w-10 h-px bg-border"
                 aria-hidden="true"
               />
-              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-[hsl(var(--bureau-ink-muted))]">
+              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-bureau-ink-muted">
                 Bureau of Appalachian Cryptid Documentation ◆ Field Office No. 7
               </span>
               <span
@@ -75,7 +75,7 @@ export default function ShopPage() {
               className="block flex-1 h-px bg-border"
               aria-hidden="true"
             />
-            <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-[hsl(var(--bureau-ink-muted))]">
+            <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-bureau-ink-muted">
               Field Decals
             </span>
             <span

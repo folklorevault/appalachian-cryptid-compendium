@@ -46,7 +46,7 @@ export default async function Home() {
             {/* Classification label */}
             <div className="flex items-center justify-center gap-3.5 mb-6" aria-hidden="true">
               <span className="block w-10 h-px bg-border" />
-              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-[hsl(var(--bureau-ink-muted))]">
+              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-bureau-ink-muted">
                 Appalachian Cryptid Division — Working Document
               </span>
               <span className="block w-10 h-px bg-border" />
@@ -69,7 +69,7 @@ export default async function Home() {
             </p>
 
             {/* Typewriter tagline */}
-            <p className="font-typewriter text-xs text-[hsl(var(--bureau-ink-muted))] tracking-wider opacity-70 mb-10">
+            <p className="font-typewriter text-xs text-bureau-ink-muted tracking-wider opacity-70 mb-10">
               Each entry is documented, cross-referenced, and filed.
             </p>
 

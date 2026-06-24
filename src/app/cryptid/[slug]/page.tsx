@@ -170,7 +170,7 @@ export default async function CryptidDetailPage({
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 items-start">
             {imageUrl && (
               <div className="relative shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
-                <div className="relative overflow-hidden rounded-sm border-2 border-[hsl(var(--bureau-border))] shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
+                <div className="relative overflow-hidden rounded-sm border-2 border-bureau-border shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
                   <Image
                     src={imageUrl}
                     alt={
@@ -410,7 +410,7 @@ export default async function CryptidDetailPage({
                         href={`/cryptid/${related.slug?.current}`}
                         className="group"
                       >
-                        <Card className="border-2 border-border hover:border-[hsl(var(--bureau-border))] hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(42,42,42,0.12)] transition-all duration-200 ease-out overflow-hidden">
+                        <Card className="border-2 border-border hover:border-bureau-border hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(42,42,42,0.12)] transition-all duration-200 ease-out overflow-hidden">
                           <div className="relative aspect-square overflow-hidden">
                             <Image
                               src={relatedImageUrl}

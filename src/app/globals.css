@@ -61,6 +61,8 @@
   --color-bureau-manila-light: hsl(var(--bureau-manila-light));
   --color-bureau-ink: hsl(var(--bureau-ink));
   --color-bureau-ink-muted: hsl(var(--bureau-ink-muted));
+  --color-bureau-border: hsl(var(--bureau-border));
+  --color-bureau-paper: hsl(var(--bureau-paper));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);

@@ -59,7 +59,7 @@ export default async function BulletinsPage() {
           <div className="relative z-10 max-w-3xl mx-auto space-y-4">
             <div className="flex items-center justify-center gap-3.5 mb-6">
               <span className="block w-10 h-px bg-border" aria-hidden="true" />
-              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-[hsl(var(--bureau-ink-muted))]">
+              <span className="font-typewriter text-xs tracking-[0.2em] uppercase text-bureau-ink-muted">
                 Bureau of Appalachian Cryptid Documentation ◆ Records Division
               </span>
               <span className="block w-10 h-px bg-border" aria-hidden="true" />
