@@ -15,9 +15,12 @@
     }
   ],
   "osvVulnerabilityAlerts": true,
+  "transitiveRemediation": true,
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null,
-    "labels": ["security"]
+    "labels": ["security"],
+    "vulnerabilityFixStrategy": "highest",
+    "automerge": true
   },
   "prHourlyLimit": 2,
   "prConcurrentLimit": 10
