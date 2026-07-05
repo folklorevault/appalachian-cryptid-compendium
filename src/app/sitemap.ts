@@ -77,7 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${BASE_URL}/bulletin/${b.slug}`,
     lastModified: new Date(b._updatedAt),
     changeFrequency: "monthly" as const,
-    priority: 0.7,
+    priority: 0.8,
   }));
 
   return [...staticPages, ...cryptidPages, ...anomalyPages, ...bulletinPages];
