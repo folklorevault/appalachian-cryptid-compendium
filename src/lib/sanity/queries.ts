@@ -236,6 +236,13 @@ export const bulletinBySlugQuery = `*[_type == "bulletin" && slug.current == $sl
   relatedAnomalies[]-> { _id, name, slug }
 }`;
 
+// Bulletins that reference a given cryptid or anomaly document id.
+// Inverse of relatedCryptids[]/relatedAnomalies[] — `references()` matches
+// a reference to $id anywhere in the document, so one query serves both.
+export const bulletinsReferencingQuery = `*[_type == "bulletin" && references($id)] | order(date desc) {
+  ${bulletinListFields}
+}`;
+
 export const bulletinSlugsQuery = `*[_type == "bulletin"].slug.current`;
 
 // Slugs with _updatedAt (for sitemap)

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { BackToTop } from "@/components/BackToTop";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { BulletinRefList } from "@/components/BulletinRefList";
 import { Footer } from "@/components/Footer";
 import {
   StructuredData,
@@ -21,7 +22,9 @@ import {
 import {
   fetchBulletinBySlug,
   fetchBulletinSlugs,
+  fetchBulletins,
 } from "@/lib/sanity/fetchers";
+import { pickRelatedBulletins } from "@/lib/bulletins";
 import { formatLongDate } from "@/lib/utils";
 import type { BulletinCategory } from "@/types/sanity";
 
@@ -89,6 +92,9 @@ export default async function BulletinDetailPage({
   }
 
   const categoryLabel = CATEGORY_LABELS[bulletin.category] ?? bulletin.category;
+
+  const allBulletins = await fetchBulletins();
+  const relatedBulletins = pickRelatedBulletins(allBulletins, bulletin);
 
   return (
     <div className="min-h-screen bg-background paper-texture">
@@ -220,6 +226,12 @@ export default async function BulletinDetailPage({
                 </div>
               </div>
             )}
+
+          {/* Related Bulletins — keeps the section cross-linked */}
+          <BulletinRefList
+            heading="Related Bulletins"
+            bulletins={relatedBulletins}
+          />
 
           {/* Newsletter */}
           <div className="mt-10 pt-8 border-t border-border">

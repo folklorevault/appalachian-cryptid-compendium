@@ -30,11 +30,13 @@ import {
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { FieldSupplyDrop } from "@/components/FieldSupplyDrop";
+import { BulletinRefList } from "@/components/BulletinRefList";
 import { Footer } from "@/components/Footer";
 import {
   fetchCryptidBySlug,
   fetchCryptidSlugs,
   fetchRelatedCryptids,
+  fetchBulletinsReferencing,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
 
@@ -99,11 +101,14 @@ export default async function CryptidDetailPage({
     notFound();
   }
 
-  const relatedCryptids = await fetchRelatedCryptids(
-    cryptid.slug?.current,
-    cryptid.region,
-    cryptid.dangerLevel
-  );
+  const [relatedCryptids, referencingBulletins] = await Promise.all([
+    fetchRelatedCryptids(
+      cryptid.slug?.current,
+      cryptid.region,
+      cryptid.dangerLevel
+    ),
+    fetchBulletinsReferencing(cryptid._id),
+  ]);
 
   const imageUrl = cryptid.image
     ? urlFor(cryptid.image)
@@ -435,6 +440,12 @@ export default async function CryptidDetailPage({
               </div>
             </div>
           )}
+
+          {/* Bulletins that reference this case file */}
+          <BulletinRefList
+            heading="Referenced in Bureau Bulletins"
+            bulletins={referencingBulletins}
+          />
 
           {/* Share */}
           <div className="mb-8 border-t border-border pt-6">

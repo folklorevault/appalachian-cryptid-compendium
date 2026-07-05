@@ -40,11 +40,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { BulletinRefList } from "@/components/BulletinRefList";
 import { Footer } from "@/components/Footer";
 import {
   fetchAnomalyBySlug,
   fetchAnomalySlugs,
   fetchRelatedAnomalies,
+  fetchBulletinsReferencing,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
 import { getAnomalyStatusColor } from "@/lib/caseUtils";
@@ -135,11 +137,14 @@ export default async function AnomalyDetailPage({
     notFound();
   }
 
-  const relatedAnomalies = await fetchRelatedAnomalies(
-    anomaly.slug?.current,
-    anomaly.anomalyType,
-    anomaly.region
-  );
+  const [relatedAnomalies, referencingBulletins] = await Promise.all([
+    fetchRelatedAnomalies(
+      anomaly.slug?.current,
+      anomaly.anomalyType,
+      anomaly.region
+    ),
+    fetchBulletinsReferencing(anomaly._id),
+  ]);
 
   const imageUrl = anomaly.image
     ? urlFor(anomaly.image)
@@ -500,6 +505,12 @@ export default async function AnomalyDetailPage({
               </div>
             </div>
           )}
+
+          {/* Bulletins that reference this case file */}
+          <BulletinRefList
+            heading="Referenced in Bureau Bulletins"
+            bulletins={referencingBulletins}
+          />
 
           {/* Share */}
           <div className="mb-8 border-t border-border pt-6">

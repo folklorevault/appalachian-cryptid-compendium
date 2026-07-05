@@ -20,6 +20,7 @@ import {
   relatedAnomaliesQuery,
   bulletinsListQuery,
   bulletinBySlugQuery,
+  bulletinsReferencingQuery,
   bulletinSlugsQuery,
   bulletinSlugsWithDatesQuery,
   feedItemsQuery,
@@ -332,6 +333,29 @@ export const fetchBulletinBySlug = cache(async (
   const bulletin = staticBulletins.find((b) => b.slug.current === slug);
   return bulletin ?? null;
 });
+
+/**
+ * Bulletins that reference a given cryptid or anomaly (by document _id).
+ * Powers the reciprocal "Referenced in Bureau Bulletins" section on
+ * cryptid/anomaly detail pages. Tagged "bulletins" so editing a bulletin's
+ * related refs revalidates these sections too.
+ */
+export async function fetchBulletinsReferencing(
+  id: string
+): Promise<SanityBulletinListItem[]> {
+  const result = await sanityFetch<SanityBulletinListItem[]>(
+    bulletinsReferencingQuery,
+    { id },
+    ["bulletins"]
+  );
+  if (result) return result;
+
+  // Static fallback: match against static bulletins' relatedCryptids ids.
+  // (Static data has no anomaly references; anomalies are Sanity-only.)
+  return staticBulletins
+    .filter((b) => b.relatedCryptids?.some((c) => c._id === id))
+    .map(bulletinToListItem);
+}
 
 export async function fetchBulletinSlugs(): Promise<string[]> {
   const result = await sanityFetch<string[]>(
