@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useDeferredValue } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LabelTape } from "@/components/EvidenceChip";
@@ -27,6 +27,11 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
   const [selectedRegion, setSelectedRegion] = useState("all");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
+  // The input stays fully responsive to `searchQuery`, but the expensive
+  // filter + grid re-render reads this deferred value, so keystrokes never
+  // block on rendering the results. Keeps typing INP low as the catalog grows.
+  const deferredQuery = useDeferredValue(searchQuery);
+
   // Preserve Sanity's _createdAt desc order, then apply client-side filters
   const filteredCryptids = useMemo(() => {
     let results = cryptids;
@@ -37,16 +42,16 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
       );
     }
 
-    if (!searchQuery) return results;
+    if (!deferredQuery) return results;
 
-    const query = searchQuery.toLowerCase();
+    const query = deferredQuery.toLowerCase();
     return results.filter(
       (c) =>
         c.name.toLowerCase().includes(query) ||
         c.location.toLowerCase().includes(query) ||
         (c.description?.toLowerCase().includes(query) ?? false)
     );
-  }, [cryptids, searchQuery, selectedRegion]);
+  }, [cryptids, deferredQuery, selectedRegion]);
 
   const visibleCryptids = filteredCryptids.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCryptids.length;

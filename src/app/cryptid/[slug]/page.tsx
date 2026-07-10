@@ -28,6 +28,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { DeferredMount } from "@/components/DeferredMount";
 import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { FieldSupplyDrop } from "@/components/FieldSupplyDrop";
 import { BulletinRefList } from "@/components/BulletinRefList";
@@ -449,12 +450,16 @@ export default async function CryptidDetailPage({
 
           {/* Share */}
           <div className="mb-8 border-t border-border pt-6">
-            <ShareButtons title={cryptid.name} />
+            <DeferredMount minHeight={56}>
+              <ShareButtons title={cryptid.name} />
+            </DeferredMount>
           </div>
 
           {/* Newsletter Signup - compact strip */}
           <div className="mb-8 border-t border-border pt-8">
-            <NewsletterSignup variant="compact" />
+            <DeferredMount minHeight={140}>
+              <NewsletterSignup variant="compact" />
+            </DeferredMount>
           </div>
         </div>
       </main>

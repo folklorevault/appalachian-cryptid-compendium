@@ -40,6 +40,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { DeferredMount } from "@/components/DeferredMount";
 import { BulletinRefList } from "@/components/BulletinRefList";
 import { Footer } from "@/components/Footer";
 import {
@@ -514,12 +515,16 @@ export default async function AnomalyDetailPage({
 
           {/* Share */}
           <div className="mb-8 border-t border-border pt-6">
-            <ShareButtons title={anomaly.name} />
+            <DeferredMount minHeight={56}>
+              <ShareButtons title={anomaly.name} />
+            </DeferredMount>
           </div>
 
           {/* Newsletter */}
           <div className="mb-8 border-t border-border pt-8">
-            <NewsletterSignup variant="compact" />
+            <DeferredMount minHeight={140}>
+              <NewsletterSignup variant="compact" />
+            </DeferredMount>
           </div>
         </div>
       </main>
