@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchCryptids, fetchBulletins } from "@/lib/sanity/fetchers";
 import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { DeferredMount } from "@/components/DeferredMount";
 import { FeaturedCryptid } from "@/components/FeaturedCryptid";
 import { BulletinTeaser } from "@/components/BulletinTeaser";
 import { SightingsMapTeaser } from "@/components/SightingsMapTeaser";
@@ -159,7 +160,9 @@ export default async function Home() {
               Sign up and we&apos;ll email you when new creatures are added to
               the guide or the Bureau has news to report.
             </p>
-            <NewsletterSignup />
+            <DeferredMount minHeight={150}>
+              <NewsletterSignup />
+            </DeferredMount>
           </div>
         </section>
 
