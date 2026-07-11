@@ -35,6 +35,13 @@ const detailFields = `
   imageAlt,
   gridImage,
   tags,
+  fileAbstract,
+  caseFileSections[] {
+    _key,
+    heading,
+    label,
+    body
+  },
   physicalDescription,
   behavior,
   habitat,

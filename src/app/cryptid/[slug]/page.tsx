@@ -41,6 +41,14 @@ import {
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
 
+// Split blank-line-separated prose into paragraphs for clean typography.
+function toParagraphs(body: string): string[] {
+  return body
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
 // ── Static params for build-time generation ──────────────
 
 export async function generateStaticParams() {
@@ -238,6 +246,65 @@ export default async function CryptidDetailPage({
               </div>
             </div>
           </div>
+
+          {/* File Abstract — always-visible summary of record, entity-first for search snippets */}
+          {cryptid.fileAbstract && (
+            <section aria-labelledby="file-abstract-heading" className="mb-10">
+              <div className="relative rounded-sm border-2 border-bureau-border/60 bg-bureau-manila-light shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]">
+                <div className="flex items-center gap-3 px-5 py-2 border-b-2 border-bureau-border/40 bg-bureau-manila">
+                  <span
+                    id="file-abstract-heading"
+                    className="font-typewriter text-xs font-bold tracking-label uppercase text-foreground"
+                  >
+                    File Abstract
+                  </span>
+                  <span
+                    className="flex-1 border-t border-dashed border-bureau-border/40"
+                    aria-hidden="true"
+                  />
+                  <span className="font-typewriter text-[0.65rem] tracking-eyebrow uppercase text-bureau-ink-muted">
+                    Summary of Record
+                  </span>
+                </div>
+                <div className="px-5 py-4 bg-bureau-paper text-bureau-ink text-[0.95rem] leading-relaxed space-y-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
+                  {toParagraphs(cryptid.fileAbstract).map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Case File Sections — always-visible narrative sections whose headings carry the search query */}
+          {cryptid.caseFileSections && cryptid.caseFileSections.length > 0 && (
+            <div className="mb-10 space-y-8">
+              {cryptid.caseFileSections.map((section) => (
+                <section
+                  key={section._key}
+                  aria-labelledby={`cfs-${section._key}`}
+                >
+                  <h2
+                    id={`cfs-${section._key}`}
+                    className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3 font-display text-xl font-bold text-foreground leading-tight"
+                  >
+                    <span>{section.heading}</span>
+                    {section.label && (
+                      <span className="font-typewriter text-xs font-bold tracking-label uppercase text-bureau-ink-muted">
+                        {section.label}
+                      </span>
+                    )}
+                  </h2>
+                  <div className="space-y-3 text-foreground/90 leading-relaxed">
+                    {toParagraphs(section.body).map((p, i) => (
+                      <p key={i} className="whitespace-pre-line">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
 
           {/* Detailed Sections - Filing Cabinet */}
           {(cryptid.physicalDescription ||

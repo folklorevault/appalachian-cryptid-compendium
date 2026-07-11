@@ -90,6 +90,14 @@ export default defineType({
       description: 'Brief summary shown on cards and previews',
     }),
     defineField({
+      name: 'fileAbstract',
+      title: 'File Abstract',
+      type: 'text',
+      rows: 6,
+      description:
+        'Always-visible summary rendered directly under the name, above all drawers. Entity-first and definitional: lead with a flat "The [name] is a creature reported across..." sentence so it works as a search snippet. Blank lines separate paragraphs. Avoid em dashes.',
+    }),
+    defineField({
       name: 'image',
       title: 'Detail Image (Portrait)',
       type: 'image',
@@ -200,6 +208,46 @@ export default defineType({
       type: 'text',
       rows: 6,
       description: 'Internal notes from Bureau field agents',
+    }),
+    defineField({
+      name: 'caseFileSections',
+      title: 'Case File Sections (always visible)',
+      type: 'array',
+      description:
+        'Prominent, always-visible narrative sections rendered above the collapsible drawers. Use for answers people arrive searching for (e.g. "Is the [name] real?", "Where the name came from"). The heading carries the search query; the label is the Bureau chrome.',
+      of: [
+        {
+          type: 'object',
+          name: 'caseFileSection',
+          title: 'Case File Section',
+          fields: [
+            {
+              name: 'heading',
+              title: 'Heading (semantic, carries the search query)',
+              type: 'string',
+              description: 'Plain-language, query-shaped. e.g. "Is the Not Deer Real?"',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'label',
+              title: 'Bureau Label (visual chrome)',
+              type: 'string',
+              description: 'Short stencil label shown beside the heading. e.g. "Disease Assessment"',
+            },
+            {
+              name: 'body',
+              title: 'Body',
+              type: 'text',
+              rows: 10,
+              description: 'Blank lines separate paragraphs. Avoid em dashes.',
+              validation: (Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {title: 'heading', subtitle: 'label'},
+          },
+        },
+      ],
     }),
     defineField({
       name: 'declassifiedBriefings',

@@ -223,7 +223,16 @@ export const FilingDrawer = ({
       </AccordionPrimitive.Header>
 
       {/* Content - Inside the folder */}
+      {/*
+       * forceMount keeps closed-drawer content in the server-rendered HTML so
+       * crawlers (Google) can index it. Without it, Radix renders closed
+       * `Content` as null and ~2/3 of every case file never reaches the DOM.
+       * With forceMount, data-state still reflects the real open/closed state,
+       * so the `data-[state=closed]:hidden` CSS below handles the visual
+       * collapse while the text stays in the markup.
+       */}
       <AccordionPrimitive.Content
+        forceMount
         className={cn(
           // INSTANT open - no slide animation
           "overflow-hidden",
