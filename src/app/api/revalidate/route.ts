@@ -38,6 +38,12 @@ export async function POST(request: NextRequest) {
       if (slug) {
         revalidateTag(`bulletin-${slug}`, "max");
       }
+      // Bulletins reference cryptid + anomaly case files (relatedCryptids/
+      // relatedAnomalies). Those pages render a reciprocal "Referenced in
+      // Bulletins" section, so a bulletin change must also refresh them —
+      // otherwise the backlinks never appear on the referenced pages.
+      revalidateTag("cryptids", "max");
+      revalidateTag("anomalies", "max");
     } else {
       // For unknown types, revalidate everything
       revalidateTag("sanity", "max");
