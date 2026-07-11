@@ -32,6 +32,13 @@ export interface SanityDeclassifiedBriefing {
   answer: string
 }
 
+export interface SanityCaseFileSection {
+  _key: string
+  heading: string
+  label?: string
+  body: string
+}
+
 export interface SanityTestimony {
   _key: string
   witness: string
@@ -57,6 +64,8 @@ export interface SanityCryptid {
   imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
+  fileAbstract?: string
+  caseFileSections?: SanityCaseFileSection[]
   physicalDescription?: string
   behavior?: string
   habitat?: string
