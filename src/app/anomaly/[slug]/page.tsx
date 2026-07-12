@@ -86,11 +86,17 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
+  // Prefer editor-authored SEO title, else the anomaly name alone.
+  const title = anomaly.metaTitle || anomaly.name;
+
+  // Prefer editor-authored meta description. Else build a fallback from
+  // subhead/description + location.
   const rawDesc = anomaly.subhead || anomaly.description || `Learn about ${anomaly.name}`;
   const withLocation = `${rawDesc} Reported near ${anomaly.location}.`;
-  const description = withLocation.length > 160
+  const derived = withLocation.length > 160
     ? rawDesc.slice(0, 157) + '...'
     : withLocation;
+  const description = anomaly.metaDescription || derived;
 
   const ogImageUrl = anomaly.image
     ? urlFor(anomaly.image)
@@ -103,7 +109,7 @@ export async function generateMetadata({
     : "https://appalachiancryptid.com/og-image.jpg";
 
   return {
-    title: anomaly.name,
+    title,
     description,
     alternates: {
       canonical: `/anomaly/${slug}`,
