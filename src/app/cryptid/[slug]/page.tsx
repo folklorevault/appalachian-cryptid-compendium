@@ -70,14 +70,19 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
-  // Build a CTR-optimized description: name + location + subhead/description
+  // Prefer editor-authored SEO title, else the default case-file template.
+  const title = cryptid.metaTitle || `${cryptid.name} | Sightings & Case File`;
+
+  // Prefer editor-authored meta description. Else build a CTR-optimized
+  // fallback: name + location + subhead/description.
   const detail = cryptid.subhead || cryptid.description || "";
   const firstDoc = cryptid.firstDocumented ? ` First documented ${cryptid.firstDocumented}.` : "";
   const candidate = `${cryptid.name} — ${cryptid.location}.${firstDoc} ${detail}`.trim();
-  const description = candidate.length > 160 ? candidate.slice(0, 157) + "..." : candidate;
+  const derived = candidate.length > 160 ? candidate.slice(0, 157) + "..." : candidate;
+  const description = cryptid.metaDescription || derived;
 
   return {
-    title: `${cryptid.name} | Sightings & Case File`,
+    title,
     description,
     alternates: {
       canonical: `/cryptid/${slug}`,

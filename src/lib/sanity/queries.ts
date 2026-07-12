@@ -35,6 +35,8 @@ const detailFields = `
   imageAlt,
   gridImage,
   tags,
+  metaTitle,
+  metaDescription,
   fileAbstract,
   caseFileSections[] {
     _key,

@@ -64,6 +64,8 @@ export interface SanityCryptid {
   imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
+  metaTitle?: string
+  metaDescription?: string
   fileAbstract?: string
   caseFileSections?: SanityCaseFileSection[]
   physicalDescription?: string
