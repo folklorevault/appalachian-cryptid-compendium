@@ -56,14 +56,19 @@ export async function generateMetadata({
     return { title: "Bulletin Not Found" };
   }
 
+  // Prefer editor-authored SEO title, else the default bulletin template.
+  const title = bulletin.metaTitle || `${bulletin.title} | Bureau Bulletins`;
+
+  // Prefer editor-authored meta description. Else fall back to the summary.
   const rawSummary = bulletin.summary || "";
-  const description =
+  const derived =
     rawSummary.length > 160
       ? rawSummary.slice(0, 157) + "..."
       : rawSummary;
+  const description = bulletin.metaDescription || derived;
 
   return {
-    title: `${bulletin.title} | Bureau Bulletins`,
+    title,
     description,
     alternates: {
       canonical: `/bulletin/${slug}`,

@@ -64,6 +64,8 @@ export interface SanityCryptid {
   imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
+  metaTitle?: string
+  metaDescription?: string
   fileAbstract?: string
   caseFileSections?: SanityCaseFileSection[]
   physicalDescription?: string
@@ -135,6 +137,8 @@ export interface SanityAnomaly {
   status: AnomalyStatus
   firstDocumented?: string
   description?: string
+  metaTitle?: string
+  metaDescription?: string
   image?: SanityImage
   imageAlt?: string
   gridImage?: SanityImage
@@ -191,6 +195,8 @@ export interface SanityBulletinListItem {
 
 export interface SanityBulletin extends SanityBulletinListItem {
   _type: 'bulletin'
+  metaTitle?: string
+  metaDescription?: string
   body?: unknown[]
   relatedAnomalies?: Array<{ _id: string; name: string; slug: SanitySlug }>
 }

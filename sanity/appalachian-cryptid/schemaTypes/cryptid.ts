@@ -98,6 +98,25 @@ export default defineType({
         'Always-visible summary rendered directly under the name, above all drawers. Entity-first and definitional: lead with a flat "The [name] is a creature reported across..." sentence so it works as a search snippet. Blank lines separate paragraphs. Avoid em dashes.',
     }),
     defineField({
+      name: 'metaTitle',
+      title: 'Meta Title (SEO)',
+      type: 'string',
+      description:
+        'The <title> shown in Google results and the browser tab. Lead with the name so it reads as a case file. Aim for 50-60 characters. If left blank, a fallback of "[name] | Sightings & Case File" is used. Avoid em dashes.',
+      validation: (Rule) =>
+        Rule.max(65).warning('Google truncates titles past ~60 characters.'),
+    }),
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Description (SEO)',
+      type: 'text',
+      rows: 2,
+      description:
+        'The <meta name="description"> shown in Google results. Write it as a hook in Bureau voice, not a summary. Aim for 150-155 characters. If left blank, a fallback is derived from the subhead. Avoid em dashes.',
+      validation: (Rule) =>
+        Rule.max(160).warning('Google truncates descriptions past ~155 characters.'),
+    }),
+    defineField({
       name: 'image',
       title: 'Detail Image (Portrait)',
       type: 'image',
