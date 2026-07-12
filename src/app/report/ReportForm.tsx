@@ -218,9 +218,9 @@ export function ReportForm() {
             <div className="font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground">
               Report Submitted
             </div>
-            <h1 className="text-title font-bold text-foreground font-display">
+            <h2 className="text-title font-bold text-foreground font-display">
               Report Filed Successfully
-            </h1>
+            </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
               Your sighting has been logged in the official record. Please retain this receipt for your files.
             </p>
@@ -241,9 +241,9 @@ export function ReportForm() {
           <div className="font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground">
             Citizen Tipline
           </div>
-          <h1 className="text-title font-bold text-foreground font-display">
+          <h2 className="text-title font-bold text-foreground font-display">
             Tell the Bureau what you saw
-          </h1>
+          </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Anonymous reports welcome. No account needed. Share whatever detail
             you&apos;re comfortable with — even &ldquo;something weird in the woods&rdquo;

@@ -28,6 +28,10 @@ export default function ReportPage() {
           </Link>
         </div>
 
+        {/* Server-rendered so crawlers and pre-hydration users see a real
+            h1; ReportForm's visible headings are h2s nested under this. */}
+        <h1 className="sr-only">Tell the Bureau what you saw</h1>
+
         <Suspense fallback={null}>
           <ReportForm />
         </Suspense>
