@@ -1,9 +1,0 @@
-# Robots.txt for Appalachian Cryptid Field Guide
-# https://appalachiancryptid.com
-
-User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /api/
-
-Sitemap: https://appalachiancryptid.com/sitemap.xml
