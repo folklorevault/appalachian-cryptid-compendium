@@ -53,3 +53,6 @@ gitleaks-baseline.json
 
 # Superset local workspace
 .superset/
+
+# Private analytics exports + strategy notes (GSC / Rybbit / Bing citations) — local only, never publish
+seostuff/
