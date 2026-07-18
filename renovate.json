@@ -20,7 +20,6 @@
     }
   ],
   "osvVulnerabilityAlerts": true,
-  "transitiveRemediation": true,
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null,
     "labels": ["security"],
