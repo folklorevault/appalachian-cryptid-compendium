@@ -11,11 +11,37 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
   if (variant === "simple") {
     return (
       <footer className="border-t border-border bg-card py-8 px-6">
-        <div className="max-w-6xl mx-auto text-center">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 text-center">
           <p className="text-sm text-muted-foreground">
             © {year} Appalachian Cryptid Field Guide. Compiled in East
             Tennessee.
           </p>
+          <ul className="flex items-center gap-4 text-xs">
+            <li>
+              <Link
+                href="/contact"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/privacy"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/terms"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Terms &amp; Conditions
+              </Link>
+            </li>
+          </ul>
         </div>
       </footer>
     );
@@ -127,11 +153,37 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
             </p>
           </div>
         </div>
-        <div className="border-t border-border pt-6">
-          <p className="text-center text-sm text-muted-foreground">
+        <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+          <p className="text-sm text-muted-foreground">
             © {year} Appalachian Cryptid Field Guide. Compiled in East
             Tennessee.
           </p>
+          <ul className="flex items-center gap-4 text-xs">
+            <li>
+              <Link
+                href="/contact"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/privacy"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/terms"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                Terms &amp; Conditions
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>
