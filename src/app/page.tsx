@@ -12,7 +12,7 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Appalachian Cryptid Field Guide — Creatures of the Mountains & the American South",
   description:
-    "A catalog of cryptids, monsters, and unexplained mysteries from West Virginia, Tennessee, Virginia, North Carolina, and the greater American South. Documented by the Appalachian Cryptid Bureau.",
+    "Field guide to the cryptids, monsters, and unexplained mysteries of Appalachia and the American South — case files documented by the Bureau.",
   alternates: {
     canonical: "/",
   },

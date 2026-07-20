@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { truncateMeta } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
@@ -86,17 +87,17 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
-  // Prefer editor-authored SEO title, else the anomaly name alone.
-  const title = anomaly.metaTitle || anomaly.name;
+  // Hand-authored metaTitle is used verbatim (title.absolute skips the root
+  // "| Appalachian Cryptids List" template); the fallback keeps it.
+  const title = anomaly.metaTitle
+    ? { absolute: anomaly.metaTitle }
+    : anomaly.name;
 
   // Prefer editor-authored meta description. Else build a fallback from
   // subhead/description + location.
   const rawDesc = anomaly.subhead || anomaly.description || `Learn about ${anomaly.name}`;
   const withLocation = `${rawDesc} Reported near ${anomaly.location}.`;
-  const derived = withLocation.length > 160
-    ? rawDesc.slice(0, 157) + '...'
-    : withLocation;
-  const description = anomaly.metaDescription || derived;
+  const description = anomaly.metaDescription || truncateMeta(withLocation);
 
   const ogImageUrl = anomaly.image
     ? urlFor(anomaly.image)

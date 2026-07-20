@@ -11,7 +11,7 @@ import {
 export const metadata: Metadata = {
   title: "Bureau Bulletins",
   description:
-    "Official communications from the Bureau of Appalachian Cryptid Documentation. Field primers, regional analysis, and operational guidance released to the public record.",
+    "Field primers, regional analysis, and operational guidance from the Bureau of Appalachian Cryptid Documentation.",
   alternates: {
     canonical: "/bulletins",
   },

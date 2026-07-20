@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Anomalies Desk",
   description:
-    "Lights, hauntings, curses, and other unresolved Appalachian incidents, cataloged like field reports. Browse the Bureau's catalog of unexplained phenomena.",
+    "Lights, hauntings, curses, and other unresolved Appalachian incidents — the Bureau's catalog of unexplained phenomena.",
   alternates: {
     canonical: "/anomalies",
   },

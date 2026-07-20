@@ -25,7 +25,7 @@ import {
   fetchBulletins,
 } from "@/lib/sanity/fetchers";
 import { pickRelatedBulletins } from "@/lib/bulletins";
-import { formatLongDate } from "@/lib/utils";
+import { formatLongDate, truncateMeta } from "@/lib/utils";
 import type { BulletinCategory } from "@/types/sanity";
 
 const CATEGORY_LABELS: Record<BulletinCategory, string> = {
@@ -56,16 +56,15 @@ export async function generateMetadata({
     return { title: "Bulletin Not Found" };
   }
 
-  // Prefer editor-authored SEO title, else the default bulletin template.
-  const title = bulletin.metaTitle || `${bulletin.title} | Bureau Bulletins`;
+  // Hand-authored metaTitle is used verbatim (title.absolute skips the root
+  // "| Appalachian Cryptids List" template); the derived fallback keeps it.
+  const title = bulletin.metaTitle
+    ? { absolute: bulletin.metaTitle }
+    : `${bulletin.title} | Bureau Bulletins`;
 
   // Prefer editor-authored meta description. Else fall back to the summary.
   const rawSummary = bulletin.summary || "";
-  const derived =
-    rawSummary.length > 160
-      ? rawSummary.slice(0, 157) + "..."
-      : rawSummary;
-  const description = bulletin.metaDescription || derived;
+  const description = bulletin.metaDescription || truncateMeta(rawSummary);
 
   return {
     title,

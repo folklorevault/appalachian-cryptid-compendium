@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { truncateMeta } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
 import { BureauMemo } from "@/components/BureauMemo";
@@ -70,16 +71,18 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
-  // Prefer editor-authored SEO title, else the default case-file template.
-  const title = cryptid.metaTitle || `${cryptid.name} | Sightings & Case File`;
+  // Hand-authored metaTitle is used verbatim (title.absolute skips the root
+  // "| Appalachian Cryptids List" template); the derived fallback keeps it.
+  const title = cryptid.metaTitle
+    ? { absolute: cryptid.metaTitle }
+    : `${cryptid.name} | Sightings & Case File`;
 
   // Prefer editor-authored meta description. Else build a CTR-optimized
   // fallback: name + location + subhead/description.
   const detail = cryptid.subhead || cryptid.description || "";
   const firstDoc = cryptid.firstDocumented ? ` First documented ${cryptid.firstDocumented}.` : "";
   const candidate = `${cryptid.name} — ${cryptid.location}.${firstDoc} ${detail}`.trim();
-  const derived = candidate.length > 160 ? candidate.slice(0, 157) + "..." : candidate;
-  const description = cryptid.metaDescription || derived;
+  const description = cryptid.metaDescription || truncateMeta(candidate);
 
   return {
     title,
