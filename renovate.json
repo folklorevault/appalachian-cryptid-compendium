@@ -1,36 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "group:allNonMajor",
-    ":pinDevDependencies"
-  ],
-  "minimumReleaseAge": "3 days",
-  "internalChecksFilter": "strict",
-  "packageRules": [
-    {
-      "description": "Pin ESLint to the v9 maintenance line until eslint-config-next's bundled plugins (eslint-plugin-react, typescript-eslint) support ESLint 10's breaking context/scope-manager API changes.",
-      "matchPackageNames": ["eslint"],
-      "allowedVersions": "<10.0.0"
-    },
-    {
-      "description": "Pin @babel/core to the v7 maintenance line. It's a transitive dep already patched at 7.29.6+ via a pnpm-workspace override; widening past v8 gives no security benefit and risks an unvalidated major. Lift this cap only as a deliberate, tested babel 8 upgrade.",
-      "matchPackageNames": ["@babel/core"],
-      "allowedVersions": "<8.0.0"
-    },
-    {
-      "description": "Pin undici to the v7 maintenance line. It's a transitive Sanity-tooling dep already patched at 7.28.0+ via a pnpm-workspace override; the pin exists only to escape a vuln, not to track latest. Widening past v8 forces a major onto packages that declared ^7 with no security benefit. Lift this cap only as a deliberate, tested undici 8 upgrade.",
-      "matchPackageNames": ["undici"],
-      "allowedVersions": "<8.0.0"
-    }
-  ],
-  "osvVulnerabilityAlerts": true,
-  "vulnerabilityAlerts": {
-    "minimumReleaseAge": null,
-    "labels": ["security"],
-    "vulnerabilityFixStrategy": "highest",
-    "automerge": true
-  },
-  "prHourlyLimit": 2,
-  "prConcurrentLimit": 10
+  "extends": ["local>folklorevault/renovate-config"]
 }
