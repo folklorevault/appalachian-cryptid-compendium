@@ -89,6 +89,24 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${rokkitt.variable} ${specialElite.variable}`}
       >
+        {/* Rubber-stamp ink-distress filter, referenced site-wide via filter: url(#__svg-stamp-texture) */}
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          width="0"
+          height="0"
+          style={{ position: "absolute" }}
+        >
+          <filter id="__svg-stamp-texture">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.35"
+              numOctaves="3"
+              result="noise"
+            />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" />
+          </filter>
+        </svg>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded"

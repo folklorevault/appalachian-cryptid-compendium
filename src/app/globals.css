@@ -64,6 +64,7 @@
   --color-bureau-ink-dark: hsl(var(--bureau-ink-dark));
   --color-bureau-border: hsl(var(--bureau-border));
   --color-bureau-paper: hsl(var(--bureau-paper));
+  --color-bureau-stamp-ink: hsl(var(--bureau-stamp-ink));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -209,6 +210,21 @@ All colors MUST be HSL.
     --bureau-ink-dark: 25 30% 12%;
     --bureau-border: 35 30% 72%;
     --bureau-stamp: 8 45% 28%;
+    /* Stamp ink indirection: brightens in dark mode without rippling
+       --bureau-stamp through every light-mode consumer. */
+    --bureau-stamp-ink: var(--bureau-stamp);
+
+    /* Manila folder stock — gradient stops for case folders, tabs, drawer chips */
+    --bureau-folder-hi: 40 42% 80%;
+    --bureau-folder-lo: 40 37% 76%;
+    --bureau-folder-deep: 38 34% 73%;
+
+    /* Bulletin category inks (ported from legacy src/index.css, which is not
+       imported — these were silently unresolved in production) */
+    --bulletin-field-terminology: 152 28% 30%;
+    --bulletin-regional-analysis: 40 55% 38%;
+    --bulletin-cultural-brief: 270 25% 35%;
+    --bulletin-operational-notice: 160 25% 35%;
 
     --shadow-2xs: 0 1px 3px 0px hsl(25 30% 20% / 0.05);
 
@@ -283,6 +299,17 @@ All colors MUST be HSL.
     --shadow-xl: 0 1px 3px 0px hsl(152 50% 50% / 0.3), 0 8px 10px -1px hsl(0 0% 0% / 0.3);
     --shadow-2xl: 0 1px 3px 0px hsl(152 50% 50% / 0.35);
     --radius: 0.5rem;
+
+    --bureau-stamp-ink: 8 50% 58%;
+
+    --bureau-folder-hi: 150 10% 20%;
+    --bureau-folder-lo: 150 9% 17%;
+    --bureau-folder-deep: 150 10% 15%;
+
+    --bulletin-field-terminology: 152 35% 62%;
+    --bulletin-regional-analysis: 40 60% 62%;
+    --bulletin-cultural-brief: 270 30% 70%;
+    --bulletin-operational-notice: 160 30% 62%;
   }
 }
 
