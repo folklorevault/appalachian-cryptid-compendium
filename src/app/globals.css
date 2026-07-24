@@ -335,7 +335,7 @@ All colors MUST be HSL.
 .nav-link-active::after {
   content: "";
   position: absolute;
-  bottom: 4px;
+  bottom: 2px;
   left: 16px;
   right: 16px;
   height: 2px;

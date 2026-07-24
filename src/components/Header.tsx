@@ -64,15 +64,15 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-card border-b-2 border-border paper-texture-nav">
       {/* Row 1: Centered title */}
-      <div className="py-1.5 px-4">
+      <div className="pt-1 pb-0.5 px-4">
         <Link
           href="/"
           className="block text-center no-underline"
         >
-          <span className="hidden md:inline font-display text-[1.7rem] font-bold text-primary leading-none tracking-tight">
+          <span className="hidden md:inline font-display text-[1.4rem] font-bold text-primary leading-none tracking-tight">
             Appalachian Cryptid Field Guide
           </span>
-          <span className="md:hidden font-display text-[1.35rem] font-bold text-primary leading-none tracking-tight">
+          <span className="md:hidden font-display text-[1.15rem] font-bold text-primary leading-none tracking-tight">
             Appalachian Cryptid
           </span>
         </Link>
@@ -86,7 +86,7 @@ export const Header = () => {
       </div>
 
       {/* Row 2: Nav links */}
-      <nav className="py-1 px-4">
+      <nav className="pt-px pb-[3px] px-4">
         {/* Desktop nav */}
         <div className="hidden md:flex justify-center items-center">
           {desktopNavItems.map((item, i) => (
@@ -101,7 +101,7 @@ export const Header = () => {
               )}
               <Link
                 href={item.href}
-                className={`font-typewriter text-xs tracking-type px-3 py-1.5 whitespace-nowrap relative transition-colors ${
+                className={`font-typewriter text-xs tracking-type px-3 py-1 whitespace-nowrap relative transition-colors ${
                   isActive(item.href)
                     ? "text-primary nav-link-active"
                     : "text-foreground/70 hover:text-primary"
@@ -127,7 +127,7 @@ export const Header = () => {
               )}
               <Link
                 href={item.href}
-                className={`font-typewriter text-xs tracking-type px-3 py-1.5 whitespace-nowrap relative transition-colors ${
+                className={`font-typewriter text-xs tracking-type px-3 py-1 whitespace-nowrap relative transition-colors ${
                   isActive(item.href)
                     ? "text-primary nav-link-active"
                     : "text-foreground/70 hover:text-primary"
@@ -149,7 +149,7 @@ export const Header = () => {
             <div ref={moreRef} className="relative">
               <button
                 onClick={() => setMoreOpen(!moreOpen)}
-                className={`font-typewriter text-xs tracking-type px-3 py-1.5 whitespace-nowrap relative transition-colors inline-flex items-center gap-1 ${
+                className={`font-typewriter text-xs tracking-type px-3 py-1 whitespace-nowrap relative transition-colors inline-flex items-center gap-1 ${
                   moreHasActive
                     ? "text-primary"
                     : "text-foreground/70 hover:text-primary"
