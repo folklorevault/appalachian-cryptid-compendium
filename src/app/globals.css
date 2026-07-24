@@ -933,6 +933,33 @@ All colors MUST be HSL.
   background: hsl(150 15% 10% / 0.5);
 }
 
+/* Drawer label chip (cryptid grid dividers) */
+.drawer-chip {
+  font-family: var(--font-typewriter);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: hsl(var(--bureau-ink));
+  background: linear-gradient(
+    180deg,
+    hsl(var(--bureau-folder-hi)),
+    hsl(var(--bureau-folder-lo))
+  );
+  border: 1px solid hsl(var(--bureau-border));
+  border-radius: 4px;
+  padding: 3px 12px;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.35),
+    0 1px 1px hsl(25 30% 20% / 0.12);
+  white-space: nowrap;
+}
+
+.dark .drawer-chip {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.05);
+}
+
 .newsletter-stamp-btn {
   position: relative;
 }
