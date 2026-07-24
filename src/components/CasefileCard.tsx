@@ -47,7 +47,20 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
 
   return (
     <Link href={linkTo} className="group">
-      <Card className="overflow-hidden border-2 border-border border-t-[3px] border-t-foreground/55 hover:border-bureau-border hover:border-t-foreground/70 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(42,42,42,0.1)] transition-all duration-200 ease-out cursor-pointer bg-card">
+      <Card className="overflow-hidden border-2 border-foreground/60 hover:border-foreground/80 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(42,42,42,0.1)] transition-all duration-200 ease-out cursor-pointer bg-card">
+        {/* Catalog tab header — decorative drawer chrome, hidden from the a11y tree */}
+        <div
+          className="bg-bureau-manila border-b-2 border-foreground/60 px-4 py-1.5 flex items-baseline justify-between gap-3"
+          aria-hidden="true"
+        >
+          <span className="font-typewriter text-[10px] tracking-eyebrow uppercase text-bureau-ink">
+            Case File
+          </span>
+          <span className="font-typewriter text-[10px] tracking-label uppercase text-bureau-ink-muted">
+            No. ACB-{fileNumber}
+          </span>
+        </div>
+
         {/* Image Section - Square aspect */}
         <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-bureau-border transition-colors duration-200">
           <Image
