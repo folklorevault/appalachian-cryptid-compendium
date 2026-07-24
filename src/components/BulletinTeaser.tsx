@@ -94,8 +94,8 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
                     className="group block py-2.5 px-0.5"
                   >
                     {/* Meta row */}
-                    <div className="flex items-baseline gap-2 mb-1 font-typewriter text-[10px] tracking-type text-bureau-ink-muted">
-                      <span className="font-bold text-bureau-ink">
+                    <div className="flex items-baseline gap-2 mb-1 font-typewriter text-[10px] tracking-type text-bureau-ink-muted dark:text-muted-foreground">
+                      <span className="font-bold text-bureau-ink dark:text-foreground">
                         {bulletin.bulletinNumber}
                       </span>
                       <span className="text-foreground/30">·</span>

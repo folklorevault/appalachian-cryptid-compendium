@@ -36,7 +36,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
       aria-label={`Read full case file for ${name}`}
     >
       {/* Die-cut folder tab */}
-      <span className="case-folder-tab self-start font-typewriter text-[10px] tracking-[0.18em] uppercase text-bureau-ink">
+      <span className="case-folder-tab self-start font-typewriter text-[10px] tracking-[0.18em] uppercase text-bureau-ink dark:text-foreground">
         Case File <span aria-hidden="true">—</span> No. ACB-
         {slug.current.slice(0, 4).toUpperCase()}
       </span>
@@ -89,7 +89,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
           </h2>
 
           {scientificName && (
-            <p className="font-serif italic text-[13px] text-bureau-ink-muted mt-0.5">
+            <p className="font-serif italic text-[13px] text-bureau-ink-muted dark:text-muted-foreground mt-0.5">
               {scientificName}
             </p>
           )}
@@ -97,7 +97,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
           {/* Catalog rows */}
           <dl className="font-typewriter text-[11px] mt-2 mb-2 border-t border-dotted border-foreground/30">
             <div className="flex gap-2 py-1 border-b border-dotted border-foreground/30">
-              <dt className="uppercase tracking-type text-bureau-ink-muted shrink-0 w-14">
+              <dt className="uppercase tracking-type text-bureau-ink-muted dark:text-muted-foreground shrink-0 w-14">
                 Region
               </dt>
               <dd className="text-foreground flex items-center gap-1 min-w-0 truncate">
@@ -107,7 +107,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
             </div>
             {tags && tags.length > 0 && (
               <div className="flex gap-2 py-1 border-b border-dotted border-foreground/30">
-                <dt className="uppercase tracking-type text-bureau-ink-muted shrink-0 w-14">
+                <dt className="uppercase tracking-type text-bureau-ink-muted dark:text-muted-foreground shrink-0 w-14">
                   Class
                 </dt>
                 <dd className="text-foreground min-w-0 truncate">
