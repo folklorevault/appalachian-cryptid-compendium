@@ -47,7 +47,7 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
 
   return (
     <Link href={linkTo} className="group">
-      <Card className="overflow-hidden border-2 border-border hover:border-bureau-border hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(42,42,42,0.1)] transition-all duration-200 ease-out cursor-pointer bg-card">
+      <Card className="overflow-hidden border-2 border-border border-t-[3px] border-t-foreground/55 hover:border-bureau-border hover:border-t-foreground/70 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(42,42,42,0.1)] transition-all duration-200 ease-out cursor-pointer bg-card">
         {/* Image Section - Square aspect */}
         <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-bureau-border transition-colors duration-200">
           <Image

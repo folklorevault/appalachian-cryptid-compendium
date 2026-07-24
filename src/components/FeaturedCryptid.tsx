@@ -38,7 +38,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
       {/* Die-cut folder tab */}
       <span className="case-folder-tab self-start font-typewriter text-[10px] tracking-[0.18em] uppercase text-bureau-ink dark:text-foreground">
         Case File <span aria-hidden="true">—</span> No. ACB-
-        {slug.current.slice(0, 4).toUpperCase()}
+        {slug.current.slice(0, 4).replace(/-+$/, "").toUpperCase()}
       </span>
 
       {/* Folder body */}
