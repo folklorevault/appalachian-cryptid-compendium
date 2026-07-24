@@ -83,6 +83,7 @@ function convertStaticToSanityFormat(
     name: cryptid.name,
     slug: { _type: "slug", current: cryptid.id },
     scientificName: cryptid.scientificName,
+    classification: cryptid.classification,
     location: cryptid.location,
     coordinates: coords
       ? { _type: "geopoint", lat: coords.lat, lng: coords.lng }

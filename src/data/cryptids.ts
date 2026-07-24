@@ -12,6 +12,8 @@ export interface Cryptid {
   id: string;
   name: string;
   scientificName: string;
+  /** Bureau stamp label, e.g. "Harbinger" — mirrors the Sanity classification field */
+  classification: string;
   location: string;
   lastSighting: string;
   dangerLevel: "Low" | "Medium" | "High";
@@ -37,6 +39,7 @@ export const cryptids: Cryptid[] = [
     id: "mothman",
     name: "Mothman",
     scientificName: "Lepidoptera giganteus",
+    classification: "Harbinger",
     location: "Point Pleasant, West Virginia",
     lastSighting: "November 2023",
     dangerLevel: "Medium",
@@ -80,6 +83,7 @@ export const cryptids: Cryptid[] = [
     id: "wampus-cat",
     name: "Wampus Cat",
     scientificName: "Felis hexapodus",
+    classification: "Apex Predator",
     location: "Eastern Tennessee",
     lastSighting: "August 2023",
     dangerLevel: "High",
@@ -115,6 +119,7 @@ export const cryptids: Cryptid[] = [
     id: "moon-eyed-people",
     name: "Moon-Eyed People",
     scientificName: "Homo nocturnalis",
+    classification: "Indigenous Remnant",
     location: "Cherokee National Forest, North Carolina",
     lastSighting: "March 2024",
     dangerLevel: "Low",
@@ -150,6 +155,7 @@ export const cryptids: Cryptid[] = [
     id: "skunk-ape",
     name: "Skunk Ape",
     scientificName: "Pongidae floridanus",
+    classification: "Primate Unknown",
     location: "Everglades, Florida",
     lastSighting: "December 2023",
     dangerLevel: "Medium",
@@ -185,6 +191,7 @@ export const cryptids: Cryptid[] = [
     id: "lizard-man",
     name: "Lizard Man of Scape Ore",
     scientificName: "Lacerta bipedis",
+    classification: "Hostile Entity",
     location: "Scape Ore Swamp, South Carolina",
     lastSighting: "July 2023",
     dangerLevel: "High",
@@ -220,6 +227,7 @@ export const cryptids: Cryptid[] = [
     id: "fouke-monster",
     name: "Fouke Monster",
     scientificName: "Anthropoidus arkansus",
+    classification: "Primate Unknown",
     location: "Fouke, Arkansas",
     lastSighting: "October 2023",
     dangerLevel: "Medium",
@@ -255,6 +263,7 @@ export const cryptids: Cryptid[] = [
     id: "tailypo",
     name: "Tailypo",
     scientificName: "Caudatus mysterius",
+    classification: "Persistence Entity",
     location: "Appalachian Mountains",
     lastSighting: "February 2024",
     dangerLevel: "Medium",
@@ -290,6 +299,7 @@ export const cryptids: Cryptid[] = [
     id: "grafton-monster",
     name: "Grafton Monster",
     scientificName: "Corpus albidus",
+    classification: "Anomalous Humanoid",
     location: "Grafton, West Virginia",
     lastSighting: "September 2023",
     dangerLevel: "Low",
@@ -325,6 +335,7 @@ export const cryptids: Cryptid[] = [
     id: "white-screamer",
     name: "White Screamer",
     scientificName: "Ululans candidus",
+    classification: "Atmospheric Phenomenon",
     location: "Appalachian Highlands",
     lastSighting: "January 2024",
     dangerLevel: "Low",

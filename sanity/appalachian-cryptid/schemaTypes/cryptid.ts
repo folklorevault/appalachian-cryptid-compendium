@@ -38,6 +38,13 @@ export default defineType({
       description: 'Pseudo-Latin classification for the field guide aesthetic',
     }),
     defineField({
+      name: 'classification',
+      title: 'Bureau Classification',
+      type: 'string',
+      description:
+        'Short stamp label for the featured case-file photo, e.g. "Harbinger" or "Apex Predator". Keep to 1-2 words; the stamp hides when unset.',
+    }),
+    defineField({
       name: 'location',
       title: 'Primary Location',
       type: 'string',

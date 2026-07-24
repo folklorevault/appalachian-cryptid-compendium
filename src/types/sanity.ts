@@ -54,6 +54,7 @@ export interface SanityCryptid {
   subhead?: string
   slug: SanitySlug
   scientificName?: string
+  classification?: string
   location: string
   coordinates?: SanityGeopoint
   region: 'Appalachia' | 'Southeast' | 'Southern'
@@ -86,6 +87,7 @@ export interface SanityCryptidListItem {
   subhead?: string
   slug: SanitySlug
   scientificName?: string
+  classification?: string
   location: string
   coordinates?: SanityGeopoint
   region: 'Appalachia' | 'Southeast' | 'Southern'
