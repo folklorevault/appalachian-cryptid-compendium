@@ -70,7 +70,7 @@ const CompactSignup = ({ initialEmail }: { initialEmail?: string }) => {
 
   if (state === "success") {
     return (
-      <div role="status" aria-live="polite" className="newsletter-paper memo-paper border border-border/40 rounded-sm px-5 py-4">
+      <div role="status" aria-live="polite" className="newsletter-paper memo-paper max-w-[34rem] mx-auto border border-border/40 rounded-sm px-5 py-4">
         <div className="flex items-center gap-3">
           <CheckCircle className="h-4 w-4 text-primary shrink-0" aria-hidden="true" />
           <p className="text-sm font-typewriter text-foreground/80">
@@ -82,7 +82,7 @@ const CompactSignup = ({ initialEmail }: { initialEmail?: string }) => {
   }
 
   return (
-    <div className="newsletter-paper memo-paper border border-border/40 rounded-sm px-5 py-4">
+    <div className="newsletter-paper memo-paper max-w-[34rem] mx-auto border border-border/40 rounded-sm px-5 py-4">
       <p className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-3">
         Get notified when new cryptids are added to the guide
       </p>
@@ -119,6 +119,7 @@ const CompactSignup = ({ initialEmail }: { initialEmail?: string }) => {
           type="submit"
           disabled={state === "submitting"}
           className="newsletter-stamp-btn self-end sm:self-auto inline-flex items-center gap-1.5 px-4 py-1.5 border-[3px] border-primary rounded-sm font-bold uppercase tracking-widest text-xs font-display text-primary shadow-[inset_0_0_0_1.5px_hsl(var(--primary))] hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          style={{ transform: "rotate(-1deg)" }}
         >
           <span
             className="flex items-center gap-1.5"

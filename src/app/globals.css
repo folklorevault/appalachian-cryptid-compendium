@@ -780,7 +780,9 @@ All colors MUST be HSL.
 }
 
 /* Disable hover-lift on newsletter paper so it reads as a static form */
-.newsletter-paper.memo-paper:hover {
+/* .memo-flat: memo-paper without the hover lift (static desk documents) */
+.newsletter-paper.memo-paper:hover,
+.memo-flat.memo-paper:hover {
   transform: none;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.08),
