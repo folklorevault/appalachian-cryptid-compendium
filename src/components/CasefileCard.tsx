@@ -26,6 +26,10 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
 
   const region = data.region;
 
+  // Bureau classification is a cryptid-only field; anomalies fall through
+  const classification =
+    type === "cryptid" ? (data as SanityCryptidListItem).classification : undefined;
+
   const linkTo = type === "cryptid" ? `/cryptid/${slug.current}` : `/anomaly/${slug.current}`;
 
   if (!gridImage) {
@@ -81,7 +85,9 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-1">
-                {type === "cryptid" ? "Creature File" : "Case File"}
+                {type === "cryptid"
+                  ? classification ?? "Creature File"
+                  : "Case File"}
               </div>
               <h3 className="text-xl font-bold text-foreground leading-tight truncate group-hover:text-bureau-ink-dark transition-colors duration-200">
                 {name}
