@@ -73,11 +73,6 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
             blurDataURL={blurUrl}
             className="object-cover object-top transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover"
           />
-
-          {/* File number - bottom left */}
-          <div className="absolute bottom-2 left-2">
-            <LabelTape>FILE {fileNumber}</LabelTape>
-          </div>
         </div>
 
         {/* Content Section */}
