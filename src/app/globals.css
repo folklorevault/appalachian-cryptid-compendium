@@ -790,6 +790,54 @@ All colors MUST be HSL.
 }
 
 /* Stamp-styled submit button */
+/* Rubber-stamp button/link. Ink color comes from the element's text color
+   (currentColor); set static rotation with --stamp-rot so the hover/active
+   scale composes with it. Size and padding per instance via utilities. */
+.stamp-btn {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  background: transparent;
+  border: 3px solid currentColor;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  transform: rotate(var(--stamp-rot, 0deg));
+  transition: transform 0.15s ease;
+}
+
+.stamp-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.stamp-btn:hover::after {
+  opacity: 0.07;
+}
+
+.stamp-btn:hover {
+  transform: rotate(var(--stamp-rot, 0deg)) scale(0.985);
+}
+
+.stamp-btn:active {
+  transform: rotate(var(--stamp-rot, 0deg)) scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-btn:hover,
+  .stamp-btn:active {
+    transform: rotate(var(--stamp-rot, 0deg));
+  }
+}
+
 .newsletter-stamp-btn {
   position: relative;
 }

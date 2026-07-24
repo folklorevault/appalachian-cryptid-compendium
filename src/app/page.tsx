@@ -74,26 +74,44 @@ export default async function Home() {
               Each entry is documented, cross-referenced, and filed.
             </p>
 
-            {/* Quick links */}
-            <div className="flex flex-wrap justify-center gap-3">
+            {/* Quick links: one stamped primary action + typed index line */}
+            <div className="flex flex-col items-center gap-[18px]">
               <Link
                 href="#field-guide"
-                className="font-display font-bold uppercase tracking-widest text-xs text-primary-foreground bg-primary border-[3px] border-primary rounded-sm px-6 py-3 shadow-[inset_0_0_0_2px_hsl(var(--primary-foreground)/0.25)] hover:bg-primary/90 transition-colors"
+                className="stamp-btn text-[15px] px-7 py-3 text-bureau-stamp-ink"
+                style={{ "--stamp-rot": "-2deg" } as React.CSSProperties}
               >
-                Explore the Guide
-              </Link>
-              {[
-                { href: "/map", label: "Sightings Map" },
-                { href: "/bulletins", label: "Bureau Bulletins" },
-              ].map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="font-display font-bold uppercase tracking-widest text-xs text-bureau-stamp border-[3px] border-bureau-stamp rounded-sm bg-bureau-manila/85 px-6 py-3 shadow-[inset_0_0_0_2px_hsl(var(--bureau-stamp))] hover:bg-bureau-stamp/10 transition-colors"
+                <span
+                  className="flex items-center gap-2"
+                  style={{ filter: "url(#__svg-stamp-texture)" }}
                 >
-                  {label}
+                  <span aria-hidden="true" className="text-[11px] tracking-normal">
+                    ★
+                  </span>
+                  Explore the Guide
+                  <span aria-hidden="true" className="text-[11px] tracking-normal">
+                    ★
+                  </span>
+                </span>
+              </Link>
+              <p className="font-typewriter text-xs tracking-[0.06em] text-bureau-ink-muted">
+                <span aria-hidden="true">Also on file: </span>
+                <Link
+                  href="/map"
+                  className="text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                >
+                  Sightings Map
                 </Link>
-              ))}
+                <span aria-hidden="true" className="text-foreground/30 mx-2">
+                  ·
+                </span>
+                <Link
+                  href="/bulletins"
+                  className="text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                >
+                  Bureau Bulletins
+                </Link>
+              </p>
             </div>
           </div>
         </section>
