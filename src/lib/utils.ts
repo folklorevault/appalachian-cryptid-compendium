@@ -41,3 +41,15 @@ export function formatLongDate(dateStr: string): string {
   ];
   return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
+
+/**
+ * Format a Sanity `date` value ("YYYY-MM-DD") as "November 15, 1966" for
+ * sighting records. Returns null for missing values and echoes anything that
+ * isn't a plain ISO date, so fuzzy/free-form entries pass through untouched.
+ * Delegates to formatLongDate (noon-anchored) to avoid a timezone off-by-one.
+ */
+export function formatSightingDate(iso?: string): string | null {
+  if (!iso) return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  return formatLongDate(iso);
+}

@@ -1,6 +1,8 @@
 // Schema.org structured data component for SEO
 // Renders JSON-LD scripts inline (not via useEffect) so Googlebot sees them
 
+import { formatSightingDate } from "@/lib/utils";
+
 interface WebSiteSchema {
   "@context": "https://schema.org";
   "@type": "WebSite";
@@ -146,9 +148,22 @@ interface CollectionPageSchema {
   };
 }
 
+interface ItemListSchema {
+  "@context": "https://schema.org";
+  "@type": "ItemList";
+  name: string;
+  numberOfItems: number;
+  itemListElement: Array<{
+    "@type": "ListItem";
+    position: number;
+    name: string;
+    description?: string;
+  }>;
+}
+
 type StructuredDataProps = {
-  type: "website" | "article" | "breadcrumb" | "collection" | "faq" | "blog" | "blogPosting";
-  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema | BlogSchema | BlogPostingSchema;
+  type: "website" | "article" | "breadcrumb" | "collection" | "faq" | "blog" | "blogPosting" | "itemList";
+  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema | BlogSchema | BlogPostingSchema | ItemListSchema;
 };
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -361,6 +376,47 @@ export function createBlogPostingSchema(bulletin: {
       "@id": `${baseUrl}/bulletin/${bulletin.slug}`,
     },
     wordCount,
+  };
+}
+
+// Structured list of a cryptid's individual sightings. Uses ItemList (not
+// Event) deliberately: Event rich results are governed by Google's
+// scheduled-event guidelines, which historical folklore sightings don't meet.
+// ItemList is honest, penalty-free, and still gives AI extractors a clean,
+// quotable "when + where" record set.
+export function createSightingListSchema(
+  cryptidName: string,
+  sightings: Array<{
+    date?: string;
+    location: string;
+    witness?: string;
+    account?: string;
+    source?: string;
+  }>
+): ItemListSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${cryptidName} sightings`,
+    numberOfItems: sightings.length,
+    itemListElement: sightings.map((s, index) => {
+      const displayDate = formatSightingDate(s.date);
+      const description =
+        [
+          displayDate ? `Date: ${displayDate}.` : null,
+          s.witness ? `Witness: ${s.witness}.` : null,
+          s.account || null,
+          s.source ? `Source: ${s.source}.` : null,
+        ]
+          .filter(Boolean)
+          .join(" ") || undefined;
+      return {
+        "@type": "ListItem" as const,
+        position: index + 1,
+        name: [`${cryptidName} sighting`, s.location].filter(Boolean).join(" — "),
+        description,
+      };
+    }),
   };
 }
 

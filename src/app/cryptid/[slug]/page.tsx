@@ -19,7 +19,9 @@ import {
   createCryptidArticleSchema,
   createBreadcrumbSchema,
   createFAQPageSchema,
+  createSightingListSchema,
 } from "@/components/StructuredData";
+import { SightingDistribution } from "@/components/SightingDistribution";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -168,6 +170,12 @@ export default async function CryptidDetailPage({
             data={createFAQPageSchema(cryptid.declassifiedBriefings)}
           />
         )}
+      {cryptid.sightings && cryptid.sightings.length > 0 && (
+        <StructuredData
+          type="itemList"
+          data={createSightingListSchema(cryptid.name, cryptid.sightings)}
+        />
+      )}
 
       <main id="main-content">
         {/* Breadcrumb Navigation */}
@@ -323,6 +331,13 @@ export default async function CryptidDetailPage({
               ))}
             </div>
           )}
+
+          {/* Sightings Distribution — structured, always-visible record list
+              (SEO target for "[name] sightings"); Phase 4 embeds the map here */}
+          <SightingDistribution
+            cryptidName={cryptid.name}
+            sightings={cryptid.sightings}
+          />
 
           {/* Detailed Sections - Filing Cabinet */}
           {(cryptid.physicalDescription ||
