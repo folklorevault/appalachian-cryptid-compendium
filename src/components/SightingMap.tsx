@@ -117,7 +117,31 @@ export function SightingMap({
         map.current.fitBounds(bounds, { padding: 56, maxZoom: 12, duration: 0 });
       }
 
+      // Fan out markers that share identical coordinates so stacked sightings
+      // don't collapse into one un-clickable blob. Display offset only — the
+      // underlying data is unchanged.
+      const coordGroups: Record<string, string[]> = {};
       sightings.forEach((s) => {
+        const key = `${s.coordinates!.lat.toFixed(5)},${s.coordinates!.lng.toFixed(5)}`;
+        if (!coordGroups[key]) coordGroups[key] = [];
+        coordGroups[key].push(s._key);
+      });
+      const FAN_DEG = 0.0018; // ~200m radius; separates pins once zoomed in
+
+      sightings.forEach((s) => {
+        let markerLng = s.coordinates!.lng;
+        let markerLat = s.coordinates!.lat;
+        const group =
+          coordGroups[
+            `${s.coordinates!.lat.toFixed(5)},${s.coordinates!.lng.toFixed(5)}`
+          ];
+        if (group.length > 1) {
+          const angle = (2 * Math.PI * group.indexOf(s._key)) / group.length;
+          markerLat += FAN_DEG * Math.sin(angle);
+          markerLng +=
+            (FAN_DEG * Math.cos(angle)) / Math.cos((markerLat * Math.PI) / 180);
+        }
+
         const el = document.createElement("div");
         el.className = "sighting-marker";
         el.textContent = String(numberByKey[s._key] ?? "").padStart(2, "0");
@@ -144,7 +168,7 @@ export function SightingMap({
         });
         markers.current[s._key] = el;
         new mapboxLib.Marker(el)
-          .setLngLat([s.coordinates!.lng, s.coordinates!.lat])
+          .setLngLat([markerLng, markerLat])
           .addTo(map.current!);
       });
     });
