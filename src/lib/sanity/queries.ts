@@ -63,6 +63,15 @@ const detailFields = `
     _key,
     question,
     answer
+  },
+  sightings[] {
+    _key,
+    date,
+    location,
+    coordinates,
+    witness,
+    account,
+    source
   }
 `;
 

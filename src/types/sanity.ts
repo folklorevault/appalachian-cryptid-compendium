@@ -47,6 +47,16 @@ export interface SanityTestimony {
   account: string
 }
 
+export interface SanitySighting {
+  _key: string
+  date?: string
+  location: string
+  coordinates?: SanityGeopoint
+  witness?: string
+  account?: string
+  source?: string
+}
+
 export interface SanityCryptid {
   _id: string
   _type: 'cryptid'
@@ -77,6 +87,7 @@ export interface SanityCryptid {
   notableSightings?: string
   bureauNotes?: string
   declassifiedBriefings?: SanityDeclassifiedBriefing[]
+  sightings?: SanitySighting[]
   featured?: boolean
 }
 
