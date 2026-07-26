@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fetchCryptidBySlug } from "@/lib/sanity/fetchers";
+import { urlFor } from "@/lib/sanity/image";
 
 export const alt = "Cryptid case file";
 export const size = { width: 1200, height: 630 };
@@ -23,7 +24,33 @@ export default async function OGImage({
   const dangerLevel = cryptid?.dangerLevel ?? "Unknown";
   const region = cryptid?.region ?? "";
   const firstDoc = cryptid?.firstDocumented ?? "";
+  const subhead = cryptid?.subhead ?? "";
   const caseNumber = `${slug.toUpperCase().slice(0, 3)}-${slug.length.toString().padStart(3, "0")}`;
+
+  // Inline the case-file illustration as a data URL. Fetching the buffer here
+  // (as JPEG, since Satori doesn't decode Sanity's webp) is more reliable than
+  // letting Satori fetch a remote URL at render time; on any failure we fall
+  // back to a text-only card rather than 500 the whole image.
+  let imageDataUrl: string | null = null;
+  const imageSource = cryptid?.image;
+  if (imageSource && typeof imageSource === "object") {
+    try {
+      const url = urlFor(imageSource)
+        .width(600)
+        .height(772)
+        .fit("crop")
+        .format("jpg")
+        .quality(80)
+        .url();
+      const res = await fetch(url);
+      if (res.ok) {
+        const buf = Buffer.from(await res.arrayBuffer());
+        imageDataUrl = `data:image/jpeg;base64,${buf.toString("base64")}`;
+      }
+    } catch {
+      imageDataUrl = null;
+    }
+  }
 
   // Color palette from the site's light mode CSS variables
   const bg = "#f0ebe0"; // --background: 40 33% 94%
@@ -89,150 +116,193 @@ export default async function OGImage({
           </span>
         </div>
 
-        {/* Main content */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            padding: "40px 56px 36px",
-          }}
-        >
-          {/* Case file header */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              marginBottom: "24px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "4px",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "13px",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  color: muted,
-                  fontWeight: 600,
-                }}
-              >
-                Case File #{caseNumber}
-              </span>
-              {firstDoc && (
-                <span
-                  style={{
-                    fontSize: "13px",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: muted,
-                  }}
-                >
-                  First Documented: {firstDoc}
-                </span>
-              )}
-            </div>
-
-            {/* Danger level badge */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                border: `3px solid ${dangerColor}`,
-                borderRadius: "4px",
-                padding: "6px 16px",
-                transform: "rotate(-2deg)",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: dangerColor,
-                  fontFamily: "Rokkitt",
-                }}
-              >
-                Danger: {dangerLevel}
-              </span>
-            </div>
-          </div>
-
-          {/* Cryptid name */}
+        {/* Body: text column + photo */}
+        <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
+          {/* Left text column */}
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "12px",
-              borderBottom: `2px dashed ${border}`,
-              paddingBottom: "24px",
-              marginBottom: "24px",
+              flex: 1,
+              padding: imageDataUrl ? "38px 32px 34px 56px" : "40px 56px 36px",
             }}
           >
-            <span
+            {/* Case file header */}
+            <div
               style={{
-                fontSize: "72px",
-                fontWeight: 700,
-                color: fg,
-                fontFamily: "Rokkitt",
-                lineHeight: 1,
-                letterSpacing: "-0.01em",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                marginBottom: "22px",
               }}
             >
-              {name}
-            </span>
-            <span
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <span
+                  style={{
+                    fontSize: "13px",
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    color: muted,
+                    fontWeight: 600,
+                  }}
+                >
+                  Case File #{caseNumber}
+                </span>
+                {firstDoc && (
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      color: muted,
+                    }}
+                  >
+                    First Documented: {firstDoc}
+                  </span>
+                )}
+              </div>
+
+              {/* Danger level badge */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  border: `3px solid ${dangerColor}`,
+                  borderRadius: "4px",
+                  padding: "6px 16px",
+                  transform: "rotate(-2deg)",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: dangerColor,
+                    fontFamily: "Rokkitt",
+                  }}
+                >
+                  Danger: {dangerLevel}
+                </span>
+              </div>
+            </div>
+
+            {/* Cryptid name */}
+            <div
               style={{
-                fontSize: "22px",
-                color: muted,
-                fontWeight: 600,
-                letterSpacing: "0.05em",
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+                borderBottom: `2px dashed ${border}`,
+                paddingBottom: "22px",
+                marginBottom: "22px",
               }}
             >
-              {location}
-              {region && ` — ${region} Region`}
-            </span>
+              <span
+                style={{
+                  fontSize: imageDataUrl ? "64px" : "72px",
+                  fontWeight: 700,
+                  color: fg,
+                  fontFamily: "Rokkitt",
+                  lineHeight: 1,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {name}
+              </span>
+              <span
+                style={{
+                  fontSize: "22px",
+                  color: muted,
+                  fontWeight: 600,
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {location}
+                {region && ` — ${region} Region`}
+              </span>
+            </div>
+
+            {/* Subhead — fills the column and adds substance to the snippet */}
+            {subhead && (
+              <span
+                style={{
+                  display: "flex",
+                  fontSize: "21px",
+                  lineHeight: 1.35,
+                  color: fg,
+                  opacity: 0.82,
+                  maxWidth: "620px",
+                }}
+              >
+                {subhead.length > 150 ? subhead.slice(0, 147) + "…" : subhead}
+              </span>
+            )}
+
+            {/* Footer */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: "auto",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "15px",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: muted,
+                }}
+              >
+                appalachiancryptid.com
+              </span>
+              <span
+                style={{
+                  fontSize: "13px",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: muted,
+                  opacity: 0.6,
+                }}
+              >
+                For Official Use Only
+              </span>
+            </div>
           </div>
 
-          {/* Footer */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: "auto",
-            }}
-          >
-            <span
+          {/* Right photo column — clipped case-file illustration */}
+          {imageDataUrl && (
+            <div
               style={{
-                fontSize: "15px",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: muted,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "392px",
+                padding: "28px 44px 28px 8px",
               }}
             >
-              appalachiancryptid.com
-            </span>
-            <span
-              style={{
-                fontSize: "13px",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: muted,
-                opacity: 0.6,
-              }}
-            >
-              For Official Use Only
-            </span>
-          </div>
+              { }
+              <img
+                src={imageDataUrl}
+                width={300}
+                height={386}
+                alt=""
+                style={{
+                  width: "300px",
+                  height: "386px",
+                  objectFit: "cover",
+                  border: `5px solid ${bg}`,
+                  outline: `2px solid ${fg}`,
+                  boxShadow: "0 10px 26px rgba(0,0,0,0.28)",
+                  transform: "rotate(2deg)",
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     ),
