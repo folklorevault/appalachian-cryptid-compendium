@@ -120,7 +120,7 @@ export default function RootLayout({
         {children}
         <Analytics />
         <Script
-          src="https://rybbit.folklorevault.com/api/script.js"
+          src="/analytics/script.js"
           data-site-id="0a6c699fadfc"
           strategy="lazyOnload"
         />

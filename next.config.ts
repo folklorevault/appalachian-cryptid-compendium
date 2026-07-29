@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 import { withBotId } from "botid/next/config";
 
+const RYBBIT_HOST = "https://rybbit.folklorevault.com";
+
 // Content Security Policy directives
 const cspDirectives = [
   "default-src 'self'",
   // Next.js requires 'unsafe-inline' for hydration scripts; 'unsafe-eval' needed in dev only
-  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''} https://rybbit.folklorevault.com`,
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.sanity.io https://*.mapbox.com",
   "font-src 'self'",
@@ -15,7 +17,6 @@ const cspDirectives = [
     "https://8thljucm.apicdn.sanity.io",
     "https://cdn.sanity.io",
     "https://*.mapbox.com",
-    "https://rybbit.folklorevault.com",
   ].join(" "),
   "worker-src 'self' blob:",
   // BotID's challenge loads a same-origin fingerprint iframe (/…/fp). Without an
@@ -57,6 +58,38 @@ const nextConfig: NextConfig = {
         hostname: "cdn.sanity.io",
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/analytics/script.js",
+        destination: `${RYBBIT_HOST}/api/script.js`,
+      },
+      {
+        source: "/analytics/replay.js",
+        destination: `${RYBBIT_HOST}/api/replay.js`,
+      },
+      {
+        source: "/analytics/metrics.js",
+        destination: `${RYBBIT_HOST}/api/metrics.js`,
+      },
+      {
+        source: "/analytics/track",
+        destination: `${RYBBIT_HOST}/api/track`,
+      },
+      {
+        source: "/analytics/identify",
+        destination: `${RYBBIT_HOST}/api/identify`,
+      },
+      {
+        source: "/analytics/session-replay/record/:siteId",
+        destination: `${RYBBIT_HOST}/api/session-replay/record/:siteId`,
+      },
+      {
+        source: "/analytics/site/tracking-config/:siteId",
+        destination: `${RYBBIT_HOST}/api/site/tracking-config/:siteId`,
+      },
+    ];
   },
   async redirects() {
     return [
