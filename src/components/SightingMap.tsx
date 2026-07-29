@@ -15,11 +15,6 @@ interface SightingMapProps {
   onSelect: (key: string) => void;
 }
 
-// Deliberate map hexes (see reference_mapbox_deliberate_hex): a deep bureau
-// oxblood pin on cream, brightened + ringed when selected.
-const PIN = "#9f1239";
-const PIN_SELECTED = "#e11d48";
-
 export function SightingMap({
   sightings,
   numberByKey,
@@ -78,12 +73,16 @@ export function SightingMap({
 
     const first = sightings[0].coordinates!;
     try {
+      const useCooperativeGestures = window.matchMedia(
+        "(max-width: 63.999rem), (pointer: coarse)"
+      ).matches;
       map.current = new mapboxLib.Map({
         accessToken: token,
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/outdoors-v12",
         center: [first.lng, first.lat],
         zoom: 9,
+        cooperativeGestures: useCooperativeGestures,
       });
     } catch {
       // Defer out of the synchronous effect body (avoids cascading-render lint
@@ -143,18 +142,13 @@ export function SightingMap({
         }
 
         const el = document.createElement("div");
-        el.className = "sighting-marker";
+        el.className =
+          "sighting-marker font-typewriter text-xs font-bold tracking-normal";
         el.textContent = String(numberByKey[s._key] ?? "").padStart(2, "0");
-        el.style.cssText = `
-          display: flex; align-items: center; justify-content: center;
-          width: 26px; height: 26px; border-radius: 9999px;
-          background: ${PIN}; color: #fff; border: 2px solid #fff;
-          font: 700 11px/1 ui-monospace, monospace; letter-spacing: 0.02em;
-          cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-          transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-        `;
+        el.dataset.selected = "false";
         el.setAttribute("role", "button");
         el.setAttribute("tabindex", "0");
+        el.setAttribute("aria-pressed", "false");
         el.setAttribute(
           "aria-label",
           `Sighting ${numberByKey[s._key] ?? ""}: ${s.location}`
@@ -185,20 +179,20 @@ export function SightingMap({
     if (!isLoaded) return;
     Object.entries(markers.current).forEach(([key, el]) => {
       const active = key === selectedKey;
-      el.style.background = active ? PIN_SELECTED : PIN;
-      el.style.transform = active ? "scale(1.35)" : "scale(1)";
+      el.dataset.selected = String(active);
+      el.setAttribute("aria-pressed", String(active));
       el.style.zIndex = active ? "2" : "1";
-      el.style.boxShadow = active
-        ? "0 0 0 4px rgba(225,29,72,0.35), 0 2px 6px rgba(0,0,0,0.4)"
-        : "0 2px 6px rgba(0,0,0,0.4)";
     });
     if (selectedKey && map.current) {
       const s = sightings.find((x) => x._key === selectedKey);
       if (s?.coordinates) {
+        const reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
         map.current.flyTo({
           center: [s.coordinates.lng, s.coordinates.lat],
           zoom: Math.max(map.current.getZoom(), 11),
-          duration: 1200,
+          duration: reduceMotion ? 0 : 1200,
         });
       }
     }
@@ -223,7 +217,7 @@ export function SightingMap({
         ref={mapContainer}
         role="application"
         aria-label="Interactive sighting map"
-        className="h-[360px] w-full overflow-hidden rounded-sm border-2 border-bureau-border/50 bg-bureau-manila-light lg:h-[460px]"
+        className="h-[42svh] min-h-64 max-h-80 w-full overflow-hidden rounded-sm border-2 border-bureau-border/50 bg-bureau-manila-light lg:h-[460px] lg:max-h-none"
       />
       {!isLoaded && (
         <div

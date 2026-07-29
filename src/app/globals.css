@@ -1105,6 +1105,54 @@ All colors MUST be HSL.
   opacity: 0.04;
 }
 
+/* Numbered Mapbox markers use a larger touch target than their visible badge. */
+.sighting-marker {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: hsl(var(--bureau-paper));
+  cursor: pointer;
+}
+
+.sighting-marker::before {
+  content: "";
+  position: absolute;
+  inset: 0.4375rem;
+  z-index: -1;
+  border: 2px solid hsl(var(--bureau-paper));
+  border-radius: inherit;
+  background: hsl(var(--bureau-stamp-ink));
+  box-shadow: 0 2px 6px hsl(var(--bureau-ink) / 0.35);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.sighting-marker[data-selected="true"]::before {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 4px hsl(var(--accent) / 0.45),
+    0 2px 6px hsl(var(--bureau-ink) / 0.35);
+}
+
+.sighting-marker:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 /* ============================================
    Reduced Motion
    ============================================ */
