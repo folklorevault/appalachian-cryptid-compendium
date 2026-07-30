@@ -1,15 +1,19 @@
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - brace-expansion@1.1.17
 overrides:
   js-yaml: ">=3.14.2"
   # Security overrides — transitive vulnerabilities flagged by pnpm audit / Dependabot
   "uuid@<11.1.1": ">=11.1.1"
   "uuid@>=13.0.0 <13.0.1": ">=13.0.1"
   "dompurify@<3.4.0": ">=3.4.0"
-  # brace-expansion CVE-2026-13149 (DoS) — patched in 1.1.16 / 2.1.2 / 5.0.7
-  "brace-expansion@<1.1.16": ">=1.1.16 <6.0.0"
-  "brace-expansion@>=2.0.0 <2.1.2": ">=2.1.2 <6.0.0"
-  "brace-expansion@>=3.0.0 <5.0.7": ">=5.0.7"
+  # brace-expansion CVE-2026-13149 + GHSA-mh99-v99m-4gvg (DoS, unbounded expansion, all <=5.0.7)
+  # Route each maintained line to its backported patch: 1.1.17 / 2.1.3 / 3.0.5 / 5.0.8
+  "brace-expansion@<1.1.17": ">=1.1.17 <2.0.0"
+  "brace-expansion@>=2.0.0 <2.1.3": ">=2.1.3 <3.0.0"
+  "brace-expansion@>=3.0.0 <3.0.5": ">=3.0.5 <4.0.0"
+  "brace-expansion@>=4.0.0 <5.0.8": ">=5.0.8"
   "undici@>=7.0.0 <7.28.0": ">=7.28.0 <8.0.0"
   "ws@>=8.0.0 <8.21.0": ">=8.21.0"
   "smol-toml@<1.6.1": ">=1.6.1"
