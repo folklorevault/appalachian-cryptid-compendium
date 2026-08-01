@@ -73,18 +73,29 @@ export async function generateMetadata({
     return { title: "Case File Not Found" };
   }
 
+  const hasText = (value?: string): value is string =>
+    typeof value === "string" && value.trim().length > 0;
+
   // Hand-authored metaTitle is used verbatim (title.absolute skips the root
-  // "| Appalachian Cryptids List" template); the derived fallback keeps it.
-  const title = cryptid.metaTitle
+  // "| Appalachian Cryptids List" template). Whitespace-only fields are
+  // treated as empty, but non-empty editor text is never trimmed or rewritten.
+  const fallbackTitle = `${cryptid.name} | Sightings & Case File`;
+  const socialTitle = hasText(cryptid.metaTitle)
+    ? cryptid.metaTitle
+    : fallbackTitle;
+  const title = hasText(cryptid.metaTitle)
     ? { absolute: cryptid.metaTitle }
-    : `${cryptid.name} | Sightings & Case File`;
+    : fallbackTitle;
 
   // Prefer editor-authored meta description. Else build a CTR-optimized
-  // fallback: name + location + subhead/description.
-  const detail = cryptid.subhead || cryptid.description || "";
+  // fallback from the most useful existing case-file summary.
+  const detail =
+    cryptid.fileAbstract || cryptid.subhead || cryptid.description || "";
   const firstDoc = cryptid.firstDocumented ? ` First documented ${cryptid.firstDocumented}.` : "";
   const candidate = `${cryptid.name} — ${cryptid.location}.${firstDoc} ${detail}`.trim();
-  const description = cryptid.metaDescription || truncateMeta(candidate);
+  const description = hasText(cryptid.metaDescription)
+    ? cryptid.metaDescription
+    : truncateMeta(candidate);
 
   return {
     title,
@@ -93,14 +104,14 @@ export async function generateMetadata({
       canonical: `/cryptid/${slug}`,
     },
     openGraph: {
-      title: `${cryptid.name} — Appalachian Cryptid Sightings`,
+      title: socialTitle,
       description,
       type: "article",
-      url: `https://appalachiancryptid.com/cryptid/${slug}`,
+      url: `/cryptid/${slug}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${cryptid.name} — Appalachian Cryptid Sightings`,
+      title: socialTitle,
       description,
     },
   };
