@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { fetchCryptids, fetchBulletins } from "@/lib/sanity/fetchers";
+import { CryptidCaseFileIndex } from "@/components/CryptidCaseFileIndex";
 import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { DeferredMount } from "@/components/DeferredMount";
@@ -160,6 +161,7 @@ export default async function Home() {
             </h2>
           </div>
           <CryptidFilters cryptids={cryptids} />
+          <CryptidCaseFileIndex cryptids={cryptids} />
         </section>
 
         {/* ── Sightings Map Teaser ──────────────────────────────────── */}
