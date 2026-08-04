@@ -25,9 +25,16 @@ const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 export function SightingDistribution({
   cryptidName,
   sightings,
+  showMap = true,
 }: {
   cryptidName: string;
   sightings?: SanitySighting[];
+  /**
+   * When false, renders the record list only and never mounts the embedded
+   * map (so mapbox-gl is never loaded). Used by anomaly pages, whose geo lives
+   * solely as pins on /map.
+   */
+  showMap?: boolean;
 }) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const recordRefs = useRef<Record<string, HTMLLIElement | null>>({});
@@ -76,7 +83,7 @@ export function SightingDistribution({
 
   if (ordered.length === 0) return null;
 
-  const hasMap = mappable.length > 0;
+  const hasMap = showMap && mappable.length > 0;
   const selectedSighting = selectedKey
     ? ordered.find((sighting) => sighting._key === selectedKey)
     : null;

@@ -391,6 +391,7 @@ export default async function AnomalyDetailPage({
           <SightingDistribution
             cryptidName={anomaly.name}
             sightings={anomaly.sightings}
+            showMap={false}
           />
 
           {/* Filing Cabinet Sections */}
