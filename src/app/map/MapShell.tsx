@@ -1,7 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { SanityCryptidMapItem } from "@/types/sanity";
+import type {
+  SanityCryptidMapItem,
+  SanityAnomalyMapItem,
+} from "@/types/sanity";
 
 const CryptidMap = dynamic(
   () => import("@/components/CryptidMap").then((m) => m.CryptidMap),
@@ -17,6 +20,12 @@ const CryptidMap = dynamic(
   }
 );
 
-export function MapShell({ cryptids }: { cryptids: SanityCryptidMapItem[] }) {
-  return <CryptidMap cryptids={cryptids} />;
+export function MapShell({
+  cryptids,
+  anomalies,
+}: {
+  cryptids: SanityCryptidMapItem[];
+  anomalies: SanityAnomalyMapItem[];
+}) {
+  return <CryptidMap cryptids={cryptids} anomalies={anomalies} />;
 }
