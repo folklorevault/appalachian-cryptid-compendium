@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { truncateMeta } from "@/lib/utils";
+import { truncateMeta, toParagraphs } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
 import { IncidentLog } from "@/components/IncidentLog";
+import { SightingDistribution } from "@/components/SightingDistribution";
 import { ShareButtons } from "@/components/ShareButtons";
 import { BackToTop } from "@/components/BackToTop";
 import {
@@ -31,6 +32,7 @@ import {
   createAnomalyArticleSchema,
   createBreadcrumbSchema,
   createFAQPageSchema,
+  createSightingListSchema,
 } from "@/components/StructuredData";
 import {
   Breadcrumb,
@@ -198,6 +200,12 @@ export default async function AnomalyDetailPage({
             data={createFAQPageSchema(anomaly.declassifiedBriefings)}
           />
         )}
+      {anomaly.sightings && anomaly.sightings.length > 0 && (
+        <StructuredData
+          type="itemList"
+          data={createSightingListSchema(anomaly.name, anomaly.sightings)}
+        />
+      )}
 
       <main id="main-content">
         {/* Breadcrumb */}
@@ -307,6 +315,83 @@ export default async function AnomalyDetailPage({
               </div>
             </div>
           </div>
+
+          {/* File Abstract — always-visible summary of record, entity-first for search snippets */}
+          {anomaly.fileAbstract && (
+            <section aria-labelledby="file-abstract-heading" className="mb-10">
+              <div className="relative rounded-sm border-2 border-bureau-border/60 bg-bureau-manila-light shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]">
+                <div className="flex items-center gap-3 px-5 py-2 border-b-2 border-bureau-border/40 bg-bureau-manila">
+                  <span
+                    id="file-abstract-heading"
+                    className="font-typewriter text-xs font-bold tracking-label uppercase text-foreground"
+                  >
+                    File Abstract
+                  </span>
+                  <span
+                    className="flex-1 border-t border-dashed border-bureau-border/40"
+                    aria-hidden="true"
+                  />
+                  <span className="font-typewriter text-[0.65rem] tracking-eyebrow uppercase text-bureau-ink-muted">
+                    Summary of Record
+                  </span>
+                </div>
+                <div className="px-5 py-4 bg-bureau-paper text-bureau-ink text-[0.95rem] leading-relaxed space-y-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
+                  {toParagraphs(anomaly.fileAbstract).map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Case File Sections — always-visible open folders (not togglable, so headings
+              carry the search query); chrome matches the File Abstract box above */}
+          {anomaly.caseFileSections && anomaly.caseFileSections.length > 0 && (
+            <div className="mb-10 space-y-6">
+              {anomaly.caseFileSections.map((section) => (
+                <section
+                  key={section._key}
+                  aria-labelledby={`cfs-${section._key}`}
+                  className="relative rounded-sm border-2 border-bureau-border/60 bg-bureau-manila-light shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]"
+                >
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-2.5 border-b-2 border-bureau-border/40 bg-bureau-manila">
+                    <h2
+                      id={`cfs-${section._key}`}
+                      className="font-display text-lg font-bold text-foreground leading-tight"
+                    >
+                      {section.heading}
+                    </h2>
+                    {section.label && (
+                      <>
+                        <span
+                          className="flex-1 min-w-4 border-t border-dashed border-bureau-border/40"
+                          aria-hidden="true"
+                        />
+                        <span className="font-typewriter text-[0.65rem] tracking-eyebrow uppercase text-bureau-ink-muted">
+                          {section.label}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="px-5 py-4 bg-bureau-paper text-bureau-ink text-[0.95rem] leading-relaxed space-y-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
+                    {toParagraphs(section.body).map((p, i) => (
+                      <p key={i} className="whitespace-pre-line">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+
+          {/* Occurrence Distribution — structured, always-visible record list
+              (SEO target for "[name] sightings"). Reuses the cryptid distribution
+              component as-is; Phase 4 wires these occurrences into the /map layer. */}
+          <SightingDistribution
+            cryptidName={anomaly.name}
+            sightings={anomaly.sightings}
+          />
 
           {/* Filing Cabinet Sections */}
           {(anomaly.phenomenon ||

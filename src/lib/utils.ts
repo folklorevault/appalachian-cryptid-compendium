@@ -53,3 +53,15 @@ export function formatSightingDate(iso?: string): string | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
   return formatLongDate(iso);
 }
+
+/**
+ * Split blank-line-separated prose into paragraphs for clean typography.
+ * Shared by the cryptid and anomaly case-file templates so both render
+ * `fileAbstract` / `caseFileSections` bodies identically.
+ */
+export function toParagraphs(body: string): string[] {
+  return body
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}

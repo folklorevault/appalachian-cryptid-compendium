@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { truncateMeta } from "@/lib/utils";
+import { truncateMeta, toParagraphs } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Stamp } from "@/components/Stamp";
 import { BureauMemo } from "@/components/BureauMemo";
@@ -43,14 +43,6 @@ import {
   fetchBulletinsReferencing,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
-
-// Split blank-line-separated prose into paragraphs for clean typography.
-function toParagraphs(body: string): string[] {
-  return body
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-}
 
 // ── Static params for build-time generation ──────────────
 
