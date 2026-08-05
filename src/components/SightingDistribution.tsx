@@ -193,7 +193,7 @@ export function SightingDistribution({
         {/* Body — records + map share one selection */}
         <div className="bg-bureau-paper shadow-[inset_0_2px_4px_hsl(var(--bureau-ink)/0.04)]">
           {hasMap ? (
-            <div className="grid gap-4 p-4 lg:h-[460px] lg:grid-cols-[1fr_minmax(300px,46%)]">
+            <div className="grid gap-4 p-4 lg:h-[492px] lg:grid-cols-[1fr_minmax(300px,46%)]">
               <div className="order-2 min-w-0 overflow-hidden rounded-sm border border-dashed border-bureau-border/30 bg-bureau-paper lg:order-1 lg:min-h-0">
                 <div className="border-b border-dashed border-bureau-border/40 p-1.5 lg:hidden">
                   <p className="mb-1 font-typewriter text-xs uppercase tracking-eyebrow text-bureau-ink-muted">

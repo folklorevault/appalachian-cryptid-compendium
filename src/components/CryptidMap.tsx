@@ -48,6 +48,8 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
   const map = useRef<mapboxgl.Map | null>(null);
   const cryptidMarkers = useRef<mapboxgl.Marker[]>([]);
   const anomalyMarkers = useRef<mapboxgl.Marker[]>([]);
+  // Once the map has painted, transient tile/network errors must not blank it.
+  const hasLoaded = useRef(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Selected>(null);
@@ -82,7 +84,13 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
 
       map.current.on("error", (e) => {
         console.error("Mapbox error:", e);
-        setMapError(`Map error: ${e.error?.message || "Unknown error"}`);
+        // Only surface a fatal config card if the map never finished loading
+        // (e.g. an invalid or URL-restricted token blocks the initial style).
+        // A map that has already painted should tolerate transient tile errors
+        // rather than replacing the whole view with an error card.
+        if (!hasLoaded.current) {
+          setMapError(`Map error: ${e.error?.message || "Unknown error"}`);
+        }
       });
 
       map.current.addControl(
@@ -94,6 +102,7 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
 
       map.current.on("load", () => {
         setIsMapLoaded(true);
+        hasLoaded.current = true;
 
         // Cryptid markers — circles, colored by danger advisory.
         cryptidMarkers.current = cryptids
