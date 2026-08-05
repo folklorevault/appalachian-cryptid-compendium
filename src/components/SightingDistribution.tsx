@@ -25,9 +25,16 @@ const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 export function SightingDistribution({
   cryptidName,
   sightings,
+  showMap = true,
 }: {
   cryptidName: string;
   sightings?: SanitySighting[];
+  /**
+   * When false, renders the record list only and never mounts the embedded
+   * map (so mapbox-gl is never loaded). Used by anomaly pages, whose geo lives
+   * solely as pins on /map.
+   */
+  showMap?: boolean;
 }) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const recordRefs = useRef<Record<string, HTMLLIElement | null>>({});
@@ -76,7 +83,7 @@ export function SightingDistribution({
 
   if (ordered.length === 0) return null;
 
-  const hasMap = mappable.length > 0;
+  const hasMap = showMap && mappable.length > 0;
   const selectedSighting = selectedKey
     ? ordered.find((sighting) => sighting._key === selectedKey)
     : null;
@@ -186,7 +193,7 @@ export function SightingDistribution({
         {/* Body — records + map share one selection */}
         <div className="bg-bureau-paper shadow-[inset_0_2px_4px_hsl(var(--bureau-ink)/0.04)]">
           {hasMap ? (
-            <div className="grid gap-4 p-4 lg:h-[460px] lg:grid-cols-[1fr_minmax(300px,46%)]">
+            <div className="grid gap-4 p-4 lg:h-[492px] lg:grid-cols-[1fr_minmax(300px,46%)]">
               <div className="order-2 min-w-0 overflow-hidden rounded-sm border border-dashed border-bureau-border/30 bg-bureau-paper lg:order-1 lg:min-h-0">
                 <div className="border-b border-dashed border-bureau-border/40 p-1.5 lg:hidden">
                   <p className="mb-1 font-typewriter text-xs uppercase tracking-eyebrow text-bureau-ink-muted">

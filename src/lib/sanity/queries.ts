@@ -172,6 +172,13 @@ export const anomalyBySlugQuery = `*[_type == "anomaly" && slug.current == $slug
   description,
   metaTitle,
   metaDescription,
+  fileAbstract,
+  caseFileSections[] {
+    _key,
+    heading,
+    label,
+    body
+  },
   image,
   imageAlt,
   gridImage,
@@ -193,6 +200,15 @@ export const anomalyBySlugQuery = `*[_type == "anomaly" && slug.current == $slug
     _key,
     question,
     answer
+  },
+  sightings[] {
+    _key,
+    date,
+    location,
+    coordinates,
+    witness,
+    account,
+    source
   }
 }`;
 

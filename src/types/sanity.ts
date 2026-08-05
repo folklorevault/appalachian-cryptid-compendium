@@ -165,6 +165,9 @@ export interface SanityAnomaly {
   bureauNotes?: string
   safetyAdvisory?: string
   declassifiedBriefings?: SanityDeclassifiedBriefing[]
+  fileAbstract?: string
+  caseFileSections?: SanityCaseFileSection[]
+  sightings?: SanitySighting[]
 }
 
 // Type for anomaly list queries (less data)
