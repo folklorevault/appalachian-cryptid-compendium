@@ -9,8 +9,14 @@ overrides:
   # Security overrides — transitive vulnerabilities flagged by pnpm audit / Dependabot
   # brace-expansion CVE-2026-13149 + GHSA-mh99-v99m-4gvg + GHSA-rgw5-rvv9-x895
   # (DoS via unbounded intermediate arrays; the last bypasses the CVE-2026-13149 mitigation)
-  # Every maintained line is affected — route each to its backported patch:
-  # 1.1.18 / 2.1.4 / 3.0.6 / 5.0.9. Keep the 1.x line on 1.x (old consumers), lift 2.x/3.x to 5.x.
+  # GHSA-rgw5 affects ALL FOUR maintained lines (<1.1.18 / <2.1.4 / <3.0.6 / <5.0.9) even though
+  # Dependabot only raised the >=4.0.0 range — every ceiling below is set from the advisory, not
+  # the alert. Ceilings must advance with each advisory or the key stops matching and silently
+  # no-ops (that is how 5.0.8 slipped past the old <5.0.8 key).
+  # The 1.x line MUST stay on 1.x. #103 routed it to 5.x, which resolves fine but breaks at
+  # runtime: brace-expansion 1.x is `module.exports = expand` (callable), 5.x moved to a named
+  # export, so minimatch@3.1.5's `require('brace-expansion')` yields an object and ESLint dies
+  # with "expand is not a function". Semver-valid, API-invalid — tsc and next build miss it.
   "brace-expansion@<1.1.18": ">=1.1.18 <2.0.0"
   "brace-expansion@>=2.0.0 <2.1.4": ">=5.0.9 <6.0.0"
   "brace-expansion@>=3.0.0 <3.0.6": ">=5.0.9 <6.0.0"

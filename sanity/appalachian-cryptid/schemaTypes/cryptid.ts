@@ -241,39 +241,7 @@ export default defineType({
       type: 'array',
       description:
         'Prominent, always-visible narrative sections rendered above the collapsible drawers. Use for answers people arrive searching for (e.g. "Is the [name] real?", "Where the name came from"). The heading carries the search query; the label is the Bureau chrome.',
-      of: [
-        {
-          type: 'object',
-          name: 'caseFileSection',
-          title: 'Case File Section',
-          fields: [
-            {
-              name: 'heading',
-              title: 'Heading (semantic, carries the search query)',
-              type: 'string',
-              description: 'Plain-language, query-shaped. e.g. "Is the Not Deer Real?"',
-              validation: (Rule) => Rule.required(),
-            },
-            {
-              name: 'label',
-              title: 'Bureau Label (visual chrome)',
-              type: 'string',
-              description: 'Short stencil label shown beside the heading. e.g. "Disease Assessment"',
-            },
-            {
-              name: 'body',
-              title: 'Body',
-              type: 'text',
-              rows: 10,
-              description: 'Blank lines separate paragraphs. Avoid em dashes.',
-              validation: (Rule) => Rule.required(),
-            },
-          ],
-          preview: {
-            select: {title: 'heading', subtitle: 'label'},
-          },
-        },
-      ],
+      of: [{type: 'caseFileSection'}],
     }),
     defineField({
       name: 'declassifiedBriefings',
@@ -312,65 +280,7 @@ export default defineType({
       type: 'array',
       description:
         'Structured, individual sighting records. Powers the always-visible Sightings Distribution section on the case file and the sighting pins on the map. Each row with coordinates becomes a map pin; rows without coordinates still appear in the list. This is data, not narrative — keep accounts to a line or two. Distinct from Testimonies (long first-person quotes) and Notable Sightings (the prose timeline).',
-      of: [
-        {
-          type: 'object',
-          name: 'sighting',
-          title: 'Sighting',
-          fields: [
-            {
-              name: 'date',
-              title: 'Date',
-              type: 'date',
-              options: {dateFormat: 'MMMM D, YYYY'},
-              description:
-                'Best known date. Approximate to the month or year when the record is fuzzy (the list sorts by this).',
-            },
-            {
-              name: 'location',
-              title: 'Location',
-              type: 'string',
-              description: 'Human-readable place, e.g. "TNT Area, Point Pleasant, WV".',
-              validation: (Rule) => Rule.required(),
-            },
-            {
-              name: 'coordinates',
-              title: 'Coordinates (optional)',
-              type: 'geopoint',
-              description:
-                'Drop a pin for the map. Leave blank if the location is too vague to place — the sighting still lists.',
-            },
-            {
-              name: 'witness',
-              title: 'Witness',
-              type: 'string',
-            },
-            {
-              name: 'account',
-              title: 'Account (short)',
-              type: 'text',
-              rows: 3,
-              description:
-                'One or two lines. For a full first-person quote, use Testimonies instead. Avoid em dashes.',
-            },
-            {
-              name: 'source',
-              title: 'Source',
-              type: 'string',
-              description: 'Citation or attribution, e.g. newspaper, report number, book.',
-            },
-          ],
-          preview: {
-            select: {location: 'location', date: 'date', witness: 'witness'},
-            prepare({location, date, witness}) {
-              return {
-                title: location || 'Unplaced sighting',
-                subtitle: [date, witness].filter(Boolean).join(' · '),
-              }
-            },
-          },
-        },
-      ],
+      of: [{type: 'sighting'}],
     }),
   ],
   preview: {

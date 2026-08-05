@@ -119,6 +119,14 @@ export default defineType({
       description: 'Brief summary shown on cards and previews',
     }),
     defineField({
+      name: 'fileAbstract',
+      title: 'File Abstract',
+      type: 'text',
+      rows: 6,
+      description:
+        'Always-visible summary rendered directly under the name, above all drawers. Entity-first and definitional: lead with a flat "The [name] is a [phenomenon type] reported across..." sentence so it works as a search snippet. Blank lines separate paragraphs. Avoid em dashes.',
+    }),
+    defineField({
       name: 'metaTitle',
       title: 'Meta Title (SEO)',
       type: 'string',
@@ -251,6 +259,14 @@ export default defineType({
       description: 'Any warnings or precautions for investigators',
     }),
     defineField({
+      name: 'caseFileSections',
+      title: 'Case File Sections (always visible)',
+      type: 'array',
+      description:
+        'Prominent, always-visible narrative sections rendered above the collapsible drawers. Use for answers people arrive searching for (e.g. "Are the [name] real?", "What causes the [name]?"). The heading carries the search query; the label is the Bureau chrome.',
+      of: [{type: 'caseFileSection'}],
+    }),
+    defineField({
       name: 'declassifiedBriefings',
       title: 'Declassified Briefings (FAQ)',
       type: 'array',
@@ -280,6 +296,14 @@ export default defineType({
           },
         },
       ],
+    }),
+    defineField({
+      name: 'sightings',
+      title: 'Occurrence Log (mapped distribution)',
+      type: 'array',
+      description:
+        'Structured, individual occurrence records (recordings, dated incidents, sightings). Powers the always-visible distribution section on the case file and the occurrence pins on the map. Each row with coordinates becomes a map pin; rows without coordinates still appear in the list. This is data, not narrative — keep accounts to a line or two. Distinct from Witness Accounts (long first-person quotes).',
+      of: [{type: 'sighting'}],
     }),
   ],
   preview: {
