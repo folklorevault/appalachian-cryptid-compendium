@@ -59,10 +59,32 @@ async function getCspFromSource() {
 }
 
 async function getCspFromUrl(url) {
-  const res = await fetch(url, { redirect: "manual" });
+  // Vercel's managed Bot Protection ruleset (flipped Log -> Challenge on
+  // 2026-08-05, after the rotating-proxy scraper incident) challenges every
+  // non-browser client, CI runners included. The WAF rule "Bypass: CSP guard
+  // monitor" waves us through when this header carries the right secret.
+  const token = process.env.CSP_GUARD_TOKEN;
+  const res = await fetch(url, {
+    redirect: "manual",
+    headers: token ? { "x-csp-guard": token } : {},
+  });
+
   const csp = res.headers.get("content-security-policy");
-  if (!csp) throw new Error(`No Content-Security-Policy header on ${url} (status ${res.status})`);
-  return csp;
+  if (csp) return csp;
+
+  // A challenge response legitimately carries no CSP header. That is NOT a CSP
+  // regression, and reporting it as one turns this tripwire into noise — the
+  // exact failure mode it was built to prevent. Name the real cause instead.
+  if (res.headers.get("x-vercel-mitigated") === "challenge") {
+    throw new Error(
+      `Vercel WAF challenged this request (status ${res.status}), so there is no CSP header to read. ` +
+        (token
+          ? "A bypass header was sent but did not match — check the rule's secret and its /report path scope."
+          : "CSP_GUARD_TOKEN is unset, so no bypass header was sent."),
+    );
+  }
+
+  throw new Error(`No Content-Security-Policy header on ${url} (status ${res.status})`);
 }
 
 async function main() {

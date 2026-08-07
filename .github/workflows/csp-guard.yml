@@ -30,6 +30,11 @@ jobs:
         run: node scripts/check-csp.mjs
 
       # Post-deploy / scheduled: inspect the live header on production.
+      # CSP_GUARD_TOKEN matches the "Bypass: CSP guard monitor" WAF rule, which
+      # is what lets this runner past managed Bot Protection. Without it the
+      # request is challenged and no CSP header comes back.
       - name: Check live production CSP
         if: github.event_name != 'pull_request'
+        env:
+          CSP_GUARD_TOKEN: ${{ secrets.CSP_GUARD_TOKEN }}
         run: node scripts/check-csp.mjs --url https://appalachiancryptid.com/report
