@@ -3,11 +3,26 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - brace-expansion@1.1.18
 overrides:
-  js-yaml: ">=3.14.2"
+  # GHSA-5p4m-2wfm-xmqj affects the 3.x and 4.x lines only, so this collapses every js-yaml
+  # request onto 5.x. The KEY stays unscoped on purpose — scoping it to the advisory ranges
+  # would leave non-matching requests free to pull 3.x/4.x copies back into the studio tree.
+  # The VALUE is bounded to 5.x so the range enforces the floor it documents: an open-ended
+  # ">=" would resolve to whatever major is newest and float us into an unvetted 6.x on release.
+  js-yaml: ">=5.0.0 <6.0.0"
   # Security overrides — transitive vulnerabilities flagged by pnpm audit / Dependabot
   "uuid@<11.1.1": ">=11.1.1"
   "uuid@>=13.0.0 <13.0.1": ">=13.0.1"
-  "dompurify@<3.4.0": ">=3.4.0"
+  # dompurify GHSA-55q2-fjhq-7xh7 — removing an IN_PLACE hook leaves a detached-but-executable
+  # subtree behind, so sanitized markup can still fire script (XSS). Reaches us via
+  # isomorphic-dompurify -> dompurify@3.4.12. Ceiling raised from <3.4.0 to <3.4.13; the old key
+  # had stopped matching entirely, which is exactly the silent no-op the brace-expansion note below
+  # warns about. Advance this with every new dompurify advisory.
+  "dompurify@<3.4.13": ">=3.4.13 <4.0.0"
+  # nanoid GHSA-2v37-7h3g-55p8 — custom generators loop forever when size is 0 (DoS).
+  # Studio resolves three nanoid copies: 3.3.16 (vulnerable), 5.1.16 and 6.0.0 (both already
+  # clear). The 4.x/5.x key is a regression guard, not a live fix.
+  "nanoid@<3.3.17": ">=3.3.17 <4.0.0"
+  "nanoid@>=4.0.0 <5.1.6": ">=5.1.6 <6.0.0"
   # brace-expansion CVE-2026-13149 + GHSA-mh99-v99m-4gvg + GHSA-rgw5-rvv9-x895
   # (DoS via unbounded intermediate arrays; the last bypasses the CVE-2026-13149 mitigation)
   # GHSA-rgw5 affects ALL FOUR maintained lines (<1.1.18 / <2.1.4 / <3.0.6 / <5.0.9) even though
