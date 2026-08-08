@@ -1,6 +1,8 @@
 name: CI
 
-# Lint + typecheck gate. This exists because ESLint is the ONLY tool that catches
+# Lint + typecheck gate. Scope is deliberately asymmetric: the root workspace gets
+# ESLint + tsc, the studio gets tsc only (its ESLint is broken upstream — see the note
+# above the studio steps). This exists because ESLint is the ONLY tool that catches
 # a whole class of dependency breakage that ships green otherwise.
 #
 # Backstory (2026-07-30, PR #103): Renovate widened the brace-expansion 1.x override
@@ -24,6 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Nothing after this runs an authenticated git command — the job only installs
+          # deps and runs ESLint/tsc. Dropping the persisted token keeps install-time
+          # lifecycle scripts from finding it in the git config.
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v6
 
