@@ -3,5 +3,12 @@
   "extends": ["local>folklorevault/renovate-config"],
   "constraints": {
     "pnpm": ">=11"
-  }
+  },
+  "packageRules": [
+    {
+      "description": "Hold the brace-expansion 1.x override key on the 1.x line. Renovate repeatedly proposes widening it to '>=1.1.18 <6.0.0' (that is PR #103), which lets 5.x resolve into minimatch@3.1.5. brace-expansion 1.x is `module.exports = expand` (callable); 5.x moved to a named export, so minimatch's require() yields an object and ESLint dies with 'expand is not a function'. Semver-valid, API-invalid: tsc and next build both miss it, so nothing but the lint job catches it. The 2.x/3.x/4.x keys are deliberately NOT matched here — those must keep flowing to 5.x. Matched by regex, not a literal key, so the rule survives each ceiling bump (a literal 'brace-expansion@<1.1.18' would silently stop matching the moment the ceiling advances).",
+      "matchDepNames": ["/^brace-expansion@<1\\./"],
+      "allowedVersions": "<2.0.0"
+    }
+  ]
 }

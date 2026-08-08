@@ -1,0 +1,57 @@
+name: CI
+
+# Lint + typecheck gate. This exists because ESLint is the ONLY tool that catches
+# a whole class of dependency breakage that ships green otherwise.
+#
+# Backstory (2026-07-30, PR #103): Renovate widened the brace-expansion 1.x override
+# key to allow 5.x. It resolved fine and both `tsc --noEmit` and `next build` passed,
+# but brace-expansion 1.x is `module.exports = expand` (callable) while 5.x moved to a
+# named export — so minimatch@3.1.5's require() returned an object and ESLint died with
+# "expand is not a function". Semver-valid, API-invalid. It sat undetected on main
+# because nothing in CI ran lint.
+#
+# Renovate now pins that key (see renovate.json), and this job is the backstop if a
+# similar override ever slips through. Keep `pnpm install --frozen-lockfile` — it also
+# fails when a pnpm-workspace.yaml override edit isn't reflected in the lockfile.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: ESLint
+        run: pnpm exec eslint .
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      # The studio is a separate project with its own lockfile. Only its typecheck runs
+      # here: its ESLint is currently broken independently of this repo's code —
+      # @sanity/eslint-config-studio pulls eslint-plugin-react@7.37.5, which calls
+      # context.getFilename() and therefore cannot run under the studio's pinned
+      # eslint@10.5.0. That is the same plugin/ESLint-10 incompatibility the shared
+      # Renovate preset pins the site's ESLint to <10 for. Add `pnpm exec eslint .`
+      # below once the studio drops to ESLint 9 or the plugin ships ESLint 10 support.
+      - name: Install studio dependencies
+        working-directory: sanity/appalachian-cryptid
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck studio
+        working-directory: sanity/appalachian-cryptid
+        run: pnpm exec tsc --noEmit

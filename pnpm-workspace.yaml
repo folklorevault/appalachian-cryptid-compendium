@@ -25,6 +25,18 @@ overrides:
   # Supersedes Next 16.2.x's optionalDependencies.sharp ^0.34.5; Next uses only sharp's stable image API.
   # Bounded <0.36.0 so a future lockfile refresh can't silently jump a breaking sharp major.
   "sharp@<0.35.0": ">=0.35.0 <0.36.0"
+  # nanoid GHSA-2v37-7h3g-55p8 — custom generators loop forever when size is 0 (DoS).
+  # Reaches us twice: postcss -> nanoid and @sanity/client -> nanoid, both on 3.3.16.
+  # Dependabot only raised the <3.3.17 line; the advisory also covers >=4.0.0 <5.1.6, so the
+  # second key is here pre-emptively even though nothing resolves into that range today.
+  "nanoid@<3.3.17": ">=3.3.17 <4.0.0"
+  "nanoid@>=4.0.0 <5.1.6": ">=5.1.6 <6.0.0"
+  # js-yaml GHSA-5p4m-2wfm-xmqj — quadratic CPU blowup resolving !!omap (CVE-2026-59870 fix
+  # was never backported). Arrives via @eslint/eslintrc -> js-yaml@4.3.0 (dev-only, but the
+  # alert is still live). Advisory covers both 3.x and 4.x; 5.x is unaffected, so both keys
+  # are majorbounded to avoid dragging anything across a major.
+  "js-yaml@>=3.0.0 <3.15.1": ">=3.15.1 <4.0.0"
+  "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1 <5.0.0"
   "postcss@<8.5.10": ">=8.5.10"
   "protocol-buffers-schema@<3.6.1": ">=3.6.1"
   "@babel/core@<7.29.6": ">=7.29.6 <8.0.0"
