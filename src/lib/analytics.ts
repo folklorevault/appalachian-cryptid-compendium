@@ -1,11 +1,37 @@
-// Analytics stub - actual tracking handled by Rybbit
-// This file exists so existing analytics.trackEvent() calls don't break
+type AnalyticsProperty = string | number;
+
+interface RybbitAnalytics {
+  event: (
+    eventName: string,
+    properties?: Record<string, AnalyticsProperty>,
+  ) => void;
+}
+
+declare global {
+  interface Window {
+    rybbit?: RybbitAnalytics;
+  }
+}
 
 class Analytics {
-  // No-op methods for backwards compatibility
+  // These methods remain for backwards compatibility. Rybbit handles its
+  // built-in pageviews automatically through the site-wide tracking script.
   trackPageView(_page: string, _cryptid?: string) {}
   trackCryptidView(_slug: string, _name: string) {}
-  trackEvent(_event: string, _data?: Record<string, unknown>) {}
+
+  trackEvent(
+    eventName: string,
+    properties?: Record<string, AnalyticsProperty>,
+  ) {
+    if (typeof window === "undefined") return;
+
+    try {
+      window.rybbit?.event(eventName, properties);
+    } catch {
+      // Analytics must never interrupt the visitor's action.
+    }
+  }
+
   disable() {}
   enable() {}
 }
