@@ -29,7 +29,7 @@ overrides:
   # Reaches us twice: postcss -> nanoid and @sanity/client -> nanoid, both on 3.3.16.
   # Dependabot only raised the <3.3.17 line; the advisory also covers >=4.0.0 <5.1.6, so the
   # second key is here pre-emptively even though nothing resolves into that range today.
-  "nanoid@<3.3.17": ">=3.3.17 <4.0.0"
+  "nanoid@<3.3.17": ">=3.3.17 <7.0.0"
   "nanoid@>=4.0.0 <5.1.6": ">=5.1.6 <6.0.0"
   # js-yaml GHSA-5p4m-2wfm-xmqj — quadratic CPU blowup resolving !!omap (CVE-2026-59870 fix
   # was never backported). Arrives via @eslint/eslintrc -> js-yaml@4.3.0 (dev-only, but the

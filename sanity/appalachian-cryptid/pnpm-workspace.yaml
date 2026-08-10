@@ -21,7 +21,7 @@ overrides:
   # nanoid GHSA-2v37-7h3g-55p8 — custom generators loop forever when size is 0 (DoS).
   # Studio resolves three nanoid copies: 3.3.16 (vulnerable), 5.1.16 and 6.0.0 (both already
   # clear). The 4.x/5.x key is a regression guard, not a live fix.
-  "nanoid@<3.3.17": ">=3.3.17 <4.0.0"
+  "nanoid@<3.3.17": ">=3.3.17 <7.0.0"
   "nanoid@>=4.0.0 <5.1.6": ">=5.1.6 <6.0.0"
   # brace-expansion CVE-2026-13149 + GHSA-mh99-v99m-4gvg + GHSA-rgw5-rvv9-x895
   # (DoS via unbounded intermediate arrays; the last bypasses the CVE-2026-13149 mitigation)
