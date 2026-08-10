@@ -4,8 +4,8 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - brace-expansion@1.1.18
 overrides:
-  "@types/react": "19.2.17"
-  "@types/react-dom": "19.2.3"
+  "@types/react": "19.2.18"
+  "@types/react-dom": "19.2.4"
   # Security overrides — transitive vulnerabilities flagged by pnpm audit / Dependabot
   # brace-expansion CVE-2026-13149 + GHSA-mh99-v99m-4gvg + GHSA-rgw5-rvv9-x895
   # (DoS via unbounded intermediate arrays; the last bypasses the CVE-2026-13149 mitigation)
