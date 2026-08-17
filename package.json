@@ -19,7 +19,7 @@
     "@radix-ui/react-slot": "^1.3.3",
     "@radix-ui/react-toast": "^1.2.23",
     "@radix-ui/react-tooltip": "^1.2.16",
-    "@sanity/client": "^7.13.1",
+    "@sanity/client": "^8.0.0",
     "@sanity/image-url": "^2.0.2",
     "@vercel/analytics": "^2.0.1",
     "botid": "^1.5.11",
