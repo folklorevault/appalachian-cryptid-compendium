@@ -79,7 +79,14 @@ async function getCspFromUrl(url) {
     throw new Error(
       `Vercel WAF challenged this request (status ${res.status}), so there is no CSP header to read. ` +
         (token
-          ? "A bypass header was sent but did not match — check the rule's secret and its /report path scope."
+          ? "A bypass header was sent but the WAF did not honour it. Check, in this order:\n" +
+            "    1. Does the rule exist LIVE?  `vercel firewall rules ls`\n" +
+            "       `rules add` only stages a draft — it is inert until `vercel firewall publish`.\n" +
+            "       This exact gap broke the guard from 2026-08-06 to 2026-08-19.\n" +
+            "    2. Is its action `bypass`?  Lesser actions skip only other custom rules,\n" +
+            "       not the managed Bot Protection ruleset that issues this challenge.\n" +
+            "    3. Does the secret still match GitHub secret CSP_GUARD_TOKEN, and does\n" +
+            "       the rule's path condition still cover the URL above?"
           : "CSP_GUARD_TOKEN is unset, so no bypass header was sent."),
     );
   }
