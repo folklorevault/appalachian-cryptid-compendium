@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "7.0.0",
-    "@types/react": "19.2.18",
+    "@types/react": "19.3.0",
     "eslint": "10.5.0",
     "prettier": "3.9.6",
     "typescript": "6.0.3"
