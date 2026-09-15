@@ -1,0 +1,223 @@
+name: Dependabot Alert Copilot Remediation
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: "Comma-separated severities to process (critical,high,moderate,low)"
+        required: false
+        default: "high,critical"
+        type: string
+
+permissions:
+  contents: read
+  security-events: read
+
+jobs:
+  fetch-alerts:
+    name: Fetch open Dependabot alerts
+    runs-on: ubuntu-latest
+    outputs:
+      alerts_matrix: ${{ steps.fetch.outputs.alerts_matrix }}
+      alert_count: ${{ steps.fetch.outputs.alert_count }}
+      has_alerts: ${{ steps.fetch.outputs.has_alerts }}
+      severity_filter: ${{ steps.fetch.outputs.severity_filter }}
+    steps:
+      - name: Fetch and filter alerts
+        id: fetch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_SEVERITY: ${{ github.event.inputs.severity }}
+        run: |
+          set -euo pipefail
+
+          severity_filter="${INPUT_SEVERITY:-high,critical}"
+          severity_filter="$(echo "$severity_filter" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+
+          if [ -z "$severity_filter" ]; then
+            severity_filter="high,critical"
+          fi
+
+          IFS=',' read -r -a severities <<< "$severity_filter"
+          for severity in "${severities[@]}"; do
+            case "$severity" in
+              critical|high|moderate|low) ;;
+              *)
+                echo "Invalid severity filter: '$severity'"
+                echo "Allowed values: critical, high, moderate, low"
+                exit 1
+                ;;
+            esac
+          done
+
+          echo "Using severity filter: $severity_filter"
+
+          all_alerts='[]'
+
+          for severity in "${severities[@]}"; do
+            echo "Fetching open Dependabot alerts with severity=$severity"
+
+            current_alerts="$(
+              gh api \
+                --paginate \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${GITHUB_REPOSITORY}/dependabot/alerts?state=open&severity=${severity}&per_page=100" \
+                | jq -cs 'add // []'
+            )"
+
+            count="$(echo "$current_alerts" | jq 'length')"
+            echo "Found $count alert(s) at severity=$severity"
+
+            all_alerts="$(jq -cn --argjson a "$all_alerts" --argjson b "$current_alerts" '$a + $b')"
+          done
+
+          deduped_alerts="$(echo "$all_alerts" | jq 'unique_by(.number)')"
+          alert_count="$(echo "$deduped_alerts" | jq 'length')"
+
+          echo "Total unique open alerts found: $alert_count"
+
+          alert_matrix="$(
+            echo "$deduped_alerts" | jq -c '
+              [
+                .[] |
+                {
+                  number: .number,
+                  html_url: .html_url,
+                  severity: (.security_advisory.severity // "unknown"),
+                  ghsa_id: (.security_advisory.ghsa_id // "unknown"),
+                  summary: (.security_advisory.summary // "No summary provided"),
+                  package_name: (.dependency.package.name // "unknown"),
+                  ecosystem: (.dependency.package.ecosystem // "unknown"),
+                  manifest_path: (.dependency.manifest_path // "unknown"),
+                  vulnerable_version_range: (.security_vulnerability.vulnerable_version_range // "unknown"),
+                  first_patched_version: (.security_vulnerability.first_patched_version.identifier // "unknown")
+                }
+              ]
+            '
+          )"
+
+          {
+            echo "severity_filter=$severity_filter"
+            echo "alert_count=$alert_count"
+            if [ "$alert_count" -gt 0 ]; then
+              echo "has_alerts=true"
+              echo "alerts_matrix=$alert_matrix"
+            else
+              echo "has_alerts=false"
+              echo "alerts_matrix=[]"
+            fi
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Dependabot alert scan"
+            echo ""
+            echo "- Repository: \`${GITHUB_REPOSITORY}\`"
+            echo "- Severity filter: \`$severity_filter\`"
+            echo "- Alerts found: **$alert_count**"
+            echo ""
+            if [ "$alert_count" -gt 0 ]; then
+              echo "### Alerts"
+              echo ""
+              echo "$alert_matrix" | jq -r '.[] | "- #\(.number) [\(.severity)] \(.package_name) — \(.summary)"'
+            else
+              echo "No matching open Dependabot alerts found."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  remediate-alert:
+    name: Remediate alert #${{ matrix.alert.number }}
+    needs: fetch-alerts
+    if: needs.fetch-alerts.outputs.has_alerts == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        alert: ${{ fromJson(needs.fetch-alerts.outputs.alerts_matrix) }}
+    permissions:
+      contents: write
+      pull-requests: write
+      security-events: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Log alert details
+        run: |
+          echo "Starting Copilot remediation task for alert #${{ matrix.alert.number }}"
+          echo "Severity: ${{ matrix.alert.severity }}"
+          echo "GHSA: ${{ matrix.alert.ghsa_id }}"
+          echo "Package: ${{ matrix.alert.package_name }} (${{ matrix.alert.ecosystem }})"
+          echo "Manifest path: ${{ matrix.alert.manifest_path }}"
+          echo "Vulnerable versions: ${{ matrix.alert.vulnerable_version_range }}"
+          echo "First patched version: ${{ matrix.alert.first_patched_version }}"
+          echo "Alert URL: ${{ matrix.alert.html_url }}"
+
+      - name: Trigger Copilot coding agent
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cat > copilot-prompt.txt <<'PROMPT'
+          You are remediating a single Dependabot alert in folklorevault/appalachian-cryptid-compendium.
+
+          Alert details:
+          - Alert number: ${{ matrix.alert.number }}
+          - Severity: ${{ matrix.alert.severity }}
+          - GHSA: ${{ matrix.alert.ghsa_id }}
+          - Advisory summary: ${{ matrix.alert.summary }}
+          - Package: ${{ matrix.alert.package_name }}
+          - Ecosystem: ${{ matrix.alert.ecosystem }}
+          - Manifest path: ${{ matrix.alert.manifest_path }}
+          - Vulnerable range: ${{ matrix.alert.vulnerable_version_range }}
+          - First patched version: ${{ matrix.alert.first_patched_version }}
+          - Alert URL: ${{ matrix.alert.html_url }}
+
+          Required actions:
+          1. Analyze the vulnerability and identify the minimal safe upgrade.
+          2. Update the affected package to a patched version.
+          3. Run CI-relevant validation for this repository (at minimum lint + typecheck, and targeted tests when applicable).
+          4. Create a pull request that clearly explains the security fix, vulnerability context, and validation results.
+
+          Constraints:
+          - Keep changes minimal and focused on this alert.
+          - Follow repository conventions for tooling and scripts.
+          - Do not modify unrelated dependencies.
+          PROMPT
+
+          echo "Invoking Copilot coding agent for alert #${{ matrix.alert.number }}"
+          copilot -p "$(cat copilot-prompt.txt)" --no-ask-user
+
+      - name: Append agent run summary
+        if: always()
+        run: |
+          {
+            echo "## Agent task result for alert #${{ matrix.alert.number }}"
+            echo ""
+            echo "- Severity: \`${{ matrix.alert.severity }}\`"
+            echo "- Package: \`${{ matrix.alert.package_name }}\`"
+            echo "- GHSA: \`${{ matrix.alert.ghsa_id }}\`"
+            echo "- Alert URL: ${{ matrix.alert.html_url }}"
+            echo "- Workflow run status: \`${{ job.status }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  no-alerts:
+    name: No matching alerts
+    needs: fetch-alerts
+    if: needs.fetch-alerts.outputs.has_alerts != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report no alerts found
+        run: |
+          echo "No open Dependabot alerts found for severities: ${{ needs.fetch-alerts.outputs.severity_filter }}"
+          echo "Nothing to remediate."
