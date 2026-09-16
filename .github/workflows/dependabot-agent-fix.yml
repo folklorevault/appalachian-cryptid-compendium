@@ -19,6 +19,9 @@ jobs:
   fetch-alerts:
     name: Fetch open Dependabot alerts
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     outputs:
       alerts_matrix: ${{ steps.fetch.outputs.alerts_matrix }}
       alert_count: ${{ steps.fetch.outputs.alert_count }}
