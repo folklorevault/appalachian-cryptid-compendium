@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useDeferredValue } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LabelTape } from "@/components/EvidenceChip";
@@ -73,6 +73,11 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
   const [selectedRegion, setSelectedRegion] = useState("all");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
+  // The input stays fully responsive to `searchQuery`, but the expensive
+  // filter + grid re-render reads this deferred value, so keystrokes never
+  // block on rendering the results. Keeps typing INP low as the catalog grows.
+  const deferredQuery = useDeferredValue(searchQuery);
+
   const filteredAnomalies = useMemo(() => {
     let results = [...anomalies];
 
@@ -85,8 +90,8 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
     if (selectedRegion !== "all") {
       results = results.filter((a) => a.region === selectedRegion);
     }
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    if (deferredQuery) {
+      const query = deferredQuery.toLowerCase();
       results = results.filter(
         (a) =>
           a.name.toLowerCase().includes(query) ||
@@ -96,7 +101,7 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
     }
 
     return results;
-  }, [anomalies, searchQuery, selectedType, selectedStatus, selectedRegion]);
+  }, [anomalies, deferredQuery, selectedType, selectedStatus, selectedRegion]);
 
   const visibleAnomalies = filteredAnomalies.slice(0, visibleCount);
   const hasMore = visibleCount < filteredAnomalies.length;
