@@ -103,7 +103,17 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
     return results;
   }, [anomalies, deferredQuery, selectedType, selectedStatus, selectedRegion]);
 
-  const visibleAnomalies = filteredAnomalies.slice(0, visibleCount);
+  const visibleAnomalies = useMemo(
+    () => filteredAnomalies.slice(0, visibleCount),
+    [filteredAnomalies, visibleCount]
+  );
+  const visibleAnomalyCards = useMemo(
+    () =>
+      visibleAnomalies.map((anomaly) => (
+        <CasefileCard key={anomaly._id} type="anomaly" data={anomaly} />
+      )),
+    [visibleAnomalies]
+  );
   const hasMore = visibleCount < filteredAnomalies.length;
 
   const handleFilterChange = (
@@ -319,13 +329,7 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {visibleAnomalies.map((anomaly) => (
-                  <CasefileCard
-                    key={anomaly._id}
-                    type="anomaly"
-                    data={anomaly}
-                  />
-                ))}
+                {visibleAnomalyCards}
               </div>
               {hasMore && (
                 <div className="text-center mt-10">
