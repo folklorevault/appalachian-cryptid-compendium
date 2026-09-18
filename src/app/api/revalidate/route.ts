@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
+import crypto from "crypto";
 
 // Sanity webhook handler — revalidates affected pages when content changes
 export async function POST(request: NextRequest) {
@@ -14,7 +15,18 @@ export async function POST(request: NextRequest) {
     }
 
     const secret = request.headers.get("x-sanity-webhook-secret");
-    if (secret !== expectedSecret) {
+    const expectedBuffer = Buffer.from(expectedSecret, "utf-8");
+    const secretBuffer = Buffer.from(secret || "", "utf-8");
+
+    let isMatch = false;
+    if (expectedBuffer.length !== secretBuffer.length) {
+      // Do a dummy timing-safe comparison to mitigate length-based timing attacks
+      crypto.timingSafeEqual(expectedBuffer, expectedBuffer);
+    } else {
+      isMatch = crypto.timingSafeEqual(expectedBuffer, secretBuffer);
+    }
+
+    if (!isMatch) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
