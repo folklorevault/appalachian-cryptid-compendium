@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowRight } from "lucide-react";
+import { memo } from "react";
 import { urlFor } from "@/lib/sanity/image";
 import { LabelTape } from "@/components/EvidenceChip";
 import type { SanityCryptidListItem, SanityAnomalyListItem } from "@/types/sanity";
@@ -15,7 +16,7 @@ interface CasefileCardProps {
   priority?: boolean;
 }
 
-export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps) => {
+export const CasefileCard = memo(({ type, data, priority = false }: CasefileCardProps) => {
   const {
     name,
     slug,
@@ -122,4 +123,5 @@ export const CasefileCard = ({ type, data, priority = false }: CasefileCardProps
       </Card>
     </Link>
   );
-};
+});
+CasefileCard.displayName = "CasefileCard";
