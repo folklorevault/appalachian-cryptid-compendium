@@ -61,6 +61,62 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (body.witness_name && body.witness_name.length > 100) {
+      return NextResponse.json(
+        { error: "Witness name must be 100 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.email && body.email.length > 254) {
+      return NextResponse.json(
+        { error: "Email must be 254 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.location && body.location.length > 1000) {
+      return NextResponse.json(
+        { error: "Location must be 1,000 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.state && body.state.length > 50) {
+      return NextResponse.json(
+        { error: "State must be 50 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.creature_name && body.creature_name.length > 150) {
+      return NextResponse.json(
+        { error: "Creature name must be 150 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.description && body.description.length > 5000) {
+      return NextResponse.json(
+        { error: "Description must be 5,000 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.physical_description && body.physical_description.length > 3000) {
+      return NextResponse.json(
+        { error: "Physical description must be 3,000 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
+    if (body.behavior && body.behavior.length > 3000) {
+      return NextResponse.json(
+        { error: "Behavior must be 3,000 characters or fewer." },
+        { status: 400 }
+      );
+    }
+
     const sanityToken = process.env.SANITY_API_TOKEN;
     if (!sanityToken) {
       console.error("SANITY_API_TOKEN not configured");
