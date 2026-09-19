@@ -4,11 +4,60 @@ import { checkBotId } from "botid/server";
 const SANITY_PROJECT_ID = "8thljucm";
 const SANITY_DATASET = "production";
 const SANITY_API_VERSION = "2024-01-01";
+const MAX_REQUEST_BODY_BYTES = 16 * 1024;
+const MAX_DATE_LENGTH = 10;
+const MAX_TIME_LENGTH = 50;
 
 function generateId() {
   return (
     Date.now().toString(36) + Math.random().toString(36).substring(2, 8)
   );
+}
+
+async function parseJsonBodyWithLimit(request: NextRequest) {
+  const contentLength = request.headers.get("content-length");
+  if (contentLength) {
+    const parsedLength = Number.parseInt(contentLength, 10);
+    if (Number.isFinite(parsedLength) && parsedLength > MAX_REQUEST_BODY_BYTES) {
+      return { error: "Request body too large.", status: 413 as const };
+    }
+  }
+
+  if (!request.body) {
+    return { error: "Invalid request body.", status: 400 as const };
+  }
+
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let bodyText = "";
+  let totalBytes = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    totalBytes += value.byteLength;
+    if (totalBytes > MAX_REQUEST_BODY_BYTES) {
+      return { error: "Request body too large.", status: 413 as const };
+    }
+
+    bodyText += decoder.decode(value, { stream: true });
+  }
+
+  bodyText += decoder.decode();
+
+  let body: unknown;
+  try {
+    body = JSON.parse(bodyText);
+  } catch {
+    return { error: "Invalid JSON body.", status: 400 as const };
+  }
+
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return { error: "Invalid request body.", status: 400 as const };
+  }
+
+  return { body: body as Record<string, any> };
 }
 
 export async function POST(request: NextRequest) {
@@ -26,7 +75,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    const parsedBody = await parseJsonBodyWithLimit(request);
+    if ("error" in parsedBody) {
+      return NextResponse.json(
+        { error: parsedBody.error },
+        { status: parsedBody.status }
+      );
+    }
+
+    const body = parsedBody.body;
 
     // Honeypot check: if the hidden field is filled, it's a bot.
     // Return fake success so bots don't retry.
@@ -115,6 +172,64 @@ export async function POST(request: NextRequest) {
         { error: "Behavior must be 3,000 characters or fewer." },
         { status: 400 }
       );
+    }
+
+    if (body.date !== undefined && body.date !== null) {
+      if (typeof body.date !== "string") {
+        return NextResponse.json(
+          { error: "Date must be a string in YYYY-MM-DD format." },
+          { status: 400 }
+        );
+      }
+
+      const trimmedDate = body.date.trim();
+      if (trimmedDate.length > MAX_DATE_LENGTH) {
+        return NextResponse.json(
+          { error: "Date must be 10 characters or fewer." },
+          { status: 400 }
+        );
+      }
+
+      if (trimmedDate && !/^\d{4}-\d{2}-\d{2}$/.test(trimmedDate)) {
+        return NextResponse.json(
+          { error: "Date must use YYYY-MM-DD format." },
+          { status: 400 }
+        );
+      }
+
+      if (trimmedDate) {
+        const parsedDate = new Date(`${trimmedDate}T00:00:00.000Z`);
+        if (
+          Number.isNaN(parsedDate.getTime()) ||
+          parsedDate.toISOString().slice(0, 10) !== trimmedDate
+        ) {
+          return NextResponse.json(
+            { error: "Date must be a valid calendar date." },
+            { status: 400 }
+          );
+        }
+      }
+
+      body.date = trimmedDate || undefined;
+    }
+
+    if (body.time !== undefined && body.time !== null) {
+      if (typeof body.time !== "string") {
+        return NextResponse.json(
+          { error: "Time must be a string." },
+          { status: 400 }
+        );
+      }
+
+      const trimmedTime = body.time.trim();
+      if (trimmedTime.length > MAX_TIME_LENGTH) {
+        return NextResponse.json(
+          { error: "Time must be 50 characters or fewer." },
+          { status: 400 }
+        );
+      }
+
+      body.time = trimmedTime || undefined;
     }
 
     const sanityToken = process.env.SANITY_API_TOKEN;
