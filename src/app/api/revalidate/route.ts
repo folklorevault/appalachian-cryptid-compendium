@@ -17,14 +17,10 @@ export async function POST(request: NextRequest) {
     const secret = request.headers.get("x-sanity-webhook-secret");
     const expectedBuffer = Buffer.from(expectedSecret, "utf-8");
     const secretBuffer = Buffer.from(secret || "", "utf-8");
-
-    let isMatch = false;
-    if (expectedBuffer.length !== secretBuffer.length) {
-      // Do a dummy timing-safe comparison to mitigate length-based timing attacks
-      crypto.timingSafeEqual(expectedBuffer, expectedBuffer);
-    } else {
-      isMatch = crypto.timingSafeEqual(expectedBuffer, secretBuffer);
-    }
+    const normalizedSecretBuffer = Buffer.alloc(expectedBuffer.length);
+    secretBuffer.copy(normalizedSecretBuffer, 0, 0, expectedBuffer.length);
+    const secretsEqual = crypto.timingSafeEqual(expectedBuffer, normalizedSecretBuffer);
+    const isMatch = secretBuffer.length === expectedBuffer.length && secretsEqual;
 
     if (!isMatch) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
