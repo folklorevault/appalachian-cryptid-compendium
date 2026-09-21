@@ -53,57 +53,15 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
     );
   }, [cryptids, deferredQuery, selectedRegion]);
 
-  const visibleCryptids = useMemo(
-    () => filteredCryptids.slice(0, visibleCount),
-    [filteredCryptids, visibleCount]
-  );
+  const visibleCryptids = filteredCryptids.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCryptids.length;
 
   // "Case Drawers" made literal: chunk the visible cards into drawers of 6
-  // for decorative divider rows.
-  const drawers = useMemo(() => {
-    const result: SanityCryptidListItem[][] = [];
-    for (let i = 0; i < visibleCryptids.length; i += LOAD_MORE_COUNT) {
-      result.push(visibleCryptids.slice(i, i + LOAD_MORE_COUNT));
-    }
-    return result;
-  }, [visibleCryptids]);
-
-  const visibleDrawerCards = useMemo(() => {
-    return drawers.map((drawer, drawerIndex) => {
-      const start = drawerIndex * LOAD_MORE_COUNT + 1;
-      const end = drawerIndex * LOAD_MORE_COUNT + drawer.length;
-      return (
-        <div key={drawerIndex}>
-          {/* Decorative drawer divider — hidden from the a11y tree */}
-          <div
-            aria-hidden="true"
-            className="flex items-center gap-3.5 mb-4"
-          >
-            <span className="drawer-chip">
-              Drawer {String.fromCharCode(65 + drawerIndex)}
-            </span>
-            <span className="h-px flex-1 bg-[hsl(var(--bureau-border)/0.6)]" />
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.14em] text-muted-foreground/80">
-              Files {start}–{end} of {filteredCryptids.length}
-            </span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {drawer.map((cryptid, cardIndex) => (
-              <CasefileCard
-                key={cryptid._id}
-                type="cryptid"
-                data={cryptid}
-                priority={
-                  drawerIndex * LOAD_MORE_COUNT + cardIndex < 3
-                }
-              />
-            ))}
-          </div>
-        </div>
-      );
-    });
-  }, [drawers, filteredCryptids.length]);
+  // for decorative divider rows. Derived at render — no new state.
+  const drawers: SanityCryptidListItem[][] = [];
+  for (let i = 0; i < visibleCryptids.length; i += LOAD_MORE_COUNT) {
+    drawers.push(visibleCryptids.slice(i, i + LOAD_MORE_COUNT));
+  }
 
   const handleFilterChange = (value: string) => {
     setSelectedRegion(value);
@@ -236,7 +194,39 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
           ) : (
             <>
               <div className="flex flex-col gap-7">
-                {visibleDrawerCards}
+                {drawers.map((drawer, drawerIndex) => {
+                  const start = drawerIndex * LOAD_MORE_COUNT + 1;
+                  const end = drawerIndex * LOAD_MORE_COUNT + drawer.length;
+                  return (
+                    <div key={drawerIndex}>
+                      {/* Decorative drawer divider — hidden from the a11y tree */}
+                      <div
+                        aria-hidden="true"
+                        className="flex items-center gap-3.5 mb-4"
+                      >
+                        <span className="drawer-chip">
+                          Drawer {String.fromCharCode(65 + drawerIndex)}
+                        </span>
+                        <span className="h-px flex-1 bg-[hsl(var(--bureau-border)/0.6)]" />
+                        <span className="font-typewriter text-[9px] uppercase tracking-[0.14em] text-muted-foreground/80">
+                          Files {start}–{end} of {filteredCryptids.length}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {drawer.map((cryptid, cardIndex) => (
+                          <CasefileCard
+                            key={cryptid._id}
+                            type="cryptid"
+                            data={cryptid}
+                            priority={
+                              drawerIndex * LOAD_MORE_COUNT + cardIndex < 3
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               {hasMore && (
                 <div className="text-center mt-10">
