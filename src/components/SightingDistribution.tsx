@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, memo, useCallback } from "react";
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
 import type { SanitySighting } from "@/types/sanity";
@@ -22,6 +22,91 @@ const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
  * load (App Router SSR), so the "[name] sightings" text stays indexable; only
  * the mapbox-gl bundle is deferred (see SightingMap).
  */
+const SightingListItem = memo(({
+  s,
+  date,
+  num,
+  active,
+  visibleOnCompact,
+  onSelect,
+  onRef,
+}: {
+  s: SanitySighting;
+  date: string | null;
+  num: string;
+  active: boolean;
+  visibleOnCompact: boolean;
+  onSelect: (key: string) => void;
+  onRef: (key: string, el: HTMLLIElement | null) => void;
+}) => {
+  return (
+    <li
+      className={visibleOnCompact ? "block" : "hidden lg:block"}
+      ref={(el) => onRef(s._key, el)}
+    >
+      <button
+        type="button"
+        onClick={() => onSelect(s._key)}
+        aria-pressed={active}
+        className={`block w-full cursor-pointer p-0 text-left transition-colors lg:h-full ${
+          active
+            ? "bg-bureau-manila/60 ring-1 ring-inset ring-primary/60"
+            : "hover:bg-bureau-manila/30"
+        }`}
+      >
+        <div
+          className={`border-b border-dashed border-bureau-border/50 px-4 py-3 lg:px-5 ${
+            active
+              ? "bg-bureau-manila/80"
+              : "bg-bureau-manila-light/50"
+          }`}
+        >
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted tabular-nums">
+              No. {num}
+            </span>
+            {date && (
+              <span className="font-display font-bold text-foreground">
+                {date}
+              </span>
+            )}
+          </div>
+          <p className="mt-1 inline-flex items-start gap-1.5 text-sm text-bureau-ink">
+            <MapPin
+              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+            <span>{s.location}</span>
+          </p>
+          {s.witness && (
+            <p className="mt-1 text-sm text-bureau-ink">
+              <span className="font-typewriter text-xs uppercase tracking-wider text-muted-foreground">
+                Witness:
+              </span>{" "}
+              {s.witness}
+            </p>
+          )}
+        </div>
+        {(s.account || s.source) && (
+          <div className="space-y-2 px-4 py-3 lg:px-5">
+            {s.account && (
+              <p className="text-base leading-relaxed text-bureau-ink">
+                {s.account}
+              </p>
+            )}
+            {s.source && (
+              <p className="text-xs italic text-bureau-ink-muted">
+                Source: {s.source}
+              </p>
+            )}
+          </div>
+        )}
+      </button>
+    </li>
+  );
+});
+SightingListItem.displayName = "SightingListItem";
+
 export function SightingDistribution({
   cryptidName,
   sightings,
@@ -38,6 +123,10 @@ export function SightingDistribution({
 }) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const recordRefs = useRef<Record<string, HTMLLIElement | null>>({});
+
+  const handleRef = useCallback((key: string, el: HTMLLIElement | null) => {
+    recordRefs.current[key] = el;
+  }, []);
 
   // Chronological; undated records sink to the end but still list.
   const ordered = useMemo(() => {
@@ -97,72 +186,16 @@ export function SightingDistribution({
         const active = s._key === selectedKey;
         const visibleOnCompact = s._key === compactVisibleKey;
         return (
-          <li
+          <SightingListItem
             key={s._key}
-            className={visibleOnCompact ? "block" : "hidden lg:block"}
-            ref={(el) => {
-              recordRefs.current[s._key] = el;
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setSelectedKey(s._key)}
-              aria-pressed={active}
-              className={`block w-full cursor-pointer p-0 text-left transition-colors lg:h-full ${
-                active
-                  ? "bg-bureau-manila/60 ring-1 ring-inset ring-primary/60"
-                  : "hover:bg-bureau-manila/30"
-              }`}
-            >
-              <div
-                className={`border-b border-dashed border-bureau-border/50 px-4 py-3 lg:px-5 ${
-                  active
-                    ? "bg-bureau-manila/80"
-                    : "bg-bureau-manila-light/50"
-                }`}
-              >
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted tabular-nums">
-                    No. {num}
-                  </span>
-                  {date && (
-                    <span className="font-display font-bold text-foreground">
-                      {date}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-1 inline-flex items-start gap-1.5 text-sm text-bureau-ink">
-                  <MapPin
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <span>{s.location}</span>
-                </p>
-                {s.witness && (
-                  <p className="mt-1 text-sm text-bureau-ink">
-                    <span className="font-typewriter text-xs uppercase tracking-wider text-muted-foreground">
-                      Witness:
-                    </span>{" "}
-                    {s.witness}
-                  </p>
-                )}
-              </div>
-              {(s.account || s.source) && (
-                <div className="space-y-2 px-4 py-3 lg:px-5">
-                  {s.account && (
-                    <p className="text-base leading-relaxed text-bureau-ink">
-                      {s.account}
-                    </p>
-                  )}
-                  {s.source && (
-                    <p className="text-xs italic text-bureau-ink-muted">
-                      Source: {s.source}
-                    </p>
-                  )}
-                </div>
-              )}
-            </button>
-          </li>
+            s={s}
+            date={date}
+            num={num}
+            active={active}
+            visibleOnCompact={visibleOnCompact}
+            onSelect={setSelectedKey}
+            onRef={handleRef}
+          />
         );
       })}
     </ol>
