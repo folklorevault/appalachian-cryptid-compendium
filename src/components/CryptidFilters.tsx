@@ -81,7 +81,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
             className="flex items-center gap-3.5 mb-4"
           >
             <span className="drawer-chip">
-              Drawer {String.fromCharCode(65 + drawerIndex)}
+              Drawer {drawerIndex + 1}
             </span>
             <span className="h-px flex-1 bg-[hsl(var(--bureau-border)/0.6)]" />
             <span className="font-typewriter text-[9px] uppercase tracking-[0.14em] text-muted-foreground/80">
