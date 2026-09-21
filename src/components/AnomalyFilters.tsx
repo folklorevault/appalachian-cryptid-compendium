@@ -109,8 +109,8 @@ export const AnomalyFilters = ({ anomalies }: AnomalyFiltersProps) => {
   );
   const visibleAnomalyCards = useMemo(
     () =>
-      visibleAnomalies.map((anomaly) => (
-        <CasefileCard key={anomaly._id} type="anomaly" data={anomaly} />
+      visibleAnomalies.map((anomaly, index) => (
+        <CasefileCard key={anomaly._id} type="anomaly" data={anomaly} priority={index < 3} />
       )),
     [visibleAnomalies]
   );
