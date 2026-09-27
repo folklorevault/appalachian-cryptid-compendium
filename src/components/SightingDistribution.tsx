@@ -107,6 +107,33 @@ const SightingListItem = memo(({
 });
 SightingListItem.displayName = "SightingListItem";
 
+const SightingMapButton = memo(({
+  sighting,
+  active,
+  num,
+  onSelect,
+}: {
+  sighting: SanitySighting;
+  active: boolean;
+  num: string;
+  onSelect: (key: string) => void;
+}) => (
+  <button
+    type="button"
+    onClick={() => onSelect(sighting._key)}
+    aria-pressed={active}
+    aria-label={`Record ${num}: ${sighting.location}`}
+    className={`size-11 shrink-0 rounded-sm border font-typewriter text-xs font-bold transition-colors ${
+      active
+        ? "border-primary bg-primary text-primary-foreground"
+        : "border-bureau-border bg-bureau-manila-light text-bureau-ink hover:border-primary hover:text-primary"
+    }`}
+  >
+    {num}
+  </button>
+));
+SightingMapButton.displayName = "SightingMapButton";
+
 export function SightingDistribution({
   cryptidName,
   sightings,
@@ -243,20 +270,13 @@ export function SightingDistribution({
                         numberByKey[sighting._key]
                       ).padStart(2, "0");
                       return (
-                        <button
+                        <SightingMapButton
                           key={sighting._key}
-                          type="button"
-                          onClick={() => setSelectedKey(sighting._key)}
-                          aria-pressed={active}
-                          aria-label={`Record ${num}: ${sighting.location}`}
-                          className={`size-11 shrink-0 rounded-sm border font-typewriter text-xs font-bold transition-colors ${
-                            active
-                              ? "border-primary bg-primary text-primary-foreground"
-                              : "border-bureau-border bg-bureau-manila-light text-bureau-ink hover:border-primary hover:text-primary"
-                          }`}
-                        >
-                          {num}
-                        </button>
+                          sighting={sighting}
+                          active={active}
+                          num={num}
+                          onSelect={setSelectedKey}
+                        />
                       );
                     })}
                   </div>

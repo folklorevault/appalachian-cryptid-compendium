@@ -13,3 +13,6 @@
 ## 2024-05-24 - Avoiding unnecessary inline array mapping
 **Learning:** In components with deeply nested mapping (e.g. mapping drawers, then mapping cards), inline mapping functions can trigger massive re-renders when parent state updates independently (like `searchQuery` when using `useDeferredValue`).
 **Action:** Memoize complex grid transformations and component rendering maps using `useMemo` so React skips recreating VDOM for untouched children, dramatically reducing INP.
+## 2024-11-20 - Memoizing map marker buttons in sighting grids
+**Learning:** In the `SightingDistribution.tsx` component, there was an inline mapped array of buttons (`<div role="group">...<button>`) representing map pins. Clicking one button sets `selectedKey` at the component level, triggering a re-render of the entire `SightingDistribution` component and thus recreating every single button in the map array. For lists with many items, this caused substantial INP (Interaction to Next Paint) lag.
+**Action:** Extract the inline mapped item into a memoized component (e.g., `SightingMapButton`). Pass only primitive props where possible. This prevents unchanged components from re-rendering when parent state changes.
