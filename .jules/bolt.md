@@ -14,6 +14,6 @@
 **Learning:** In components with deeply nested mapping (e.g. mapping drawers, then mapping cards), inline mapping functions can trigger massive re-renders when parent state updates independently (like `searchQuery` when using `useDeferredValue`).
 **Action:** Memoize complex grid transformations and component rendering maps using `useMemo` so React skips recreating VDOM for untouched children, dramatically reducing INP.
 
-## 2025-05-25 - Preventing full-list re-renders for map sidebars on selection
-**Learning:** In interactive maps like `CryptidMap`, having a sidebar list of all locations rendered using an inline `.map(() => <button>)` means clicking one location triggers a full re-render of every single item in the list just to update the `selected` state styling on one or two buttons.
-**Action:** Extract list items that depend on a `selected` or `active` state into a distinct `React.memo` component (like `SidebarItem`). Ensure callbacks like `onClick` are wrapped in `useCallback` to prevent breaking memoization, limiting re-renders to only the items whose selection state changes.
+## 2024-09-26 - Preventing O(n) list re-renders on row hover states
+**Learning:** In table-like lists (e.g. `BulletinLedger.tsx`), passing an inline callback to track hovered rows (`onHover={() => setHoveredRow(id)}`) means the callback's reference changes on every render. Even worse, if the row components aren't memoized, updating a single hovered row causes *every single row* in the list to re-render.
+**Action:** Wrap the row component in `React.memo()`, pass a stable `useCallback` down from the parent, and let the child row supply its own ID to the handler (`onHover={() => onHover(id)}` inside the memoized child). This ensures that only the previously hovered row and newly hovered row re-render.
