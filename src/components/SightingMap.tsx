@@ -147,6 +147,7 @@ export function SightingMap({
           "sighting-marker font-typewriter text-xs font-bold tracking-normal";
         el.textContent = String(numberByKey[s._key] ?? "").padStart(2, "0");
         el.dataset.selected = "false";
+        el.style.zIndex = "1";
         el.setAttribute("role", "button");
         el.setAttribute("tabindex", "0");
         el.setAttribute("aria-pressed", "false");
