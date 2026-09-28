@@ -13,3 +13,7 @@
 ## 2024-05-24 - Avoiding unnecessary inline array mapping
 **Learning:** In components with deeply nested mapping (e.g. mapping drawers, then mapping cards), inline mapping functions can trigger massive re-renders when parent state updates independently (like `searchQuery` when using `useDeferredValue`).
 **Action:** Memoize complex grid transformations and component rendering maps using `useMemo` so React skips recreating VDOM for untouched children, dramatically reducing INP.
+
+## 2024-05-30 - Optimizing manual DOM updates in mapbox integrations
+**Learning:** When managing manual DOM elements (like mapbox-gl Markers) outside of React's standard Virtual DOM reconciliation, looping over an array of refs to clear and reapply active states causes $O(N)$ synchronous updates that block the main thread. This was causing noticeable lag when selecting sightings on a map with many pins.
+**Action:** Use a `useRef` to track the `previousSelectedKey`. When the selection changes, only update the DOM for the previously selected element (to turn it off) and the newly selected element (to turn it on). This reduces selection updates from $O(N)$ to $O(1)$.

@@ -25,6 +25,7 @@ export function SightingMap({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<Record<string, HTMLDivElement>>({});
+  const prevSelectedRef = useRef<string | null>(null);
   // Typed as any to match CryptidMap: the dynamic import's module namespace and
   // the `mapboxgl` default-export type don't line up, and fighting it adds noise.
    
@@ -171,18 +172,34 @@ export function SightingMap({
       map.current?.remove();
       map.current = null;
       markers.current = {};
+      prevSelectedRef.current = null;
     };
   }, [mapboxLib, token, sightings, numberByKey, onSelect]);
 
   // Reflect the shared selection: emphasise the active pin and fly to it.
+  // ⚡ Optimization: Update DOM selection in O(1) time by tracking previously
+  // selected marker instead of iterating over all markers.
   useEffect(() => {
     if (!isLoaded) return;
-    Object.entries(markers.current).forEach(([key, el]) => {
-      const active = key === selectedKey;
-      el.dataset.selected = String(active);
-      el.setAttribute("aria-pressed", String(active));
-      el.style.zIndex = active ? "2" : "1";
-    });
+
+    // Clear previous selection if it exists
+    if (prevSelectedRef.current && markers.current[prevSelectedRef.current]) {
+      const prevEl = markers.current[prevSelectedRef.current];
+      prevEl.dataset.selected = "false";
+      prevEl.setAttribute("aria-pressed", "false");
+      prevEl.style.zIndex = "1";
+    }
+
+    // Apply new selection
+    if (selectedKey && markers.current[selectedKey]) {
+      const newEl = markers.current[selectedKey];
+      newEl.dataset.selected = "true";
+      newEl.setAttribute("aria-pressed", "true");
+      newEl.style.zIndex = "2";
+    }
+
+    prevSelectedRef.current = selectedKey;
+
     if (selectedKey && map.current) {
       const s = sightings.find((x) => x._key === selectedKey);
       if (s?.coordinates) {
