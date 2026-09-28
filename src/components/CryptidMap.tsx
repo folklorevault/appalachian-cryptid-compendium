@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import Link from "next/link";
 import type mapboxgl from "mapbox-gl";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,51 @@ type Selected =
   | { kind: "cryptid"; id: string }
   | { kind: "anomaly"; id: string }
   | null;
+
+// Memoized component for sidebar items to prevent re-rendering the whole list
+// when a single item is selected
+const SidebarItem = memo(({
+  item,
+  kind,
+  isSelected,
+  color,
+  onClick,
+}: {
+  item: SanityCryptidMapItem | SanityAnomalyMapItem;
+  kind: "cryptid" | "anomaly";
+  isSelected: boolean;
+  color: string;
+  onClick: (item: SanityCryptidMapItem | SanityAnomalyMapItem, kind: "cryptid" | "anomaly") => void;
+}) => {
+  return (
+    <button
+      onClick={() => onClick(item, kind)}
+      className={`w-full text-left p-2 rounded transition-colors ${
+        isSelected
+          ? "bg-primary/20 border border-primary"
+          : "hover:bg-muted"
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        {kind === "cryptid" ? (
+          <div
+            className="w-3 h-3 rounded-full shrink-0"
+            aria-hidden="true"
+            style={{ backgroundColor: color }}
+          />
+        ) : (
+          <div
+            className="w-2.5 h-2.5 rotate-45 rounded-[2px] shrink-0 ml-0.5 mr-0.5"
+            aria-hidden="true"
+            style={{ backgroundColor: color }}
+          />
+        )}
+        <span className="text-sm text-foreground">{item.name}</span>
+      </div>
+    </button>
+  );
+});
+SidebarItem.displayName = "SidebarItem";
 
 export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -283,13 +328,21 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
         .url()
     : "";
 
-  const flyTo = (coords: { lng: number; lat: number }) => {
+  const flyTo = useCallback((coords: { lng: number; lat: number }) => {
     map.current?.flyTo({
       center: [coords.lng, coords.lat],
       zoom: 8,
       duration: 1500,
     });
-  };
+  }, []);
+
+  const handleItemClick = useCallback((
+    item: SanityCryptidMapItem | SanityAnomalyMapItem,
+    kind: "cryptid" | "anomaly"
+  ) => {
+    setSelected({ kind, id: item._id });
+    if (item.coordinates) flyTo(item.coordinates);
+  }, [flyTo]);
 
   return (
     <>
@@ -511,58 +564,29 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
               <div className="space-y-2 max-h-[200px] overflow-y-auto">
                 {showCryptids &&
                   cryptids.map((cryptid) => (
-                    <button
+                    <SidebarItem
                       key={cryptid._id}
-                      onClick={() => {
-                        setSelected({ kind: "cryptid", id: cryptid._id });
-                        if (cryptid.coordinates) flyTo(cryptid.coordinates);
-                      }}
-                      className={`w-full text-left p-2 rounded transition-colors ${
-                        selected?.kind === "cryptid" &&
-                        selected.id === cryptid._id
-                          ? "bg-primary/20 border border-primary"
-                          : "hover:bg-muted"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full shrink-0"
-                          aria-hidden="true"
-                          style={{
-                            backgroundColor: getDangerColor(cryptid.dangerLevel),
-                          }}
-                        />
-                        <span className="text-sm text-foreground">
-                          {cryptid.name}
-                        </span>
-                      </div>
-                    </button>
+                      item={cryptid}
+                      kind="cryptid"
+                      isSelected={
+                        selected?.kind === "cryptid" && selected.id === cryptid._id
+                      }
+                      color={getDangerColor(cryptid.dangerLevel)}
+                      onClick={handleItemClick}
+                    />
                   ))}
                 {showAnomalies &&
                   anomalies.map((anomaly) => (
-                    <button
+                    <SidebarItem
                       key={anomaly._id}
-                      onClick={() => {
-                        setSelected({ kind: "anomaly", id: anomaly._id });
-                        if (anomaly.coordinates) flyTo(anomaly.coordinates);
-                      }}
-                      className={`w-full text-left p-2 rounded transition-colors ${
-                        selected?.kind === "anomaly" &&
-                        selected.id === anomaly._id
-                          ? "bg-primary/20 border border-primary"
-                          : "hover:bg-muted"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-2.5 h-2.5 rotate-45 rounded-[2px] shrink-0 ml-0.5 mr-0.5 bg-[#8b5cf6]"
-                          aria-hidden="true"
-                        />
-                        <span className="text-sm text-foreground">
-                          {anomaly.name}
-                        </span>
-                      </div>
-                    </button>
+                      item={anomaly}
+                      kind="anomaly"
+                      isSelected={
+                        selected?.kind === "anomaly" && selected.id === anomaly._id
+                      }
+                      color={ANOMALY_COLOR}
+                      onClick={handleItemClick}
+                    />
                   ))}
               </div>
             </CardContent>
