@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import Link from "next/link";
 import type { SanityBulletinListItem, BulletinCategory } from "@/types/sanity";
 import { formatLedgerDate, formatLongDate } from "@/lib/utils";
@@ -47,7 +47,7 @@ function CategoryTag({ category }: { category: BulletinCategory }) {
   );
 }
 
-function LedgerRow({
+const LedgerRow = memo(function LedgerRow({
   bulletin,
   index,
   isHovered,
@@ -57,12 +57,12 @@ function LedgerRow({
   bulletin: SanityBulletinListItem;
   index: number;
   isHovered: boolean;
-  onHover: () => void;
+  onHover: (id: string) => void;
   onLeave: () => void;
 }) {
   return (
     <tr
-      onMouseEnter={onHover}
+      onMouseEnter={() => onHover(bulletin._id)}
       onMouseLeave={onLeave}
       className={`cursor-pointer transition-colors duration-100 ${
         isHovered ? "bg-muted" : "bg-transparent"
@@ -124,9 +124,9 @@ function LedgerRow({
       </td>
     </tr>
   );
-}
+});
 
-function MobileLedgerEntry({
+const MobileLedgerEntry = memo(function MobileLedgerEntry({
   bulletin,
 }: {
   bulletin: SanityBulletinListItem;
@@ -163,7 +163,7 @@ function MobileLedgerEntry({
       </div>
     </Link>
   );
-}
+});
 
 export function BulletinLedger({
   bulletins,
@@ -171,6 +171,14 @@ export function BulletinLedger({
   bulletins: SanityBulletinListItem[];
 }) {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+
+  const handleHover = useCallback((id: string) => {
+    setHoveredRow(id);
+  }, []);
+
+  const handleLeave = useCallback(() => {
+    setHoveredRow(null);
+  }, []);
 
   const lastDate =
     bulletins.length > 0
@@ -250,8 +258,8 @@ export function BulletinLedger({
                   bulletin={bulletin}
                   index={i}
                   isHovered={hoveredRow === bulletin._id}
-                  onHover={() => setHoveredRow(bulletin._id)}
-                  onLeave={() => setHoveredRow(null)}
+                  onHover={handleHover}
+                  onLeave={handleLeave}
                 />
               ))}
             </tbody>
