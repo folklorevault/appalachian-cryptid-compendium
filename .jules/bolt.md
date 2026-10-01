@@ -16,3 +16,6 @@
 ## 2024-11-20 - Memoizing map marker buttons in sighting grids
 **Learning:** In the `SightingDistribution.tsx` component, there was an inline mapped array of buttons (`<div role="group">...<button>`) representing map pins. Clicking one button sets `selectedKey` at the component level, triggering a re-render of the entire `SightingDistribution` component and thus recreating every single button in the map array. For lists with many items, this caused substantial INP (Interaction to Next Paint) lag.
 **Action:** Extract the inline mapped item into a memoized component (e.g., `SightingMapButton`). Pass only primitive props where possible. This prevents unchanged components from re-rendering when parent state changes.
+## 2024-11-20 - Preventing JSON Stringify XSS vulnerabilities in next/head script tags
+**Learning:** `dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}` inside `<script type="application/ld+json">` is a known XSS vector when the `data` contains user-provided or CMS-provided content. If the content contains `</script>`, it can break out of the tag and execute malicious JavaScript.
+**Action:** Always replace `<` characters in the stringified JSON output with the safe unicode equivalent (`\\u003c`) before injecting into `__html`: `JSON.stringify(data).replace(/</g, '\\u003c')`.

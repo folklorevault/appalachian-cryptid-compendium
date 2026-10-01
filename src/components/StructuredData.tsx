@@ -169,11 +169,11 @@ type StructuredDataProps = {
 export function StructuredData({ type, data }: StructuredDataProps) {
   // Render script tag directly in JSX so it's in the initial HTML render
   // This ensures Googlebot sees the structured data without needing to execute JS
-  // Note: dangerouslySetInnerHTML is safe here because we control the data (JSON.stringify of our own objects)
+  // We sanitize the JSON by escaping '<' to prevent XSS from CMS data (e.g. </script> injection)
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\u003c') }}
     />
   );
 }
