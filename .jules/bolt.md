@@ -19,3 +19,6 @@
 ## 2024-11-20 - Preventing JSON Stringify XSS vulnerabilities in next/head script tags
 **Learning:** `dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}` inside `<script type="application/ld+json">` is a known XSS vector when the `data` contains user-provided or CMS-provided content. If the content contains `</script>`, it can break out of the tag and execute malicious JavaScript.
 **Action:** Always replace `<` characters in the stringified JSON output with the safe unicode equivalent (`\\u003c`) before injecting into `__html`: `JSON.stringify(data).replace(/</g, '\\u003c')`.
+## 2025-03-09 - Pre-computing display formats in list rendering
+**Learning:** In Next.js/React applications with long lists mapping over data (like `SightingDistribution`), calculating display formats (e.g. date formatting or string padding) inline within the `map` function causes redundant re-calculation on every re-render, even when just switching a selected item state.
+**Action:** Pre-compute and map formatting logic into a memoized state block (`useMemo`) alongside the list data so that formatting strings only recalculate when the underlying data changes, freeing up the render loop.
