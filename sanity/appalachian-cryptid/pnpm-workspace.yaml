@@ -1,7 +1,7 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
-  - brace-expansion@1.1.18
+  - brace-expansion@1.1.21
 overrides:
   # GHSA-5p4m-2wfm-xmqj affects the 3.x and 4.x lines only, so this collapses every js-yaml
   # request onto 5.x. The KEY stays unscoped on purpose — scoping it to the advisory ranges
@@ -12,35 +12,34 @@ overrides:
   # Security overrides — transitive vulnerabilities flagged by pnpm audit / Dependabot
   "uuid@<11.1.1": ">=11.1.1"
   "uuid@>=13.0.0 <13.0.1": ">=13.0.1"
-  # dompurify GHSA-55q2-fjhq-7xh7 — removing an IN_PLACE hook leaves a detached-but-executable
-  # subtree behind, so sanitized markup can still fire script (XSS). Reaches us via
-  # isomorphic-dompurify -> dompurify@3.4.12. Ceiling raised from <3.4.0 to <3.4.13; the old key
-  # had stopped matching entirely, which is exactly the silent no-op the brace-expansion note below
-  # warns about. Advance this with every new dompurify advisory.
-  "dompurify@<3.4.13": ">=3.4.13 <4.0.0"
+  # DOMPurify GHSA-55q2-fjhq-7xh7 and GHSA-p98j-92pf-mc4p: detached
+  # subtrees retain executable event handlers after IN_PLACE sanitization hooks.
+  # The newer advisory raises the patch boundary to 3.4.16.
+  "dompurify@<3.4.16": ">=3.4.16 <4.0.0"
   # nanoid GHSA-2v37-7h3g-55p8 — custom generators loop forever when size is 0 (DoS).
   # Studio resolves three nanoid copies: 3.3.16 (vulnerable), 5.1.16 and 6.0.0 (both already
   # clear). The 4.x/5.x key is a regression guard, not a live fix.
   "nanoid@<3.3.17": ">=3.3.17 <7.0.0"
   "nanoid@>=4.0.0 <5.1.6": ">=5.1.6 <7.0.0"
-  # brace-expansion CVE-2026-13149 + GHSA-mh99-v99m-4gvg + GHSA-rgw5-rvv9-x895
-  # (DoS via unbounded intermediate arrays; the last bypasses the CVE-2026-13149 mitigation)
-  # GHSA-rgw5 affects ALL FOUR maintained lines (<1.1.18 / <2.1.4 / <3.0.6 / <5.0.9) even though
-  # Dependabot only raised the >=4.0.0 range — every ceiling below is set from the advisory, not
-  # the alert. Ceilings must advance with each advisory or the key stops matching and silently
-  # no-ops (that is how 5.0.8 slipped past the old <5.0.8 key).
+  # brace-expansion: GHSA-q2hr-2g5m-vwhr, GHSA-qhr7-859c-m2p7, and
+  # GHSA-6j4f-fj2g-mc7p supersede the earlier DoS fixes on all maintained lines.
+  # Keep both selector ceilings and patch floors current; an old ceiling silently
+  # stops matching newer vulnerable versions (as happened with the old <5.0.8 key).
   # The 1.x line MUST stay on 1.x. #103 routed it to 5.x, which resolves fine but breaks at
   # runtime: brace-expansion 1.x is `module.exports = expand` (callable), 5.x moved to a named
   # export, so minimatch@3.1.5's `require('brace-expansion')` yields an object and ESLint dies
   # with "expand is not a function". Semver-valid, API-invalid — tsc and next build miss it.
-  "brace-expansion@<1.1.18": ">=1.1.18 <2.0.0"
-  "brace-expansion@>=2.0.0 <2.1.4": ">=5.0.9 <6.0.0"
-  "brace-expansion@>=3.0.0 <3.0.6": ">=5.0.9 <6.0.0"
-  "brace-expansion@>=4.0.0 <5.0.9": ">=5.0.9 <6.0.0"
-  # undici GHSA-4cwx-7wf7-3272 (high) + 4 medium: cache-directive disclosure, CRLF injection,
-  # cookie attribute injection, retry-interceptor response desync. 7.x patched at 7.29.0.
+  "brace-expansion@<1.1.21": ">=1.1.21 <2.0.0"
+  "brace-expansion@>=2.0.0 <2.1.7": ">=5.0.12 <6.0.0"
+  "brace-expansion@>=3.0.0 <3.0.9": ">=5.0.12 <6.0.0"
+  "brace-expansion@>=4.0.0 <5.0.12": ">=5.0.12 <6.0.0"
+  # undici GHSA-4cwx-7wf7-3272 plus GHSA-3wwx-pv8p-q78v (WebSocket decompression DoS).
+  # The latter raises the 7.x patch boundary to 7.29.1.
   # 6.28.0 is already at the v6 patch boundary, so only the 7.x line needs lifting.
-  "undici@>=7.0.0 <7.29.0": ">=7.29.0 <8.0.0"
+  "undici@>=7.0.0 <7.29.1": ">=7.29.1 <8.0.0"
   "ws@>=8.0.0 <8.21.0": ">=8.21.0"
   "smol-toml@<1.6.1": ">=1.6.1"
-  "adm-zip@<0.6.0": ">=0.6.1"
+  # GHSA-7q85-xj36-vmfc (ZIP allocation DoS) and GHSA-vwc7-r8mq-g2x9
+  # (extraction through destination symlinks); 0.6.1 fixes both upstream.
+  # Include 0.6.0 in the selector; the old ceiling left that vulnerable copy intact.
+  "adm-zip@<0.6.1": ">=0.6.1 <0.7.0"
