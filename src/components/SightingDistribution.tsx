@@ -156,25 +156,31 @@ export function SightingDistribution({
   }, []);
 
   // Chronological; undated records sink to the end but still list.
-  const ordered = useMemo(() => {
+  const orderedItems = useMemo(() => {
     if (!sightings) return [];
-    return [...sightings].sort((a, b) => {
+    const sorted = [...sightings].sort((a, b) => {
       if (!a.date) return 1;
       if (!b.date) return -1;
       return a.date.localeCompare(b.date);
     });
+    return sorted.map((s, i) => ({
+      s,
+      dateFormatted: formatSightingDate(s.date),
+      numStr: String(i + 1).padStart(2, "0"),
+      num: i + 1,
+    }));
   }, [sightings]);
 
   // Record numbers keyed by _key, shared between the list and the map pins.
   const numberByKey = useMemo(() => {
     const map: Record<string, number> = {};
-    ordered.forEach((s, i) => (map[s._key] = i + 1));
+    orderedItems.forEach((item) => (map[item.s._key] = item.num));
     return map;
-  }, [ordered]);
+  }, [orderedItems]);
 
   const mappable = useMemo(
-    () => ordered.filter((s) => s.coordinates),
-    [ordered]
+    () => orderedItems.map(item => item.s).filter((s) => s.coordinates),
+    [orderedItems]
   );
 
   // Keep the selected record visible without moving the entire page away from
@@ -197,27 +203,25 @@ export function SightingDistribution({
     });
   }, [selectedKey]);
 
-  if (ordered.length === 0) return null;
+  if (orderedItems.length === 0) return null;
 
   const hasMap = showMap && mappable.length > 0;
   const selectedSighting = selectedKey
-    ? ordered.find((sighting) => sighting._key === selectedKey)
+    ? orderedItems.find((item) => item.s._key === selectedKey)?.s
     : null;
-  const compactVisibleKey = selectedKey ?? ordered[0]._key;
+  const compactVisibleKey = selectedKey ?? orderedItems[0].s._key;
 
   const recordList = (
     <ol className="lg:block lg:h-full lg:overflow-y-auto lg:divide-y lg:divide-dashed lg:divide-bureau-border/30">
-      {ordered.map((s) => {
-        const date = formatSightingDate(s.date);
-        const num = String(numberByKey[s._key]).padStart(2, "0");
+      {orderedItems.map(({ s, dateFormatted, numStr }) => {
         const active = s._key === selectedKey;
         const visibleOnCompact = s._key === compactVisibleKey;
         return (
           <SightingListItem
             key={s._key}
             s={s}
-            date={date}
-            num={num}
+            date={dateFormatted}
+            num={numStr}
             active={active}
             visibleOnCompact={visibleOnCompact}
             onSelect={setSelectedKey}
@@ -244,8 +248,8 @@ export function SightingDistribution({
             aria-hidden="true"
           />
           <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted">
-            {`${ordered.length} Logged ${
-              ordered.length === 1 ? "Record" : "Records"
+            {`${orderedItems.length} Logged ${
+              orderedItems.length === 1 ? "Record" : "Records"
             }`}
           </span>
         </div>
@@ -264,11 +268,8 @@ export function SightingDistribution({
                     role="group"
                     aria-label="Select a sighting record"
                   >
-                    {ordered.map((sighting) => {
+                    {orderedItems.map(({ s: sighting, numStr: num }) => {
                       const active = sighting._key === selectedKey;
-                      const num = String(
-                        numberByKey[sighting._key]
-                      ).padStart(2, "0");
                       return (
                         <SightingMapButton
                           key={sighting._key}
@@ -309,7 +310,7 @@ export function SightingDistribution({
           {hasMap && (
             <div className="flex items-center justify-between gap-3 border-t border-dashed border-bureau-border/40 px-5 py-2.5">
               <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted">
-                {mappable.length} of {ordered.length} plotted
+                {mappable.length} of {orderedItems.length} plotted
               </span>
               <Link
                 href="/map"
