@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 interface IncidentLogProps {
@@ -19,13 +20,23 @@ export const IncidentLog = ({
   station = "FIELD STATION",
   className,
 }: IncidentLogProps) => {
-  // Parse content into log entries if it contains newlines
-  const entries = content.split('\n').filter(line => line.trim());
-
   // Generate a pseudo-random time based on case number for consistency
   const baseHour = caseNumber
     ? (caseNumber.charCodeAt(0) % 12) + 19 // 19:00 - 06:00 (night hours)
     : 21;
+
+  // ⚡ Optimization: Pre-compute display formats in list rendering.
+  // We parse the content and calculate the fake timestamp for each entry inside a useMemo
+  // block so that we avoid performing expensive string allocations and math on every re-render.
+  const processedEntries = useMemo(() => {
+    const lines = content.split('\n').filter(line => line.trim());
+    return lines.map((entry, idx) => {
+      const hour = (baseHour + Math.floor(idx / 4)) % 24;
+      const minute = (idx * 7 + 13) % 60;
+      const timestamp = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
+      return { text: entry.trim(), timestamp };
+    });
+  }, [content, baseHour]);
 
   return (
     <div className={cn("relative", className)}>
@@ -69,23 +80,16 @@ export const IncidentLog = ({
 
           {/* Log entries */}
           <div className="space-y-2">
-            {entries.map((entry, idx) => {
-              // Calculate fake timestamp for each entry
-              const hour = (baseHour + Math.floor(idx / 4)) % 24;
-              const minute = (idx * 7 + 13) % 60;
-              const timestamp = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
-
-              return (
-                <div key={idx} className="flex gap-3">
-                  <span className="text-bureau-ink-muted shrink-0 tabular-nums">
-                    {timestamp} HRS -
-                  </span>
-                  <span className="uppercase tracking-wide">
-                    {entry.trim()}
-                  </span>
-                </div>
-              );
-            })}
+            {processedEntries.map((entry, idx) => (
+              <div key={idx} className="flex gap-3">
+                <span className="text-bureau-ink-muted shrink-0 tabular-nums">
+                  {entry.timestamp} HRS -
+                </span>
+                <span className="uppercase tracking-wide">
+                  {entry.text}
+                </span>
+              </div>
+            ))}
           </div>
 
           {/* End transmission */}

@@ -22,3 +22,6 @@
 ## 2025-03-09 - Pre-computing display formats in list rendering
 **Learning:** In Next.js/React applications with long lists mapping over data (like `SightingDistribution`), calculating display formats (e.g. date formatting or string padding) inline within the `map` function causes redundant re-calculation on every re-render, even when just switching a selected item state.
 **Action:** Pre-compute and map formatting logic into a memoized state block (`useMemo`) alongside the list data so that formatting strings only recalculate when the underlying data changes, freeing up the render loop.
+## 2025-03-09 - Pre-computing display formats in list rendering
+**Learning:** In Next.js/React applications with lists mapped over data (like `IncidentLog.tsx`), calculating display formats (e.g., date formatting, string padding, mathematical derivations from indexes) inline within the `map` function causes redundant recalculation on every re-render.
+**Action:** Pre-compute and map formatting logic into a memoized state block (`useMemo`) alongside the list data so that formatting strings only recalculate when the underlying data changes, freeing up the render loop.
