@@ -29,6 +29,8 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
     "",
     result.assessment,
     "",
+    `A lesson from ${result.name.replace(/^The /, "the ")}: ${result.note}`,
+    "",
     `Find out which Appalachian cryptid you are: ${shareUrl}`,
   ].join("\n");
 
@@ -48,7 +50,7 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
         </div>
         {/* A torn-off slip clipped to the file: the cryptid's own advice, set apart from the Bureau's paperwork.
             The clip and shadow live on the wrapper so the torn-edge mask doesn't cut them off. */}
-        <div className="relative z-10 mx-auto mt-4 mb-2 w-full max-w-xl -rotate-1 drop-shadow-md motion-reduce:rotate-0 dark:brightness-90">
+        <div className="relative z-10 mx-auto mt-4 mb-2 w-full max-w-xl -rotate-1 drop-shadow-md motion-reduce:rotate-0 dark:brightness-[0.82]">
           <div className="paper-clip" aria-hidden="true" />
           <figure className="torn-slip rounded-t-sm bg-bureau-manila-light px-6 pt-8 pb-9 sm:px-8">
             <figcaption className={`${eyebrow} text-bureau-stamp`}>A lesson from {result.name}</figcaption>
