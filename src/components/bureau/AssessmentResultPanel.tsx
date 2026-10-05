@@ -40,15 +40,16 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
 
       <FieldAgentIdCard result={result} headingId="acd-result" agentNo={agentNo} matchPct={matchPct} issued={issued} />
 
-      <div className="memo-paper memo-flat flex flex-col gap-5 rounded-sm px-6 py-6 sm:px-8">
+      <div className="memo-paper memo-flat flex flex-col gap-6 rounded-sm px-6 py-6 sm:px-8">
+        {/* The assessment is the Bureau's dry file voice; the lesson is the heart of the result, so it reads loudest. */}
         <div className="relative z-10 flex flex-col gap-2">
-          <h3 className={`${eyebrow} text-bureau-stamp-ink`}>Bureau assessment</h3>
-          <p className="font-typewriter text-base leading-relaxed text-foreground">{result.assessment}</p>
+          <h3 className={`${eyebrow} text-bureau-ink-muted`}>Bureau assessment</h3>
+          <p className="font-typewriter text-sm leading-relaxed text-bureau-ink-muted sm:text-base">{result.assessment}</p>
         </div>
-        <div className="relative z-10 flex flex-col gap-2 rounded-sm border border-bureau-border bg-bureau-manila/30 px-4 py-4">
-          <h3 className={`${eyebrow} text-bureau-ink-muted`}>Handwritten in the margin</h3>
-          <p className="text-lg leading-relaxed text-foreground">{result.note}</p>
-        </div>
+        <figure className="relative z-10 flex flex-col gap-3 border-l-4 border-primary pl-5">
+          <figcaption className={`${eyebrow} text-bureau-stamp-ink`}>A lesson from {result.name}</figcaption>
+          <blockquote className="text-xl leading-relaxed text-foreground sm:text-2xl sm:leading-snug">{result.note}</blockquote>
+        </figure>
         <p className="relative z-10 border-t border-dashed border-bureau-border pt-4 text-base leading-relaxed text-bureau-ink-muted">
           <span className={`${eyebrow} mr-2 text-bureau-ink`}>Works well with</span>
           <Link
@@ -62,13 +63,19 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <CopyButton text={copyText} label="Copy my result" failLabel="Copy blocked: try a screenshot" event="result_copied" />
         <Button asChild size="lg" className="text-base">
           <Link href={`/cryptid/${result.slug}`}>
             <FolderOpen className="h-4 w-4" aria-hidden="true" />
             Read your full case file
           </Link>
         </Button>
+        <CopyButton
+          text={copyText}
+          label="Copy my result"
+          failLabel="Copy blocked: try a screenshot"
+          event="result_copied"
+          className="border border-bureau-border bg-transparent shadow-none! hover:bg-bureau-manila/40"
+        />
         {onRetake && (
           <Button variant="link" size="lg" onClick={onRetake} className="px-1 font-typewriter text-sm uppercase tracking-type text-bureau-ink-muted underline">
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
