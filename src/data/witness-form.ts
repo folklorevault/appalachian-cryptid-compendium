@@ -141,7 +141,7 @@ export function fileStatement(values: WitnessValues, now: Date): FiledStatement 
   const classification = mostlyBlank ? "Redacted in Full" : CLASSIFICATIONS[seed % CLASSIFICATIONS.length];
   const determination = mostlyBlank
     ? MOSTLY_BLANK_DETERMINATION
-    : DETERMINATIONS[(seed >> 3) % DETERMINATIONS.length];
+    : DETERMINATIONS[(seed >>> 3) % DETERMINATIONS.length];
   const advisory = advisoryFor(t("number"));
 
   const redactionNote =
