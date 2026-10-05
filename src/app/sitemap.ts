@@ -4,6 +4,7 @@ import {
   fetchAnomalySlugsWithDates,
   fetchBulletinSlugsWithDates,
 } from "@/lib/sanity/fetchers";
+import { ASSESSMENT_PATH, RESULT_SLUGS, resultPath } from "@/data/assessment";
 
 const BASE_URL = "https://appalachiancryptid.com";
 
@@ -80,5 +81,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...cryptidPages, ...anomalyPages, ...bulletinPages];
+  // Form ACD-41 quiz and its shareable result pages. Form ACD-27B is unlisted on purpose.
+  const assessmentPages: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}${ASSESSMENT_PATH}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...RESULT_SLUGS.map((slug) => ({
+      url: `${BASE_URL}${resultPath(slug)}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
+  ];
+
+  return [...staticPages, ...assessmentPages, ...cryptidPages, ...anomalyPages, ...bulletinPages];
 }

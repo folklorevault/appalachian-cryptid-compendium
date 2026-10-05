@@ -33,7 +33,9 @@ export interface AssessmentResultCopy {
   dangerLevel: DangerLevel;
 }
 
+export const SITE_URL = "https://appalachiancryptid.com";
 export const ASSESSMENT_PATH = "/bureau/which-cryptid-are-you";
+export const WITNESS_FORM_PATH = "/bureau/form-acd-27b";
 
 /** Tie-break priority when two cryptids also tie on the most recent answer. */
 export const CRYPTID_ORDER: CryptidKey[] = ["mothman", "notdeer", "tailypo", "flatwoods", "sheep", "grafton"];
