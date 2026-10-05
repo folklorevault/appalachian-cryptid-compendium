@@ -46,12 +46,17 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
           <h3 className={`${eyebrow} text-bureau-ink-muted`}>Bureau assessment</h3>
           <p className="font-typewriter text-sm leading-relaxed text-bureau-ink-muted sm:text-base">{result.assessment}</p>
         </div>
-        <figure className="relative z-10 flex flex-col gap-3 border-l-4 border-primary pl-5">
-          <figcaption className={`${eyebrow} text-bureau-stamp-ink`}>A lesson from {result.name}</figcaption>
-          <blockquote className="text-xl leading-relaxed text-foreground sm:text-2xl sm:leading-snug">{result.note}</blockquote>
-        </figure>
+        {/* A torn-off slip clipped to the file: the cryptid's own advice, set apart from the Bureau's paperwork.
+            The clip and shadow live on the wrapper so the torn-edge mask doesn't cut them off. */}
+        <div className="relative z-10 mx-auto mt-4 mb-2 w-full max-w-xl -rotate-1 drop-shadow-md motion-reduce:rotate-0 dark:brightness-90">
+          <div className="paper-clip" aria-hidden="true" />
+          <figure className="torn-slip rounded-t-sm bg-bureau-manila-light px-6 pt-8 pb-9 sm:px-8">
+            <figcaption className={`${eyebrow} text-bureau-stamp`}>A lesson from {result.name}</figcaption>
+            <blockquote className="mt-3 text-xl leading-relaxed text-bureau-ink-dark sm:text-2xl sm:leading-snug">{result.note}</blockquote>
+          </figure>
+        </div>
         <p className="relative z-10 border-t border-dashed border-bureau-border pt-4 text-base leading-relaxed text-bureau-ink-muted">
-          <span className={`${eyebrow} mr-2 text-bureau-ink`}>Works well with</span>
+          <span className={`${eyebrow} mr-2 text-bureau-ink dark:text-foreground`}>Works well with</span>
           <Link
             href={resultPath(partner.slug)}
             className="font-semibold text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
