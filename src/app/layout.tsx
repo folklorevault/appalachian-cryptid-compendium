@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ClassificationStripe } from "@/components/ClassificationStripe";
 import { Header } from "@/components/Header";
 import { SiteHeaderGate } from "@/components/SiteHeaderGate";
+import { ConsoleGreeting } from "@/components/bureau/ConsoleGreeting";
 import "./globals.css";
 
 const workSans = localFont({
@@ -118,6 +119,7 @@ export default function RootLayout({
           <Header />
         </SiteHeaderGate>
         {children}
+        <ConsoleGreeting />
         <Analytics />
         <Script
           src="/analytics/script.js"

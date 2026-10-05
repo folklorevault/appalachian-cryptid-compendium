@@ -28,6 +28,16 @@ export default function NotFound() {
               Return to Directory
             </Button>
           </Link>
+          <p className="mt-10 font-typewriter text-xs tracking-type text-muted-foreground">
+            If you were looking for a form that isn&rsquo;t listed, you may be a{" "}
+            <Link
+              href="/bureau/form-acd-27b"
+              className="text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              field agent
+            </Link>
+            .
+          </p>
         </div>
       </main>
       <Footer />

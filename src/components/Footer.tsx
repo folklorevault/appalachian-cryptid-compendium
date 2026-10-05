@@ -5,6 +5,17 @@ interface FooterProps {
   variant?: "simple" | "full";
 }
 
+// Easter egg: a tiny form number that leads to the unlisted witness statement.
+const FormStamp = () => (
+  <Link
+    href="/bureau/form-acd-27b"
+    aria-label="Form ACD-27B, supplemental witness statement"
+    className="inline-flex min-h-11 items-center px-2 font-typewriter text-[10px] uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-bureau-stamp-ink"
+  >
+    Form ACD-27B
+  </Link>
+);
+
 export const Footer = ({ variant = "simple" }: FooterProps) => {
   const year = new Date().getFullYear();
 
@@ -42,6 +53,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
               </Link>
             </li>
           </ul>
+          <FormStamp />
         </div>
       </footer>
     );
@@ -184,6 +196,7 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
               </Link>
             </li>
           </ul>
+          <FormStamp />
         </div>
       </div>
     </footer>

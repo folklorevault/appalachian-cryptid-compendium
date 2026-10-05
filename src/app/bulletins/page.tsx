@@ -65,7 +65,7 @@ export default async function BulletinsPage() {
               <span className="block w-10 h-px bg-border" aria-hidden="true" />
             </div>
 
-            <h1 className="font-display font-bold text-foreground leading-tight text-[clamp(2.2rem,5.5vw,3.75rem)]">
+            <h1 className="font-display font-bold text-foreground leading-tight text-hero">
               Bureau Bulletins
             </h1>
 

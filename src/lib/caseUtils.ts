@@ -42,3 +42,8 @@ export function getDangerLevelLabel(dangerLevel: DangerLevel): string {
       return dangerLevel;
   }
 }
+
+/** Bureau case file number shown on casefile cards, e.g. "ACB-GRA-015". */
+export function getCaseFileNumber(slug: string): string {
+  return `ACB-${slug.slice(0, 3).toUpperCase() || "UNK"}-${String(slug.length).padStart(3, "0")}`;
+}
