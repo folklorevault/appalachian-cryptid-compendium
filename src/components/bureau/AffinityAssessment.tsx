@@ -82,7 +82,7 @@ export function AffinityAssessment({ results }: { results: AssessmentResults }) 
       {screen === "intro" && (
         <section className="flex flex-col items-start gap-6">
           <span className="drawer-chip">ACD-41 · Field Agent Affinity Assessment</span>
-          <h1 className="font-display text-[clamp(2.2rem,5.5vw,3.75rem)] font-bold leading-[1.08] tracking-tight text-foreground">
+          <h1 className="font-display text-hero font-bold leading-tight text-foreground">
             Which Appalachian cryptid are you?
           </h1>
           <p className="text-lg leading-relaxed text-muted-foreground">
@@ -99,7 +99,7 @@ export function AffinityAssessment({ results }: { results: AssessmentResults }) 
               retake the assessment.
             </p>
           </div>
-          <Button size="lg" onClick={start} className="min-h-12 px-7 text-base">
+          <Button size="lg" onClick={start} className="text-base">
             Begin assessment
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>
@@ -145,10 +145,10 @@ export function AffinityAssessment({ results }: { results: AssessmentResults }) 
                 onClick={() => pick(i)}
                 aria-pressed={answers[step] === i}
                 className={cn(
-                  "flex min-h-14 w-full items-center gap-4 rounded-sm border-2 border-foreground/70 bg-card px-4 py-3.5 text-left text-lg leading-snug text-foreground shadow-offset",
+                  "flex min-h-14 w-full items-center gap-4 rounded-sm border-2 border-foreground/60 bg-card px-4 py-3.5 text-left text-lg leading-snug text-foreground shadow-offset",
                   "transition-[box-shadow,transform,border-color] duration-200 ease-out",
                   "hover:-translate-y-0.5 hover:border-primary hover:shadow-offset-hover",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
                   answers[step] === i && "border-primary",
                 )}

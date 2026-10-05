@@ -43,9 +43,9 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
       <div className="memo-paper memo-flat flex flex-col gap-5 rounded-sm px-6 py-6 sm:px-8">
         <div className="relative z-10 flex flex-col gap-2">
           <h3 className={`${eyebrow} text-bureau-stamp-ink`}>Bureau assessment</h3>
-          <p className="font-typewriter text-base leading-loose text-foreground">{result.assessment}</p>
+          <p className="font-typewriter text-base leading-relaxed text-foreground">{result.assessment}</p>
         </div>
-        <div className="relative z-10 flex flex-col gap-2 rounded-sm border border-bureau-border bg-bureau-manila/35 px-4 py-4">
+        <div className="relative z-10 flex flex-col gap-2 rounded-sm border border-bureau-border bg-bureau-manila/30 px-4 py-4">
           <h3 className={`${eyebrow} text-bureau-ink-muted`}>Handwritten in the margin</h3>
           <p className="text-lg leading-relaxed text-foreground">{result.note}</p>
         </div>

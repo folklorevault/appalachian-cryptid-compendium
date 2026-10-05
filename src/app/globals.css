@@ -89,6 +89,10 @@
   /* Detail-page H1 size (was the ad-hoc text-[28px] used across 8 pages). */
   --text-title: 1.75rem;
 
+  /* Page hero H1 size (index pages, quiz, witness form). Was the arbitrary
+     text-[clamp(2.2rem,5.5vw,3.75rem)] repeated across 7 pages. */
+  --text-hero: clamp(2.2rem, 5.5vw, 3.75rem);
+
   /* Hard offset shadow for pressable paper controls (quiz options, copy
      buttons). Tracks --foreground so it inverts cleanly in dark mode. */
   --shadow-offset: 2px 2px 0 hsl(var(--foreground) / 0.15);

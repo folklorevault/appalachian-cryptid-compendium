@@ -21,7 +21,7 @@ export default function WitnessFormPage() {
         <header className="flex flex-wrap items-end justify-between gap-8">
           <div className="flex min-w-0 max-w-2xl flex-col items-start gap-4">
             <span className="drawer-chip">ACD-27B · Supplemental Witness Statement</span>
-            <h1 className="font-display text-[clamp(2.2rem,5.5vw,3.75rem)] font-bold leading-[1.08] tracking-tight text-foreground">
+            <h1 className="font-display text-hero font-bold leading-tight text-foreground">
               Tell the Bureau what you saw.
             </h1>
             <p className="text-lg leading-relaxed text-muted-foreground">

@@ -33,7 +33,7 @@ export function FieldAgentIdCard({ result, headingId, agentNo, matchPct, issued 
       aria-labelledby={headingId}
       className="memo-paper memo-flat overflow-hidden rounded-lg border-2 border-foreground/60"
     >
-      <div className="flex items-center justify-between gap-3 bg-primary px-4 py-2 font-typewriter text-[10px] uppercase tracking-eyebrow text-primary-foreground/85">
+      <div className="flex items-center justify-between gap-3 bg-primary px-4 py-2 font-typewriter text-[10px] uppercase tracking-eyebrow text-primary-foreground/75">
         <span>Appalachian Cryptid Division</span>
         <span className="hidden sm:inline">Field Agent Identification</span>
       </div>

@@ -20,6 +20,8 @@ import {
 } from "@/data/witness-form";
 
 const eyebrow = "font-typewriter text-xs uppercase tracking-eyebrow";
+// Denser typewriter labels (form fields, case lines) use the tighter tracking step.
+const label = "font-typewriter text-xs uppercase tracking-type";
 const rustStamp = "border-bureau-stamp-ink text-bureau-stamp-ink";
 
 // Reuse the site's danger-level badge colors; "Unquantified" has no level.
@@ -115,7 +117,7 @@ export function WitnessStatementForm() {
             ))}
           </dl>
 
-          <p className="relative z-10 font-typewriter text-lg leading-loose text-foreground">
+          <p className="relative z-10 font-typewriter text-lg leading-relaxed text-foreground">
             {statement.segments.map((seg, i) =>
               seg.kind === "text" ? (
                 <span key={i}>{seg.text}</span>
@@ -125,7 +127,7 @@ export function WitnessStatementForm() {
                 </span>
               ) : (
                 <span key={i}>
-                  <span aria-hidden="true" className="select-none rounded-[1px] bg-foreground px-1 text-foreground">
+                  <span aria-hidden="true" className="select-none rounded-xs bg-foreground px-1 text-foreground">
                     ███████
                   </span>
                   <span className="sr-only">redacted</span>
@@ -139,7 +141,7 @@ export function WitnessStatementForm() {
             <p className="text-base leading-relaxed text-foreground">{statement.determination}</p>
           </div>
 
-          <p className={`${eyebrow} relative z-10 border-t border-dashed border-bureau-border pt-4 tracking-type text-bureau-ink-muted`}>
+          <p className={`${label} relative z-10 border-t border-dashed border-bureau-border pt-4 text-bureau-ink-muted`}>
             Statement {statement.redactionNote} · Filed under ACD-27B · Distribution restricted
           </p>
         </article>
@@ -147,13 +149,13 @@ export function WitnessStatementForm() {
         <div className="flex w-full max-w-[52rem] flex-wrap items-center justify-center gap-8">
           <figure
             aria-label="Shareable case card"
-            className="flex aspect-square w-full max-w-[25rem] flex-col overflow-hidden rounded-sm border-2 border-foreground/80 bg-card shadow-offset-hover"
+            className="flex aspect-square w-full max-w-[25rem] flex-col overflow-hidden rounded-sm border-2 border-foreground/60 bg-card shadow-offset-hover"
           >
-            <div className="bg-primary px-3 py-2 text-center font-typewriter text-[10px] uppercase tracking-eyebrow text-primary-foreground/85">
+            <div className="bg-primary px-3 py-2 text-center font-typewriter text-[10px] uppercase tracking-eyebrow text-primary-foreground/75">
               Sighting on record ◆ Field Office No. 7
             </div>
             <div className="flex flex-1 flex-col gap-3.5 px-7 py-6">
-              <span className={`${eyebrow} tracking-type text-bureau-ink-muted`}>
+              <span className={`${label} text-bureau-ink-muted`}>
                 {statement.caseNo} · {statement.jurisdiction}
               </span>
               <p className="font-display text-3xl font-bold leading-tight tracking-tight text-foreground">{statement.shareQuote}</p>
@@ -211,10 +213,10 @@ export function WitnessStatementForm() {
     <section className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <form
         onSubmit={file}
-        className="flex flex-col rounded-sm border-2 border-foreground/70 bg-card shadow-offset"
+        className="flex flex-col rounded-sm border-2 border-foreground/60 bg-card shadow-offset"
         aria-label="Supplemental witness statement"
       >
-        <div className={`${eyebrow} flex flex-wrap justify-between gap-2 border-b-2 border-foreground/70 px-6 py-3.5 tracking-type text-bureau-ink-muted`}>
+        <div className={`${label} flex flex-wrap justify-between gap-2 border-b-2 border-foreground/60 px-6 py-3.5 text-bureau-ink-muted`}>
           <span>Section A · Particulars of the encounter</span>
           <span>Form No. ACD-27B, Rev. 10/1977</span>
         </div>
@@ -222,7 +224,7 @@ export function WitnessStatementForm() {
         <div className="grid gap-x-6 gap-y-5 p-6 sm:grid-cols-2 xl:grid-cols-3">
           {WITNESS_FIELDS.map((f, i) => (
             <div key={f.key} className="flex flex-col gap-1.5">
-              <label htmlFor={`acd27b-${f.key}`} className={`${eyebrow} flex items-baseline gap-2 tracking-type text-bureau-ink`}>
+              <label htmlFor={`acd27b-${f.key}`} className={`${label} flex items-baseline gap-2 text-bureau-ink`}>
                 <span className="text-bureau-stamp-ink">{String(i + 1).padStart(2, "0")}.</span>
                 <span>{f.label}</span>
               </label>
@@ -233,7 +235,7 @@ export function WitnessStatementForm() {
                 value={values[f.key]}
                 onChange={(e) => setField(f.key, e.target.value)}
                 placeholder={f.placeholder}
-                className="min-h-11 w-full rounded-sm border border-bureau-border bg-bureau-manila/30 px-3 py-2 font-typewriter text-base text-foreground placeholder:italic placeholder:text-muted-foreground/80 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring"
+                className="min-h-11 w-full rounded-sm border border-bureau-border bg-bureau-manila/30 px-3 py-2 font-typewriter text-base text-foreground placeholder:italic placeholder:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
             </div>
           ))}

@@ -55,7 +55,7 @@ export default async function Home() {
             </div>
 
             {/* Heading */}
-            <h1 className="font-display font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-[clamp(2.2rem,5.5vw,3.75rem)]">
+            <h1 className="font-display font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-hero">
               Creatures of the Mountains
               <br />
               <span className="text-primary block">and the American South</span>
