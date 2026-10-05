@@ -64,10 +64,8 @@ export const QUESTIONS: AssessmentQuestion[] = [
     options: [
       { text: "A pepperoni roll, still warm from the case", points: ["mothman"] },
       { text: "Salted peanuts poured into a glass-bottle Coke, like a normal person", points: ["notdeer"] },
-      { text: "Jerky. Don’t ask what kind.", points: ["tailypo"] },
+      { text: "Jerky. Don’t ask what kind.", points: ["tailypo", "sheep"] },
       { text: "A Moon Pie and an RC Cola", points: ["flatwoods"] },
-      { text: "Pickled egg from the jar on the counter. Nobody else ever touches it.", points: ["sheep"] },
-      { text: "I’ll just stand by the hot case a while.", points: ["grafton"] },
     ],
   },
   {

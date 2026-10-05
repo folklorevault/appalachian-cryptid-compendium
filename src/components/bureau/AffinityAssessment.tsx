@@ -17,7 +17,7 @@ import {
 
 type Screen = "intro" | "question" | "result";
 
-const LETTERS = "ABCDEF";
+const LETTERS = "ABCD";
 const eyebrow = "font-typewriter text-xs uppercase tracking-eyebrow";
 
 function formatIssued(d: Date) {
