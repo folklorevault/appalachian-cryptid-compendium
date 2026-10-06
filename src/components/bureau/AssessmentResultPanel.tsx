@@ -56,7 +56,7 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
             <figcaption className={`${eyebrow} text-bureau-stamp`}>A lesson from {result.name}</figcaption>
             <blockquote className="mt-3 text-xl leading-relaxed text-bureau-ink-dark sm:text-2xl sm:leading-snug">{result.note}</blockquote>
           </figure>
-          <div className="torn-edge -mt-px h-3.5 bg-bureau-manila-light" aria-hidden="true" />
+          <div className="torn-slip-edge -mt-px h-3.5 bg-bureau-manila-light" aria-hidden="true" />
         </div>
         <p className="relative z-10 border-t border-dashed border-bureau-border pt-4 text-base leading-relaxed text-bureau-ink-muted">
           <span className={`${eyebrow} mr-2 text-bureau-ink dark:text-foreground`}>Works well with</span>
