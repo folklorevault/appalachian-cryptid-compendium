@@ -29,6 +29,8 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
     "",
     result.assessment,
     "",
+    `A lesson from ${result.name.replace(/^The /, "the ")}: ${result.note}`,
+    "",
     `Find out which Appalachian cryptid you are: ${shareUrl}`,
   ].join("\n");
 
@@ -40,17 +42,23 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
 
       <FieldAgentIdCard result={result} headingId="acd-result" agentNo={agentNo} matchPct={matchPct} issued={issued} />
 
-      <div className="memo-paper memo-flat flex flex-col gap-5 rounded-sm px-6 py-6 sm:px-8">
+      <div className="memo-paper memo-flat flex flex-col gap-6 rounded-sm px-6 py-6 sm:px-8">
+        {/* The assessment is the Bureau's dry file voice; the lesson is the heart of the result, so it reads loudest. */}
         <div className="relative z-10 flex flex-col gap-2">
-          <h3 className={`${eyebrow} text-bureau-stamp-ink`}>Bureau assessment</h3>
-          <p className="font-typewriter text-base leading-relaxed text-foreground">{result.assessment}</p>
+          <h3 className={`${eyebrow} text-bureau-ink-muted`}>Bureau assessment</h3>
+          <p className="font-typewriter text-sm leading-relaxed text-bureau-ink-muted sm:text-base">{result.assessment}</p>
         </div>
-        <div className="relative z-10 flex flex-col gap-2 rounded-sm border border-bureau-border bg-bureau-manila/30 px-4 py-4">
-          <h3 className={`${eyebrow} text-bureau-ink-muted`}>Handwritten in the margin</h3>
-          <p className="text-lg leading-relaxed text-foreground">{result.note}</p>
+        {/* A torn-off slip clipped to the file: the cryptid's own advice, set apart from the Bureau's paperwork.
+            The clip and shadow live on the wrapper so the torn-edge mask doesn't cut them off. */}
+        <div className="relative z-10 mx-auto mt-4 mb-2 w-full max-w-xl -rotate-1 drop-shadow-md motion-reduce:rotate-0 dark:brightness-[0.82]">
+          <div className="paper-clip" aria-hidden="true" />
+          <figure className="torn-slip rounded-t-sm bg-bureau-manila-light px-6 pt-8 pb-9 sm:px-8">
+            <figcaption className={`${eyebrow} text-bureau-stamp`}>A lesson from {result.name}</figcaption>
+            <blockquote className="mt-3 text-xl leading-relaxed text-bureau-ink-dark sm:text-2xl sm:leading-snug">{result.note}</blockquote>
+          </figure>
         </div>
         <p className="relative z-10 border-t border-dashed border-bureau-border pt-4 text-base leading-relaxed text-bureau-ink-muted">
-          <span className={`${eyebrow} mr-2 text-bureau-ink`}>Works well with</span>
+          <span className={`${eyebrow} mr-2 text-bureau-ink dark:text-foreground`}>Works well with</span>
           <Link
             href={resultPath(partner.slug)}
             className="font-semibold text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
@@ -62,13 +70,19 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <CopyButton text={copyText} label="Copy my result" failLabel="Copy blocked: try a screenshot" event="result_copied" />
         <Button asChild size="lg" className="text-base">
           <Link href={`/cryptid/${result.slug}`}>
             <FolderOpen className="h-4 w-4" aria-hidden="true" />
             Read your full case file
           </Link>
         </Button>
+        <CopyButton
+          text={copyText}
+          label="Copy my result"
+          failLabel="Copy blocked: try a screenshot"
+          event="result_copied"
+          className="border border-bureau-border bg-transparent shadow-none! hover:bg-bureau-manila/40"
+        />
         {onRetake && (
           <Button variant="link" size="lg" onClick={onRetake} className="px-1 font-typewriter text-sm uppercase tracking-type text-bureau-ink-muted underline">
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
