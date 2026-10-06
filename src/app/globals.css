@@ -1203,9 +1203,9 @@ All colors MUST be HSL.
   background-position: 0 3.25rem, 0 3.4rem;
   background-repeat: no-repeat, repeat;
   box-shadow:
-    0 1px 1px rgba(60, 40, 20, 0.12),
-    0 6px 14px -4px rgba(60, 40, 20, 0.22),
-    0 18px 32px -14px rgba(60, 40, 20, 0.28);
+    0 1px 1px rgba(60, 40, 20, 0.1),
+    0 4px 10px -4px rgba(60, 40, 20, 0.16),
+    0 12px 22px -12px rgba(60, 40, 20, 0.18);
 }
 
 /* The card underneath, slightly askew */
@@ -1213,7 +1213,7 @@ All colors MUST be HSL.
   position: absolute;
   inset: 0;
   background: hsl(40 30% 90%);
-  box-shadow: 0 4px 12px -4px rgba(60, 40, 20, 0.25);
+  box-shadow: 0 3px 8px -4px rgba(60, 40, 20, 0.18);
   transform: rotate(3deg) translate(6px, 4px);
 }
 
