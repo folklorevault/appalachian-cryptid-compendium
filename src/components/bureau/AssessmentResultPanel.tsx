@@ -49,13 +49,14 @@ export function AssessmentResultPanel({ result, agentNo, matchPct, issued, onRet
           <p className="font-typewriter text-sm leading-relaxed text-bureau-ink-muted sm:text-base">{result.assessment}</p>
         </div>
         {/* A torn-off slip clipped to the file: the cryptid's own advice, set apart from the Bureau's paperwork.
-            The clip and shadow live on the wrapper so the torn-edge mask doesn't cut them off. */}
+            The torn edge is its own masked strip; the clip and shadow live on the wrapper so the mask doesn't cut them off. */}
         <div className="relative z-10 mx-auto mt-4 mb-2 w-full max-w-xl -rotate-1 drop-shadow-md motion-reduce:rotate-0 dark:brightness-[0.82]">
           <div className="paper-clip" aria-hidden="true" />
-          <figure className="torn-slip rounded-t-sm bg-bureau-manila-light px-6 pt-8 pb-9 sm:px-8">
+          <figure className="rounded-t-sm bg-bureau-manila-light px-6 pt-8 pb-6 sm:px-8">
             <figcaption className={`${eyebrow} text-bureau-stamp`}>A lesson from {result.name}</figcaption>
             <blockquote className="mt-3 text-xl leading-relaxed text-bureau-ink-dark sm:text-2xl sm:leading-snug">{result.note}</blockquote>
           </figure>
+          <div className="torn-edge -mt-px h-3.5 bg-bureau-manila-light" aria-hidden="true" />
         </div>
         <p className="relative z-10 border-t border-dashed border-bureau-border pt-4 text-base leading-relaxed text-bureau-ink-muted">
           <span className={`${eyebrow} mr-2 text-bureau-ink dark:text-foreground`}>Works well with</span>
