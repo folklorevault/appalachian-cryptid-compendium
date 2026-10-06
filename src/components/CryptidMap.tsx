@@ -153,18 +153,26 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
         cryptidMarkers.current = cryptids
           .filter((c) => c.coordinates)
           .map((cryptid) => {
+            // Mapbox positions markers by writing `transform` on the outer
+            // element, so all visuals + the hover scale live on an inner node.
             const el = document.createElement("div");
             el.className = "cryptid-marker";
             el.style.cssText = `
               width: 28px;
               height: 28px;
+              cursor: pointer;
+            `;
+            const glyph = document.createElement("div");
+            glyph.style.cssText = `
+              width: 100%;
+              height: 100%;
               background-color: ${getDangerColor(cryptid.dangerLevel)};
               border: 3px solid white;
               border-radius: 50%;
-              cursor: pointer;
               box-shadow: 0 2px 10px rgba(0,0,0,0.5);
               transition: transform 0.2s;
             `;
+            el.appendChild(glyph);
             el.setAttribute("tabindex", "0");
             el.setAttribute("role", "button");
             el.setAttribute(
@@ -180,10 +188,10 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
               });
             };
             el.addEventListener("mouseenter", () => {
-              el.style.transform = "scale(1.2)";
+              glyph.style.transform = "scale(1.2)";
             });
             el.addEventListener("mouseleave", () => {
-              el.style.transform = "scale(1)";
+              glyph.style.transform = "scale(1)";
             });
             el.addEventListener("click", select);
             el.addEventListener("keydown", (e) => {
@@ -210,7 +218,6 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
               width: 26px;
               height: 26px;
               cursor: pointer;
-              transition: transform 0.2s;
             `;
             const glyph = document.createElement("div");
             glyph.style.cssText = `
@@ -221,6 +228,7 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
               border-radius: 4px;
               transform: rotate(45deg);
               box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+              transition: transform 0.2s;
             `;
             el.appendChild(glyph);
             el.setAttribute("tabindex", "0");
@@ -238,10 +246,10 @@ export function CryptidMap({ cryptids, anomalies = [] }: CryptidMapProps) {
               });
             };
             el.addEventListener("mouseenter", () => {
-              el.style.transform = "scale(1.2)";
+              glyph.style.transform = "rotate(45deg) scale(1.2)";
             });
             el.addEventListener("mouseleave", () => {
-              el.style.transform = "scale(1)";
+              glyph.style.transform = "rotate(45deg)";
             });
             el.addEventListener("click", select);
             el.addEventListener("keydown", (e) => {

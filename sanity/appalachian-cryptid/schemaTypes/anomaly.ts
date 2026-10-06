@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {westernHemisphere} from './coordinatesValidation'
 
 export default defineType({
   name: 'anomaly',
@@ -35,6 +36,7 @@ export default defineType({
       title: 'Map Coordinates',
       type: 'geopoint',
       description: 'For map marker placement',
+      validation: westernHemisphere,
     }),
     defineField({
       name: 'region',

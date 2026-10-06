@@ -1,4 +1,5 @@
-import {defineType} from 'sanity'
+import {defineType, defineField} from 'sanity'
+import {westernHemisphere} from './coordinatesValidation'
 
 // Shared object type used by both `cryptid` and `anomaly` documents.
 // Extracted from the original inline definition in cryptid so anomaly can
@@ -26,13 +27,14 @@ export default defineType({
       description: 'Human-readable place, e.g. "TNT Area, Point Pleasant, WV".',
       validation: (Rule) => Rule.required(),
     },
-    {
+    defineField({
       name: 'coordinates',
       title: 'Coordinates (optional)',
       type: 'geopoint',
       description:
         'Drop a pin for the map. Leave blank if the location is too vague to place — the sighting still lists.',
-    },
+      validation: westernHemisphere,
+    }),
     {
       name: 'witness',
       title: 'Witness',
