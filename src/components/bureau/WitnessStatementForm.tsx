@@ -146,29 +146,34 @@ export function WitnessStatementForm() {
           </p>
         </article>
 
-        <div className="flex w-full max-w-[52rem] flex-wrap items-center justify-center gap-8">
-          <figure
-            aria-label="Shareable case card"
-            className="flex aspect-square w-full max-w-[25rem] flex-col overflow-hidden rounded-sm border-2 border-foreground/60 bg-card shadow-offset-hover"
-          >
-            <div className="bg-primary px-3 py-2 text-center font-typewriter text-[10px] uppercase tracking-eyebrow text-primary-foreground/75">
-              Sighting on record ◆ Field Office No. 7
-            </div>
-            <div className="flex flex-1 flex-col gap-3.5 px-7 py-6">
-              <span className={`${label} text-bureau-ink-muted`}>
-                {statement.caseNo} · {statement.jurisdiction}
-              </span>
-              <p className="font-display text-3xl font-bold leading-tight tracking-tight text-foreground">{statement.shareQuote}</p>
-              <p className="text-sm leading-relaxed text-muted-foreground">{statement.shareLine}</p>
-              <Stamp text={statement.classification} rotation={-5} className={cn(rustStamp, "mt-auto self-end")} />
-            </div>
-            <figcaption className="flex justify-between gap-2 border-t border-dashed border-bureau-border px-4 py-2.5 font-typewriter text-[10px] uppercase tracking-label text-bureau-ink-muted">
-              <span>Form ACD-27B</span>
-              <span>appalachiancryptid.com</span>
-            </figcaption>
-          </figure>
+        <div className="grid w-full max-w-[52rem] items-center gap-x-12 gap-y-10 md:grid-cols-[minmax(0,23rem)_minmax(0,1fr)]">
+          <div className="relative mx-auto w-full max-w-[23rem] -rotate-[1.5deg] pt-3">
+            <span className="index-card-under" aria-hidden="true" />
+            <figure aria-label="Shareable case card" className="index-card flex flex-col">
+              <span className="tape-strip" aria-hidden="true" />
+              <div className={`${label} relative z-10 flex h-[3.25rem] items-end justify-between gap-3 px-6 pb-2 text-[11px] text-bureau-ink-muted`}>
+                <span>{statement.caseNo}</span>
+                <span>{statement.jurisdiction}</span>
+              </div>
+              <div className="relative z-10 flex flex-col px-6 pb-4 pt-3">
+                <p className={`${eyebrow} text-[10px] leading-[28px] text-bureau-stamp-ink`}>Sighting on record ◆ Field Office No. 7</p>
+                <p className="font-display text-[2rem] font-bold leading-[56px] tracking-tight text-foreground">{statement.shareQuote}</p>
+                <p className="font-typewriter text-sm leading-[28px] text-bureau-ink">{statement.shareLine}</p>
+                <Stamp
+                  text={statement.classification}
+                  rotation={-8}
+                  className={cn(rustStamp, "-mb-8 -mr-2 mt-1 self-end sm:-mr-9")}
+                />
+              </div>
+              {/* Right side stays clear for the classification stamp. */}
+              <figcaption className="relative z-10 flex flex-col px-6 pb-3 pt-1 font-typewriter text-[10px] uppercase leading-[14px] tracking-label text-bureau-ink-muted">
+                <span>Form ACD-27B</span>
+                <span>appalachiancryptid.com</span>
+              </figcaption>
+            </figure>
+          </div>
 
-          <div className="flex min-w-[16rem] flex-1 flex-col items-start gap-3">
+          <div className="flex flex-col items-start gap-3">
             <h3 className={`${eyebrow} text-bureau-stamp-ink`}>For public release</h3>
             <p className="text-base leading-relaxed text-muted-foreground">
               The Bureau has approved this card for distribution. Screenshot it, or copy the full statement to share
@@ -183,27 +188,34 @@ export function WitnessStatementForm() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-3">
-          <Button variant="outline" size="lg" onClick={() => setFiledAt(null)} className="border-primary text-base text-primary">
+        <div className="flex w-full max-w-[52rem] flex-col-reverse items-center gap-4 border-t border-dashed border-bureau-border pt-6 sm:flex-row sm:justify-between">
+          <button
+            type="button"
+            onClick={() => setFiledAt(null)}
+            className={`${label} inline-flex min-h-11 items-center gap-2 px-1 text-bureau-ink-muted underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+          >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Amend statement
-          </Button>
-          <Button
-            size="lg"
-            className="text-base"
-            onClick={() => {
-              setValues(emptyWitnessValues());
-              setFiledAt(null);
-            }}
-          >
-            File another sighting
-          </Button>
-          <Button asChild variant="link" size="lg" className="text-base">
-            <Link href="/map">
-              <MapPin className="h-4 w-4" aria-hidden="true" />
-              See the official sightings map
-            </Link>
-          </Button>
+          </button>
+          <div className="flex flex-col-reverse items-center gap-3 sm:flex-row">
+            <Button asChild variant="link" size="lg" className="text-base">
+              <Link href="/map">
+                <MapPin className="h-4 w-4" aria-hidden="true" />
+                See the sightings map
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              className="text-base shadow-offset"
+              onClick={() => {
+                setValues(emptyWitnessValues());
+                setFiledAt(null);
+              }}
+            >
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              File another sighting
+            </Button>
+          </div>
         </div>
       </section>
     );

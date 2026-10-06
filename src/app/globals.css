@@ -1186,3 +1186,80 @@ All colors MUST be HSL.
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================
+   Index card (ACD-27B shareable case card)
+   Ruled 3x5 stock, taped to the desk, a second card peeking out behind.
+   ============================================ */
+.index-card {
+  --rule: hsl(205 45% 55% / 0.22);
+  --margin-rule: hsl(var(--bureau-stamp) / 0.45);
+  position: relative;
+  background-color: hsl(42 38% 95%);
+  background-image:
+    linear-gradient(var(--margin-rule), var(--margin-rule)),
+    repeating-linear-gradient(180deg, transparent 0 27px, var(--rule) 27px 28px);
+  background-size: 100% 1.5px, 100% 100%;
+  background-position: 0 3.25rem, 0 3.4rem;
+  background-repeat: no-repeat, repeat;
+  box-shadow:
+    0 1px 1px rgba(60, 40, 20, 0.12),
+    0 6px 14px -4px rgba(60, 40, 20, 0.22),
+    0 18px 32px -14px rgba(60, 40, 20, 0.28);
+}
+
+/* The card underneath, slightly askew */
+.index-card-under {
+  position: absolute;
+  inset: 0;
+  background: hsl(40 30% 90%);
+  box-shadow: 0 4px 12px -4px rgba(60, 40, 20, 0.25);
+  transform: rotate(3deg) translate(6px, 4px);
+}
+
+/* Paper grain */
+.index-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='card-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23card-noise)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+/* Strip of masking tape across the top edge */
+.tape-strip {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 104px;
+  height: 26px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: hsl(45 45% 82% / 0.78);
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.15);
+  clip-path: polygon(3% 0, 97% 4%, 100% 50%, 96% 100%, 2% 96%, 0 45%);
+  z-index: 2;
+}
+
+.dark .index-card {
+  --rule: hsl(205 30% 70% / 0.12);
+  background-color: hsl(150 10% 18%);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 6px 14px -4px rgba(0, 0, 0, 0.5),
+    0 18px 32px -14px rgba(0, 0, 0, 0.6);
+}
+
+.dark .index-card-under {
+  background: hsl(150 9% 14%);
+}
+
+.dark .index-card::after {
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+.dark .tape-strip {
+  background: hsl(45 20% 60% / 0.45);
+}
