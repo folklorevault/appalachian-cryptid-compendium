@@ -86,6 +86,12 @@
   --tracking-label: 0.15em;
   --tracking-type: 0.05em;
 
+  /* Typewriter label sizes. tag = the 10px floor for uppercase bureau
+     labels (folder tabs, ledger codes, eyebrows, map legends); caption =
+     11px catalog rows and inline marks. Nothing functional goes below tag. */
+  --text-tag: 0.625rem;
+  --text-caption: 0.6875rem;
+
   /* Detail-page H1 size (was the ad-hoc text-[28px] used across 8 pages). */
   --text-title: 1.75rem;
 
@@ -157,7 +163,8 @@ All colors MUST be HSL.
     --secondary-foreground: 25 30% 20%;
 
     --muted: 35 20% 90%;
-    --muted-foreground: 25 15% 45%;
+    /* 38% clears 4.5:1 on paper, card, muted and manila-light surfaces. */
+    --muted-foreground: 25 16% 38%;
 
     --accent: 28 60% 55%;
     --accent-foreground: 40 33% 96%;
@@ -215,7 +222,9 @@ All colors MUST be HSL.
     --bureau-manila-light: 40 35% 88%;
     --bureau-paper: 40 30% 96%;
     --bureau-ink: 25 30% 22%;
-    --bureau-ink-muted: 25 20% 38%;
+    /* 28% clears 4.5:1 on full manila stock as rendered under the paper
+       texture (folder fronts, case tabs). */
+    --bureau-ink-muted: 25 24% 28%;
     --bureau-ink-dark: 25 30% 12%;
     --bureau-border: 35 30% 72%;
     --bureau-stamp: 8 45% 28%;
@@ -330,6 +339,13 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
+  }
+
+  /* Filing Green focus ring everywhere, replacing the browser's blue
+     auto ring. Lives in the base layer so component utilities still win. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
@@ -648,8 +664,8 @@ All colors MUST be HSL.
 /* Form reference number */
 .memo-form-ref {
   font-family: var(--font-typewriter);
-  font-size: 8px;
-  color: hsl(25 15% 55%);
+  font-size: var(--text-tag);
+  color: hsl(var(--muted-foreground));
   text-transform: uppercase;
   letter-spacing: 0.08em;
   line-height: 1.3;
@@ -659,7 +675,7 @@ All colors MUST be HSL.
 .memo-footer {
   font-family: var(--font-typewriter);
   font-size: 8px;
-  color: hsl(25 15% 50%);
+  color: hsl(var(--muted-foreground));
   text-transform: uppercase;
   letter-spacing: 0.1em;
   text-align: center;

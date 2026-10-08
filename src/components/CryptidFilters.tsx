@@ -81,7 +81,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
               Drawer {String.fromCharCode(65 + drawerIndex)}
             </span>
             <span className="h-px flex-1 bg-[hsl(var(--bureau-border)/0.6)]" />
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.14em] text-muted-foreground/80">
+            <span className="font-typewriter text-tag uppercase tracking-[0.14em] text-muted-foreground">
               Files {start}–{end} of {filteredCryptids.length}
             </span>
           </div>
@@ -151,7 +151,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                 onClick={() => handleFilterChange(region.value)}
                 aria-pressed={selectedRegion === region.value}
                 aria-label={`Filter by region: ${region.label}`}
-                className={`font-typewriter text-xs tracking-wide px-2.5 py-1 rounded-sm border transition-colors duration-150 ${
+                className={`relative font-typewriter text-xs tracking-wide px-2.5 py-1 rounded-sm border transition-colors duration-150 after:absolute after:inset-x-0 after:-inset-y-2.5 after:content-[""] ${
                   selectedRegion === region.value
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-transparent text-muted-foreground border-[hsl(var(--bureau-border)/0.5)] hover:border-bureau-border hover:text-foreground"

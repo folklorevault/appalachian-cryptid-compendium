@@ -151,12 +151,12 @@ export function WitnessStatementForm() {
             <span className="index-card-under" aria-hidden="true" />
             <figure aria-label="Shareable case card" className="index-card flex flex-col">
               <span className="tape-strip" aria-hidden="true" />
-              <div className={`${label} relative z-10 flex h-[3.25rem] items-end justify-between gap-3 px-6 pb-2 text-[11px] text-bureau-ink-muted`}>
+              <div className={`${label} relative z-10 flex h-[3.25rem] items-end justify-between gap-3 px-6 pb-2 text-caption text-bureau-ink-muted`}>
                 <span>{statement.caseNo}</span>
                 <span>{statement.jurisdiction}</span>
               </div>
               <div className="relative z-10 flex flex-col px-6 pb-4 pt-3">
-                <p className={`${eyebrow} text-[10px] leading-[28px] text-bureau-stamp-ink`}>Sighting on record ◆ Field Office No. 7</p>
+                <p className={`${eyebrow} text-tag leading-[28px] text-bureau-stamp-ink`}>Sighting on record ◆ Field Office No. 7</p>
                 <p className="font-display text-[2rem] font-bold leading-[56px] tracking-tight text-foreground">{statement.shareQuote}</p>
                 <p className="font-typewriter text-sm leading-[28px] text-bureau-ink">{statement.shareLine}</p>
                 <Stamp
@@ -166,7 +166,7 @@ export function WitnessStatementForm() {
                 />
               </div>
               {/* Right side stays clear for the classification stamp. */}
-              <figcaption className="relative z-10 flex flex-col px-6 pb-3 pt-1 font-typewriter text-[10px] uppercase leading-[14px] tracking-label text-bureau-ink-muted">
+              <figcaption className="relative z-10 flex flex-col px-6 pb-3 pt-1 font-typewriter text-tag uppercase leading-[14px] tracking-label text-bureau-ink-muted">
                 <span>Form ACD-27B</span>
                 <span>appalachiancryptid.com</span>
               </figcaption>

@@ -53,7 +53,7 @@ export const ShopProductCard = () => (
         <h2 className="font-display font-bold text-xl text-foreground leading-tight">
           Appalachian Cryptid Decal
         </h2>
-        <p className="font-typewriter text-[10px] tracking-wider text-muted-foreground mt-1">
+        <p className="font-typewriter text-tag tracking-wider text-muted-foreground mt-1">
           Item No. BFC-001
         </p>
       </div>
@@ -95,7 +95,7 @@ export const ShopProductCard = () => (
         {SPECS.map(([label, value]) => (
           <div
             key={label}
-            className="flex gap-3 font-typewriter text-[10px] sm:text-xs"
+            className="flex gap-3 font-typewriter text-tag sm:text-xs"
           >
             <span className="uppercase tracking-wider text-muted-foreground shrink-0 w-16">
               {label}
@@ -113,7 +113,7 @@ export const ShopProductCard = () => (
           <span className="font-display font-bold text-2xl text-foreground">
             $4.00
           </span>
-          <span className="font-typewriter text-[10px] text-muted-foreground ml-2 tracking-wider uppercase">
+          <span className="font-typewriter text-tag text-muted-foreground ml-2 tracking-wider uppercase">
             Free shipping
           </span>
         </div>

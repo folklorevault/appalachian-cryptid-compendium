@@ -36,7 +36,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
       aria-label={`Read full case file for ${name}`}
     >
       {/* Die-cut folder tab */}
-      <span className="case-folder-tab self-start font-typewriter text-[10px] tracking-[0.18em] uppercase text-bureau-ink dark:text-foreground">
+      <span className="case-folder-tab self-start font-typewriter text-tag tracking-[0.18em] uppercase text-bureau-ink dark:text-foreground">
         Case File <span aria-hidden="true">—</span> No. ACB-
         {slug.current.slice(0, 4).replace(/-+$/, "").toUpperCase()}
       </span>
@@ -61,7 +61,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
                 />
               ) : (
                 <div className="absolute inset-0 bg-muted flex items-end justify-center pb-1">
-                  <span className="font-typewriter text-[8px] uppercase tracking-widest text-muted-foreground text-center leading-tight">
+                  <span className="font-typewriter text-tag uppercase tracking-widest text-muted-foreground text-center leading-tight">
                     Photo
                     <br />
                     Unavailable
@@ -84,18 +84,18 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
 
         {/* Text column (relative so folder grain never overlays copy) */}
         <div className="relative z-[2] flex-1 min-w-0 flex flex-col">
-          <h2 className="font-display font-bold text-[26px] leading-[1.05] text-foreground">
+          <h2 className="font-display font-bold text-title leading-[1.05] text-foreground">
             {name}
           </h2>
 
           {scientificName && (
-            <p className="font-serif italic text-[13px] text-bureau-ink-muted dark:text-muted-foreground mt-0.5">
+            <p className="font-serif italic text-sm text-bureau-ink-muted dark:text-muted-foreground mt-0.5">
               {scientificName}
             </p>
           )}
 
           {/* Catalog rows */}
-          <dl className="font-typewriter text-[11px] mt-2 mb-2 border-t border-dotted border-foreground/30">
+          <dl className="font-typewriter text-caption mt-2 mb-2 border-t border-dotted border-foreground/30">
             <div className="flex gap-2 py-1 border-b border-dotted border-foreground/30">
               <dt className="uppercase tracking-type text-bureau-ink-muted dark:text-muted-foreground shrink-0 w-14">
                 Region

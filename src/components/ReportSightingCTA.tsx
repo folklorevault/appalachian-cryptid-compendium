@@ -27,7 +27,7 @@ export const ReportSightingCTA = ({ cryptidName, cryptidSlug }: ReportSightingCT
               text="Field Inquiry"
               variant="primary"
               rotation={-6}
-              className="text-[10px] px-2 py-0.5 opacity-70"
+              className="text-tag px-2 py-0.5 opacity-70"
             />
           </div>
 
@@ -44,7 +44,7 @@ export const ReportSightingCTA = ({ cryptidName, cryptidSlug }: ReportSightingCT
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="text-[10px] uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-1">
+              <div className="text-tag uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-1">
                 Witness Report Requested
               </div>
               <h2 id="report-cta-heading" className="text-lg sm:text-xl font-bold text-foreground font-display leading-tight">

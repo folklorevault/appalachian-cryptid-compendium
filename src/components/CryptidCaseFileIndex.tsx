@@ -15,14 +15,14 @@ export function CryptidCaseFileIndex({ cryptids }: CryptidCaseFileIndexProps) {
       <details className="group rounded-sm border border-bureau-border/60 bg-card/40">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 select-none [&::-webkit-details-marker]:hidden">
           <span>
-            <span className="block font-typewriter text-[9px] uppercase tracking-label text-muted-foreground">
+            <span className="block font-typewriter text-tag uppercase tracking-label text-muted-foreground">
               Reference Index
             </span>
             <span className="font-display text-base font-bold text-foreground">
               Complete Case File Index
             </span>
           </span>
-          <span className="flex shrink-0 items-center gap-3 font-typewriter text-[10px] uppercase tracking-wide text-muted-foreground">
+          <span className="flex shrink-0 items-center gap-3 font-typewriter text-tag uppercase tracking-wide text-muted-foreground">
             {cryptids.length} files
             <span
               aria-hidden="true"
@@ -42,7 +42,7 @@ export function CryptidCaseFileIndex({ cryptids }: CryptidCaseFileIndexProps) {
               >
                 <span
                   aria-hidden="true"
-                  className="w-5 shrink-0 text-[9px] tabular-nums text-muted-foreground/70"
+                  className="w-5 shrink-0 text-tag tabular-nums text-muted-foreground"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>

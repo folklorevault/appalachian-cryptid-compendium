@@ -10,7 +10,7 @@ const FormStamp = () => (
   <Link
     href="/bureau/form-acd-27b"
     aria-label="Form ACD-27B, supplemental witness statement"
-    className="inline-flex min-h-11 items-center px-2 font-typewriter text-[10px] uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-bureau-stamp-ink"
+    className="inline-flex min-h-11 items-center px-2 font-typewriter text-tag uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-bureau-stamp-ink"
   >
     Form ACD-27B
   </Link>

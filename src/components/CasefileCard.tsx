@@ -58,10 +58,10 @@ export const CasefileCard = memo(({ type, data, priority = false }: CasefileCard
           className="bg-bureau-manila border-b-2 border-foreground/60 px-4 py-1.5 flex items-baseline justify-between gap-3"
           aria-hidden="true"
         >
-          <span className="font-typewriter text-[10px] tracking-eyebrow uppercase text-bureau-ink">
+          <span className="font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink">
             Case File
           </span>
-          <span className="font-typewriter text-[10px] tracking-label uppercase text-bureau-ink-muted">
+          <span className="font-typewriter text-tag tracking-label uppercase text-bureau-ink-muted">
             No. ACB-{fileNumber}
           </span>
         </div>
