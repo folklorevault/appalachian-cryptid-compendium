@@ -22,3 +22,6 @@
 ## 2025-03-09 - Pre-computing display formats in list rendering
 **Learning:** In Next.js/React applications with long lists mapping over data (like `SightingDistribution`), calculating display formats (e.g. date formatting or string padding) inline within the `map` function causes redundant re-calculation on every re-render, even when just switching a selected item state.
 **Action:** Pre-compute and map formatting logic into a memoized state block (`useMemo`) alongside the list data so that formatting strings only recalculate when the underlying data changes, freeing up the render loop.
+## 2024-11-20 - Preventing unnecessary mapping of hidden responsive elements
+**Learning:** In components with both desktop and mobile layouts rendered in the same React tree (hidden via CSS media queries), state updates intended only for the desktop view (like row hovers) will cause the parent to re-map the array for the mobile view, unnecessarily eating main thread time.
+**Action:** Memoize the mapped array of mobile elements using `useMemo` so that desktop-only state changes (like hovers) skip recreating the VDOM array for the mobile layout entirely.
