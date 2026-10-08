@@ -64,18 +64,18 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h4 className="text-xl font-bold text-foreground font-display mb-3">
+            <p className="text-xl font-bold text-foreground font-display mb-3">
               Appalachian Cryptid
-            </h4>
+            </p>
             <p className="text-sm text-muted-foreground">
               Front-porch stories, backroad sightings, and local legends from
               the mountains and hollers of Appalachia and the American South.
             </p>
           </div>
           <div>
-            <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
+            <h2 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
               Explore
-            </h5>
+            </h2>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
@@ -120,9 +120,9 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
             </ul>
           </div>
           <div>
-            <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
+            <h2 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
               Bureau
-            </h5>
+            </h2>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
@@ -154,9 +154,9 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
             </ul>
           </div>
           <div>
-            <h5 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
+            <h2 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
               A Note
-            </h5>
+            </h2>
             <p className="text-xs text-muted-foreground">
               This field guide honors the storytelling traditions of Appalachia
               and the South. Many accounts trace back through Cherokee and other

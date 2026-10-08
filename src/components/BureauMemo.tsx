@@ -25,34 +25,23 @@ export const BureauMemo = ({ content, cryptidName, caseNumber }: BureauMemoProps
           Rev. 08/1972
         </div>
 
-        {/* Internal Memo Stamp */}
-        <div className="absolute -top-3 right-12 z-20">
-          <Stamp
-            text="Internal"
-            variant="muted"
-            rotation={-3}
-            className="text-xs px-2 py-1 opacity-60 border-2"
-          />
-        </div>
-
-        {/* File Copy Stamp */}
-        <div className="absolute top-16 left-6 z-20">
-          <Stamp
-            text="File Copy"
-            variant="muted"
-            rotation={-12}
-            className="text-xs px-2 py-0.5 opacity-40 border-2"
-          />
-        </div>
-
         {/* Memo Header */}
-        <div className="memo-header">
+        <div className="memo-header max-sm:mt-6">
           <div className="memo-letterhead">
             Appalachian Cryptid Division<br />
             Department of Unexplained Phenomena
           </div>
-          <div className="memo-title">
-            Internal Memorandum
+          {/* "Internal" stamp dropped — the title already says it. File Copy sits in flow so it can't cover the TO: line. */}
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-3.5">
+            <div className="memo-title" style={{ marginBottom: 0 }}>
+              Internal Memorandum
+            </div>
+            <Stamp
+              text="File Copy"
+              variant="muted"
+              rotation={-6}
+              className="text-xs px-2 py-0.5 opacity-50 border-2"
+            />
           </div>
           <div className="space-y-1">
             <div className="memo-meta-line">
