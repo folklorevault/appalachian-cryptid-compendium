@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import Link from "next/link";
 import type { SanityBulletinListItem, BulletinCategory } from "@/types/sanity";
 import { formatLedgerDate, formatLongDate } from "@/lib/utils";
@@ -180,6 +180,17 @@ export function BulletinLedger({
     setHoveredRow(null);
   }, []);
 
+  // ⚡ Optimization: Memoize the mapped mobile entries so that rapid
+  // desktop-only state changes (like row hovers) skip recreating the
+  // VDOM array for the hidden mobile layout entirely.
+  const mobileEntries = useMemo(
+    () =>
+      bulletins.map((bulletin) => (
+        <MobileLedgerEntry key={bulletin._id} bulletin={bulletin} />
+      )),
+    [bulletins]
+  );
+
   const lastDate =
     bulletins.length > 0
       ? formatLongDate(bulletins[bulletins.length - 1].date)
@@ -268,9 +279,7 @@ export function BulletinLedger({
 
         {/* ── Mobile stacked entries ── */}
         <div className="md:hidden relative z-2">
-          {bulletins.map((bulletin) => (
-            <MobileLedgerEntry key={bulletin._id} bulletin={bulletin} />
-          ))}
+          {mobileEntries}
         </div>
 
         {/* Ledger footer */}
