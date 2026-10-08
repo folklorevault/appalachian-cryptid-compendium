@@ -133,19 +133,6 @@ export default async function Home() {
           </section>
         )}
 
-        {/* ── Newsletter (slim, inline) ─────────────────────────────── */}
-        <section
-          className="border-b border-border bg-card/30"
-          aria-label="Email newsletter signup"
-        >
-          <div className="max-w-3xl mx-auto px-6 lg:px-8 py-6">
-            <p className="font-typewriter text-tag tracking-eyebrow uppercase text-muted-foreground mb-3 text-center">
-              Bureau Dispatches — Standing Order
-            </p>
-            <NewsletterSignup variant="compact" />
-          </div>
-        </section>
-
         {/* ── Cryptid Directory ─────────────────────────────────────── */}
         <section
           id="field-guide"
@@ -167,20 +154,10 @@ export default async function Home() {
         {/* ── Sightings Map Teaser ──────────────────────────────────── */}
         <SightingsMapTeaser />
 
-        {/* ── Newsletter ────────────────────────────────────────────── */}
+        {/* ── Newsletter (the memo carries its own heading) ─────────── */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">
-          <div className="max-w-6xl mx-auto text-center">
-            <p className="font-typewriter text-xs tracking-eyebrow uppercase text-muted-foreground mb-2">
-              Email Newsletter
-            </p>
-            <h2 className="font-display text-xl font-bold text-foreground mb-3">
-              Get New Cryptid Alerts
-            </h2>
-            <p className="font-typewriter text-sm text-muted-foreground max-w-md mx-auto mb-8">
-              Sign up and we&apos;ll email you when new creatures are added to
-              the guide or the Bureau has news to report.
-            </p>
-            <DeferredMount minHeight={150}>
+          <div className="max-w-6xl mx-auto">
+            <DeferredMount minHeight={460}>
               <NewsletterSignup />
             </DeferredMount>
           </div>
