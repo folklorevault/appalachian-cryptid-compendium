@@ -15,19 +15,19 @@ const desktopNavItems: NavItem[] = [
   { href: "/anomalies", label: "Anomalies" },
   { href: "/map", label: "Sightings Map" },
   { href: "/bulletins", label: "Bulletins" },
-  { href: "/shop", label: "Shop" },
+  { href: "/report", label: "File a Report" },
 ];
 
 const mobileMainItems: NavItem[] = [
   { href: "/", label: "Guide" },
-  { href: "/shop", label: "Shop" },
   { href: "/map", label: "Map" },
+  { href: "/report", label: "Report" },
 ];
 
 const mobileMoreItems: NavItem[] = [
   { href: "/anomalies", label: "Anomalies" },
   { href: "/bulletins", label: "Bulletins" },
-  { href: "/report", label: "File a Report" },
+  { href: "/shop", label: "Shop" },
 ];
 
 export const Header = () => {

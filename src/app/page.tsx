@@ -8,6 +8,7 @@ import { DeferredMount } from "@/components/DeferredMount";
 import { FeaturedCryptid } from "@/components/FeaturedCryptid";
 import { BulletinTeaser } from "@/components/BulletinTeaser";
 import { SightingsMapTeaser } from "@/components/SightingsMapTeaser";
+import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -153,6 +154,13 @@ export default async function Home() {
 
         {/* ── Sightings Map Teaser ──────────────────────────────────── */}
         <SightingsMapTeaser />
+
+        {/* ── Witness path: the map shows reports; this is where you add yours ── */}
+        <section className="px-6 lg:px-8" aria-label="Report a sighting">
+          <div className="max-w-3xl mx-auto">
+            <ReportSightingCTA />
+          </div>
+        </section>
 
         {/* ── Newsletter (the memo carries its own heading) ─────────── */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">
