@@ -238,42 +238,19 @@ const FullSignup = () => {
             Rev. 06/1973
           </div>
 
-          {/* FORM 104: ROSTER ADDITION stamp - faded red, rotated */}
-          <div className="absolute -top-3 right-14 z-20">
-            <Stamp
-              text="Form 104: Roster Addition"
-              variant="danger"
-              rotation={-6}
-              className="text-xs px-2 py-0.5 opacity-50 border-2"
-            />
-          </div>
-
-          {/* File Copy stamp */}
-          <div className="absolute bottom-8 left-4 z-20">
-            <Stamp
-              text="File Copy"
-              variant="muted"
-              rotation={-15}
-              className="text-xs px-2 py-0.5 opacity-30 border-2"
-            />
-          </div>
-
           {/* Letterhead */}
-          <div className="memo-header">
+          <div className="memo-header max-sm:mt-6">
             <div className="memo-letterhead">
               Appalachian Cryptid Division<br />
               Department of Unexplained Phenomena
             </div>
-            <div className="memo-title mt-3">
-              Personnel Dispatch Roster
-            </div>
           </div>
 
-          {/* Directive title */}
+          {/* Directive title — the memo's only heading; host pages add none of their own */}
           <div className="mt-4 mb-3 relative z-2">
-            <h3 className="text-xl font-bold text-foreground font-display uppercase tracking-wide">
+            <h2 className="text-xl font-bold text-foreground font-display uppercase tracking-wide">
               Standing Order: Register for Bureau Dispatches
-            </h3>
+            </h2>
           </div>
 
           {/* Body text */}
@@ -320,27 +297,35 @@ const FullSignup = () => {
               )}
             </div>
 
-            {/* Submit button - stamp styled */}
-            <button
-              type="submit"
-              disabled={state === "submitting"}
-              className="newsletter-stamp-btn group relative inline-flex items-center gap-2 px-6 py-2.5 border-4 border-primary rounded-sm font-bold uppercase tracking-widest text-sm font-display text-primary shadow-[inset_0_0_0_2px_hsl(var(--primary))] hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ transform: "rotate(-1deg)" }}
-            >
-              <span
-                className="block"
-                style={{ filter: "url(#__svg-stamp-texture)" }}
+            {/* Submit row — Form 104 stamp sits in flow beside the button so it can't collide with the clip, form ref, or disclaimer */}
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+              <button
+                type="submit"
+                disabled={state === "submitting"}
+                className="newsletter-stamp-btn group relative inline-flex items-center gap-2 px-6 py-2.5 border-4 border-primary rounded-sm font-bold uppercase tracking-widest text-sm font-display text-primary shadow-[inset_0_0_0_2px_hsl(var(--primary))] hover:bg-primary/10 active:bg-primary/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ transform: "rotate(-1deg)" }}
               >
-                {state === "submitting" ? (
-                  <>Processing...</>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <Send className="h-3.5 w-3.5" />
-                    Register
-                  </span>
-                )}
-              </span>
-            </button>
+                <span
+                  className="block"
+                  style={{ filter: "url(#__svg-stamp-texture)" }}
+                >
+                  {state === "submitting" ? (
+                    <>Processing...</>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <Send className="h-3.5 w-3.5" />
+                      Register
+                    </span>
+                  )}
+                </span>
+              </button>
+              <Stamp
+                text="Form 104: Roster Addition"
+                variant="danger"
+                rotation={-6}
+                className="text-xs px-2 py-0.5 opacity-50 border-2"
+              />
+            </div>
           </form>
 
           {/* Disclaimer */}

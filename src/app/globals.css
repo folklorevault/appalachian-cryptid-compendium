@@ -674,7 +674,7 @@ All colors MUST be HSL.
 /* Classification footer */
 .memo-footer {
   font-family: var(--font-typewriter);
-  font-size: 8px;
+  font-size: var(--text-tag);
   color: hsl(var(--muted-foreground));
   text-transform: uppercase;
   letter-spacing: 0.1em;
