@@ -33,7 +33,7 @@ export function FieldAgentIdCard({ result, headingId, agentNo, matchPct, issued 
       aria-labelledby={headingId}
       className="memo-paper memo-flat overflow-hidden rounded-lg border-2 border-foreground/60"
     >
-      <div className="flex items-center justify-between gap-3 bg-primary px-4 py-2 font-typewriter text-[10px] uppercase tracking-eyebrow text-primary-foreground/75">
+      <div className="flex items-center justify-between gap-3 bg-primary px-4 py-2 font-typewriter text-tag uppercase tracking-eyebrow text-primary-foreground/75">
         <span>Appalachian Cryptid Division</span>
         <span className="hidden sm:inline">Field Agent Identification</span>
       </div>
@@ -50,7 +50,7 @@ export function FieldAgentIdCard({ result, headingId, agentNo, matchPct, issued 
                 className="object-cover"
               />
             ) : (
-              <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-center font-typewriter text-[10px] uppercase tracking-label text-bureau-ink-muted">
+              <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-center font-typewriter text-tag uppercase tracking-label text-bureau-ink-muted">
                 <CameraOff className="h-7 w-7" aria-hidden="true" />
                 Photo unavailable
                 <br />
@@ -93,7 +93,7 @@ export function FieldAgentIdCard({ result, headingId, agentNo, matchPct, issued 
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 border-t border-dashed border-bureau-border px-5 py-3 font-typewriter text-[10px] uppercase tracking-label text-bureau-ink-muted sm:px-7">
+      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 border-t border-dashed border-bureau-border px-5 py-3 font-typewriter text-tag uppercase tracking-label text-bureau-ink-muted sm:px-7">
         <span>
           File {result.fileNo}
           {issued && ` · Issued ${issued}`}

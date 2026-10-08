@@ -13,6 +13,13 @@ const dangerFill: Record<string, string> = {
   Low: "hsl(152 35% 32%)",
 };
 
+// Size repeats the danger level so the plot doesn't rely on color alone.
+const dangerRadius: Record<string, number> = {
+  High: 5.2,
+  Medium: 4.2,
+  Low: 3.4,
+};
+
 const TICK_COUNT_X = 10;
 const TICK_COUNT_Y = 6;
 
@@ -39,7 +46,7 @@ export async function SightingsMapTeaser() {
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 lg:py-10">
         <div className="text-center mb-4">
-          <p className="font-typewriter text-[10px] tracking-eyebrow uppercase text-muted-foreground mb-1">
+          <p className="font-typewriter text-tag tracking-eyebrow uppercase text-muted-foreground mb-1">
             Bureau Sighting Grid — Field Survey {new Date().getFullYear()}
           </p>
           <h2 className="font-display font-bold text-xl text-foreground">
@@ -185,7 +192,7 @@ export async function SightingsMapTeaser() {
                   <circle
                     cx={c.x}
                     cy={c.y}
-                    r="4.2"
+                    r={dangerRadius[c.dangerLevel] ?? dangerRadius.Low}
                     fill={dangerFill[c.dangerLevel] ?? dangerFill.Low}
                     stroke="hsl(var(--bureau-manila-light))"
                     strokeWidth="1.2"
@@ -234,31 +241,31 @@ export async function SightingsMapTeaser() {
             </g>
           </svg>
 
-          <div className="absolute top-2 left-3 font-typewriter text-[9px] tracking-eyebrow uppercase text-bureau-ink/50 pointer-events-none">
+          <div className="absolute top-2 left-3 font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink pointer-events-none">
             Lat 40°N
           </div>
-          <div className="absolute bottom-2 left-3 font-typewriter text-[9px] tracking-eyebrow uppercase text-bureau-ink/50 pointer-events-none">
+          <div className="absolute bottom-2 left-3 font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink pointer-events-none">
             Lat 30°N
           </div>
-          <div className="absolute bottom-2 right-3 font-typewriter text-[9px] tracking-eyebrow uppercase text-bureau-ink/50 pointer-events-none">
+          <div className="absolute bottom-2 right-3 font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink pointer-events-none">
             Lng 75°W
           </div>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 font-typewriter text-[9px] tracking-eyebrow uppercase text-bureau-ink/50 pointer-events-none">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink pointer-events-none">
             Plot No. {plotted.length.toString().padStart(3, "0")}
           </div>
           </div>
         </div>
 
         <div className="mt-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 max-w-[560px] mx-auto">
-          <div className="flex justify-center sm:justify-start gap-3 font-typewriter text-[10px] tracking-label uppercase text-muted-foreground">
-            <LegendDot label="High" color={dangerFill.High} />
-            <LegendDot label="Medium" color={dangerFill.Medium} />
-            <LegendDot label="Low" color={dangerFill.Low} />
+          <div className="flex justify-center sm:justify-start gap-3 font-typewriter text-tag tracking-label uppercase text-muted-foreground">
+            <LegendDot label="High" color={dangerFill.High} size={12} />
+            <LegendDot label="Medium" color={dangerFill.Medium} size={10} />
+            <LegendDot label="Low" color={dangerFill.Low} size={8} />
           </div>
 
           <Link
             href="/map"
-            className="self-center sm:self-auto font-display font-bold uppercase tracking-widest text-[11px] text-bureau-stamp border-[3px] border-bureau-stamp rounded-sm bg-bureau-manila/85 px-4 py-2 shadow-[inset_0_0_0_2px_hsl(var(--bureau-stamp))] hover:bg-bureau-stamp/10 transition-colors"
+            className="self-center sm:self-auto font-display font-bold uppercase tracking-widest text-caption text-bureau-stamp border-[3px] border-bureau-stamp rounded-sm bg-bureau-manila/85 px-4 py-2 shadow-[inset_0_0_0_2px_hsl(var(--bureau-stamp))] hover:bg-bureau-stamp/10 transition-colors"
           >
             Open Full Map →
           </Link>
@@ -268,12 +275,12 @@ export async function SightingsMapTeaser() {
   );
 }
 
-function LegendDot({ label, color }: { label: string; color: string }) {
+function LegendDot({ label, color, size }: { label: string; color: string; size: number }) {
   return (
     <span className="inline-flex items-center gap-2">
       <span
-        className="inline-block w-2.5 h-2.5 rounded-full border border-bureau-ink/30"
-        style={{ backgroundColor: color }}
+        className="inline-block rounded-full border border-bureau-ink/30"
+        style={{ backgroundColor: color, width: size, height: size }}
         aria-hidden="true"
       />
       {label} Risk

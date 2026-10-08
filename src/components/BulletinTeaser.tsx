@@ -28,7 +28,7 @@ function CategoryTag({ category }: { category: BulletinCategory }) {
   const cat = CATEGORIES[category];
   return (
     <span
-      className="font-typewriter font-bold uppercase tracking-[0.14em] text-[10px] shrink-0"
+      className="font-typewriter font-bold uppercase tracking-[0.14em] text-tag shrink-0"
       style={{ color: `hsl(var(${cat.cssVar}))` }}
     >
       {cat.abbr}
@@ -94,7 +94,7 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
                     className="group block py-2.5 px-0.5"
                   >
                     {/* Meta row */}
-                    <div className="flex items-baseline gap-2 mb-1 font-typewriter text-[10px] tracking-type text-bureau-ink-muted dark:text-muted-foreground">
+                    <div className="flex items-baseline gap-2 mb-1 font-typewriter text-tag tracking-type text-bureau-ink-muted dark:text-muted-foreground">
                       <span className="font-bold text-bureau-ink dark:text-foreground">
                         {bulletin.bulletinNumber}
                       </span>
@@ -106,7 +106,7 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-display font-bold text-[15px] leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                    <h3 className="font-display font-bold text-base leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2">
                       {bulletin.title}
                     </h3>
                   </Link>

@@ -71,7 +71,7 @@ export default async function Home() {
             </p>
 
             {/* Typewriter tagline */}
-            <p className="font-typewriter text-xs text-bureau-ink-muted tracking-wider opacity-70 mb-10">
+            <p className="font-typewriter text-xs text-bureau-ink-muted tracking-wider mb-10">
               Each entry is documented, cross-referenced, and filed.
             </p>
 
@@ -79,18 +79,18 @@ export default async function Home() {
             <div className="flex flex-col items-center gap-[18px]">
               <Link
                 href="#field-guide"
-                className="stamp-btn text-[15px] px-7 py-3 text-bureau-stamp-ink"
+                className="stamp-btn text-base px-7 py-3 text-bureau-stamp-ink"
                 style={{ "--stamp-rot": "-2deg" } as React.CSSProperties}
               >
                 <span
                   className="flex items-center gap-2"
                   style={{ filter: "url(#__svg-stamp-texture)" }}
                 >
-                  <span aria-hidden="true" className="text-[11px] tracking-normal">
+                  <span aria-hidden="true" className="text-caption tracking-normal">
                     ★
                   </span>
                   Explore the Guide
-                  <span aria-hidden="true" className="text-[11px] tracking-normal">
+                  <span aria-hidden="true" className="text-caption tracking-normal">
                     ★
                   </span>
                 </span>
@@ -139,7 +139,7 @@ export default async function Home() {
           aria-label="Email newsletter signup"
         >
           <div className="max-w-3xl mx-auto px-6 lg:px-8 py-6">
-            <p className="font-typewriter text-[10px] tracking-eyebrow uppercase text-muted-foreground mb-3 text-center">
+            <p className="font-typewriter text-tag tracking-eyebrow uppercase text-muted-foreground mb-3 text-center">
               Bureau Dispatches — Standing Order
             </p>
             <NewsletterSignup variant="compact" />
@@ -153,7 +153,7 @@ export default async function Home() {
           aria-label="Cryptid directory"
         >
           <div className="max-w-6xl mx-auto px-6 lg:px-8 mb-6">
-            <p className="font-typewriter text-[10px] tracking-label uppercase text-muted-foreground mb-1">
+            <p className="font-typewriter text-tag tracking-label uppercase text-muted-foreground mb-1">
               Bureau Active Case Files — {cryptids.length} Entries
             </p>
             <h2 className="font-display font-bold text-2xl text-foreground">

@@ -57,7 +57,7 @@ export const FieldSupplyDrop = ({
           <h3 className="font-display font-bold text-sm text-foreground leading-tight">
             Appalachian Cryptid Decal
           </h3>
-          <p className="font-typewriter text-[10px] tracking-wider text-muted-foreground mt-0.5">
+          <p className="font-typewriter text-tag tracking-wider text-muted-foreground mt-0.5">
             Item No. BFC-001
           </p>
         </div>
@@ -65,7 +65,7 @@ export const FieldSupplyDrop = ({
         {/* Specs */}
         <div className="space-y-1 mb-3 relative z-2">
           {SPECS.map(([label, value]) => (
-            <div key={label} className="flex gap-2 font-typewriter text-[10px]">
+            <div key={label} className="flex gap-2 font-typewriter text-tag">
               <span className="uppercase tracking-wider text-muted-foreground shrink-0 w-12">
                 {label}
               </span>
@@ -90,7 +90,7 @@ export const FieldSupplyDrop = ({
             href={STRIPE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="supply-stamp-btn inline-flex items-center px-4 py-1.5 border-[3px] border-accent rounded-sm font-bold uppercase tracking-widest text-[10px] font-display text-accent bg-[hsl(var(--bureau-manila)/0.85)] shadow-[inset_0_0_0_2px_hsl(var(--accent))] hover:bg-accent/10 active:bg-accent/20 transition-colors duration-200"
+            className="supply-stamp-btn inline-flex items-center px-4 py-1.5 border-[3px] border-accent rounded-sm font-bold uppercase tracking-widest text-tag font-display text-accent bg-[hsl(var(--bureau-manila)/0.85)] shadow-[inset_0_0_0_2px_hsl(var(--accent))] hover:bg-accent/10 active:bg-accent/20 transition-colors duration-200"
             style={{ transform: "rotate(-1deg)" }}
           >
             <span style={{ filter: "url(#__svg-stamp-texture)" }}>
