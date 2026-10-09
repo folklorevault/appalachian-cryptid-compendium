@@ -57,7 +57,7 @@ export function AnomaliesDeskBand({ desk, anomalies }: AnomaliesDeskBandProps) {
             {paragraphs.map((p, i) => (
               <p
                 key={i}
-                className="font-sans text-base leading-[1.7] text-bureau-manila-light/90 max-w-[54ch] mb-3.5"
+                className="font-sans text-base leading-relaxed text-bureau-manila-light/90 max-w-[54ch] mb-3.5"
               >
                 {p}
               </p>
@@ -119,14 +119,18 @@ export function AnomaliesDeskBand({ desk, anomalies }: AnomaliesDeskBandProps) {
                       <p className="font-typewriter text-sm tracking-type uppercase">
                         {type.replace("/", " / ")}
                       </p>
-                      <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                      {/* py-1.5 lifts each name to a 24px tap target; the
+                          underline lives on the inner span so it stays tight. */}
+                      <ul className="flex flex-wrap gap-x-3">
                         {items.map((a) => (
                           <li key={a._id}>
                             <Link
                               href={`/anomaly/${a.slug.current}`}
-                              className="font-typewriter text-xs tracking-type text-bureau-manila-light/80 border-b border-dotted border-bureau-manila-light/45 hover:text-bureau-manila-light hover:border-solid"
+                              className="group/name inline-block py-1.5 font-typewriter text-xs tracking-type text-bureau-manila-light/80 hover:text-bureau-manila-light"
                             >
-                              {a.name}
+                              <span className="border-b border-dotted border-bureau-manila-light/45 group-hover/name:border-solid">
+                                {a.name}
+                              </span>
                             </Link>
                           </li>
                         ))}
@@ -189,7 +193,6 @@ function FeaturedAnomaly({
     <Link
       href={`/anomaly/${anomaly.slug.current}`}
       className="group grid grid-cols-1 gap-7 md:grid-cols-[280px_minmax(0,1fr)] md:gap-11 md:items-center"
-      aria-label={`Read the full anomaly file for ${anomaly.name}`}
     >
       <div className="relative w-full max-w-[220px] md:max-w-[280px]">
         <div className="aspect-3/4 max-w-full border border-bureau-manila-light/35 p-1.5">
@@ -212,7 +215,7 @@ function FeaturedAnomaly({
           </div>
         </div>
         <span
-          className="absolute -right-3.5 bottom-6 -rotate-8 rounded-[3px] border-[2.5px] border-current bg-bureau-ink/70 px-2 py-1 font-typewriter text-caption font-bold uppercase tracking-[0.16em] text-bureau-rust-ink"
+          className="absolute -right-3.5 bottom-6 -rotate-8 rounded-sm border-2 border-current bg-bureau-ink/70 px-2 py-1 font-typewriter text-caption font-bold uppercase tracking-label text-bureau-rust-ink"
           aria-hidden="true"
         >
           <span style={{ filter: "url(#__svg-stamp-texture)" }}>{anomaly.status}</span>
@@ -238,7 +241,7 @@ function FeaturedAnomaly({
           </p>
         )}
         {blurb && (
-          <p className="font-sans text-[15px] leading-[1.7] text-bureau-manila-light/90 max-w-[56ch] mb-4.5 line-clamp-4">
+          <p className="font-sans text-base leading-relaxed text-bureau-manila-light/90 max-w-[56ch] mb-4.5 line-clamp-4">
             {blurb}
           </p>
         )}
@@ -246,7 +249,7 @@ function FeaturedAnomaly({
           <ol className="grid gap-1.5 mb-5.5 font-typewriter text-sm tracking-type">
             {rules.map((rule, i) => (
               <li key={i} className="flex gap-3.5">
-                <span className="min-w-[62px] text-bureau-rust-ink">Rule {i + 1}</span>
+                <span className="min-w-16 text-bureau-rust-ink">Rule {i + 1}</span>
                 <span>{rule}</span>
               </li>
             ))}
