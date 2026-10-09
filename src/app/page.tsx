@@ -56,7 +56,7 @@ export default async function Home() {
             </div>
 
             {/* Heading */}
-            <h1 className="font-display font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-hero">
+            <h1 className="font-display font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-hero text-balance">
               Creatures of the Mountains
               <br />
               <span className="text-primary block">and the American South</span>
@@ -77,7 +77,7 @@ export default async function Home() {
             </p>
 
             {/* Quick links: one stamped primary action + typed index line */}
-            <div className="flex flex-col items-center gap-[18px]">
+            <div className="flex flex-col items-center gap-4.5">
               <Link
                 href="#field-guide"
                 className="stamp-btn text-base px-7 py-3 text-bureau-stamp-ink"
@@ -96,7 +96,7 @@ export default async function Home() {
                   </span>
                 </span>
               </Link>
-              <p className="font-typewriter text-xs tracking-[0.06em] text-bureau-ink-muted">
+              <p className="font-typewriter text-xs tracking-type text-bureau-ink-muted">
                 <span aria-hidden="true">Also on file: </span>
                 <Link
                   href="/map"

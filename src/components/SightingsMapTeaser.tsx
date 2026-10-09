@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { fetchMapCryptids } from "@/lib/sanity/fetchers";
 import {
   APPALACHIAN_STATES,
@@ -202,7 +203,7 @@ export async function SightingsMapTeaser() {
             </g>
 
             <g
-              transform={`translate(${VIEWBOX_WIDTH - 30} 60) rotate(-12)`}
+              transform={`translate(${VIEWBOX_WIDTH - 25} ${VIEWBOX_HEIGHT - 130}) rotate(-12)`}
               opacity="0.55"
             >
               <rect
@@ -265,9 +266,10 @@ export async function SightingsMapTeaser() {
 
           <Link
             href="/map"
-            className="self-center sm:self-auto font-display font-bold uppercase tracking-widest text-caption text-bureau-stamp border-[3px] border-bureau-stamp rounded-sm bg-bureau-manila/85 px-4 py-2 shadow-[inset_0_0_0_2px_hsl(var(--bureau-stamp))] hover:bg-bureau-stamp/10 transition-colors"
+            className="self-center sm:self-auto inline-flex items-center gap-1.5 rounded-md border border-primary/60 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 hover:border-primary transition-colors"
           >
-            Open Full Map →
+            Open full map
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
       </div>

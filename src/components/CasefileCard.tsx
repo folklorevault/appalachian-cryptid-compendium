@@ -33,19 +33,14 @@ export const CasefileCard = memo(({ type, data, priority = false }: CasefileCard
 
   const linkTo = type === "cryptid" ? `/cryptid/${slug.current}` : `/anomaly/${slug.current}`;
 
-  if (!gridImage) {
-    return null;
-  }
-
-  const imageUrl = urlFor(gridImage)
-    .width(480)
-    .height(480)
-    .fit("crop")
-    .quality(60)
-    .auto("format")
-    .url();
-
-  const blurUrl = urlFor(gridImage).width(24).height(24).blur(12).quality(30).auto("format").url();
+  // A missing photo used to drop the whole card while the drawer counts still
+  // included it. Keep the file and show an empty evidence mat instead.
+  const imageUrl = gridImage
+    ? urlFor(gridImage).width(480).height(480).fit("crop").quality(60).auto("format").url()
+    : null;
+  const blurUrl = gridImage
+    ? urlFor(gridImage).width(24).height(24).blur(12).quality(30).auto("format").url()
+    : undefined;
 
   // File number based on slug
   const fileNumber = `${slug.current?.slice(0, 3).toUpperCase() || 'UNK'}-${String(slug.current?.length || 0).padStart(3, '0')}`;
@@ -68,16 +63,26 @@ export const CasefileCard = memo(({ type, data, priority = false }: CasefileCard
 
         {/* Image Section - Square aspect */}
         <div className="relative aspect-square overflow-hidden bg-muted border-b-4 border-border group-hover:border-bureau-border transition-colors duration-200">
-          <Image
-            src={imageUrl}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
-            priority={priority}
-            placeholder="blur"
-            blurDataURL={blurUrl}
-            className="object-cover object-top transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover"
-          />
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={name}
+              fill
+              sizes="(max-width: 640px) 92vw, (max-width: 1024px) 48vw, 33vw"
+              priority={priority}
+              placeholder="blur"
+              blurDataURL={blurUrl}
+              className="object-cover object-top transition-all duration-500 group-hover:scale-105 sepia-light sepia-hover"
+            />
+          ) : (
+            <div className="absolute inset-4 flex items-center justify-center border-2 border-dashed border-bureau-border bg-bureau-manila/30">
+              <span className="font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink-muted text-center leading-relaxed">
+                No photograph
+                <br />
+                on file
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Content Section */}
@@ -112,10 +117,10 @@ export const CasefileCard = memo(({ type, data, priority = false }: CasefileCard
             </p>
           )}
 
-          {/* View Casefile CTA */}
+          {/* View case file CTA */}
           <div className="pt-2 border-t border-border">
             <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary group-hover:gap-2.5 transition-all">
-              View casefile
+              View case file
               <ArrowRight className="h-4 w-4" />
             </span>
           </div>

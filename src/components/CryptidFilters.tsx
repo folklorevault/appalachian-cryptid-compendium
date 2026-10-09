@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useDeferredValue } from "react";
+import { useState, useMemo, useDeferredValue, useEffect, useRef } from "react";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LabelTape } from "@/components/EvidenceChip";
@@ -53,6 +54,10 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
     );
   }, [cryptids, deferredQuery, selectedRegion]);
 
+  // Drawer index to focus after "Next Drawer" — keyboard and screen-reader
+  // users land on the files that just opened instead of staying on the button.
+  const pendingDrawerFocus = useRef<number | null>(null);
+
   const visibleCryptids = useMemo(() => filteredCryptids.slice(0, visibleCount), [filteredCryptids, visibleCount]);
   const hasMore = visibleCount < filteredCryptids.length;
 
@@ -66,12 +71,26 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
     return d;
   }, [visibleCryptids]);
 
+  useEffect(() => {
+    const index = pendingDrawerFocus.current;
+    if (index === null) return;
+    pendingDrawerFocus.current = null;
+    document.getElementById(`drawer-${index}`)?.focus();
+  }, [drawers.length]);
+
   const visibleCryptidCards = useMemo(() => {
     return drawers.map((drawer, drawerIndex) => {
       const start = drawerIndex * LOAD_MORE_COUNT + 1;
       const end = drawerIndex * LOAD_MORE_COUNT + drawer.length;
       return (
-        <div key={drawerIndex}>
+        <div
+          key={drawerIndex}
+          id={`drawer-${drawerIndex}`}
+          role="group"
+          tabIndex={-1}
+          aria-label={`Drawer ${String.fromCharCode(65 + drawerIndex)}, files ${start} to ${end} of ${filteredCryptids.length}`}
+          className="rounded-sm outline-offset-8"
+        >
           {/* Decorative drawer divider — hidden from the a11y tree */}
           <div
             aria-hidden="true"
@@ -81,7 +100,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
               Drawer {String.fromCharCode(65 + drawerIndex)}
             </span>
             <span className="h-px flex-1 bg-[hsl(var(--bureau-border)/0.6)]" />
-            <span className="font-typewriter text-tag uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="font-typewriter text-tag uppercase tracking-label text-muted-foreground">
               Files {start}–{end} of {filteredCryptids.length}
             </span>
           </div>
@@ -115,7 +134,6 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
       {/* The canonical #field-guide anchor lives on the wrapping section in page.tsx */}
       <section className="pt-6 pb-2 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-4">
-          <h2 className="sr-only">Cryptid Case Files</h2>
           {/* Search Bar */}
           <div className="max-w-xl mx-auto">
             <label
@@ -178,16 +196,18 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                   &ldquo;{searchQuery}&rdquo;
                 </LabelTape>
               )}
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedRegion("all");
-                  setVisibleCount(INITIAL_VISIBLE);
-                }}
-                className="text-xs font-typewriter text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Clear
-              </button>
+              {filteredCryptids.length > 0 && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedRegion("all");
+                    setVisibleCount(INITIAL_VISIBLE);
+                  }}
+                  className="text-xs font-typewriter text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Clear
+                </button>
+              )}
             </div>
           )}
 
@@ -214,10 +234,29 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
       <section className="pt-4 pb-16 px-6 lg:pb-20 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {filteredCryptids.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-xl text-muted-foreground">
-                No cryptids found matching your criteria.
+            <div role="status" className="max-w-md mx-auto text-center py-12">
+              <p className="font-display text-xl font-bold text-foreground">
+                No creature files match{deferredQuery ? <> &ldquo;{deferredQuery}&rdquo;</> : " this filing"}.
               </p>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                Lights, hauntings, and curses are filed with the Anomalies
+                Desk. If nobody has written it down yet, you could be the
+                first witness.
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 font-typewriter text-xs tracking-wide">
+                <Link
+                  href="/anomalies"
+                  className="text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                >
+                  Check the Anomalies Desk
+                </Link>
+                <Link
+                  href="/report"
+                  className="text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                >
+                  File a report
+                </Link>
+              </div>
               <Button
                 onClick={() => {
                   setSearchQuery("");
@@ -225,9 +264,9 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                   setVisibleCount(INITIAL_VISIBLE);
                 }}
                 variant="outline"
-                className="mt-4 border-primary text-primary hover:bg-primary/10"
+                className="mt-6 border-primary text-primary hover:bg-primary/10"
               >
-                Clear Filters
+                Clear search
               </Button>
             </div>
           ) : (
@@ -238,9 +277,10 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
               {hasMore && (
                 <div className="text-center mt-10">
                   <Button
-                    onClick={() =>
-                      setVisibleCount((prev) => prev + LOAD_MORE_COUNT)
-                    }
+                    onClick={() => {
+                      pendingDrawerFocus.current = drawers.length;
+                      setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
+                    }}
                     size="lg"
                     variant="outline"
                     className="border-2 border-bureau-border text-foreground hover:bg-muted/50 gap-2"
