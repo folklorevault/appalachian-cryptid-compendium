@@ -8,6 +8,7 @@ import { LabelTape } from "@/components/EvidenceChip";
 import { CasefileCard } from "@/components/CasefileCard";
 import { Search, FolderOpen } from "lucide-react";
 import type { SanityCryptidListItem } from "@/types/sanity";
+import { buildStateChips, matchesStateFilter, stateName } from "@/lib/states";
 
 const INITIAL_VISIBLE = 6;
 const LOAD_MORE_COUNT = 6;
@@ -16,16 +17,9 @@ interface CryptidFiltersProps {
   cryptids: SanityCryptidListItem[];
 }
 
-const regions = [
-  { value: "all", label: "All" },
-  { value: "Appalachia", label: "Appalachia" },
-  { value: "Southeast", label: "Southeast" },
-  { value: "Southern", label: "Southern" },
-];
-
 export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("all");
+  const [selectedState, setSelectedState] = useState("all");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
   // The input stays fully responsive to `searchQuery`, but the expensive
@@ -33,26 +27,29 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
   // block on rendering the results. Keeps typing INP low as the catalog grows.
   const deferredQuery = useDeferredValue(searchQuery);
 
+  const { chips: stateChips, singles } = useMemo(
+    () => buildStateChips(cryptids),
+    [cryptids]
+  );
+
   // Preserve Sanity's _createdAt desc order, then apply client-side filters
   const filteredCryptids = useMemo(() => {
-    let results = cryptids;
-
-    if (selectedRegion !== "all") {
-      results = results.filter(
-        (c) => c.region?.toLowerCase() === selectedRegion.toLowerCase()
-      );
-    }
+    let results = cryptids.filter((c) =>
+      matchesStateFilter(c.states, selectedState, singles)
+    );
 
     if (!deferredQuery) return results;
 
     const query = deferredQuery.toLowerCase();
-    return results.filter(
+    results = results.filter(
       (c) =>
         c.name.toLowerCase().includes(query) ||
         c.location.toLowerCase().includes(query) ||
-        (c.description?.toLowerCase().includes(query) ?? false)
+        (c.description?.toLowerCase().includes(query) ?? false) ||
+        (c.states?.some((code) => stateName(code).toLowerCase().includes(query)) ?? false)
     );
-  }, [cryptids, deferredQuery, selectedRegion]);
+    return results;
+  }, [cryptids, deferredQuery, selectedState, singles]);
 
   // Drawer index to focus after "Next Drawer" — keyboard and screen-reader
   // users land on the files that just opened instead of staying on the button.
@@ -122,11 +119,13 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
   }, [drawers, filteredCryptids.length]);
 
   const handleFilterChange = (value: string) => {
-    setSelectedRegion(value);
+    setSelectedState(value);
     setVisibleCount(INITIAL_VISIBLE);
   };
 
-  const hasActiveFilters = selectedRegion !== "all" || searchQuery;
+  const selectedStateLabel =
+    stateChips.find((chip) => chip.value === selectedState)?.label ?? selectedState;
+  const hasActiveFilters = selectedState !== "all" || searchQuery;
 
   return (
     <>
@@ -161,24 +160,39 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
             </div>
           </div>
 
-          {/* Region Filters — compact typewriter labels */}
-          <div className="flex flex-wrap gap-1.5 justify-center items-center">
-            {regions.map((region) => (
-              <button
-                key={region.value}
-                onClick={() => handleFilterChange(region.value)}
-                aria-pressed={selectedRegion === region.value}
-                aria-label={`Filter by region: ${region.label}`}
-                className={`relative font-typewriter text-xs tracking-wide px-2.5 py-1 rounded-sm border transition-colors duration-150 after:absolute after:inset-x-0 after:-inset-y-2.5 after:content-[""] ${
-                  selectedRegion === region.value
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-transparent text-muted-foreground border-[hsl(var(--bureau-border)/0.5)] hover:border-bureau-border hover:text-foreground"
-                }`}
-              >
-                {region.label}
-              </button>
-            ))}
-          </div>
+          {/* State Filters — compact typewriter labels, built from the data */}
+          {stateChips.length > 0 && (
+            <div
+              role="group"
+              aria-label="Filter by state"
+              className="flex flex-wrap gap-1.5 justify-center items-center"
+            >
+              {[{ value: "all", label: "All", count: cryptids.length }, ...stateChips].map((chip) => {
+                const active = selectedState === chip.value;
+                return (
+                  <button
+                    key={chip.value}
+                    onClick={() => handleFilterChange(chip.value)}
+                    aria-pressed={active}
+                    aria-label={`${chip.label}, ${chip.count} files`}
+                    className={`relative inline-flex items-baseline gap-1.5 font-typewriter text-xs tracking-wide px-2.5 py-1 rounded-sm border transition-colors duration-150 after:absolute after:inset-x-0 after:-inset-y-2.5 after:content-[""] ${
+                      active
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-transparent text-muted-foreground border-[hsl(var(--bureau-border)/0.5)] hover:border-bureau-border hover:text-foreground"
+                    }`}
+                  >
+                    {chip.label}
+                    <span
+                      aria-hidden="true"
+                      className={`text-tag tabular-nums ${active ? "text-primary-foreground/80" : "text-bureau-ink-muted"}`}
+                    >
+                      {chip.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Active Filter Chips */}
           {hasActiveFilters && (
@@ -186,9 +200,9 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
               <span className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter">
                 Filing:
               </span>
-              {selectedRegion !== "all" && (
+              {selectedState !== "all" && (
                 <LabelTape onRemove={() => handleFilterChange("all")}>
-                  {selectedRegion}
+                  {selectedStateLabel}
                 </LabelTape>
               )}
               {searchQuery && (
@@ -200,7 +214,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                 <button
                   onClick={() => {
                     setSearchQuery("");
-                    setSelectedRegion("all");
+                    setSelectedState("all");
                     setVisibleCount(INITIAL_VISIBLE);
                   }}
                   className="text-xs font-typewriter text-muted-foreground hover:text-foreground transition-colors"
@@ -260,7 +274,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
               <Button
                 onClick={() => {
                   setSearchQuery("");
-                  setSelectedRegion("all");
+                  setSelectedState("all");
                   setVisibleCount(INITIAL_VISIBLE);
                 }}
                 variant="outline"

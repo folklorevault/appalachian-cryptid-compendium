@@ -11,6 +11,7 @@ const listFields = `
   location,
   coordinates,
   region,
+  states,
   dangerLevel,
   description,
   image,

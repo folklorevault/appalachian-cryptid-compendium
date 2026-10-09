@@ -102,6 +102,8 @@ export interface SanityCryptidListItem {
   location: string
   coordinates?: SanityGeopoint
   region: 'Appalachia' | 'Southeast' | 'Southern'
+  /** State codes / "across-appalachia" — see src/lib/states.ts */
+  states?: string[]
   dangerLevel: 'Low' | 'Medium' | 'High'
   description?: string
   image?: SanityImage
