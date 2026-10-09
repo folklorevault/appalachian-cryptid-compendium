@@ -287,7 +287,7 @@ All colors MUST be HSL.
      The archive after hours: the same paper world with the lamps down.
      Warm brown-black desk, dim manila stock, parchment ink, and Filing
      Green lifted just enough to read. Toggled by .dark on <html>
-     (src/lib/theme.ts); with no saved choice it follows the OS. */
+     (src/lib/theme.ts); light is the default, dark is opt-in. */
   .dark {
     color-scheme: dark;
 
@@ -740,6 +740,29 @@ All colors MUST be HSL.
 }
 
 /* Dark mode adjustments */
+/* Typography plugin (bulletin bodies): prose-stone hard-codes near-black
+   for bold, links, headings and quotes, which vanish on the night-shift
+   desk. Re-point its color variables at the theme tokens in dark only;
+   light keeps prose-stone exactly as approved. */
+.dark .prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-lead: hsl(var(--muted-foreground));
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--muted-foreground));
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-quote-borders: hsl(var(--primary));
+  --tw-prose-captions: hsl(var(--muted-foreground));
+  --tw-prose-code: hsl(var(--foreground));
+  --tw-prose-pre-code: hsl(var(--foreground));
+  --tw-prose-pre-bg: hsl(var(--muted));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
+}
+
 .dark .memo-paper {
   background: linear-gradient(
     180deg,

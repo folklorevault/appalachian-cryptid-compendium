@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 
@@ -26,21 +26,6 @@ function applyTheme(dark: boolean) {
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
-  // With no saved choice, keep following the OS as it flips (e.g. at sunset).
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const onSystemChange = (e: MediaQueryListEvent) => {
-      try {
-        if (localStorage.getItem(THEME_STORAGE_KEY)) return;
-      } catch {
-        // Storage blocked: following the OS is the only option anyway.
-      }
-      applyTheme(e.matches);
-    };
-    media.addEventListener("change", onSystemChange);
-    return () => media.removeEventListener("change", onSystemChange);
-  }, []);
 
   const toggle = () => {
     const next = !isDark;

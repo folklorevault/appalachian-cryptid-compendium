@@ -74,12 +74,9 @@ export const metadata: Metadata = {
   },
 };
 
-// Browser chrome matches the classification stripe in each theme.
+// Browser chrome matches the classification stripe (same green in both themes).
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#3a5a47" },
-    { media: "(prefers-color-scheme: dark)", color: "#3a5a47" },
-  ],
+  themeColor: "#3a5a47",
 };
 
 export default function RootLayout({
