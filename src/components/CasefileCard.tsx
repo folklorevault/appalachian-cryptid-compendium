@@ -5,6 +5,7 @@ import { MapPin, ArrowRight } from "lucide-react";
 import { memo } from "react";
 import { urlFor } from "@/lib/sanity/image";
 import { LabelTape } from "@/components/EvidenceChip";
+import { ACROSS_APPALACHIA, stateName } from "@/lib/states";
 import type { SanityCryptidListItem, SanityAnomalyListItem } from "@/types/sanity";
 
 type CasefileType = "cryptid" | "anomaly";
@@ -25,7 +26,12 @@ export const CasefileCard = memo(({ type, data, priority = false }: CasefileCard
     gridImage,
   } = data;
 
-  const region = data.region;
+  // Cryptids file by state (matches the homepage filter); anomalies still file by region.
+  const states = type === "cryptid" ? (data as SanityCryptidListItem).states : undefined;
+  const filingTag = states?.length
+    ? states.map((code) => (code === ACROSS_APPALACHIA ? "Appalachia" : code)).join(" · ")
+    : data.region;
+  const filingTitle = states?.length ? states.map(stateName).join(", ") : undefined;
 
   // Bureau classification is a cryptid-only field; anomalies fall through
   const classification =
@@ -105,8 +111,10 @@ export const CasefileCard = memo(({ type, data, priority = false }: CasefileCard
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-primary shrink-0" />
             <span className="text-foreground truncate">{location}</span>
-            {region && (
-              <LabelTape className="ml-auto shrink-0">{region}</LabelTape>
+            {filingTag && (
+              <LabelTape className="ml-auto shrink-0">
+                {filingTitle ? <abbr title={filingTitle} className="no-underline">{filingTag}</abbr> : filingTag}
+              </LabelTape>
             )}
           </div>
 
