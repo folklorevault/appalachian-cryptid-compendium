@@ -65,6 +65,8 @@
   --color-bureau-border: hsl(var(--bureau-border));
   --color-bureau-paper: hsl(var(--bureau-paper));
   --color-bureau-stamp-ink: hsl(var(--bureau-stamp-ink));
+  --color-bureau-rust: hsl(var(--bureau-rust));
+  --color-bureau-rust-ink: hsl(var(--bureau-rust-ink));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -98,6 +100,10 @@
   /* Page hero H1 size (index pages, quiz, witness form). Was the arbitrary
      text-[clamp(2.2rem,5.5vw,3.75rem)] repeated across 7 pages. */
   --text-hero: clamp(2.2rem, 5.5vw, 3.75rem);
+
+  /* Ink-plate display size (Anomalies Desk band headline). One step past
+     --text-hero so a full-bleed dark band can carry a single loud line. */
+  --text-plate: clamp(2.4rem, 6vw, 4.75rem);
 
   /* Hard offset shadow for pressable paper controls (quiz options, copy
      buttons). Tracks --foreground so it inverts cleanly in dark mode. */
@@ -231,6 +237,13 @@ All colors MUST be HSL.
     /* Stamp ink indirection: brightens in dark mode without rippling
        --bureau-stamp through every light-mode consumer. */
     --bureau-stamp-ink: var(--bureau-stamp);
+
+    /* Rust on bureau-ink plates (Anomalies Desk band). The plate stays dark
+       in both themes, so these are not redefined under .dark.
+       rust = large display type only (3.6:1 on --bureau-ink);
+       rust-ink = small labels and buttons (4.5:1 on --bureau-ink). */
+    --bureau-rust: 8 50% 62%;
+    --bureau-rust-ink: 10 55% 68%;
 
     /* Manila folder stock — gradient stops for case folders, tabs, drawer chips */
     --bureau-folder-hi: 40 42% 80%;

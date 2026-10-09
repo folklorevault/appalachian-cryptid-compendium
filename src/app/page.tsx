@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { fetchCryptids, fetchBulletins } from "@/lib/sanity/fetchers";
+import {
+  fetchCryptids,
+  fetchBulletins,
+  fetchAnomalies,
+  fetchHomepageAnomaliesDesk,
+} from "@/lib/sanity/fetchers";
 import { CryptidCaseFileIndex } from "@/components/CryptidCaseFileIndex";
 import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
@@ -8,6 +13,7 @@ import { DeferredMount } from "@/components/DeferredMount";
 import { FeaturedCryptid } from "@/components/FeaturedCryptid";
 import { BulletinTeaser } from "@/components/BulletinTeaser";
 import { SightingsMapTeaser } from "@/components/SightingsMapTeaser";
+import { AnomaliesDeskBand } from "@/components/AnomaliesDeskBand";
 import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { Footer } from "@/components/Footer";
 
@@ -21,9 +27,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [cryptids, bulletins] = await Promise.all([
+  const [cryptids, bulletins, anomalies, anomaliesDesk] = await Promise.all([
     fetchCryptids(),
     fetchBulletins(),
+    fetchAnomalies(),
+    fetchHomepageAnomaliesDesk(),
   ]);
 
   const featuredCryptid =
@@ -100,7 +108,7 @@ export default async function Home() {
                 <span aria-hidden="true">Also on file: </span>
                 <Link
                   href="/map"
-                  className="text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                  className="whitespace-nowrap text-primary border-b border-dotted border-primary/60 hover:border-solid"
                 >
                   Sightings Map
                 </Link>
@@ -109,9 +117,18 @@ export default async function Home() {
                 </span>
                 <Link
                   href="/bulletins"
-                  className="text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                  className="whitespace-nowrap text-primary border-b border-dotted border-primary/60 hover:border-solid"
                 >
                   Bureau Bulletins
+                </Link>
+                <span aria-hidden="true" className="text-foreground/30 mx-2">
+                  ·
+                </span>
+                <Link
+                  href="/anomalies"
+                  className="whitespace-nowrap text-primary border-b border-dotted border-primary/60 hover:border-solid"
+                >
+                  Anomalies Desk
                 </Link>
               </p>
             </div>
@@ -151,6 +168,9 @@ export default async function Home() {
           <CryptidFilters cryptids={cryptids} />
           <CryptidCaseFileIndex cryptids={cryptids} />
         </section>
+
+        {/* ── Anomalies Desk: things without bodies, edited in Sanity ─ */}
+        <AnomaliesDeskBand desk={anomaliesDesk} anomalies={anomalies} />
 
         {/* ── Sightings Map Teaser ──────────────────────────────────── */}
         <SightingsMapTeaser />

@@ -39,6 +39,8 @@ export async function POST(request: NextRequest) {
       if (slug) {
         revalidateTag(`anomaly-${slug}`, "max");
       }
+    } else if (type === "homepageAnomaliesDesk") {
+      revalidateTag("homepageAnomaliesDesk", "max");
     } else if (type === "linkInBio") {
       revalidateTag("linkInBio", "max");
     } else if (type === "bulletin") {

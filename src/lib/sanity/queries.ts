@@ -322,3 +322,28 @@ export const linkInBioQuery = `*[_type == "linkInBio"][0] {
     url
   }
 }`;
+
+// ── HOMEPAGE: ANOMALIES DESK ─────────────────────────────────
+
+export const homepageAnomaliesDeskQuery = `*[_type == "homepageAnomaliesDesk"][0] {
+  eyebrow,
+  headline,
+  intro,
+  typedLine,
+  countSuffix,
+  buttonLabel,
+  briefingBulletin-> { title, slug },
+  featuredAnomaly-> {
+    ${anomalyListFields}
+  },
+  featureHeadline,
+  featureHeadlineEmphasis,
+  featureRules,
+  featureBlurb,
+  featureImage
+}`;
+
+// Fallback feature when the singleton hasn't been created yet.
+export const anomalyListItemBySlugQuery = `*[_type == "anomaly" && slug.current == $slug][0] {
+  ${anomalyListFields}
+}`;
