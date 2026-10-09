@@ -276,3 +276,21 @@ export interface SanityLinkInBio {
   links: LinkInBioLink[]
   socials?: LinkInBioSocial[]
 }
+
+// ── Homepage: Anomalies Desk band (singleton) ───────────────
+
+export interface SanityHomepageAnomaliesDesk {
+  eyebrow: string
+  headline: string
+  intro: string
+  typedLine?: string
+  countSuffix?: string
+  buttonLabel: string
+  briefingBulletin?: { title: string; slug: SanitySlug } | null
+  featuredAnomaly?: SanityAnomalyListItem | null
+  featureHeadline?: string
+  featureHeadlineEmphasis?: string
+  featureRules?: string[]
+  featureBlurb?: string
+  featureImage?: (SanityImage & { alt?: string }) | null
+}

@@ -3,6 +3,7 @@ import anomaly from './anomaly'
 import sightingReport from './sightingReport'
 import bulletin from './bulletin'
 import linkInBio from './linkInBio'
+import homepageAnomaliesDesk from './homepageAnomaliesDesk'
 import caseFileSection from './caseFileSection'
 import sighting from './sighting'
 
@@ -16,4 +17,5 @@ export const schemaTypes = [
   sightingReport,
   bulletin,
   linkInBio,
+  homepageAnomaliesDesk,
 ]

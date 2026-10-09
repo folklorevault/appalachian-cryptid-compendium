@@ -25,6 +25,8 @@ import {
   bulletinSlugsWithDatesQuery,
   feedItemsQuery,
   linkInBioQuery,
+  homepageAnomaliesDeskQuery,
+  anomalyListItemBySlugQuery,
 } from "./queries";
 import { cryptids as staticCryptids } from "@/data/cryptids";
 import type {
@@ -37,6 +39,7 @@ import type {
   SanityBulletinListItem,
   SanityBulletin,
   SanityLinkInBio,
+  SanityHomepageAnomaliesDesk,
   FeedItem,
 } from "@/types/sanity";
 import { bulletins as staticBulletins, bulletinToListItem } from "@/data/bulletins";
@@ -452,4 +455,51 @@ export async function fetchFeedItems(): Promise<FeedItem[]> {
   return fallback
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
     .slice(0, 30);
+}
+
+// ── Homepage: Anomalies Desk band ────────────────────────────
+
+// Used until the singleton exists in Sanity, so the band ships with its copy.
+const fallbackAnomaliesDesk: SanityHomepageAnomaliesDesk = {
+  eyebrow: "The Anomalies Desk",
+  headline: "Not everything strange has a body.",
+  intro:
+    "Some things don't leave tracks. Some don't have names. There are lights nobody can account for, sounds nobody wants to answer, and places where something simply isn't right.",
+  typedLine: "The Bureau maintains a separate department for these matters.",
+  countSuffix: "None satisfactorily explained.",
+  buttonLabel: "Explore the Anomalies Desk",
+  featureHeadline: "If you hear whistling after dark,",
+  featureHeadlineEmphasis: "you didn't.",
+  featureRules: ["If you hear it, you didn't.", "If you whistled first, stop."],
+  featureBlurb:
+    "A whistle in the woods after dark. It's too clean, too close, sometimes answering when called back. Generations of mountain elders have passed this warning down without ever quite explaining what's doing the whistling.",
+};
+
+const FALLBACK_FEATURED_SLUG = "the-whistler";
+
+export async function fetchHomepageAnomaliesDesk(): Promise<SanityHomepageAnomaliesDesk> {
+  const tags = ["homepageAnomaliesDesk", "anomalies", "bulletins"];
+  const desk = await sanityFetch<SanityHomepageAnomaliesDesk | null>(
+    homepageAnomaliesDeskQuery,
+    undefined,
+    tags
+  );
+  if (desk) {
+    // Required desk copy falls back field by field. Feature fields don't, so
+    // the Whistler's headline never lands on a different featured anomaly.
+    return {
+      ...desk,
+      eyebrow: desk.eyebrow || fallbackAnomaliesDesk.eyebrow,
+      headline: desk.headline || fallbackAnomaliesDesk.headline,
+      intro: desk.intro || fallbackAnomaliesDesk.intro,
+      buttonLabel: desk.buttonLabel || fallbackAnomaliesDesk.buttonLabel,
+    };
+  }
+
+  const featuredAnomaly = await sanityFetch<SanityAnomalyListItem | null>(
+    anomalyListItemBySlugQuery,
+    { slug: FALLBACK_FEATURED_SLUG },
+    tags
+  );
+  return { ...fallbackAnomaliesDesk, featuredAnomaly };
 }
