@@ -56,7 +56,7 @@ export async function SightingsMapTeaser() {
         </div>
 
         <div
-          className="relative mx-auto w-full max-w-[560px] rounded-md bg-bureau-ink p-2.5 shadow-[0_8px_24px_-8px_hsl(var(--bureau-ink)/0.55),0_2px_0_0_hsl(var(--bureau-ink))]"
+          className="plate-stock relative mx-auto w-full max-w-[560px] rounded-md bg-bureau-ink p-2.5 shadow-[0_8px_24px_-8px_hsl(var(--bureau-ink)/0.55),0_2px_0_0_hsl(var(--bureau-ink))]"
         >
           <div className="relative overflow-hidden rounded-sm bg-bureau-manila-light/70 ring-1 ring-bureau-ink/30">
           <svg
@@ -158,10 +158,10 @@ export async function SightingsMapTeaser() {
                     y={cy}
                     textAnchor="middle"
                     fontFamily="'Special Elite', monospace"
-                    fontSize="14"
+                    fontSize="26"
                     fill="hsl(var(--bureau-ink))"
-                    fillOpacity="0.45"
-                    letterSpacing="2"
+                    fillOpacity="0.8"
+                    letterSpacing="3"
                   >
                     {s.code}
                   </text>

@@ -102,14 +102,11 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {drawer.map((cryptid, cardIndex) => (
+            {drawer.map((cryptid) => (
               <CasefileCard
                 key={cryptid._id}
                 type="cryptid"
                 data={cryptid}
-                priority={
-                  drawerIndex * LOAD_MORE_COUNT + cardIndex < 3
-                }
               />
             ))}
           </div>

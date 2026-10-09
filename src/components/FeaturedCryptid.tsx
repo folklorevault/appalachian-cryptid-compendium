@@ -33,16 +33,16 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
     <Link
       href={`/cryptid/${slug.current}`}
       className="group flex flex-col h-full rotate-[-0.35deg] motion-safe:transition-transform motion-safe:duration-200 motion-safe:hover:-translate-y-0.5"
-      aria-label={`Read full case file for ${name}`}
+      aria-label={`View Full Case File: ${name}`}
     >
       {/* Die-cut folder tab */}
-      <span className="case-folder-tab self-start font-typewriter text-tag tracking-[0.18em] uppercase text-bureau-ink dark:text-foreground">
+      <span className="case-folder-tab self-start font-typewriter text-tag tracking-eyebrow uppercase text-bureau-ink dark:text-foreground">
         Case File <span aria-hidden="true">—</span> No. ACB-
         {slug.current.slice(0, 4).replace(/-+$/, "").toUpperCase()}
       </span>
 
       {/* Folder body */}
-      <div className="case-folder flex-1 flex flex-col sm:flex-row gap-5 p-[22px] pb-[18px]">
+      <div className="case-folder flex-1 flex flex-col sm:flex-row gap-5 p-5.5 pb-4.5">
         {/* Photo as paperclipped print */}
         <div className="relative flex-none self-center sm:self-start rotate-[1.6deg]">
           <div className="paper-clip" aria-hidden="true" />
@@ -72,7 +72,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
           </div>
           {classification && (
             <span
-              className="classification-stamp absolute -bottom-2.5 -right-4 z-[2]"
+              className="plate-stock classification-stamp absolute -bottom-2.5 -right-4 z-[2]"
               aria-hidden="true"
             >
               <span style={{ filter: "url(#__svg-stamp-texture)" }}>
@@ -118,7 +118,7 @@ export function FeaturedCryptid({ cryptid }: FeaturedCryptidProps) {
           </dl>
 
           {description && (
-            <p className="font-sans text-[12.5px] text-foreground/85 leading-[1.6] line-clamp-3 mb-3">
+            <p className="font-sans text-sm text-foreground/85 leading-relaxed line-clamp-3 mb-3">
               {description}
             </p>
           )}

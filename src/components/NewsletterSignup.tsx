@@ -106,7 +106,7 @@ const CompactSignup = ({ initialEmail }: { initialEmail?: string }) => {
             placeholder="your email address"
             aria-invalid={state === "error" || undefined}
             aria-describedby={state === "error" && errorMsg ? "newsletter-compact-error" : undefined}
-            className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-1.5 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-hidden focus:border-primary/60 transition-colors"
+            className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/60 rounded-none px-0 py-1.5 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-hidden focus:border-solid focus:border-primary focus:bg-primary/5 transition-colors"
             disabled={state === "submitting"}
           />
           {state === "error" && errorMsg && (
@@ -286,7 +286,7 @@ const FullSignup = () => {
                   placeholder="operative.email@field-office.gov"
                   aria-invalid={state === "error" || undefined}
                   aria-describedby={state === "error" && errorMsg ? "newsletter-full-error" : undefined}
-                  className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/30 rounded-none px-0 py-2 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-hidden focus:border-primary/60 transition-colors"
+                  className="newsletter-input w-full bg-transparent border-0 border-b-2 border-dashed border-foreground/60 rounded-none px-0 py-2 font-typewriter text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-hidden focus:border-solid focus:border-primary focus:bg-primary/5 transition-colors"
                   disabled={state === "submitting"}
                 />
               </div>
@@ -319,12 +319,15 @@ const FullSignup = () => {
                   )}
                 </span>
               </button>
-              <Stamp
-                text="Form 104: Roster Addition"
-                variant="danger"
-                rotation={-6}
-                className="text-xs px-2 py-0.5 opacity-50 border-2"
-              />
+              {/* Decorative, like the site's other stamps: keep it out of the form's reading order */}
+              <span aria-hidden="true">
+                <Stamp
+                  text="Form 104: Roster Addition"
+                  variant="danger"
+                  rotation={-6}
+                  className="text-xs px-2 py-0.5 opacity-50 border-2"
+                />
+              </span>
             </div>
           </form>
 

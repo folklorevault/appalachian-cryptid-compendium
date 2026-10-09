@@ -18,7 +18,10 @@
   }
 }
 
-@theme {
+/* Colors are `inline` so utilities emit hsl(var(--token)) at the element,
+   not a value frozen at :root. That lets a subtree re-pin tokens (.dark on
+   <html>, .plate-stock on printed plates) and have utilities follow. */
+@theme inline {
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
@@ -67,7 +70,9 @@
   --color-bureau-stamp-ink: hsl(var(--bureau-stamp-ink));
   --color-bureau-rust: hsl(var(--bureau-rust));
   --color-bureau-rust-ink: hsl(var(--bureau-rust-ink));
+}
 
+@theme {
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -278,69 +283,109 @@ All colors MUST be HSL.
     --spacing: 0.25rem;
   }
 
+  /* ── Night shift (dark theme) ───────────────────────────────────────
+     The archive after hours: the same paper world with the lamps down.
+     Warm brown-black desk, dim manila stock, parchment ink, and Filing
+     Green lifted just enough to read. Toggled by .dark on <html>
+     (src/lib/theme.ts); with no saved choice it follows the OS. */
   .dark {
-    /* Dark mode - forest evening aesthetic */
-    --background: 150 15% 10%;
-    --foreground: 40 20% 88%;
+    color-scheme: dark;
 
-    --card: 150 12% 14%;
-    --card-foreground: 40 20% 88%;
+    --background: 28 20% 9%;
+    --foreground: 38 25% 86%;
 
-    --popover: 150 12% 14%;
-    --popover-foreground: 40 20% 88%;
+    --card: 30 16% 13%;
+    --card-foreground: 38 25% 86%;
 
-    --primary: 152 50% 50%;
-    --primary-foreground: 150 15% 10%;
+    --popover: 30 16% 13%;
+    --popover-foreground: 38 25% 86%;
 
-    --secondary: 28 50% 50%;
-    --secondary-foreground: 150 15% 10%;
+    --primary: 150 30% 58%;
+    --primary-foreground: 28 20% 9%;
 
-    --muted: 150 10% 22%;
-    --muted-foreground: 40 12% 60%;
+    --secondary: 28 45% 58%;
+    --secondary-foreground: 28 20% 9%;
 
-    --accent: 28 60% 55%;
-    --accent-foreground: 150 15% 10%;
+    --muted: 30 12% 19%;
+    --muted-foreground: 36 14% 68%;
 
-    --destructive: 0 70% 55%;
-    --destructive-foreground: 150 15% 10%;
+    --accent: 28 55% 60%;
+    --accent-foreground: 28 20% 9%;
 
-    --border: 150 10% 25%;
-    --input: 150 10% 25%;
-    --ring: 152 50% 50%;
-    --sidebar-background: 150 15% 10%;
-    --sidebar-foreground: 40 20% 88%;
-    --sidebar-primary: 152 50% 50%;
-    --sidebar-primary-foreground: 150 15% 10%;
-    --sidebar-accent: 150 12% 14%;
-    --sidebar-accent-foreground: 40 20% 88%;
-    --sidebar-border: 150 10% 25%;
-    --sidebar-ring: 152 50% 50%;
-    --chart-1: 152 50% 50%;
-    --chart-2: 28 60% 55%;
-    --chart-3: 40 30% 60%;
-    --chart-4: 180 40% 45%;
-    --chart-5: 45 70% 50%;
-    --sidebar: 150 15% 10%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.3);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.3);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.4), 0 1px 2px -1px hsl(0 0% 0% / 0.4);
-    --shadow: 0 1px 3px 0px hsl(152 50% 50% / 0.15), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
-    --shadow-md: 0 1px 3px 0px hsl(152 50% 50% / 0.2), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
-    --shadow-lg: 0 1px 3px 0px hsl(152 50% 50% / 0.25), 0 4px 6px -1px hsl(0 0% 0% / 0.3);
-    --shadow-xl: 0 1px 3px 0px hsl(152 50% 50% / 0.3), 0 8px 10px -1px hsl(0 0% 0% / 0.3);
-    --shadow-2xl: 0 1px 3px 0px hsl(152 50% 50% / 0.35);
-    --radius: 0.5rem;
+    --destructive: 4 70% 64%;
+    --destructive-foreground: 28 20% 9%;
 
-    --bureau-stamp-ink: 8 50% 58%;
+    --border: 30 12% 24%;
+    --input: 30 12% 30%;
+    --ring: 150 30% 58%;
 
-    --bureau-folder-hi: 150 10% 20%;
-    --bureau-folder-lo: 150 9% 17%;
-    --bureau-folder-deep: 150 10% 15%;
+    --sidebar-background: 28 20% 9%;
+    --sidebar-foreground: 38 25% 86%;
+    --sidebar-primary: 150 30% 58%;
+    --sidebar-primary-foreground: 28 20% 9%;
+    --sidebar-accent: 30 16% 13%;
+    --sidebar-accent-foreground: 38 25% 86%;
+    --sidebar-border: 30 12% 24%;
+    --sidebar-ring: 150 30% 58%;
+    --sidebar: 28 20% 9%;
 
-    --bulletin-field-terminology: 152 35% 62%;
-    --bulletin-regional-analysis: 40 60% 62%;
-    --bulletin-cultural-brief: 270 30% 70%;
-    --bulletin-operational-notice: 160 30% 62%;
+    --chart-1: 150 30% 58%;
+    --chart-2: 28 55% 60%;
+    --chart-3: 38 25% 70%;
+    --chart-4: 180 30% 55%;
+    --chart-5: 45 60% 60%;
+
+    /* Shadows fall on a dark desk: deeper, never a colored glow. */
+    --shadow-2xs: 0 1px 3px 0px hsl(25 40% 3% / 0.35);
+    --shadow-xs: 0 1px 3px 0px hsl(25 40% 3% / 0.35);
+    --shadow-sm: 0 1px 3px 0px hsl(25 40% 3% / 0.45), 0 1px 2px -1px hsl(25 40% 3% / 0.45);
+    --shadow: 0 1px 3px 0px hsl(25 40% 3% / 0.5), 0 1px 2px -1px hsl(25 40% 3% / 0.5);
+    --shadow-md: 0 1px 3px 0px hsl(25 40% 3% / 0.5), 0 2px 4px -1px hsl(25 40% 3% / 0.5);
+    --shadow-lg: 0 1px 3px 0px hsl(25 40% 3% / 0.5), 0 4px 6px -1px hsl(25 40% 3% / 0.5);
+    --shadow-xl: 0 1px 3px 0px hsl(25 40% 3% / 0.5), 0 8px 10px -1px hsl(25 40% 3% / 0.5);
+    --shadow-2xl: 0 1px 3px 0px hsl(25 40% 3% / 0.6);
+
+    /* Bureau stock and inks invert as a family: paper tokens become dim
+       stock, ink tokens become parchment, so every "ink on manila" pairing
+       keeps its contrast without per-component dark: overrides. Physical
+       plates opt out with .plate-stock. */
+    --bureau-manila: 32 16% 20%;
+    --bureau-manila-dark: 32 16% 16%;
+    --bureau-manila-light: 32 14% 23%;
+    --bureau-paper: 30 14% 15%;
+    --bureau-ink: 38 25% 86%;
+    --bureau-ink-muted: 36 16% 72%;
+    --bureau-ink-dark: 40 30% 94%;
+    --bureau-border: 30 12% 32%;
+    --bureau-stamp: 8 48% 62%;
+    --bureau-stamp-ink: 8 52% 66%;
+
+    --bureau-folder-hi: 32 16% 21%;
+    --bureau-folder-lo: 32 15% 18%;
+    --bureau-folder-deep: 32 15% 16%;
+
+    --bulletin-field-terminology: 152 32% 64%;
+    --bulletin-regional-analysis: 40 55% 64%;
+    --bulletin-cultural-brief: 270 30% 74%;
+    --bulletin-operational-notice: 160 28% 64%;
+  }
+
+  /* Physical plates (the Anomalies Desk ink plate, the sighting-grid map,
+     the classification stripe) are printed objects: their stock and ink
+     don't change when the room lights do, so they pin the day values. */
+  .plate-stock {
+    --primary: 152 35% 28%;
+    --primary-foreground: 40 33% 96%;
+    --bureau-manila: 40 40% 78%;
+    --bureau-manila-dark: 40 35% 68%;
+    --bureau-manila-light: 40 35% 88%;
+    --bureau-paper: 40 30% 96%;
+    --bureau-ink: 25 30% 22%;
+    --bureau-ink-muted: 25 24% 28%;
+    --bureau-ink-dark: 25 30% 12%;
+    --bureau-border: 35 30% 72%;
+    --bureau-stamp: 8 45% 28%;
+    --bureau-stamp-ink: var(--bureau-stamp);
   }
 }
 
@@ -698,14 +743,14 @@ All colors MUST be HSL.
 .dark .memo-paper {
   background: linear-gradient(
     180deg,
-    hsl(150 12% 16%) 0%,
-    hsl(150 10% 15%) 50%,
-    hsl(150 12% 14%) 100%
+    hsl(30 12% 16%) 0%,
+    hsl(30 10% 15%) 50%,
+    hsl(30 12% 14%) 100%
   );
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.3),
     0 4px 16px rgba(0, 0, 0, 0.2),
-    inset 0 0 40px rgba(100, 120, 100, 0.05);
+    inset 0 0 40px rgba(120, 100, 80, 0.05);
 }
 
 .dark .memo-paper::before {
@@ -716,23 +761,23 @@ All colors MUST be HSL.
 .dark .paper-clip {
   background: linear-gradient(
     180deg,
-    hsl(150 5% 45%) 0%,
-    hsl(150 5% 35%) 50%,
-    hsl(150 5% 28%) 100%
+    hsl(30 5% 45%) 0%,
+    hsl(30 5% 35%) 50%,
+    hsl(30 5% 28%) 100%
   );
 }
 
 .dark .paper-clip::before {
-  background: hsl(150 5% 22%);
-  box-shadow: 0 5px 0 hsl(150 5% 22%);
+  background: hsl(30 5% 22%);
+  box-shadow: 0 5px 0 hsl(30 5% 22%);
 }
 
 .dark .hole-punch {
   background: radial-gradient(
     circle,
-    hsl(150 10% 12%) 0%,
-    hsl(150 10% 10%) 40%,
-    hsl(150 12% 14%) 70%,
+    hsl(30 10% 12%) 0%,
+    hsl(30 10% 10%) 40%,
+    hsl(30 12% 14%) 70%,
     transparent 71%
   );
   box-shadow:
@@ -757,7 +802,7 @@ All colors MUST be HSL.
 }
 
 .dark .memo-meta-value {
-  border-bottom-color: hsl(150 10% 35%);
+  border-bottom-color: hsl(30 10% 35%);
 }
 
 .dark .memo-body {
@@ -765,11 +810,11 @@ All colors MUST be HSL.
 }
 
 .dark .memo-form-ref {
-  color: hsl(40 10% 50%);
+  color: hsl(40 12% 62%);
 }
 
 .dark .memo-footer {
-  color: hsl(40 10% 45%);
+  color: hsl(40 12% 60%);
 }
 
 /* Hover lift effect */
@@ -978,9 +1023,6 @@ All colors MUST be HSL.
   background: hsl(40 15% 80%);
 }
 
-.dark .classification-stamp {
-  background: hsl(150 15% 10% / 0.5);
-}
 
 /* Drawer label chip (cryptid grid dividers) */
 .drawer-chip {
@@ -1029,11 +1071,11 @@ All colors MUST be HSL.
 
 /* Dark mode input adjustments */
 .dark .newsletter-input {
-  border-bottom-color: hsl(40 15% 50%);
+  border-bottom-color: hsl(40 15% 55%);
 }
 
 .dark .newsletter-input:focus {
-  border-bottom-color: hsl(152 50% 50%);
+  border-bottom-color: hsl(var(--primary));
 }
 
 /* ============================================
@@ -1069,13 +1111,13 @@ All colors MUST be HSL.
 .dark .supply-card-inner {
   background: linear-gradient(
     135deg,
-    hsl(150 10% 18%) 0%,
-    hsl(150 8% 16%) 50%,
-    hsl(150 10% 15%) 100%
+    hsl(30 10% 18%) 0%,
+    hsl(30 8% 16%) 50%,
+    hsl(30 10% 15%) 100%
   );
   box-shadow:
     0 1px 4px rgba(0, 0, 0, 0.25),
-    inset 0 0 20px rgba(100, 120, 100, 0.04);
+    inset 0 0 20px rgba(120, 100, 80, 0.04);
 }
 
 .dark .supply-card-inner::before {
@@ -1273,7 +1315,7 @@ All colors MUST be HSL.
 
 .dark .index-card {
   --rule: hsl(205 30% 70% / 0.12);
-  background-color: hsl(150 10% 18%);
+  background-color: hsl(30 10% 18%);
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.4),
     0 6px 14px -4px rgba(0, 0, 0, 0.5),
@@ -1281,7 +1323,7 @@ All colors MUST be HSL.
 }
 
 .dark .index-card-under {
-  background: hsl(150 9% 14%);
+  background: hsl(30 9% 14%);
 }
 
 .dark .index-card::after {
