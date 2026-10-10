@@ -58,7 +58,7 @@ export function FieldAgentIdCard({ result, headingId, agentNo, matchPct, issued 
               </div>
             )}
           </div>
-          <span aria-hidden="true" className="classification-stamp absolute -bottom-3 -right-4">
+          <span aria-hidden="true" className="plate-stock classification-stamp absolute -bottom-3 -right-4">
             Assigned
           </span>
         </div>

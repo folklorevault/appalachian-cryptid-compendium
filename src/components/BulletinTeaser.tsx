@@ -28,7 +28,7 @@ function CategoryTag({ category }: { category: BulletinCategory }) {
   const cat = CATEGORIES[category];
   return (
     <span
-      className="font-typewriter font-bold uppercase tracking-[0.14em] text-tag shrink-0"
+      className="font-typewriter font-bold uppercase tracking-label text-tag shrink-0"
       style={{ color: `hsl(var(${cat.cssVar}))` }}
     >
       {cat.abbr}
@@ -45,7 +45,7 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
 
   return (
     <div className="h-full rotate-[0.4deg]">
-      <div className="memo-paper memo-flat relative h-full flex flex-col border border-border/60 rounded-[2px] pt-5 pb-4 pl-10 pr-[22px]">
+      <div className="memo-paper memo-flat relative h-full flex flex-col border border-border/60 rounded-xs pt-5 pb-4 pl-10 pr-5.5">
         {/* Hole punches along the left edge */}
         <div className="hole-punch" style={{ top: "26px" }} aria-hidden="true" />
         <div
@@ -72,9 +72,10 @@ export function BulletinTeaser({ bulletins }: BulletinTeaserProps) {
             <br />
             Department of Unexplained Phenomena
           </div>
-          <div className="memo-title mt-3 mb-0">
+          {/* Own h2 so the bulletin h3s don't nest under the featured cryptid's h2 */}
+          <h2 className="memo-title mt-3 mb-0">
             Bulletin Index — Recent Dispatches
-          </div>
+          </h2>
         </div>
 
         {/* Body */}

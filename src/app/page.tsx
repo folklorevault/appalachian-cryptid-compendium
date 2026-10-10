@@ -185,7 +185,7 @@ export default async function Home() {
         {/* ── Newsletter (the memo carries its own heading) ─────────── */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">
           <div className="max-w-6xl mx-auto">
-            <DeferredMount minHeight={460}>
+            <DeferredMount minHeight={460} mobileMinHeight={590}>
               <NewsletterSignup />
             </DeferredMount>
           </div>

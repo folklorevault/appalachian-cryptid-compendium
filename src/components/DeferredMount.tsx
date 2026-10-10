@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 interface DeferredMountProps {
   children: ReactNode;
@@ -9,6 +9,11 @@ interface DeferredMountProps {
    * when the real content mounts. Set this to the component's natural height.
    */
   minHeight: number;
+  /**
+   * Reserved height below the `sm` breakpoint, for children that grow taller
+   * when they wrap on phones. Defaults to `minHeight`.
+   */
+  mobileMinHeight?: number;
   /**
    * How far before the placeholder enters the viewport to begin mounting.
    * A generous margin means content is ready before the user scrolls to it,
@@ -32,6 +37,7 @@ interface DeferredMountProps {
 export function DeferredMount({
   children,
   minHeight,
+  mobileMinHeight,
   rootMargin = "300px",
   className,
 }: DeferredMountProps) {
@@ -69,8 +75,13 @@ export function DeferredMount({
     <div
       ref={ref}
       aria-hidden="true"
-      className={className}
-      style={{ minHeight }}
+      className={`min-h-(--deferred-h-mobile) sm:min-h-(--deferred-h) ${className ?? ""}`}
+      style={
+        {
+          "--deferred-h": `${minHeight}px`,
+          "--deferred-h-mobile": `${mobileMinHeight ?? minHeight}px`,
+        } as CSSProperties
+      }
     />
   );
 }

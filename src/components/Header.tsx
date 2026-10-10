@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface NavItem {
   href: string;
@@ -63,6 +64,9 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-card border-b-2 border-border paper-texture-nav">
+      {/* Theme switch pinned to the header's right edge so the title stays centered */}
+      <ThemeToggle className="absolute right-2 top-1/2 -translate-y-1/2 sm:right-4" />
+
       {/* Row 1: Centered title */}
       <div className="pt-1 pb-0.5 px-4">
         <Link

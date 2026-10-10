@@ -35,7 +35,7 @@ export function AnomaliesDeskBand({ desk, anomalies }: AnomaliesDeskBandProps) {
 
   return (
     <section
-      className="relative overflow-hidden border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
+      className="plate-stock relative overflow-hidden border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
       aria-labelledby="anomalies-desk-heading"
     >
       <div className="relative z-[2] max-w-6xl mx-auto px-6 lg:px-8 pt-12 pb-12 lg:pt-16 lg:pb-14">

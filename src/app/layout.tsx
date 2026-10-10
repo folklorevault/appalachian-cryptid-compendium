@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
@@ -6,6 +6,7 @@ import { ClassificationStripe } from "@/components/ClassificationStripe";
 import { Header } from "@/components/Header";
 import { SiteHeaderGate } from "@/components/SiteHeaderGate";
 import { ConsoleGreeting } from "@/components/bureau/ConsoleGreeting";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 const workSans = localFont({
@@ -71,9 +72,11 @@ export const metadata: Metadata = {
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
   },
-  other: {
-    "theme-color": "#3a5a47",
-  },
+};
+
+// Browser chrome matches the classification stripe (same green in both themes).
+export const viewport: Viewport = {
+  themeColor: "#3a5a47",
 };
 
 export default function RootLayout({
@@ -84,6 +87,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Sets .dark before first paint; see src/lib/theme.ts */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
       </head>
