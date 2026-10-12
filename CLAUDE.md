@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The Appalachian Cryptid Compendium is a Next.js web application for cataloging cryptid sightings in the Appalachian region. Built with a "forgotten bureau field guide" aesthetic.
 
 - **Framework**: Next.js 16 (App Router) + React 19 + TypeScript
-- **Styling**: Tailwind CSS + shadcn/ui
+- **Styling**: Tailwind CSS v4 (CSS-first — tokens live in `@theme` in `src/app/globals.css`, no `tailwind.config`) + shadcn/ui
 - **CMS**: Sanity CMS (project ID: `8thljucm`, dataset: `production`)
 - **Hosting**: Vercel
 - **Map**: Mapbox GL JS for interactive sighting maps
@@ -25,6 +25,7 @@ mise build            # Production build
 mise start            # Serve the production build
 mise lint             # ESLint
 mise typecheck        # tsc --noEmit
+mise check:csp        # Verify the CSP still allows BotID's challenge (add --url <url> for live)
 mise borders:generate # Re-run the Appalachian state-borders generator
 mise studio:dev       # Run the Sanity studio locally
 mise studio:deploy    # Deploy the Sanity studio
@@ -48,7 +49,13 @@ Pages live in `src/app/` using Next.js file-based routing:
 - `map/page.tsx` — Interactive Mapbox sighting map
 - `report/page.tsx` — Public sighting report form
 - `about/page.tsx` — About page
-- `sitemap.ts` — Dynamic sitemap generation
+- `shop/page.tsx` — Field supply shop
+- `links/page.tsx` — Link-in-bio dossier (hidden from nav)
+- `bureau/which-cryptid-are-you/` — Cryptid affinity quiz (ACD-41)
+- `bureau/form-acd-27b/page.tsx` — Hidden mad-lib witness form
+- `contact/`, `privacy/`, `terms/`, `newsletter-success/`, `newsletter-error/` — Utility pages
+- `rss.xml/` — Bulletins RSS feed
+- `sitemap.ts`, `robots.ts` — Dynamic sitemap and robots generation
 - `not-found.tsx` — 404 page
 
 ### API Routes
@@ -61,16 +68,14 @@ Pages live in `src/app/` using Next.js file-based routing:
 
 - **Sanity Studio**: `sanity/appalachian-cryptid/` — **this is the deployed studio**
   - Studio URL: `appalachian-cryptid.sanity.studio`
-  - Schema: `sanity/appalachian-cryptid/schemaTypes/cryptid.ts`
+  - Schemas: `sanity/appalachian-cryptid/schemaTypes/` — `cryptid`, `anomaly`, `bulletin`, `sighting`, `sightingReport`, `caseFileSection`, `homepageAnomaliesDesk` (singleton), `linkInBio`
 - **Client**: `src/lib/sanity/client.ts` — Sanity client config
 - **Image helper**: `src/lib/sanity/image.ts` — `urlFor()` image URL builder
 - **GROQ queries**: `src/lib/sanity/queries.ts`
 - **Data fetchers**: `src/lib/sanity/fetchers.ts` — Server-side fetchers with static fallback
 - **Legacy re-export**: `src/lib/sanity.ts` — Shim re-exporting from `src/lib/sanity/`
 
-**IMPORTANT**: There are two Sanity folders — always use `sanity/appalachian-cryptid/` for schema changes:
-- `sanity/` — Legacy/partial setup (do not use)
-- `sanity/appalachian-cryptid/` — **Active studio that deploys**
+Schema changes go in `sanity/appalachian-cryptid/` and only take effect after `mise studio:deploy`.
 
 ### Dual Data Mode (Sanity + Static Fallback)
 
@@ -91,8 +96,37 @@ This allows development without a configured Sanity project.
 - **shadcn/ui components** in `src/components/ui/` (do not modify directly)
 - **Custom components** in `src/components/`
 - **Path alias**: `@/` maps to `src/`
-- **Fonts**: Self-hosted in `public/fonts/` — Work Sans, Rokkitt, Special Elite
+- **Fonts**: Self-hosted in `public/fonts/` — Work Sans (`font-sans`, body), Rokkitt (`font-display`, headings and numerals), Special Elite (`font-typewriter`, labels and UI text)
+- **Dark mode** ("Night Shift"): class-based (`.dark` on `<html>`), driven by `src/lib/theme.ts` + `ThemeToggle`. Colors invert through the HSL tokens in `globals.css`, so use tokens and check both themes
 - **Metadata**: Root layout sets `metadataBase` and default OG/Twitter tags; pages override via `export const metadata` or `generateMetadata()`
+
+### Design Consistency
+
+Every type size, tracking value and color should trace back to a named token in `src/app/globals.css`. Do not introduce arbitrary values (`text-[28px]`, `tracking-[0.18em]`, raw hex/HSL); if no token fits, add a named one to `@theme` with a comment saying what it is for.
+
+**Type scale** — the same role gets the same size on every page:
+
+| Role | Class | Size |
+|---|---|---|
+| Index-page H1 (homepage, `/anomalies`, `/bulletins`, `/shop`, quiz) and anomaly detail H1 | `text-hero` + `font-display font-bold` | clamp, 64px max |
+| Homepage Anomalies Desk band headline only | `text-plate` | clamp, 76px max |
+| Cryptid detail H1 | `text-title` | 28px |
+| Section H2, card and ledger-row titles | `text-xl` | 20px |
+| Hero lede, long-form body | `text-base leading-relaxed` | 16px |
+| Card descriptions, secondary copy | `text-sm` | 14px |
+| Typewriter eyebrows, notes, chips, meta | `text-xs` | 12px |
+| Catalog rows, inline marks | `text-caption` | 11px |
+| Uppercase bureau labels, table heads (the floor — nothing functional goes smaller) | `text-tag` | 10px |
+
+**Typewriter tracking**: `tracking-eyebrow` (0.2em, prominent uppercase kickers), `tracking-label` (0.15em, sub-labels, table heads), `tracking-type` (0.05em, running typewriter text).
+
+**Color**: use the semantic (`foreground`, `muted-foreground`, `primary`, `border`) and `bureau-*` tokens. Dark "ink plate" sections use `bg-bureau-ink` with `text-bureau-paper` / `text-bureau-manila-light` and `bureau-rust` accents.
+
+**Deliberate exceptions — do not "fix" these:**
+- Anomaly file numbers (`006` in the ledger at `text-4xl`/`text-5xl`; `text-7xl`/`text-8xl` on the detail page) are a signature device.
+- Marker and legend hex values in `CryptidMap` are intentional.
+
+When a new page or component copies an existing pattern (hero, ledger row, card, section head), copy its type classes too rather than re-choosing sizes. After a redesign of one section, compare its H1, lede and row titles against the homepage before shipping.
 
 ### Security Headers
 
@@ -113,9 +147,9 @@ CSP and security headers are configured in `next.config.ts` via the `headers()` 
 ## Sanity Studio Setup
 
 ```bash
-cd sanity/appalachian-cryptid && pnpm install
-pnpm run dev       # Local studio
-pnpm run deploy    # Deploy to sanity.studio
+cd sanity/appalachian-cryptid && pnpm install   # one-time
+mise studio:dev       # Local studio
+mise studio:deploy    # Deploy to sanity.studio
 ```
 
 ## Security Practices
@@ -131,5 +165,6 @@ When generating or modifying code:
 - When adding new routes, create a new directory in `src/app/` with a `page.tsx`
 - Dynamic routes use `generateStaticParams` for SSG and `generateMetadata` for per-page SEO
 - The `.env` file still has `VITE_` prefixed vars from the old Vite setup — the app uses `NEXT_PUBLIC_` prefixes now
-- The `scripts/` directory contains one-off migration scripts (not part of the running app)
+- The `scripts/` directory contains one-off migration scripts plus `check-csp.mjs` (the CSP guard run in CI); none are part of the running app
+- `AGENTS.md` mirrors this file for other agents — apply the same edit to both. `next dev` appends its own `nextjs-agent-rules` block to `AGENTS.md`; leave that block in place
 - `src/lib/sanity-queries.ts` and `src/lib/sanity-provider.ts` are legacy files from the Vite era — active code uses `src/lib/sanity/`
