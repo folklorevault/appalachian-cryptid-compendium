@@ -41,17 +41,12 @@ export const IncidentLog = ({
     entries.push(timed ? { time: timed[1], text: timed[2] } : { text: line });
   }
 
-  // Generate a pseudo-random time based on case number for consistency
-  const baseHour = caseNumber
-    ? (caseNumber.charCodeAt(0) % 12) + 19 // 19:00 - 06:00 (night hours)
-    : 21;
-
   return (
     <div className={cn("relative", className)}>
       {/* Teletype paper with perforated edges */}
       <div className="bg-bureau-paper border border-bureau-border rounded-none overflow-hidden shadow-md">
         {/* Perforated edge top */}
-        <div className="h-4 bg-bureau-manila-light border-b border-dashed border-bureau-border flex items-center justify-between px-2">
+        <div className="h-4 bg-bureau-manila-light border-b border-dashed border-bureau-border flex items-center justify-between px-2" aria-hidden="true">
           <div className="flex gap-1">
             {[...Array(20)].map((_, i) => (
               <div key={i} className="w-1.5 h-1.5 rounded-full bg-bureau-border" />
@@ -60,58 +55,55 @@ export const IncidentLog = ({
         </div>
 
         {/* Main content */}
-        <div className="p-4 font-typewriter text-xs leading-relaxed text-bureau-ink">
+        <div className="p-4 font-typewriter text-sm leading-relaxed text-bureau-ink">
           {/* Header block */}
           <div className="border-b-2 border-double border-bureau-border pb-3 mb-4">
-            <div className="text-center tracking-[0.3em] text-xs text-bureau-ink-muted">
-              ══════════ INCIDENT LOG ══════════
+            <div className="flex items-center gap-3 tracking-eyebrow text-xs text-bureau-ink-muted">
+              <span className="flex-1 border-t-4 border-double border-bureau-border" aria-hidden="true" />
+              INCIDENT LOG
+              <span className="flex-1 border-t-4 border-double border-bureau-border" aria-hidden="true" />
             </div>
             <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
               <div>
                 <span className="text-bureau-ink-muted">STATION:</span>{" "}
-                <span className="tracking-wider">{(stationLine ?? station).toUpperCase()}</span>
+                <span className="tracking-type">{(stationLine ?? station).toUpperCase()}</span>
               </div>
               <div>
                 <span className="text-bureau-ink-muted">CASE:</span>{" "}
-                <span className="tracking-wider">{caseNumber || "PENDING"}</span>
+                <span className="tracking-type">{caseNumber || "PENDING"}</span>
               </div>
               <div>
                 <span className="text-bureau-ink-muted">SUBJECT:</span>{" "}
-                <span className="tracking-wider">{anomalyName.toUpperCase()}</span>
+                <span className="tracking-type">{anomalyName.toUpperCase()}</span>
               </div>
               <div>
                 <span className="text-bureau-ink-muted">DATE:</span>{" "}
-                <span className="tracking-wider">[REDACTED]</span>
+                <span className="tracking-type">[REDACTED]</span>
               </div>
             </div>
           </div>
 
           {/* Log entries */}
           <div className="space-y-2">
-            {entries.map((entry, idx) => {
-              // Calculate fake timestamp for each entry
-              const hour = (baseHour + Math.floor(idx / 4)) % 24;
-              const minute = (idx * 7 + 13) % 60;
-              const timestamp =
-                entry.time ?? `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
-
-              return (
-                <div key={idx} className="flex gap-3">
+            {/* Only the editor's own times are printed; untimed lines run plain. */}
+            {entries.map((entry, idx) => (
+              <div key={idx} className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                {entry.time && (
                   <span className="text-bureau-ink-muted shrink-0 tabular-nums">
-                    {timestamp} HRS -
+                    {entry.time} HRS -
                   </span>
-                  <span className="uppercase tracking-wide">
-                    {entry.text}
-                  </span>
-                </div>
-              );
-            })}
+                )}
+                <span className="uppercase tracking-type">{entry.text}</span>
+              </div>
+            ))}
           </div>
 
           {/* End transmission */}
           <div className="mt-6 pt-3 border-t-2 border-double border-bureau-border">
-            <div className="text-center text-xs tracking-eyebrow text-bureau-ink-muted">
-              ─── END TRANSMISSION ───
+            <div className="flex items-center justify-center gap-3 text-xs tracking-eyebrow text-bureau-ink-muted">
+              <span className="w-8 border-t border-bureau-border" aria-hidden="true" />
+              END TRANSMISSION
+              <span className="w-8 border-t border-bureau-border" aria-hidden="true" />
             </div>
             <div className="text-center text-xs mt-2 text-muted-foreground">
               {statusLine ? statusLine.toUpperCase() : "CLASSIFICATION: RESTRICTED • RETAIN FOR RECORDS"}
@@ -120,7 +112,7 @@ export const IncidentLog = ({
         </div>
 
         {/* Perforated edge bottom */}
-        <div className="h-4 bg-bureau-manila-light border-t border-dashed border-bureau-border flex items-center justify-between px-2">
+        <div className="h-4 bg-bureau-manila-light border-t border-dashed border-bureau-border flex items-center justify-between px-2" aria-hidden="true">
           <div className="flex gap-1">
             {[...Array(20)].map((_, i) => (
               <div key={i} className="w-1.5 h-1.5 rounded-full bg-bureau-border" />

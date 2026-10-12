@@ -22,6 +22,11 @@ export const metadata: Metadata = {
 
 export default async function AnomaliesPage() {
   const anomalies = await fetchAnomalies();
+  if (anomalies.length === 0) {
+    // fetchAnomalies swallows Sanity errors and there is no static fallback,
+    // so an empty list here is an outage. Make it findable in the logs.
+    console.error("[anomalies] ledger rendered with 0 files: Sanity fetch failed or returned nothing");
+  }
 
   // File numbers follow creation order (oldest = 001) so a file keeps its
   // number as new ones arrive; the ledger lists newest first.
@@ -41,7 +46,7 @@ export default async function AnomaliesPage() {
       <main id="main-content">
         {/* ── The desk: ink plate, same stock as the homepage band ── */}
         <section
-          className="plate-stock relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
+          className="plate-stock plate-ink relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
           aria-labelledby="anomalies-heading"
         >
           <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8">

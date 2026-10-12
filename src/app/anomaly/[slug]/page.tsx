@@ -233,7 +233,7 @@ export default async function AnomalyDetailPage({
       <main id="main-content">
         {/* ── Cover: ink plate, same stock as the desk ledger ────────── */}
         <section
-          className="plate-stock relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
+          className="plate-stock plate-ink relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
           aria-labelledby="anomaly-heading"
         >
           <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8">
@@ -394,28 +394,17 @@ export default async function AnomalyDetailPage({
                 cryptidName={anomaly.name}
                 sightings={anomaly.sightings}
                 showMap={false}
+                variant="file"
               />
 
               {/* The story reads open: phenomenon first, then the people who heard it */}
               {phenomenon.length > 0 && (
                 <FileSection id="the-phenomenon" title="The Phenomenon">
-                  {phenomenon.slice(0, PHENOMENON_PREVIEW).map((p, i) => (
+                  {phenomenon.map((p, i) => (
                     <p key={i} className={i === 0 ? "text-lg" : undefined}>
                       {p}
                     </p>
                   ))}
-                  {phenomenon.length > PHENOMENON_PREVIEW && (
-                    <details className="group/more">
-                      <summary className="inline-block cursor-pointer list-none font-typewriter text-sm tracking-type text-bureau-stamp-ink border-b border-dotted border-current hover:border-solid group-open/more:hidden [&::-webkit-details-marker]:hidden">
-                        Keep reading →
-                      </summary>
-                      <div className="space-y-4">
-                        {phenomenon.slice(PHENOMENON_PREVIEW).map((p, i) => (
-                          <p key={i}>{p}</p>
-                        ))}
-                      </div>
-                    </details>
-                  )}
                 </FileSection>
               )}
 
@@ -578,7 +567,7 @@ export default async function AnomalyDetailPage({
                     station={
                       anomaly.subRegion
                         ? `${anomaly.subRegion.toUpperCase()} OUTPOST`
-                        : `${anomaly.region} FIELD STATION`
+                        : `${stateName(anomaly.region)} FIELD STATION`
                     }
                   />
                 </div>
@@ -616,9 +605,6 @@ export default async function AnomalyDetailPage({
 }
 
 // ── Page pieces ──────────────────────────────────────────
-
-/** Paragraphs of the phenomenon shown before "Keep reading". */
-const PHENOMENON_PREVIEW = 3;
 
 function FiledHeading({ count, children }: { count: number; children: React.ReactNode }) {
   return (
@@ -760,7 +746,7 @@ function FileSection({
 
 /** Shared row grid so file rows and bulletin rows line up column for column. */
 const DESK_ROW =
-  "group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-4.5 focus-visible:outline-bureau-rust-ink md:grid-cols-[80px_minmax(0,1fr)_160px_120px] md:items-center md:gap-5";
+  "group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-4.5 md:grid-cols-[80px_minmax(0,1fr)_160px_120px] md:items-center md:gap-5";
 
 function DeskNumber({ prefix, number }: { prefix: string; number: string }) {
   return (
@@ -790,7 +776,7 @@ function MoreFromTheDesk({
 }) {
   return (
     <section
-      className="plate-stock relative bg-bureau-ink text-bureau-manila-light paper-texture"
+      className="plate-stock plate-ink relative bg-bureau-ink text-bureau-manila-light paper-texture"
       aria-labelledby="more-from-desk-heading"
     >
       <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8 py-10 lg:py-12">
@@ -803,7 +789,7 @@ function MoreFromTheDesk({
           </h2>
           <Link
             href="/anomalies"
-            className="font-typewriter text-sm tracking-type border-b border-dotted border-bureau-manila-light/70 hover:border-solid focus-visible:outline-bureau-rust-ink"
+            className="font-typewriter text-sm tracking-type border-b border-dotted border-bureau-manila-light/70 hover:border-solid"
           >
             All anomalies →
           </Link>
@@ -812,7 +798,7 @@ function MoreFromTheDesk({
         {related.length > 0 && (
           <div>
             <DeskGroupLabel>Related files</DeskGroupLabel>
-            <ul>
+            <ul role="list">
               {related.map((r) => (
                 <li key={r._id} className="border-t border-bureau-manila-light/15">
                   <Link href={`/anomaly/${r.slug.current}`} className={DESK_ROW}>
@@ -836,7 +822,7 @@ function MoreFromTheDesk({
         {bulletins.length > 0 && (
           <div className={related.length > 0 ? "mt-10" : undefined}>
             <DeskGroupLabel>In the bulletins</DeskGroupLabel>
-            <ul>
+            <ul role="list">
               {bulletins.map((b) => {
                 // "BUR-013" → small "BUR" over a big "013", matching AD-### above
                 const [prefix, number] = b.bulletinNumber.includes("-")
@@ -869,7 +855,7 @@ function MoreFromTheDesk({
             </ul>
             <Link
               href="/bulletins"
-              className="mt-5 inline-block font-typewriter text-sm tracking-type border-b border-dotted border-bureau-manila-light/70 hover:border-solid focus-visible:outline-bureau-rust-ink"
+              className="mt-5 inline-block font-typewriter text-sm tracking-type border-b border-dotted border-bureau-manila-light/70 hover:border-solid"
             >
               All bulletins →
             </Link>

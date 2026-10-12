@@ -28,6 +28,7 @@ const SightingListItem = memo(({
   num,
   active,
   visibleOnCompact,
+  interactive,
   onSelect,
   onRef,
 }: {
@@ -36,24 +37,13 @@ const SightingListItem = memo(({
   num: string;
   active: boolean;
   visibleOnCompact: boolean;
+  /** False when there is no map to drive: the record is plain text, not a control. */
+  interactive: boolean;
   onSelect: (key: string) => void;
   onRef: (key: string, el: HTMLLIElement | null) => void;
 }) => {
-  return (
-    <li
-      className={visibleOnCompact ? "block" : "hidden lg:block"}
-      ref={(el) => onRef(s._key, el)}
-    >
-      <button
-        type="button"
-        onClick={() => onSelect(s._key)}
-        aria-pressed={active}
-        className={`block w-full cursor-pointer p-0 text-left transition-colors lg:h-full ${
-          active
-            ? "bg-bureau-manila/60 ring-1 ring-inset ring-primary/60"
-            : "hover:bg-bureau-manila/30"
-        }`}
-      >
+  const record = (
+    <>
         <div
           className={`border-b border-dashed border-bureau-border/50 px-4 py-3 lg:px-5 ${
             active
@@ -80,7 +70,7 @@ const SightingListItem = memo(({
           </p>
           {s.witness && (
             <p className="mt-1 text-sm text-bureau-ink">
-              <span className="font-typewriter text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="font-typewriter text-xs uppercase tracking-type text-muted-foreground">
                 Witness:
               </span>{" "}
               {s.witness}
@@ -101,7 +91,30 @@ const SightingListItem = memo(({
             )}
           </div>
         )}
-      </button>
+    </>
+  );
+
+  return (
+    <li
+      className={visibleOnCompact ? "block" : "hidden lg:block"}
+      ref={(el) => onRef(s._key, el)}
+    >
+      {interactive ? (
+        <button
+          type="button"
+          onClick={() => onSelect(s._key)}
+          aria-pressed={active}
+          className={`block w-full cursor-pointer p-0 text-left transition-colors lg:h-full ${
+            active
+              ? "bg-bureau-manila/60 ring-1 ring-inset ring-primary/60"
+              : "hover:bg-bureau-manila/30"
+          }`}
+        >
+          {record}
+        </button>
+      ) : (
+        record
+      )}
     </li>
   );
 });
@@ -138,6 +151,7 @@ export function SightingDistribution({
   cryptidName,
   sightings,
   showMap = true,
+  variant = "folder",
 }: {
   cryptidName: string;
   sightings?: SanitySighting[];
@@ -147,6 +161,12 @@ export function SightingDistribution({
    * solely as pins on /map.
    */
   showMap?: boolean;
+  /**
+   * "folder" is the manila case-file box (cryptid pages). "file" drops the
+   * box for a plain heading over a ruled list, matching the anomaly page's
+   * reading column.
+   */
+  variant?: "folder" | "file";
 }) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const recordRefs = useRef<Record<string, HTMLLIElement | null>>({});
@@ -205,17 +225,26 @@ export function SightingDistribution({
 
   if (orderedItems.length === 0) return null;
 
-  const hasMap = showMap && mappable.length > 0;
   const selectedSighting = selectedKey
     ? orderedItems.find((item) => item.s._key === selectedKey)?.s
     : null;
   const compactVisibleKey = selectedKey ?? orderedItems[0].s._key;
+  const hasMap = showMap && mappable.length > 0;
 
+  // The one-record-at-a-time compact view depends on the numbered picker,
+  // which only exists beside a map. Without a map every record is listed.
   const recordList = (
-    <ol className="lg:block lg:h-full lg:overflow-y-auto lg:divide-y lg:divide-dashed lg:divide-bureau-border/30">
+    <ol
+      role="list"
+      className={
+        hasMap
+          ? "lg:block lg:h-full lg:overflow-y-auto lg:divide-y lg:divide-dashed lg:divide-bureau-border/30"
+          : "divide-y divide-dashed divide-bureau-border/30"
+      }
+    >
       {orderedItems.map(({ s, dateFormatted, numStr }) => {
         const active = s._key === selectedKey;
-        const visibleOnCompact = s._key === compactVisibleKey;
+        const visibleOnCompact = !hasMap || s._key === compactVisibleKey;
         return (
           <SightingListItem
             key={s._key}
@@ -224,6 +253,7 @@ export function SightingDistribution({
             num={numStr}
             active={active}
             visibleOnCompact={visibleOnCompact}
+            interactive={hasMap}
             onSelect={setSelectedKey}
             onRef={handleRef}
           />
@@ -231,6 +261,30 @@ export function SightingDistribution({
       })}
     </ol>
   );
+
+  const recordCount = `${orderedItems.length} Logged ${
+    orderedItems.length === 1 ? "Record" : "Records"
+  }`;
+
+  if (variant === "file") {
+    return (
+      <section
+        aria-labelledby="sightings-heading"
+        className="mb-10 pb-10 border-b border-border last:mb-0 last:pb-0 last:border-0"
+      >
+        <h2
+          id="sightings-heading"
+          className="scroll-mt-28 font-display font-bold text-2xl lg:text-3xl leading-tight text-foreground"
+        >
+          {`${cryptidName} Sightings`}
+        </h2>
+        <p className="mt-1.5 mb-5 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-stamp-ink">
+          {recordCount}
+        </p>
+        <div className="border-y border-border bg-bureau-paper">{recordList}</div>
+      </section>
+    );
+  }
 
   return (
     <section aria-labelledby="sightings-heading" className="mb-10">
@@ -248,9 +302,7 @@ export function SightingDistribution({
             aria-hidden="true"
           />
           <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted">
-            {`${orderedItems.length} Logged ${
-              orderedItems.length === 1 ? "Record" : "Records"
-            }`}
+            {recordCount}
           </span>
         </div>
 
@@ -314,7 +366,7 @@ export function SightingDistribution({
               </span>
               <Link
                 href="/map"
-                className="inline-flex items-center gap-1 font-typewriter text-xs uppercase tracking-wider text-primary hover:underline"
+                className="inline-flex items-center gap-1 font-typewriter text-xs uppercase tracking-type text-primary hover:underline"
               >
                 View full Sightings Map
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
