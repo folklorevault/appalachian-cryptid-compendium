@@ -43,23 +43,24 @@ export default async function AnomaliesPage() {
           className="plate-stock relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
           aria-labelledby="anomalies-heading"
         >
-          <div className="relative z-[2] max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="grid gap-8 pt-14 pb-9 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-end lg:gap-14 lg:pt-18 lg:pb-10">
+          <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid gap-10 pt-12 pb-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-end lg:gap-14 lg:pt-16 lg:pb-10">
               <div>
-                <p className="flex items-center gap-3.5 mb-4 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-rust-ink">
+                <p className="flex items-center gap-3.5 mb-4.5 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-rust-ink">
                   <span className="block w-10 h-px bg-current opacity-70" aria-hidden="true" />
                   Open Investigations
                 </p>
                 <h1
                   id="anomalies-heading"
-                  className="font-display font-bold text-plate leading-none tracking-tight text-bureau-paper text-balance mb-5"
+                  className="font-display font-bold text-plate leading-none tracking-tight text-bureau-paper text-balance mb-6"
                 >
                   The Anomalies Desk
                 </h1>
-                <p className="font-sans text-base leading-relaxed text-bureau-manila-light/90 max-w-[56ch] mb-3">
+                <p className="font-sans text-base leading-relaxed text-bureau-manila-light/90 max-w-[54ch] mb-3.5">
                   Lights nobody can account for, sounds nobody wants to answer,
-                  places where something simply isn&rsquo;t right. Cataloged from
-                  witness reports and ongoing investigations.
+                  places where something simply isn&rsquo;t right. Appalachian
+                  stories that have traveled through the mountains and beyond
+                  for generations.
                 </p>
                 <p className="font-typewriter text-sm tracking-type text-bureau-manila-light/70">
                   None satisfactorily explained.

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { urlFor } from "@/lib/sanity/image";
-import type { AnomalyStatus, AnomalyType, SanityAnomalyListItem } from "@/types/sanity";
+import type { AnomalyType, SanityAnomalyListItem } from "@/types/sanity";
 
 export interface LedgerEntry {
   anomaly: SanityAnomalyListItem;
@@ -19,13 +19,6 @@ const TYPE_TAB_LABEL: Partial<Record<AnomalyType, string>> = {
   "Omen Events": "Omens",
   "Weather Oddities": "Weather",
   "Time Weirdness": "Time",
-};
-
-const STATUS_STAMP: Record<AnomalyStatus, string> = {
-  Active: "text-bureau-paper border-bureau-rust bg-bureau-rust/35",
-  "Open File": "text-bureau-rust-ink border-current",
-  Seasonal: "text-bureau-rust-ink border-current",
-  Cold: "text-bureau-manila-light/70 border-current",
 };
 
 /** A few words for the ledger column: the short field, else the start of the long one. */
@@ -181,9 +174,9 @@ function TypeTab({
       type="button"
       aria-pressed={pressed}
       onClick={onClick}
-      className={`inline-flex items-baseline gap-2 rounded-sm border-[1.5px] px-3 py-1.5 font-typewriter text-xs tracking-type uppercase transition-colors duration-150 focus-visible:outline-bureau-rust-ink ${
+      className={`inline-flex items-baseline gap-2 rounded-sm border px-3 py-1.5 font-typewriter text-xs tracking-type uppercase transition-colors duration-150 focus-visible:outline-bureau-rust-ink ${
         pressed
-          ? "border-bureau-rust-ink text-bureau-rust-ink shadow-[inset_0_0_0_1px_hsl(var(--bureau-rust-ink))]"
+          ? "border-bureau-rust-ink bg-bureau-rust-ink/10 text-bureau-rust-ink"
           : "border-bureau-manila-light/30 text-bureau-manila-light/85 hover:border-bureau-manila-light/60 hover:text-bureau-manila-light"
       }`}
     >
@@ -235,12 +228,9 @@ function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
               </>
             )}
           </span>
-          <span>
-            <span
-              className={`inline-block -rotate-4 whitespace-nowrap rounded-sm border-2 px-1.5 py-0.5 text-caption font-bold uppercase tracking-label ${STATUS_STAMP[a.status] ?? STATUS_STAMP["Open File"]}`}
-            >
-              <span style={{ filter: "url(#__svg-stamp-texture)" }}>{a.status}</span>
-            </span>
+          <span className="text-bureau-manila-light/85">
+            <span className="lg:hidden text-bureau-manila-light/70">Status: </span>
+            {a.status}
           </span>
         </div>
 
