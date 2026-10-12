@@ -176,6 +176,8 @@ export default async function AnomalyDetailPage({
   const places = anomaly.relatedLocations ? parseTitledBlocks(anomaly.relatedLocations) : [];
   const hasBriefings = Boolean(anomaly.declassifiedBriefings?.length);
   const hasWitnesses = Boolean(anomaly.witnesses?.length);
+  const hasDeskNotes = Boolean(anomaly.noteOnRecord || anomaly.bureauNotes);
+  const phenomenon = anomaly.phenomenon ? splitLines(anomaly.phenomenon) : [];
 
   // "In this file" index — only sections this file actually has, in page order.
   const contents = [
@@ -186,12 +188,10 @@ export default async function AnomalyDetailPage({
     })),
     anomaly.sightings?.length && { id: "sightings-heading", label: "Sightings" },
     anomaly.phenomenon && { id: "the-phenomenon", label: "The phenomenon" },
-    theories.length > 0 && { id: "theories", label: "Theories" },
-    places.length > 0 && { id: "where-reported", label: "Where it's reported" },
-    hasBriefings && { id: "transmissions-received", label: "Transmissions received" },
     hasWitnesses && { id: "witness-accounts", label: "Witness accounts" },
-    anomaly.noteOnRecord && { id: "note-on-record", label: "Note on the record" },
-    anomaly.bureauNotes && { id: "field-transmission", label: "Field transmission" },
+    (theories.length > 0 || places.length > 0) && { id: "on-file", label: "On file" },
+    hasBriefings && { id: "transmissions-received", label: "Transmissions received" },
+    hasDeskNotes && { id: "from-the-desk", label: "From the desk" },
   ].filter((item): item is { id: string; label: string } => Boolean(item));
 
   return (
@@ -395,69 +395,26 @@ export default async function AnomalyDetailPage({
                 showMap={false}
               />
 
-              {/* The long sections read open, in page order */}
-              {anomaly.phenomenon && (
+              {/* The story reads open: phenomenon first, then the people who heard it */}
+              {phenomenon.length > 0 && (
                 <FileSection id="the-phenomenon" title="The Phenomenon">
-                  {splitLines(anomaly.phenomenon).map((p, i) => (
+                  {phenomenon.slice(0, PHENOMENON_PREVIEW).map((p, i) => (
                     <p key={i} className={i === 0 ? "text-lg" : undefined}>
                       {p}
                     </p>
                   ))}
-                </FileSection>
-              )}
-
-              {theories.length > 0 && (
-                <FileSection id="theories" title="Theories & Explanations">
-                  {theories.map((t, i) =>
-                    t.title ? (
-                      <div key={i} className="pt-2">
-                        <h3 className="mb-1.5 font-display font-bold text-xl leading-snug text-foreground">
-                          {t.title}
-                        </h3>
-                        <p>{t.body}</p>
+                  {phenomenon.length > PHENOMENON_PREVIEW && (
+                    <details className="group/more">
+                      <summary className="inline-block cursor-pointer list-none font-typewriter text-sm tracking-type text-bureau-stamp-ink border-b border-dotted border-current hover:border-solid group-open/more:hidden [&::-webkit-details-marker]:hidden">
+                        Keep reading →
+                      </summary>
+                      <div className="space-y-4">
+                        {phenomenon.slice(PHENOMENON_PREVIEW).map((p, i) => (
+                          <p key={i}>{p}</p>
+                        ))}
                       </div>
-                    ) : (
-                      <p key={i}>{t.body}</p>
-                    )
+                    </details>
                   )}
-                </FileSection>
-              )}
-
-              {places.length > 0 && (
-                <FileSection id="where-reported" title="Where it's reported">
-                  <ul className="border-t border-dashed border-border">
-                    {places.map((place, i) => (
-                      <li key={i} className="py-3.5 border-b border-dashed border-border last:border-b-0">
-                        {place.title && (
-                          <h3 className="mb-1 font-typewriter text-sm tracking-type uppercase text-bureau-stamp-ink">
-                            {place.title}
-                          </h3>
-                        )}
-                        <p>{place.body}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </FileSection>
-              )}
-
-              {hasBriefings && (
-                <FileSection id="transmissions-received" title="Transmissions Received">
-                  <dl className="space-y-5">
-                    {anomaly.declassifiedBriefings!.map((briefing) => (
-                      <div key={briefing._key}>
-                        <dt className="mb-1.5 font-display font-bold text-xl leading-snug text-foreground">
-                          {briefing.question}
-                        </dt>
-                        <dd className="space-y-3">
-                          {toParagraphs(briefing.answer).map((p, i) => (
-                            <p key={i} className="whitespace-pre-line">
-                              {p}
-                            </p>
-                          ))}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
                 </FileSection>
               )}
 
@@ -520,26 +477,95 @@ export default async function AnomalyDetailPage({
                 </FileBlock>
               )}
 
-              {/* Note on the Record — the Bureau's own voice, set in the typewriter face */}
-              {anomaly.noteOnRecord && (
-                <FileBlock>
-                  <SectionTitle id="note-on-record">Note on the Record</SectionTitle>
-                  <div className="mt-5 space-y-4 max-w-[64ch] font-typewriter text-sm tracking-type leading-loose text-foreground/85">
-                    {toParagraphs(anomaly.noteOnRecord).map((p, i) => (
-                      <p key={i} className="whitespace-pre-line">
-                        {p}
-                      </p>
-                    ))}
+              {/* Reference material, filed as rows that open in place */}
+              {(theories.length > 0 || places.length > 0) && (
+                <FileSection id="on-file" title="On file">
+                  <div className={`grid gap-9 ${theories.length > 0 && places.length > 0 ? "md:grid-cols-2" : ""}`}>
+                    {theories.length > 0 && (
+                      <div>
+                        <FiledHeading count={theories.length}>Theories &amp; explanations</FiledHeading>
+                        <FiledRows items={theories} numbered />
+                      </div>
+                    )}
+                    {places.length > 0 && (
+                      <div>
+                        <FiledHeading count={places.length}>Where it&rsquo;s reported</FiledHeading>
+                        <FiledRows items={places} variant="place" />
+                      </div>
+                    )}
                   </div>
-                </FileBlock>
+                </FileSection>
               )}
 
-              {/* Field Transmission — the paper incident slip */}
+              {hasBriefings && (
+                <FileSection id="transmissions-received" title="Transmissions Received">
+                  <FiledRows
+                    items={anomaly.declassifiedBriefings!.map((b) => ({
+                      title: b.question,
+                      body: b.answer,
+                    }))}
+                  />
+                </FileSection>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── From the desk: the Bureau's note, then the full transmission strip ── */}
+        {hasDeskNotes && (
+          <section
+            id="from-the-desk"
+            aria-labelledby="from-the-desk-heading"
+            className="scroll-mt-28 border-t border-border bg-card/50"
+          >
+            <div className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-14">
+              <h2
+                id="from-the-desk-heading"
+                className="flex items-center gap-3.5 mb-8 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-stamp-ink"
+              >
+                From the desk
+                <span className="flex-1 border-t border-dashed border-border" aria-hidden="true" />
+              </h2>
+
+              {anomaly.noteOnRecord && (
+                <article
+                  aria-labelledby="note-on-record"
+                  className="memo-paper memo-flat relative max-w-3xl rounded-sm border border-border/60 px-6 pt-6 pb-5 rotate-[-0.3deg] sm:px-8"
+                >
+                  <div className="memo-header">
+                    <div className="memo-letterhead">
+                      Appalachian Cryptid Division
+                      <br />
+                      Anomalies Desk
+                    </div>
+                    <h3 id="note-on-record" className="memo-title mt-2.5">
+                      Note on the Record
+                    </h3>
+                    <div className="memo-meta-line">
+                      <span className="memo-meta-label">Re:</span>
+                      <span className="memo-meta-value">
+                        {anomaly.name} ({caseNumber})
+                      </span>
+                    </div>
+                    <div className="memo-meta-line">
+                      <span className="memo-meta-label">From:</span>
+                      <span className="memo-meta-value">Field Office No. 7</span>
+                    </div>
+                  </div>
+                  <div className="relative z-2 space-y-4 font-typewriter text-sm tracking-type leading-loose text-foreground/90">
+                    {splitLines(anomaly.noteOnRecord).map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                    <p className="text-right text-xs text-bureau-stamp-ink">
+                      Filed by the Anomalies Desk
+                    </p>
+                  </div>
+                </article>
+              )}
+
               {anomaly.bureauNotes && (
-                <FileBlock>
-                  <SectionTitle id="field-transmission" className="mb-6">
-                    Field Transmission
-                  </SectionTitle>
+                <div className={anomaly.noteOnRecord ? "mt-12" : undefined}>
+                  <h3 className="sr-only">Field Transmission</h3>
                   <IncidentLog
                     content={anomaly.bureauNotes}
                     anomalyName={anomaly.name}
@@ -550,11 +576,11 @@ export default async function AnomalyDetailPage({
                         : `${anomaly.region} FIELD STATION`
                     }
                   />
-                </FileBlock>
+                </div>
               )}
             </div>
-          </div>
-        </div>
+          </section>
+        )}
 
         {/* ── More from the desk: related files as ledger rows ───────── */}
         {relatedAnomalies.length > 0 && (
@@ -591,6 +617,73 @@ export default async function AnomalyDetailPage({
 }
 
 // ── Page pieces ──────────────────────────────────────────
+
+/** Paragraphs of the phenomenon shown before "Keep reading". */
+const PHENOMENON_PREVIEW = 3;
+
+function FiledHeading({ count, children }: { count: number; children: React.ReactNode }) {
+  return (
+    <h3 className="mb-2 flex justify-between gap-3 font-typewriter text-tag tracking-label uppercase text-muted-foreground">
+      <span>{children}</span>
+      <span className="tabular-nums">{count}</span>
+    </h3>
+  );
+}
+
+/** Title rows that open in place — the desk's version of a drawer. */
+function FiledRows({
+  items,
+  numbered = false,
+  variant = "default",
+}: {
+  items: { title?: string; body: string }[];
+  numbered?: boolean;
+  variant?: "default" | "place";
+}) {
+  return (
+    <div className="border-t border-border">
+      {items.map((item, i) =>
+        item.title ? (
+          <details key={i} className="group border-b border-border">
+            <summary className="flex cursor-pointer list-none items-baseline gap-2.5 py-3 [&::-webkit-details-marker]:hidden">
+              {numbered && (
+                <span className="w-6 shrink-0 font-display font-bold text-lg leading-none text-bureau-stamp-ink tabular-nums">
+                  {i + 1}
+                </span>
+              )}
+              <span
+                className={`flex-1 decoration-dotted underline-offset-4 group-hover:underline ${
+                  variant === "place"
+                    ? "font-typewriter text-sm tracking-type uppercase text-bureau-stamp-ink"
+                    : "font-display font-bold text-lg leading-snug text-foreground"
+                }`}
+              >
+                {item.title}
+              </span>
+              <span
+                className="font-typewriter text-muted-foreground transition-transform group-open:rotate-45 motion-reduce:transition-none"
+                aria-hidden="true"
+              >
+                +
+              </span>
+            </summary>
+            <div className={`space-y-3 pb-4 text-base leading-relaxed text-foreground/90 ${numbered ? "pl-8.5" : ""}`}>
+              {toParagraphs(item.body).map((p, j) => (
+                <p key={j} className="whitespace-pre-line">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </details>
+        ) : (
+          <p key={i} className="py-3 border-b border-border">
+            {item.body}
+          </p>
+        )
+      )}
+    </div>
+  );
+}
 
 function CoverFact({
   label,
@@ -649,7 +742,7 @@ function FileSection({
   children: React.ReactNode;
 }) {
   return (
-    <section aria-labelledby={id} className="mb-10 pb-10 border-b border-border">
+    <section aria-labelledby={id} className="mb-10 pb-10 border-b border-border last:mb-0 last:pb-0 last:border-0">
       {kicker && (
         <p className="mb-1.5 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-stamp-ink">
           {kicker}
