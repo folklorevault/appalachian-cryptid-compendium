@@ -387,6 +387,12 @@ All colors MUST be HSL.
     --bureau-stamp: 8 45% 28%;
     --bureau-stamp-ink: var(--bureau-stamp);
   }
+
+  /* Ink plates (bg-bureau-ink) also re-pin the focus ring: Filing Green is
+     1.6:1 on the ink, rust-ink is 4.5:1. Pair with .plate-stock. */
+  .plate-ink {
+    --ring: var(--bureau-rust-ink);
+  }
 }
 
 @layer base {

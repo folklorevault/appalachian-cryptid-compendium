@@ -22,6 +22,10 @@ const TYPE_TAB_LABEL: Partial<Record<AnomalyType, string>> = {
   "Time Weirdness": "Time",
 };
 
+// One column template for the heads and the rows so they can't drift apart.
+const LEDGER_COLS =
+  "lg:grid-cols-[80px_minmax(0,1fr)_140px_160px_104px_64px] lg:gap-5";
+
 function typeLabel(t: AnomalyType) {
   return t.replace("/", " / ");
 }
@@ -53,11 +57,26 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
 
   const filtered = type !== "all" || query.trim() !== "";
 
+  // No files at all means the fetch came back empty, not that a filter
+  // matched nothing. Say so instead of showing the "no match" copy.
+  if (entries.length === 0) {
+    return (
+      <div role="alert" className="border-t border-bureau-manila-light/20 py-16 text-center">
+        <p className="font-display font-bold text-2xl text-bureau-paper">
+          The ledger didn&rsquo;t load.
+        </p>
+        <p className="mt-2 font-typewriter text-sm tracking-type text-bureau-manila-light/80">
+          The files are still on the desk; the page couldn&rsquo;t reach them. Try again in a minute.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* ── Controls ─────────────────────────────────────────── */}
       <div className="grid gap-4 py-5 border-y border-bureau-manila-light/20 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-center">
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by type">
+        <div className="flex flex-wrap gap-2 lg:gap-1.5" role="group" aria-label="Filter by type">
           <TypeTab pressed={type === "all"} onClick={() => setType("all")} label="All" count={entries.length} />
           {typeCounts.map(([t, n]) => (
             <TypeTab
@@ -69,7 +88,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
             />
           ))}
         </div>
-        <label className="flex items-center gap-2 border-b border-bureau-manila-light/40 py-1.5 focus-within:border-bureau-rust-ink">
+        <label className="flex min-h-11 items-center gap-2 border-b border-bureau-manila-light/50 py-1.5 focus-within:border-bureau-rust-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-ring lg:min-h-0">
           <Search className="h-3.5 w-3.5 shrink-0 text-bureau-manila-light/70" aria-hidden="true" />
           <span className="sr-only">Search the anomalies</span>
           <input
@@ -78,7 +97,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="a name, a county, a sound…"
-            className="min-w-0 flex-1 bg-transparent font-typewriter text-sm tracking-type text-bureau-manila-light placeholder:text-bureau-manila-light/70 outline-none"
+            className="min-w-0 flex-1 bg-transparent font-typewriter text-base tracking-type text-bureau-manila-light placeholder:text-bureau-manila-light/70 outline-none lg:text-sm"
           />
         </label>
       </div>
@@ -89,7 +108,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
 
       {/* ── Column heads (desktop) ───────────────────────────── */}
       <div
-        className="hidden lg:grid lg:grid-cols-[80px_minmax(0,1fr)_140px_160px_104px_64px] gap-5 pt-4 pb-2.5 border-b border-bureau-manila-light/30 font-typewriter text-tag tracking-label uppercase text-bureau-manila-light/70"
+        className={`hidden lg:grid ${LEDGER_COLS} pt-4 pb-2.5 border-b border-bureau-manila-light/30 font-typewriter text-tag tracking-label uppercase text-bureau-manila-light/70`}
         aria-hidden="true"
       >
         <span>File</span>
@@ -101,7 +120,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
       </div>
 
       {visible.length === 0 ? (
-        <div role="status" className="py-16 text-center">
+        <div className="py-16 text-center">
           <p className="font-display font-bold text-2xl text-bureau-paper">
             Nothing on the desk matches{deferredQuery ? <> &ldquo;{deferredQuery}&rdquo;</> : " that filter"}.
           </p>
@@ -128,7 +147,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
           </div>
         </div>
       ) : (
-        <ol className="list-none">
+        <ol role="list" className="list-none">
           {visible.map((entry) => (
             <LedgerRow key={entry.anomaly._id} {...entry} />
           ))}
@@ -143,7 +162,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
         </p>
         <Link
           href="/report"
-          className="font-typewriter text-sm tracking-type text-bureau-manila-light border-b border-dotted border-bureau-manila-light/70 hover:border-solid focus-visible:outline-bureau-rust-ink"
+          className="font-typewriter text-sm tracking-type text-bureau-manila-light border-b border-dotted border-bureau-manila-light/70 hover:border-solid"
         >
           Witnessed something? File a report →
         </Link>
@@ -168,9 +187,9 @@ function TypeTab({
       type="button"
       aria-pressed={pressed}
       onClick={onClick}
-      className={`inline-flex items-baseline gap-2 rounded-sm border px-3 py-1.5 font-typewriter text-xs tracking-type uppercase transition-colors duration-150 focus-visible:outline-bureau-rust-ink ${
+      className={`inline-flex min-h-11 items-center gap-2 rounded-sm border px-3 py-1.5 font-typewriter text-xs tracking-type uppercase transition-colors duration-150 lg:min-h-0 ${
         pressed
-          ? "border-bureau-rust-ink bg-bureau-rust-ink/10 text-bureau-rust-ink"
+          ? "border-bureau-rust-ink bg-bureau-rust-ink/10 text-bureau-paper"
           : "border-bureau-manila-light/30 text-bureau-manila-light/85 hover:border-bureau-manila-light/60 hover:text-bureau-manila-light"
       }`}
     >
@@ -191,7 +210,7 @@ function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
     <li className="border-b border-bureau-manila-light/15">
       <Link
         href={`/anomaly/${a.slug.current}`}
-        className="group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-5.5 focus-visible:outline-bureau-rust-ink lg:grid-cols-[80px_minmax(0,1fr)_140px_160px_104px_64px] lg:items-center lg:gap-5"
+        className={`group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-5.5 lg:items-center ${LEDGER_COLS}`}
       >
         <span className="row-span-2 font-display font-bold text-4xl leading-none text-bureau-rust tabular-nums lg:row-span-1 lg:text-5xl">
           <span className="block mb-1 font-typewriter font-normal text-tag tracking-label text-bureau-manila-light/70">

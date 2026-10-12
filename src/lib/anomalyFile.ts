@@ -14,7 +14,9 @@ export function ledgerDate(a: {
 }): string {
   if (a.firstDocumentedShort) return a.firstDocumentedShort;
   const head = a.firstDocumented?.split(/\s\(|;|\.\s/)[0]?.trim() ?? "";
-  return head.length > 36 ? `${head.slice(0, 34).trimEnd()}…` : head;
+  if (head.length <= 36) return head;
+  // Cut at a word boundary so the ledger never shows half a word.
+  return `${head.slice(0, 35).replace(/\s+\S*$/, "")}…`;
 }
 
 export interface WitnessParts {
