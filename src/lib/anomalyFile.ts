@@ -49,33 +49,70 @@ export interface TitledBlock {
   body: string;
 }
 
+const BULLET = /^[•*\-–]\s+/;
+const MAX_TITLE = 120;
+
+/** Capitalise the first letter of a body split off an inline title. */
+function sentence(text: string): string {
+  const t = text.trim();
+  return t ? t[0].toUpperCase() + t.slice(1) : t;
+}
+
 /**
- * Theories and related-location fields are written as blocks separated by a
- * blank line, each starting with a short title line:
+ * Split "Title: body", "Title — body" or "Title - body" written on one line.
+ * The title must be short and read like a label (no sentence punctuation),
+ * and there must be a body after it; otherwise the line stays whole.
+ */
+function splitInline(line: string): TitledBlock {
+  for (const sep of [": ", " — ", " – ", " - "]) {
+    const at = line.indexOf(sep);
+    if (at <= 0) continue;
+    const head = line.slice(0, at).trim();
+    const body = line.slice(at + sep.length).trim();
+    if (body && head.length <= MAX_TITLE && !/[.!?]/.test(head)) {
+      return { title: head, body: sentence(body) };
+    }
+  }
+  return { body: line };
+}
+
+/**
+ * Theories and related-location fields arrive in a few hand-written shapes;
+ * all of them become title/body pairs where a title can be found:
  *
- *   Bird and wildlife misidentification
- *   Several Appalachian species produce…
+ *   Title line            "Title: body"           • Title - body
+ *   body on the next      (one per paragraph)     - plain bullet
  *
- * A block whose first line reads like a sentence (ends in . ! ?) or runs long
- * is kept as plain body text, so prose-only entries still render.
+ * Intro lines ("Scientific hypotheses have included:") and closing prose
+ * stay as untitled paragraphs, so nothing the editor wrote is dropped.
  */
 export function parseTitledBlocks(text: string): TitledBlock[] {
-  return text
+  const out: TitledBlock[] = [];
+  const blocks = text
     .split(/\n\s*\n/)
     .map((block) =>
       block
         .split("\n")
-        .map((line) => line.trim())
+        .map((line) => line.replace(/\s{2,}/g, " ").trim())
         .filter(Boolean)
     )
-    .filter((lines) => lines.length > 0)
-    .map((lines) => {
-      const [first, ...rest] = lines;
-      const looksLikeTitle = rest.length > 0 && first.length <= 80 && !/[.!?:]$/.test(first);
-      return looksLikeTitle
-        ? { title: first, body: rest.join(" ") }
-        : { body: lines.join(" ") };
-    });
+    .filter((lines) => lines.length > 0);
+
+  for (const lines of blocks) {
+    if (lines.some((line) => BULLET.test(line))) {
+      for (const line of lines) {
+        out.push(BULLET.test(line) ? splitInline(line.replace(BULLET, "")) : { body: line });
+      }
+      continue;
+    }
+    const [first, ...rest] = lines;
+    if (rest.length > 0 && first.length <= 80 && !/[.!?:]$/.test(first)) {
+      out.push({ title: first, body: rest.join(" ") });
+    } else {
+      out.push(splitInline(lines.join(" ")));
+    }
+  }
+  return out;
 }
 
 /** Single-newline prose (how the phenomenon field is written) → paragraphs. */

@@ -230,7 +230,10 @@ export const mapAnomaliesQuery = `*[_type == "anomaly" && defined(coordinates)] 
   gridImage
 }`;
 
-export const relatedAnomaliesQuery = `*[_type == "anomaly" && slug.current != $slug && (anomalyType == $anomalyType || region == $region)][0...3] {
+// Same type or state first, then the newest other files, so the band always
+// fills (a lone Haunting in West Virginia otherwise had no related files).
+export const relatedAnomaliesQuery = `*[_type == "anomaly" && slug.current != $slug]
+  | order((anomalyType == $anomalyType || region == $region) desc, _createdAt desc)[0...3] {
   _id,
   "fileNumber": count(*[_type == "anomaly" && _createdAt < ^._createdAt]) + 1,
   name,

@@ -483,13 +483,13 @@ export default async function AnomalyDetailPage({
                   <div className={`grid gap-9 ${theories.length > 0 && places.length > 0 ? "md:grid-cols-2" : ""}`}>
                     {theories.length > 0 && (
                       <div>
-                        <FiledHeading count={theories.length}>Theories &amp; explanations</FiledHeading>
+                        <FiledHeading count={theories.filter((t) => t.title).length || theories.length}>Theories &amp; explanations</FiledHeading>
                         <FiledRows items={theories} numbered />
                       </div>
                     )}
                     {places.length > 0 && (
                       <div>
-                        <FiledHeading count={places.length}>Where it&rsquo;s reported</FiledHeading>
+                        <FiledHeading count={places.filter((p) => p.title).length || places.length}>Where it&rsquo;s reported</FiledHeading>
                         <FiledRows items={places} variant="place" />
                       </div>
                     )}
@@ -648,11 +648,12 @@ function FiledRows({
     <div className="border-t border-border">
       {items.map((item, i) =>
         item.title ? (
+          // Number titled rows only, so intro/closing prose doesn't skip a count
           <details key={i} className="group border-b border-border">
             <summary className="flex cursor-pointer list-none items-baseline gap-2.5 py-3 [&::-webkit-details-marker]:hidden">
               {numbered && (
                 <span className="w-6 shrink-0 font-display font-bold text-lg leading-none text-bureau-stamp-ink tabular-nums">
-                  {i + 1}
+                  {items.slice(0, i + 1).filter((it) => it.title).length}
                 </span>
               )}
               <span
