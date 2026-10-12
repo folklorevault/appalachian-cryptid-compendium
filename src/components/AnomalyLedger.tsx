@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { urlFor } from "@/lib/sanity/image";
+import { ledgerDate } from "@/lib/anomalyFile";
 import type { AnomalyType, SanityAnomalyListItem } from "@/types/sanity";
 
 export interface LedgerEntry {
@@ -20,13 +21,6 @@ const TYPE_TAB_LABEL: Partial<Record<AnomalyType, string>> = {
   "Weather Oddities": "Weather",
   "Time Weirdness": "Time",
 };
-
-/** A few words for the ledger column: the short field, else the start of the long one. */
-function ledgerDate(a: SanityAnomalyListItem): string {
-  if (a.firstDocumentedShort) return a.firstDocumentedShort;
-  const head = a.firstDocumented?.split(/\s\(|;|\.\s/)[0]?.trim() ?? "";
-  return head.length > 36 ? `${head.slice(0, 34).trimEnd()}…` : head;
-}
 
 function typeLabel(t: AnomalyType) {
   return t.replace("/", " / ");

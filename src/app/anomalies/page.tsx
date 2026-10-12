@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { fetchAnomalies } from "@/lib/sanity/fetchers";
 import { AnomalyLedger, type LedgerEntry } from "@/components/AnomalyLedger";
+import { formatFileNo } from "@/lib/anomalyFile";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { Footer } from "@/components/Footer";
 
@@ -29,7 +30,7 @@ export default async function AnomaliesPage() {
   );
   const width = Math.max(3, String(byAge.length).length);
   const entries: LedgerEntry[] = byAge
-    .map((anomaly, i) => ({ anomaly, fileNo: String(i + 1).padStart(width, "0") }))
+    .map((anomaly, i) => ({ anomaly, fileNo: formatFileNo(i + 1, width) }))
     .reverse();
 
   const active = anomalies.filter((a) => a.status === "Active").length;

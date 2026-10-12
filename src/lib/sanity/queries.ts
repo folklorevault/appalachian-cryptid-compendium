@@ -163,6 +163,7 @@ export const filteredAnomaliesQuery = `*[_type == "anomaly"
 
 export const anomalyBySlugQuery = `*[_type == "anomaly" && slug.current == $slug][0] {
   _id,
+  "fileNumber": count(*[_type == "anomaly" && _createdAt < ^._createdAt]) + 1,
   name,
   subhead,
   slug,
@@ -173,6 +174,7 @@ export const anomalyBySlugQuery = `*[_type == "anomaly" && slug.current == $slug
   anomalyType,
   status,
   firstDocumented,
+  firstDocumentedShort,
   description,
   metaTitle,
   metaDescription,
@@ -230,6 +232,7 @@ export const mapAnomaliesQuery = `*[_type == "anomaly" && defined(coordinates)] 
 
 export const relatedAnomaliesQuery = `*[_type == "anomaly" && slug.current != $slug && (anomalyType == $anomalyType || region == $region)][0...3] {
   _id,
+  "fileNumber": count(*[_type == "anomaly" && _createdAt < ^._createdAt]) + 1,
   name,
   slug,
   location,

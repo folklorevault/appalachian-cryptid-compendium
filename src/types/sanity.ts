@@ -139,6 +139,9 @@ export interface SanityWitnessAccount {
 }
 
 export interface SanityAnomaly {
+  /** Position in creation order (1 = oldest); rendered as AD-001. */
+  fileNumber?: number
+  firstDocumentedShort?: string
   _id: string
   _type: 'anomaly'
   name: string
@@ -174,6 +177,7 @@ export interface SanityAnomaly {
 
 // Type for anomaly list queries (less data)
 export interface SanityAnomalyListItem {
+  fileNumber?: number
   _id: string
   _createdAt?: string
   name: string

@@ -3,9 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { truncateMeta, toParagraphs } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Stamp } from "@/components/Stamp";
 import { IncidentLog } from "@/components/IncidentLog";
 import { SightingDistribution } from "@/components/SightingDistribution";
 import { ShareButtons } from "@/components/ShareButtons";
@@ -16,8 +13,6 @@ import {
   FilingCabinetControls,
 } from "@/components/FilingDrawer";
 import {
-  MapPin,
-  Calendar,
   Clock,
   Zap,
   Ghost,
@@ -53,8 +48,9 @@ import {
   fetchBulletinsReferencing,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
-import { getAnomalyStatusColor } from "@/lib/caseUtils";
-import type { AnomalyType } from "@/types/sanity";
+import { formatFileNo, ledgerDate, parseWitness } from "@/lib/anomalyFile";
+import { stateName } from "@/lib/states";
+import type { AnomalyType, SanityAnomalyListItem } from "@/types/sanity";
 
 // Icon mapping for anomaly types
 const typeIcons: Record<AnomalyType, typeof Zap> = {
@@ -168,9 +164,33 @@ export default async function AnomalyDetailPage({
 
 
 
-  const caseNumber = `${(anomaly.slug?.current ?? "UNK").toUpperCase().slice(0, 3)}-${(anomaly.slug?.current?.length ?? 0).toString().padStart(3, "0")}`;
+  const fileNo = anomaly.fileNumber ? formatFileNo(anomaly.fileNumber) : null;
+  // IncidentLog prints this on the transmission slip; match the ledger's numbering.
+  const caseNumber = fileNo ? `AD-${fileNo}` : "AD-PENDING";
 
   const TypeIcon = typeIcons[anomaly.anomalyType] || Zap;
+  const firstDocumented = ledgerDate(anomaly);
+
+  const hasCaseSections = Boolean(
+    anomaly.phenomenon || anomaly.theories || anomaly.relatedLocations
+  );
+  const hasBriefings = Boolean(anomaly.declassifiedBriefings?.length);
+  const hasWitnesses = Boolean(anomaly.witnesses?.length);
+
+  // "In this file" index — only sections this file actually has, in page order.
+  const contents = [
+    anomaly.fileAbstract && { id: "file-abstract", label: "File abstract" },
+    ...(anomaly.caseFileSections ?? []).map((section) => ({
+      id: `cfs-${section._key}`,
+      label: section.heading,
+    })),
+    anomaly.sightings?.length && { id: "sightings-heading", label: "Sightings" },
+    hasCaseSections && { id: "case-sections", label: "Case sections" },
+    hasBriefings && { id: "transmissions-received", label: "Transmissions received" },
+    hasWitnesses && { id: "witness-accounts", label: "Witness accounts" },
+    anomaly.noteOnRecord && { id: "note-on-record", label: "Note on the record" },
+    anomaly.bureauNotes && { id: "field-transmission", label: "Field transmission" },
+  ].filter((item): item is { id: string; label: string } => Boolean(item));
 
   return (
     <div className="min-h-screen bg-background paper-texture">
@@ -208,398 +228,315 @@ export default async function AnomalyDetailPage({
       )}
 
       <main id="main-content">
-        {/* Breadcrumb */}
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <Breadcrumb>
-            <BreadcrumbList className="font-typewriter uppercase tracking-widest text-xs">
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">Directory</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>/</BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/anomalies">Anomalies Desk</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>/</BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbPage>{anomaly.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
+        {/* ── Cover: ink plate, same stock as the desk ledger ────────── */}
+        <section
+          className="plate-stock relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
+          aria-labelledby="anomaly-heading"
+        >
+          <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8">
+            <Breadcrumb className="pt-4">
+              <BreadcrumbList className="font-typewriter uppercase tracking-label text-xs text-bureau-manila-light/80">
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild className="hover:text-bureau-paper">
+                    <Link href="/">Directory</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild className="hover:text-bureau-paper">
+                    <Link href="/anomalies">Anomalies Desk</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-bureau-paper">{anomaly.name}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
 
-        <div className="max-w-6xl mx-auto px-6 pb-8">
-          {/* Cover Sheet — photo clipped to left, identifying info on right */}
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mb-10 items-start">
-            <div className="relative shrink-0 w-[220px] sm:w-[280px] lg:w-[320px]">
-              <div className="relative aspect-3/4 overflow-hidden rounded-sm border-2 border-bureau-border shadow-[3px_3px_8px_rgba(42,42,42,0.15)]">
-                {imageUrl ? (
-                  <Image
-                    src={imageUrl}
-                    alt={
-                      (anomaly.imageAlt || anomaly.name).length > 125
-                        ? (anomaly.imageAlt || anomaly.name).slice(0, 122) + '...'
-                        : (anomaly.imageAlt || anomaly.name)
-                    }
-                    fill
-                    priority
-                    sizes="(max-width: 640px) 220px, (max-width: 1024px) 280px, 320px"
-                    className="object-cover object-top sepia-light"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
-                    <TypeIcon className="h-24 w-24 text-muted-foreground/30" />
-                  </div>
+            <div className="grid gap-8 pt-10 pb-12 md:grid-cols-[minmax(0,1fr)_240px] md:items-end md:gap-14 lg:grid-cols-[minmax(0,1fr)_280px] lg:pt-12 lg:pb-14">
+              <div className="min-w-0">
+                {fileNo && (
+                  <p className="flex flex-wrap items-baseline gap-x-3.5 gap-y-1 mb-3">
+                    <span className="font-display font-bold text-7xl lg:text-8xl leading-none text-bureau-rust tabular-nums">
+                      {fileNo}
+                    </span>
+                    <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-rust-ink">
+                      Anomaly file AD-{fileNo}
+                    </span>
+                  </p>
                 )}
-              </div>
-              <div className="absolute -bottom-2 -right-2">
-                <Stamp text="Anomaly" variant="primary" rotation={-8} className="text-xs px-2 py-0.5" />
-              </div>
-            </div>
+                <h1
+                  id="anomaly-heading"
+                  className="font-display font-bold text-plate leading-none tracking-tight text-bureau-paper text-balance mb-5"
+                >
+                  {anomaly.name}
+                </h1>
+                {anomaly.subhead && (
+                  <p className="font-sans text-base leading-relaxed text-bureau-manila-light/90 max-w-[56ch] mb-6">
+                    {anomaly.subhead}
+                  </p>
+                )}
 
-            <div className="flex-1 min-w-0 pt-1">
-              <div className="text-xs uppercase tracking-eyebrow text-muted-foreground font-typewriter mb-2">
-                Case File #{caseNumber}
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-3.5 max-w-2xl pt-4 border-t border-dashed border-bureau-manila-light/30 font-typewriter text-sm tracking-type sm:grid-cols-4">
+                  <CoverFact label="Type">
+                    <span className="uppercase text-bureau-rust-ink">
+                      {anomaly.anomalyType.replace("/", " / ")}
+                    </span>
+                  </CoverFact>
+                  <CoverFact label="Status">{anomaly.status}</CoverFact>
+                  {firstDocumented && (
+                    <CoverFact label="First documented">{firstDocumented}</CoverFact>
+                  )}
+                  {anomaly.region && (
+                    <CoverFact label="Region">{stateName(anomaly.region)}</CoverFact>
+                  )}
+                  {anomaly.location && (
+                    <CoverFact label="Location" wide>
+                      {anomaly.location}
+                    </CoverFact>
+                  )}
+                  {anomaly.frequency && (
+                    <CoverFact label="Frequency" wide>
+                      {anomaly.frequency}
+                    </CoverFact>
+                  )}
+                </dl>
               </div>
-              <h1 className="text-title font-bold text-foreground font-display mb-2 leading-tight">
-                {anomaly.name}
-              </h1>
-              {anomaly.subhead && (
-                <p className="text-sm text-foreground/80 leading-relaxed mb-3 max-w-lg">
-                  {anomaly.subhead}
-                </p>
-              )}
 
-              <div className="space-y-2 pt-3 border-t border-dashed border-[hsl(var(--bureau-border)/0.5)]">
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-primary shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Location</span>
-                  <span className="text-foreground">{anomaly.location}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <TypeIcon className="h-4 w-4 text-accent shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Type</span>
-                  <span className="text-foreground">{anomaly.anomalyType}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="h-4 w-4 shrink-0" />
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Status</span>
-                  <Badge className={`${getAnomalyStatusColor(anomaly.status)} text-xs px-1.5 py-0`}>
-                    {anomaly.status}
-                  </Badge>
-                </div>
-                {anomaly.firstDocumented && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">First Doc.</span>
-                    <span className="text-foreground">{anomaly.firstDocumented}</span>
+              <div className="w-full max-w-[220px] md:max-w-none">
+                <div className="aspect-3/4 max-w-full border border-bureau-manila-light/35 p-1.5">
+                  <div className="relative h-full w-full overflow-hidden bg-bureau-ink-dark">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={
+                          (anomaly.imageAlt || anomaly.name).length > 125
+                            ? (anomaly.imageAlt || anomaly.name).slice(0, 122) + "..."
+                            : anomaly.imageAlt || anomaly.name
+                        }
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 220px, (max-width: 1024px) 240px, 280px"
+                        className="object-cover object-top sepia-light"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <TypeIcon className="h-16 w-16 text-bureau-manila-light/30" aria-hidden="true" />
+                      </div>
+                    )}
                   </div>
-                )}
-                {anomaly.frequency && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Frequency</span>
-                    <span className="text-foreground">{anomaly.frequency}</span>
-                  </div>
-                )}
-                {anomaly.region && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="h-4 w-4 shrink-0" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-typewriter w-20 shrink-0">Region</span>
-                    <span className="text-foreground">{anomaly.region}</span>
-                  </div>
-                )}
+                </div>
               </div>
             </div>
           </div>
+        </section>
 
-          {/* File Abstract — always-visible summary of record, entity-first for search snippets */}
-          {anomaly.fileAbstract && (
-            <section aria-labelledby="file-abstract-heading" className="mb-10">
-              <div className="relative rounded-sm border-2 border-bureau-border/60 bg-bureau-manila-light shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]">
-                <div className="flex items-center gap-3 px-5 py-2 border-b-2 border-bureau-border/40 bg-bureau-manila">
-                  <span
-                    id="file-abstract-heading"
-                    className="font-typewriter text-xs font-bold tracking-label uppercase text-foreground"
-                  >
-                    File Abstract
-                  </span>
-                  <span
-                    className="flex-1 border-t border-dashed border-bureau-border/40"
-                    aria-hidden="true"
-                  />
-                  <span className="font-typewriter text-[0.65rem] tracking-eyebrow uppercase text-bureau-ink-muted">
-                    Summary of Record
-                  </span>
+        {/* ── The file: paper reading body ──────────────────────────── */}
+        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-14">
+          <div className="grid gap-10 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-16">
+            {contents.length >= 3 && (
+              <nav aria-label="In this file" className="hidden lg:block">
+                <div className="sticky top-24">
+                  <p className="font-typewriter text-tag tracking-label uppercase text-muted-foreground">
+                    In this file
+                  </p>
+                  <ol className="mt-2 border-t border-border">
+                    {contents.map((item, i) => (
+                      <li key={item.id}>
+                        <a
+                          href={`#${item.id}`}
+                          className="flex gap-2.5 py-2 border-b border-border font-typewriter text-xs tracking-type text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <span className="min-w-4 text-bureau-stamp-ink tabular-nums">{i + 1}</span>
+                          {item.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <div className="px-5 py-4 bg-bureau-paper text-bureau-ink text-[0.95rem] leading-relaxed space-y-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
+              </nav>
+            )}
+
+            <div className="min-w-0 max-w-3xl">
+              {/* File Abstract — always-visible summary of record, entity-first for search snippets */}
+              {anomaly.fileAbstract && (
+                <FileSection id="file-abstract" kicker="Summary of record" title="File Abstract">
                   {toParagraphs(anomaly.fileAbstract).map((p, i) => (
-                    <p key={i}>{p}</p>
+                    <p key={i} className={i === 0 ? "text-lg" : undefined}>
+                      {p}
+                    </p>
                   ))}
-                </div>
-              </div>
-            </section>
-          )}
+                </FileSection>
+              )}
 
-          {/* Case File Sections — always-visible open folders (not togglable, so headings
-              carry the search query); chrome matches the File Abstract box above */}
-          {anomaly.caseFileSections && anomaly.caseFileSections.length > 0 && (
-            <div className="mb-10 space-y-6">
-              {anomaly.caseFileSections.map((section) => (
-                <section
+              {/* Case File Sections — always visible (not togglable) so headings carry the search query */}
+              {anomaly.caseFileSections?.map((section) => (
+                <FileSection
                   key={section._key}
-                  aria-labelledby={`cfs-${section._key}`}
-                  className="relative rounded-sm border-2 border-bureau-border/60 bg-bureau-manila-light shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.1)]"
+                  id={`cfs-${section._key}`}
+                  kicker={section.label}
+                  title={section.heading}
                 >
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-2.5 border-b-2 border-bureau-border/40 bg-bureau-manila">
-                    <h2
-                      id={`cfs-${section._key}`}
-                      className="font-display text-lg font-bold text-foreground leading-tight"
-                    >
-                      {section.heading}
-                    </h2>
-                    {section.label && (
-                      <>
-                        <span
-                          className="flex-1 min-w-4 border-t border-dashed border-bureau-border/40"
-                          aria-hidden="true"
-                        />
-                        <span className="font-typewriter text-[0.65rem] tracking-eyebrow uppercase text-bureau-ink-muted">
-                          {section.label}
-                        </span>
-                      </>
+                  {toParagraphs(section.body).map((p, i) => (
+                    <p key={i} className="whitespace-pre-line">
+                      {p}
+                    </p>
+                  ))}
+                </FileSection>
+              ))}
+
+              {/* Occurrence Distribution — structured record list (SEO target for "[name] sightings") */}
+              <SightingDistribution
+                cryptidName={anomaly.name}
+                sightings={anomaly.sightings}
+                showMap={false}
+              />
+
+              {/* Long sections stay in drawers — readers like opening them */}
+              {hasCaseSections && (
+                <FileBlock>
+                  <FilingCabinet defaultOpen={anomaly.phenomenon ? ["phenomenon"] : []}>
+                    <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
+                      <SectionTitle id="case-sections">Case Sections</SectionTitle>
+                      <FilingCabinetControls />
+                    </div>
+                    {anomaly.phenomenon && (
+                      <FilingDrawer value="phenomenon" label="Phenomenon Description">
+                        <p className="whitespace-pre-line">{anomaly.phenomenon}</p>
+                      </FilingDrawer>
                     )}
-                  </div>
-                  <div className="px-5 py-4 bg-bureau-paper text-bureau-ink text-[0.95rem] leading-relaxed space-y-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]">
-                    {toParagraphs(section.body).map((p, i) => (
+                    {anomaly.theories && (
+                      <FilingDrawer value="theories" label="Theories & Explanations">
+                        <p className="whitespace-pre-line">{anomaly.theories}</p>
+                      </FilingDrawer>
+                    )}
+                    {anomaly.relatedLocations && (
+                      <FilingDrawer value="locations" label="Related Locations">
+                        <p className="whitespace-pre-line">{anomaly.relatedLocations}</p>
+                      </FilingDrawer>
+                    )}
+                  </FilingCabinet>
+                </FileBlock>
+              )}
+
+              {hasBriefings && (
+                <FileBlock>
+                  <FilingCabinet defaultOpen={[]}>
+                    <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
+                      <SectionTitle id="transmissions-received">Transmissions Received</SectionTitle>
+                      <FilingCabinetControls />
+                    </div>
+                    {anomaly.declassifiedBriefings!.map((briefing) => (
+                      <FilingDrawer key={briefing._key} value={briefing._key} label={briefing.question}>
+                        <p className="whitespace-pre-line">{briefing.answer}</p>
+                      </FilingDrawer>
+                    ))}
+                  </FilingCabinet>
+                </FileBlock>
+              )}
+
+              {/* Witness Accounts — archive metadata left, testimony right */}
+              {hasWitnesses && (
+                <FileBlock>
+                  <SectionTitle id="witness-accounts">Witness Accounts</SectionTitle>
+                  <ol className="mt-5 border-t border-border">
+                    {anomaly.witnesses!.map((witness, index) => {
+                      const who = parseWitness(witness.witness);
+                      return (
+                        <li
+                          key={witness._key}
+                          className="grid gap-4 py-7 border-b border-border last:border-b-0 last:pb-0 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-8"
+                        >
+                          <dl className="space-y-3 font-typewriter text-xs tracking-type text-muted-foreground">
+                            <div>
+                              <dt className="sr-only">Addendum</dt>
+                              <dd className="text-tag tracking-label uppercase text-bureau-stamp-ink">
+                                Addendum {String.fromCharCode(65 + index)}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="sr-only">Witness</dt>
+                              <dd className="text-sm text-foreground">{who.name}</dd>
+                              {who.role && <dd className="mt-0.5">{who.role}</dd>}
+                            </div>
+                            {who.location && (
+                              <div>
+                                <dt className="text-tag tracking-label uppercase">Location</dt>
+                                <dd className="text-foreground/85">{who.location}</dd>
+                              </div>
+                            )}
+                            {witness.date && (
+                              <div>
+                                <dt className="text-tag tracking-label uppercase">Date</dt>
+                                <dd className="text-foreground/85">{witness.date}</dd>
+                              </div>
+                            )}
+                          </dl>
+                          <div className="space-y-3.5 font-sans text-base sm:text-lg leading-relaxed text-foreground/90">
+                            {toParagraphs(witness.account).map((p, i) => (
+                              <p key={i} className="whitespace-pre-line">
+                                {i === 0 && (
+                                  <span
+                                    className="mr-1 font-display font-bold text-2xl leading-none text-bureau-stamp-ink/60"
+                                    aria-hidden="true"
+                                  >
+                                    &ldquo;
+                                  </span>
+                                )}
+                                {p}
+                              </p>
+                            ))}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </FileBlock>
+              )}
+
+              {/* Note on the Record — the Bureau's own voice, set in the typewriter face */}
+              {anomaly.noteOnRecord && (
+                <FileBlock>
+                  <SectionTitle id="note-on-record">Note on the Record</SectionTitle>
+                  <div className="mt-5 space-y-4 max-w-[64ch] font-typewriter text-sm tracking-type leading-loose text-foreground/85">
+                    {toParagraphs(anomaly.noteOnRecord).map((p, i) => (
                       <p key={i} className="whitespace-pre-line">
                         {p}
                       </p>
                     ))}
                   </div>
-                </section>
-              ))}
+                </FileBlock>
+              )}
+
+              {/* Field Transmission — the paper incident slip */}
+              {anomaly.bureauNotes && (
+                <FileBlock>
+                  <SectionTitle id="field-transmission" className="mb-6">
+                    Field Transmission
+                  </SectionTitle>
+                  <IncidentLog
+                    content={anomaly.bureauNotes}
+                    anomalyName={anomaly.name}
+                    caseNumber={caseNumber}
+                    station={
+                      anomaly.subRegion
+                        ? `${anomaly.subRegion.toUpperCase()} OUTPOST`
+                        : `${anomaly.region} FIELD STATION`
+                    }
+                  />
+                </FileBlock>
+              )}
             </div>
-          )}
+          </div>
+        </div>
 
-          {/* Occurrence Distribution — structured, always-visible record list
-              (SEO target for "[name] sightings"). Reuses the cryptid distribution
-              component as-is; Phase 4 wires these occurrences into the /map layer. */}
-          <SightingDistribution
-            cryptidName={anomaly.name}
-            sightings={anomaly.sightings}
-            showMap={false}
-          />
+        {/* ── More from the desk: related files as ledger rows ───────── */}
+        {relatedAnomalies.length > 0 && (
+          <MoreFromTheDesk related={relatedAnomalies} />
+        )}
 
-          {/* Filing Cabinet Sections */}
-          {(anomaly.phenomenon ||
-            anomaly.theories ||
-            anomaly.relatedLocations) && (
-            <div className="mb-8">
-              <FilingCabinet
-                defaultOpen={anomaly.phenomenon ? ["phenomenon"] : []}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-foreground font-display">
-                    Case Sections
-                  </h2>
-                  <FilingCabinetControls />
-                </div>
-                {anomaly.phenomenon && (
-                  <FilingDrawer
-                    value="phenomenon"
-                    label="Phenomenon Description"
-                  >
-                    <p className="whitespace-pre-line">{anomaly.phenomenon}</p>
-                  </FilingDrawer>
-                )}
-                {anomaly.theories && (
-                  <FilingDrawer
-                    value="theories"
-                    label="Theories & Explanations"
-                  >
-                    <p className="whitespace-pre-line">{anomaly.theories}</p>
-                  </FilingDrawer>
-                )}
-                {anomaly.relatedLocations && (
-                  <FilingDrawer value="locations" label="Related Locations">
-                    <p className="whitespace-pre-line">
-                      {anomaly.relatedLocations}
-                    </p>
-                  </FilingDrawer>
-                )}
-              </FilingCabinet>
-            </div>
-          )}
-
-          {/* Declassified Briefings */}
-          {anomaly.declassifiedBriefings &&
-            anomaly.declassifiedBriefings.length > 0 && (
-              <div className="mb-8">
-                <FilingCabinet defaultOpen={[]}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-foreground font-display">
-                      Transmissions Received
-                    </h2>
-                    <FilingCabinetControls />
-                  </div>
-                  {anomaly.declassifiedBriefings.map((briefing) => (
-                    <FilingDrawer
-                      key={briefing._key}
-                      value={briefing._key}
-                      label={briefing.question}
-                    >
-                      <p className="whitespace-pre-line">{briefing.answer}</p>
-                    </FilingDrawer>
-                  ))}
-                </FilingCabinet>
-              </div>
-            )}
-
-          {/* Witness Accounts */}
-          {anomaly.witnesses && anomaly.witnesses.length > 0 && (
-            <div className="mb-8">
-              <FilingCabinet defaultOpen={["addendum-0"]}>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-foreground font-display">
-                    Witness Accounts
-                  </h2>
-                  <FilingCabinetControls />
-                </div>
-                {anomaly.witnesses.map((witness, index) => {
-                  const addendumLetter = String.fromCharCode(65 + index);
-                  return (
-                    <FilingDrawer
-                      key={witness._key}
-                      value={`addendum-${index}`}
-                      label={`Addendum ${addendumLetter}`}
-                    >
-                      <div className="flex flex-wrap gap-4 mb-4 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">
-                            Witness:
-                          </span>{" "}
-                          <span className="text-foreground font-medium">
-                            {witness.witness}
-                          </span>
-                        </div>
-                        {witness.date && (
-                          <div>
-                            <span className="text-muted-foreground">
-                              Date:
-                            </span>{" "}
-                            <span className="text-foreground">
-                              {witness.date}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-foreground/80 leading-relaxed italic border-l-2 border-primary pl-4">
-                        &ldquo;{witness.account}&rdquo;
-                      </p>
-                    </FilingDrawer>
-                  );
-                })}
-              </FilingCabinet>
-            </div>
-          )}
-
-          {/* Note on the Record */}
-          {anomaly.noteOnRecord && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-foreground font-display mb-4">
-                Note on the Record
-              </h2>
-              <Card className="border-2 border-dashed border-[hsl(var(--bureau-border)/0.5)]">
-                <CardContent className="p-5">
-                  <p className="whitespace-pre-line text-foreground/80 leading-relaxed italic">
-                    {anomaly.noteOnRecord}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Incident Log */}
-          {anomaly.bureauNotes && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-foreground font-display mb-6">
-                Field Transmission
-              </h2>
-              <IncidentLog
-                content={anomaly.bureauNotes}
-                anomalyName={anomaly.name}
-                caseNumber={caseNumber}
-                station={
-                  anomaly.subRegion
-                    ? `${anomaly.subRegion.toUpperCase()} OUTPOST`
-                    : `${anomaly.region} FIELD STATION`
-                }
-              />
-            </div>
-          )}
-
-          {/* Related Anomalies */}
-          {relatedAnomalies.filter((r) => r.gridImage).length > 0 && (
-            <div className="mb-8 border-t border-border pt-8">
-              <h2 className="text-xl font-bold text-foreground font-display mb-6">
-                Related Case Files
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {relatedAnomalies
-                  .filter((related) => related.gridImage)
-                  .map((related) => {
-                    const relatedImageUrl = urlFor(related.gridImage!)
-                      .width(400)
-                      .height(400)
-                      .auto("format")
-                      .url();
-                    const RelatedIcon =
-                      typeIcons[related.anomalyType] || Zap;
-                    return (
-                      <Link
-                        key={related._id}
-                        href={`/anomaly/${related.slug?.current}`}
-                        className="group"
-                      >
-                        <Card className="border-2 border-border hover:border-bureau-border hover:-translate-y-[3px] hover:shadow-[0_6px_20px_rgba(42,42,42,0.12)] transition-all duration-200 ease-out overflow-hidden">
-                          <div className="relative aspect-square overflow-hidden">
-                            <Image
-                              src={relatedImageUrl}
-                              alt={related.name}
-                              fill
-                              sizes="(max-width: 640px) 50vw, 200px"
-                              className="object-cover object-top transition-transform group-hover:scale-105 sepia-light"
-                            />
-                            <div className="absolute bottom-2 left-2">
-                              <Badge
-                                variant="outline"
-                                className="bg-background/80 backdrop-blur-xs text-xs"
-                              >
-                                <RelatedIcon className="h-3 w-3 mr-1" />
-                                {related.anomalyType}
-                              </Badge>
-                            </div>
-                          </div>
-                          <CardContent className="p-4">
-                            <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
-                              {related.name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              {related.location}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-
+        <div className="max-w-6xl mx-auto px-6 lg:px-8 pt-8 pb-8">
           {/* Bulletins that reference this case file */}
           <BulletinRefList
             heading="Referenced in Bureau Bulletins"
@@ -625,5 +562,129 @@ export default async function AnomalyDetailPage({
       <BackToTop />
       <Footer />
     </div>
+  );
+}
+
+// ── Page pieces ──────────────────────────────────────────
+
+function CoverFact({
+  label,
+  wide = false,
+  children,
+}: {
+  label: string;
+  wide?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={wide ? "col-span-full" : undefined}>
+      <dt className="mb-1 text-tag tracking-label uppercase text-bureau-manila-light/70">
+        {label}
+      </dt>
+      <dd className={wide ? "text-xs leading-relaxed text-bureau-manila-light/85" : undefined}>
+        {children}
+      </dd>
+    </div>
+  );
+}
+
+function SectionTitle({
+  id,
+  className,
+  children,
+}: {
+  id: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <h2
+      id={id}
+      className={`scroll-mt-28 font-display font-bold text-2xl lg:text-3xl leading-tight text-foreground ${className ?? ""}`}
+    >
+      {children}
+    </h2>
+  );
+}
+
+/** One block of the file, separated from the next by a thin rule. */
+function FileBlock({ children }: { children: React.ReactNode }) {
+  return <div className="mb-10 pb-10 border-b border-border last:mb-0 last:pb-0 last:border-0">{children}</div>;
+}
+
+function FileSection({
+  id,
+  kicker,
+  title,
+  children,
+}: {
+  id: string;
+  kicker?: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section aria-labelledby={id} className="mb-10 pb-10 border-b border-border">
+      {kicker && (
+        <p className="mb-1.5 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-stamp-ink">
+          {kicker}
+        </p>
+      )}
+      <SectionTitle id={id} className="mb-5">
+        {title}
+      </SectionTitle>
+      <div className="space-y-4 font-sans text-base leading-relaxed text-foreground/90">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function MoreFromTheDesk({ related }: { related: SanityAnomalyListItem[] }) {
+  return (
+    <section
+      className="plate-stock relative bg-bureau-ink text-bureau-manila-light paper-texture"
+      aria-labelledby="more-from-desk-heading"
+    >
+      <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8 py-10 lg:py-12">
+        <div className="flex flex-wrap items-baseline justify-between gap-3 mb-2">
+          <h2
+            id="more-from-desk-heading"
+            className="font-display font-bold text-2xl lg:text-3xl text-bureau-paper"
+          >
+            More from the desk
+          </h2>
+          <Link
+            href="/anomalies"
+            className="font-typewriter text-sm tracking-type border-b border-dotted border-bureau-manila-light/70 hover:border-solid focus-visible:outline-bureau-rust-ink"
+          >
+            All anomalies →
+          </Link>
+        </div>
+        <ul>
+          {related.map((r) => (
+            <li key={r._id} className="border-t border-bureau-manila-light/15">
+              <Link
+                href={`/anomaly/${r.slug.current}`}
+                className="group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-4.5 focus-visible:outline-bureau-rust-ink md:grid-cols-[80px_minmax(0,1fr)_160px_120px] md:items-center md:gap-5"
+              >
+                <span className="row-span-3 font-display font-bold text-4xl leading-none text-bureau-rust tabular-nums md:row-span-1 md:text-5xl">
+                  {r.fileNumber ? formatFileNo(r.fileNumber) : "—"}
+                </span>
+                <span className="font-display font-bold text-xl md:text-2xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
+                  {r.name}
+                </span>
+                <span className="col-start-2 font-typewriter text-xs tracking-type uppercase text-bureau-rust-ink md:col-start-auto">
+                  {r.anomalyType.replace("/", " / ")}
+                </span>
+                <span className="col-start-2 font-typewriter text-xs tracking-type text-bureau-manila-light/85 md:col-start-auto">
+                  {r.status}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
