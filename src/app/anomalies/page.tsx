@@ -58,7 +58,7 @@ export default async function AnomaliesPage() {
                 </p>
                 <h1
                   id="anomalies-heading"
-                  className="font-display font-bold text-plate leading-none tracking-tight text-bureau-paper text-balance mb-6"
+                  className="font-display font-bold text-hero leading-[1.08] tracking-tight text-bureau-paper text-balance mb-6"
                 >
                   The Anomalies Desk
                 </h1>
@@ -68,13 +68,13 @@ export default async function AnomaliesPage() {
                   stories that have traveled through the mountains and beyond
                   for generations.
                 </p>
-                <p className="font-typewriter text-sm tracking-type text-bureau-manila-light/70">
+                <p className="font-typewriter text-xs tracking-type text-bureau-manila-light/70">
                   None satisfactorily explained.
                 </p>
               </div>
 
               {anomalies.length > 0 && (
-                <dl className="flex flex-wrap gap-x-8 gap-y-2.5 font-typewriter text-sm tracking-type">
+                <dl className="flex flex-wrap gap-x-8 gap-y-2.5 font-typewriter text-xs tracking-type">
                   <Tally n={anomalies.length} label={anomalies.length === 1 ? "file on the desk" : "files on the desk"} />
                   {active > 0 && <Tally n={active} label="active" />}
                   {cold > 0 && <Tally n={cold} label="gone cold" />}

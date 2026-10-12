@@ -53,7 +53,7 @@ export default async function Home() {
             }}
           />
 
-          <div className="relative z-10 max-w-[680px] mx-auto">
+          <div className="relative z-10 max-w-3xl mx-auto">
             {/* Classification label */}
             <div className="flex items-center justify-center gap-3.5 mb-6" aria-hidden="true">
               <span className="block w-10 h-px bg-border" />
@@ -71,7 +71,7 @@ export default async function Home() {
             </h1>
 
             {/* SEO description */}
-            <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-[520px] mx-auto mb-2">
+            <p className="font-sans text-base text-muted-foreground leading-relaxed max-w-[520px] mx-auto mb-2">
               The <strong className="text-foreground font-semibold">Appalachian Cryptid Field Guide</strong> documents cryptids, monsters, unexplained mysteries and lore from the hollers of{" "}
               <strong className="text-foreground font-semibold">West Virginia</strong>,{" "}
               <strong className="text-foreground font-semibold">Tennessee</strong>,{" "}

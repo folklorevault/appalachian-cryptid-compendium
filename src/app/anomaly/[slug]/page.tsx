@@ -271,7 +271,7 @@ export default async function AnomalyDetailPage({
                 )}
                 <h1
                   id="anomaly-heading"
-                  className="font-display font-bold text-plate leading-none tracking-tight text-bureau-paper text-balance mb-5"
+                  className="font-display font-bold text-hero leading-[1.08] tracking-tight text-bureau-paper text-balance mb-5"
                 >
                   {anomaly.name}
                 </h1>
@@ -366,7 +366,7 @@ export default async function AnomalyDetailPage({
               {anomaly.fileAbstract && (
                 <FileSection id="file-abstract" kicker="Summary of record" title="File Abstract">
                   {toParagraphs(anomaly.fileAbstract).map((p, i) => (
-                    <p key={i} className={i === 0 ? "text-lg" : undefined}>
+                    <p key={i}>
                       {p}
                     </p>
                   ))}
@@ -401,7 +401,7 @@ export default async function AnomalyDetailPage({
               {phenomenon.length > 0 && (
                 <FileSection id="the-phenomenon" title="The Phenomenon">
                   {phenomenon.map((p, i) => (
-                    <p key={i} className={i === 0 ? "text-lg" : undefined}>
+                    <p key={i}>
                       {p}
                     </p>
                   ))}
@@ -445,7 +445,7 @@ export default async function AnomalyDetailPage({
                               </div>
                             )}
                           </dl>
-                          <div className="space-y-3.5 font-sans text-base sm:text-lg leading-relaxed text-foreground/90">
+                          <div className="space-y-3.5 font-sans text-base leading-relaxed text-foreground/90">
                             {toParagraphs(witness.account).map((p, i) => (
                               <p key={i} className="whitespace-pre-line">
                                 {i === 0 && (
@@ -704,7 +704,7 @@ function SectionTitle({
   return (
     <h2
       id={id}
-      className={`scroll-mt-28 font-display font-bold text-2xl lg:text-3xl leading-tight text-foreground ${className ?? ""}`}
+      className={`scroll-mt-28 font-display font-bold text-xl leading-tight text-foreground ${className ?? ""}`}
     >
       {children}
     </h2>
@@ -783,7 +783,7 @@ function MoreFromTheDesk({
         <div className="flex flex-wrap items-baseline justify-between gap-3 mb-6">
           <h2
             id="more-from-desk-heading"
-            className="font-display font-bold text-2xl lg:text-3xl text-bureau-paper"
+            className="font-display font-bold text-xl text-bureau-paper"
           >
             More from the desk
           </h2>
@@ -803,7 +803,7 @@ function MoreFromTheDesk({
                 <li key={r._id} className="border-t border-bureau-manila-light/15">
                   <Link href={`/anomaly/${r.slug.current}`} className={DESK_ROW}>
                     <DeskNumber prefix="AD" number={r.fileNumber ? formatFileNo(r.fileNumber) : "—"} />
-                    <span className="font-display font-bold text-xl md:text-2xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
+                    <span className="font-display font-bold text-xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
                       {r.name}
                     </span>
                     <span className="col-start-2 font-typewriter text-xs tracking-type uppercase text-bureau-rust-ink md:col-start-auto">
@@ -833,7 +833,7 @@ function MoreFromTheDesk({
                     <Link href={`/bulletin/${b.slug.current}`} className={DESK_ROW}>
                       <DeskNumber prefix={prefix} number={number} />
                       <span className="min-w-0">
-                        <span className="block font-display font-bold text-xl md:text-2xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
+                        <span className="block font-display font-bold text-xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
                           {b.title}
                         </span>
                         {b.summary && (
