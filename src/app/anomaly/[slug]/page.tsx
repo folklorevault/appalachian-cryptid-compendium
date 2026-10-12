@@ -8,11 +8,6 @@ import { SightingDistribution } from "@/components/SightingDistribution";
 import { ShareButtons } from "@/components/ShareButtons";
 import { BackToTop } from "@/components/BackToTop";
 import {
-  FilingCabinet,
-  FilingDrawer,
-  FilingCabinetControls,
-} from "@/components/FilingDrawer";
-import {
   Clock,
   Zap,
   Ghost,
@@ -48,7 +43,13 @@ import {
   fetchBulletinsReferencing,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
-import { formatFileNo, ledgerDate, parseWitness } from "@/lib/anomalyFile";
+import {
+  formatFileNo,
+  ledgerDate,
+  parseTitledBlocks,
+  parseWitness,
+  splitLines,
+} from "@/lib/anomalyFile";
 import { stateName } from "@/lib/states";
 import type { AnomalyType, SanityAnomalyListItem } from "@/types/sanity";
 
@@ -171,9 +172,8 @@ export default async function AnomalyDetailPage({
   const TypeIcon = typeIcons[anomaly.anomalyType] || Zap;
   const firstDocumented = ledgerDate(anomaly);
 
-  const hasCaseSections = Boolean(
-    anomaly.phenomenon || anomaly.theories || anomaly.relatedLocations
-  );
+  const theories = anomaly.theories ? parseTitledBlocks(anomaly.theories) : [];
+  const places = anomaly.relatedLocations ? parseTitledBlocks(anomaly.relatedLocations) : [];
   const hasBriefings = Boolean(anomaly.declassifiedBriefings?.length);
   const hasWitnesses = Boolean(anomaly.witnesses?.length);
 
@@ -185,7 +185,9 @@ export default async function AnomalyDetailPage({
       label: section.heading,
     })),
     anomaly.sightings?.length && { id: "sightings-heading", label: "Sightings" },
-    hasCaseSections && { id: "case-sections", label: "Case sections" },
+    anomaly.phenomenon && { id: "the-phenomenon", label: "The phenomenon" },
+    theories.length > 0 && { id: "theories", label: "Theories" },
+    places.length > 0 && { id: "where-reported", label: "Where it's reported" },
     hasBriefings && { id: "transmissions-received", label: "Transmissions received" },
     hasWitnesses && { id: "witness-accounts", label: "Witness accounts" },
     anomaly.noteOnRecord && { id: "note-on-record", label: "Note on the record" },
@@ -393,47 +395,70 @@ export default async function AnomalyDetailPage({
                 showMap={false}
               />
 
-              {/* Long sections stay in drawers — readers like opening them */}
-              {hasCaseSections && (
-                <FileBlock>
-                  <FilingCabinet defaultOpen={anomaly.phenomenon ? ["phenomenon"] : []}>
-                    <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
-                      <SectionTitle id="case-sections">Case Sections</SectionTitle>
-                      <FilingCabinetControls />
-                    </div>
-                    {anomaly.phenomenon && (
-                      <FilingDrawer value="phenomenon" label="Phenomenon Description">
-                        <p className="whitespace-pre-line">{anomaly.phenomenon}</p>
-                      </FilingDrawer>
-                    )}
-                    {anomaly.theories && (
-                      <FilingDrawer value="theories" label="Theories & Explanations">
-                        <p className="whitespace-pre-line">{anomaly.theories}</p>
-                      </FilingDrawer>
-                    )}
-                    {anomaly.relatedLocations && (
-                      <FilingDrawer value="locations" label="Related Locations">
-                        <p className="whitespace-pre-line">{anomaly.relatedLocations}</p>
-                      </FilingDrawer>
-                    )}
-                  </FilingCabinet>
-                </FileBlock>
+              {/* The long sections read open, in page order */}
+              {anomaly.phenomenon && (
+                <FileSection id="the-phenomenon" title="The Phenomenon">
+                  {splitLines(anomaly.phenomenon).map((p, i) => (
+                    <p key={i} className={i === 0 ? "text-lg" : undefined}>
+                      {p}
+                    </p>
+                  ))}
+                </FileSection>
+              )}
+
+              {theories.length > 0 && (
+                <FileSection id="theories" title="Theories & Explanations">
+                  {theories.map((t, i) =>
+                    t.title ? (
+                      <div key={i} className="pt-2">
+                        <h3 className="mb-1.5 font-display font-bold text-xl leading-snug text-foreground">
+                          {t.title}
+                        </h3>
+                        <p>{t.body}</p>
+                      </div>
+                    ) : (
+                      <p key={i}>{t.body}</p>
+                    )
+                  )}
+                </FileSection>
+              )}
+
+              {places.length > 0 && (
+                <FileSection id="where-reported" title="Where it's reported">
+                  <ul className="border-t border-dashed border-border">
+                    {places.map((place, i) => (
+                      <li key={i} className="py-3.5 border-b border-dashed border-border last:border-b-0">
+                        {place.title && (
+                          <h3 className="mb-1 font-typewriter text-sm tracking-type uppercase text-bureau-stamp-ink">
+                            {place.title}
+                          </h3>
+                        )}
+                        <p>{place.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </FileSection>
               )}
 
               {hasBriefings && (
-                <FileBlock>
-                  <FilingCabinet defaultOpen={[]}>
-                    <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
-                      <SectionTitle id="transmissions-received">Transmissions Received</SectionTitle>
-                      <FilingCabinetControls />
-                    </div>
+                <FileSection id="transmissions-received" title="Transmissions Received">
+                  <dl className="space-y-5">
                     {anomaly.declassifiedBriefings!.map((briefing) => (
-                      <FilingDrawer key={briefing._key} value={briefing._key} label={briefing.question}>
-                        <p className="whitespace-pre-line">{briefing.answer}</p>
-                      </FilingDrawer>
+                      <div key={briefing._key}>
+                        <dt className="mb-1.5 font-display font-bold text-xl leading-snug text-foreground">
+                          {briefing.question}
+                        </dt>
+                        <dd className="space-y-3">
+                          {toParagraphs(briefing.answer).map((p, i) => (
+                            <p key={i} className="whitespace-pre-line">
+                              {p}
+                            </p>
+                          ))}
+                        </dd>
+                      </div>
                     ))}
-                  </FilingCabinet>
-                </FileBlock>
+                  </dl>
+                </FileSection>
               )}
 
               {/* Witness Accounts — archive metadata left, testimony right */}

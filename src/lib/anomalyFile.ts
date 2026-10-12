@@ -43,3 +43,45 @@ export function parseWitness(raw: string): WitnessParts {
     location,
   };
 }
+
+export interface TitledBlock {
+  title?: string;
+  body: string;
+}
+
+/**
+ * Theories and related-location fields are written as blocks separated by a
+ * blank line, each starting with a short title line:
+ *
+ *   Bird and wildlife misidentification
+ *   Several Appalachian species produce…
+ *
+ * A block whose first line reads like a sentence (ends in . ! ?) or runs long
+ * is kept as plain body text, so prose-only entries still render.
+ */
+export function parseTitledBlocks(text: string): TitledBlock[] {
+  return text
+    .split(/\n\s*\n/)
+    .map((block) =>
+      block
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+    )
+    .filter((lines) => lines.length > 0)
+    .map((lines) => {
+      const [first, ...rest] = lines;
+      const looksLikeTitle = rest.length > 0 && first.length <= 80 && !/[.!?:]$/.test(first);
+      return looksLikeTitle
+        ? { title: first, body: rest.join(" ") }
+        : { body: lines.join(" ") };
+    });
+}
+
+/** Single-newline prose (how the phenomenon field is written) → paragraphs. */
+export function splitLines(text: string): string[] {
+  return text
+    .split(/\n+/)
+    .map((line) => line.replace(/\s{2,}/g, " ").trim())
+    .filter(Boolean);
+}
