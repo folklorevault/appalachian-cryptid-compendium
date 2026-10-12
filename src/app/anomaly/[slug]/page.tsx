@@ -530,7 +530,7 @@ export default async function AnomalyDetailPage({
               {anomaly.noteOnRecord && (
                 <article
                   aria-labelledby="note-on-record"
-                  className="memo-paper memo-flat relative max-w-3xl rounded-sm border border-border/60 px-6 pt-6 pb-5 rotate-[-0.3deg] sm:px-8"
+                  className="memo-paper memo-flat relative rounded-sm border border-border/60 px-6 pt-6 pb-5 rotate-[-0.2deg] sm:px-8 lg:px-10"
                 >
                   <div className="memo-header">
                     <div className="memo-letterhead">
@@ -552,14 +552,18 @@ export default async function AnomalyDetailPage({
                       <span className="memo-meta-value">Field Office No. 7</span>
                     </div>
                   </div>
-                  <div className="relative z-2 space-y-4 font-typewriter text-sm tracking-type leading-loose text-foreground/90">
+                  {/* Full-width sheet; on wide screens the note flows into two
+                      typed columns so lines stay a readable length. */}
+                  <div className="relative z-2 font-typewriter text-sm tracking-type leading-loose text-foreground/90 lg:columns-2 lg:gap-12">
                     {splitLines(anomaly.noteOnRecord).map((p, i) => (
-                      <p key={i}>{p}</p>
+                      <p key={i} className="mb-4">
+                        {p}
+                      </p>
                     ))}
-                    <p className="text-right text-xs text-bureau-stamp-ink">
-                      Filed by the Anomalies Desk
-                    </p>
                   </div>
+                  <p className="relative z-2 mt-1 text-right font-typewriter text-xs tracking-type text-bureau-stamp-ink">
+                    Filed by the Anomalies Desk
+                  </p>
                 </article>
               )}
 
