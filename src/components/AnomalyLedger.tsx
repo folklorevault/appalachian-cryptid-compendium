@@ -220,7 +220,7 @@ function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
         </span>
 
         <div className="min-w-0">
-          <h2 className="font-display font-bold text-2xl leading-tight text-bureau-paper mb-1 transition-colors group-hover:text-bureau-rust">
+          <h2 className="font-display font-bold text-xl leading-tight text-bureau-paper mb-1 transition-colors group-hover:text-bureau-rust">
             {a.name}
           </h2>
           {(a.subhead || a.description) && (
