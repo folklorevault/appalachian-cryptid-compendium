@@ -129,6 +129,7 @@ export const cryptidSlugsWithDatesQuery = `*[_type == "cryptid"]{ "slug": slug.c
 
 const anomalyListFields = `
   _id,
+  _createdAt,
   name,
   subhead,
   slug,
@@ -142,7 +143,9 @@ const anomalyListFields = `
   image,
   imageAlt,
   gridImage,
-  tags
+  tags,
+  firstDocumented,
+  firstDocumentedShort
 `;
 
 export const anomaliesListQuery = `*[_type == "anomaly"] | order(_createdAt desc) {

@@ -175,6 +175,7 @@ export interface SanityAnomaly {
 // Type for anomaly list queries (less data)
 export interface SanityAnomalyListItem {
   _id: string
+  _createdAt?: string
   name: string
   subhead?: string
   slug: SanitySlug
@@ -189,6 +190,8 @@ export interface SanityAnomalyListItem {
   imageAlt?: string
   gridImage?: SanityImage
   tags?: string[]
+  firstDocumented?: string
+  firstDocumentedShort?: string
 }
 
 // ── Bulletin types ──────────────────────────────────────────

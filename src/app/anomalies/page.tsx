@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { fetchAnomalies } from "@/lib/sanity/fetchers";
-import { AnomalyFilters } from "@/components/AnomalyFilters";
+import { AnomalyLedger, type LedgerEntry } from "@/components/AnomalyLedger";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { Footer } from "@/components/Footer";
 
@@ -22,33 +22,62 @@ export const metadata: Metadata = {
 export default async function AnomaliesPage() {
   const anomalies = await fetchAnomalies();
 
+  // File numbers follow creation order (oldest = 001) so a file keeps its
+  // number as new ones arrive; the ledger lists newest first.
+  const byAge = [...anomalies].sort((a, b) =>
+    (a._createdAt ?? "").localeCompare(b._createdAt ?? "")
+  );
+  const width = Math.max(3, String(byAge.length).length);
+  const entries: LedgerEntry[] = byAge
+    .map((anomaly, i) => ({ anomaly, fileNo: String(i + 1).padStart(width, "0") }))
+    .reverse();
+
+  const active = anomalies.filter((a) => a.status === "Active").length;
+  const cold = anomalies.filter((a) => a.status === "Cold").length;
+
   return (
     <div className="min-h-screen bg-background paper-texture">
       <main id="main-content">
-        {/* Hero */}
-        <section className="relative py-20 px-6 lg:py-24 lg:px-8 text-center overflow-hidden">
-          <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent pointer-events-none" />
-          <div className="relative z-10 max-w-3xl mx-auto space-y-4">
-            <div className="flex items-center justify-center gap-3.5 mb-6">
-              <span className="block w-10 h-px bg-border" aria-hidden="true" />
-              <span className="font-typewriter text-xs tracking-eyebrow uppercase text-bureau-ink-muted">
-                Anomalies Desk — Open Cases
-              </span>
-              <span className="block w-10 h-px bg-border" aria-hidden="true" />
+        {/* ── The desk: ink plate, same stock as the homepage band ── */}
+        <section
+          className="plate-stock relative border-b border-border bg-bureau-ink text-bureau-manila-light paper-texture"
+          aria-labelledby="anomalies-heading"
+        >
+          <div className="relative z-[2] max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid gap-8 pt-14 pb-9 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-end lg:gap-14 lg:pt-18 lg:pb-10">
+              <div>
+                <p className="flex items-center gap-3.5 mb-4 font-typewriter text-xs tracking-eyebrow uppercase text-bureau-rust-ink">
+                  <span className="block w-10 h-px bg-current opacity-70" aria-hidden="true" />
+                  Open Investigations
+                </p>
+                <h1
+                  id="anomalies-heading"
+                  className="font-display font-bold text-plate leading-none tracking-tight text-bureau-paper text-balance mb-5"
+                >
+                  The Anomalies Desk
+                </h1>
+                <p className="font-sans text-base leading-relaxed text-bureau-manila-light/90 max-w-[56ch] mb-3">
+                  Lights nobody can account for, sounds nobody wants to answer,
+                  places where something simply isn&rsquo;t right. Cataloged from
+                  witness reports and ongoing investigations.
+                </p>
+                <p className="font-typewriter text-sm tracking-type text-bureau-manila-light/70">
+                  None satisfactorily explained.
+                </p>
+              </div>
+
+              {anomalies.length > 0 && (
+                <dl className="flex flex-wrap gap-x-8 gap-y-2.5 font-typewriter text-sm tracking-type">
+                  <Tally n={anomalies.length} label={anomalies.length === 1 ? "file on the desk" : "files on the desk"} />
+                  {active > 0 && <Tally n={active} label="active" />}
+                  {cold > 0 && <Tally n={cold} label="gone cold" />}
+                </dl>
+              )}
             </div>
-            <h1 className="font-display font-bold text-foreground leading-tight text-hero">
-              Anomalies Desk
-            </h1>
-            <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed font-typewriter">
-              Lights, hauntings, curses, and other unresolved incidents from the
-              mountains and hollers—cataloged from witness reports and ongoing
-              investigations.
-            </p>
+
+            <AnomalyLedger entries={entries} />
           </div>
         </section>
-
-        {/* Filters + Grid */}
-        <AnomalyFilters anomalies={anomalies} />
 
         {/* Newsletter */}
         <section className="py-16 px-6 lg:py-20 lg:px-8 border-t border-border bg-card/50">
@@ -59,6 +88,20 @@ export default async function AnomaliesPage() {
       </main>
 
       <Footer variant="full" />
+    </div>
+  );
+}
+
+function Tally({ n, label }: { n: number; label: string }) {
+  return (
+    <div className="flex items-baseline gap-1.5">
+      <dt className="sr-only">{label}</dt>
+      <dd className="flex items-baseline gap-1.5">
+        <span className="font-display font-bold text-3xl leading-none text-bureau-rust tabular-nums">
+          {n}
+        </span>
+        <span aria-hidden="true">{label}</span>
+      </dd>
     </div>
   );
 }
