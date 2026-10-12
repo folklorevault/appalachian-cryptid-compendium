@@ -34,7 +34,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { DeferredMount } from "@/components/DeferredMount";
-import { BulletinRefList } from "@/components/BulletinRefList";
 import { Footer } from "@/components/Footer";
 import {
   fetchAnomalyBySlug,
@@ -51,7 +50,9 @@ import {
   splitLines,
 } from "@/lib/anomalyFile";
 import { stateName } from "@/lib/states";
-import type { AnomalyType, SanityAnomalyListItem } from "@/types/sanity";
+import { BULLETIN_CATEGORIES } from "@/lib/bulletins";
+import { formatLedgerDate } from "@/lib/utils";
+import type { AnomalyType, SanityAnomalyListItem, SanityBulletinListItem } from "@/types/sanity";
 
 // Icon mapping for anomaly types
 const typeIcons: Record<AnomalyType, typeof Zap> = {
@@ -586,20 +587,14 @@ export default async function AnomalyDetailPage({
           </section>
         )}
 
-        {/* ── More from the desk: related files as ledger rows ───────── */}
-        {relatedAnomalies.length > 0 && (
-          <MoreFromTheDesk related={relatedAnomalies} />
+        {/* ── More from the desk: related files + the bulletins citing this one ── */}
+        {(relatedAnomalies.length > 0 || referencingBulletins.length > 0) && (
+          <MoreFromTheDesk related={relatedAnomalies} bulletins={referencingBulletins} />
         )}
 
         <div className="max-w-6xl mx-auto px-6 lg:px-8 pt-8 pb-8">
-          {/* Bulletins that reference this case file */}
-          <BulletinRefList
-            heading="Referenced in Bureau Bulletins"
-            bulletins={referencingBulletins}
-          />
-
           {/* Share */}
-          <div className="mb-8 border-t border-border pt-6">
+          <div className="mb-8 pt-6">
             <DeferredMount minHeight={56}>
               <ShareButtons title={anomaly.name} />
             </DeferredMount>
@@ -763,14 +758,43 @@ function FileSection({
   );
 }
 
-function MoreFromTheDesk({ related }: { related: SanityAnomalyListItem[] }) {
+/** Shared row grid so file rows and bulletin rows line up column for column. */
+const DESK_ROW =
+  "group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-4.5 focus-visible:outline-bureau-rust-ink md:grid-cols-[80px_minmax(0,1fr)_160px_120px] md:items-center md:gap-5";
+
+function DeskNumber({ prefix, number }: { prefix: string; number: string }) {
+  return (
+    <span className="row-span-3 font-display font-bold text-4xl leading-none text-bureau-rust tabular-nums md:row-span-1 md:text-5xl">
+      <span className="block mb-1 font-typewriter font-normal text-tag tracking-label text-bureau-manila-light/70">
+        {prefix}
+      </span>
+      {number}
+    </span>
+  );
+}
+
+function DeskGroupLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="pb-2 font-typewriter text-tag tracking-label uppercase text-bureau-manila-light/70">
+      {children}
+    </h3>
+  );
+}
+
+function MoreFromTheDesk({
+  related,
+  bulletins,
+}: {
+  related: SanityAnomalyListItem[];
+  bulletins: SanityBulletinListItem[];
+}) {
   return (
     <section
       className="plate-stock relative bg-bureau-ink text-bureau-manila-light paper-texture"
       aria-labelledby="more-from-desk-heading"
     >
       <div className="relative z-2 max-w-6xl mx-auto px-6 lg:px-8 py-10 lg:py-12">
-        <div className="flex flex-wrap items-baseline justify-between gap-3 mb-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-3 mb-6">
           <h2
             id="more-from-desk-heading"
             className="font-display font-bold text-2xl lg:text-3xl text-bureau-paper"
@@ -784,29 +808,73 @@ function MoreFromTheDesk({ related }: { related: SanityAnomalyListItem[] }) {
             All anomalies →
           </Link>
         </div>
-        <ul>
-          {related.map((r) => (
-            <li key={r._id} className="border-t border-bureau-manila-light/15">
-              <Link
-                href={`/anomaly/${r.slug.current}`}
-                className="group grid grid-cols-[64px_minmax(0,1fr)] gap-x-4 gap-y-1 py-4.5 focus-visible:outline-bureau-rust-ink md:grid-cols-[80px_minmax(0,1fr)_160px_120px] md:items-center md:gap-5"
-              >
-                <span className="row-span-3 font-display font-bold text-4xl leading-none text-bureau-rust tabular-nums md:row-span-1 md:text-5xl">
-                  {r.fileNumber ? formatFileNo(r.fileNumber) : "—"}
-                </span>
-                <span className="font-display font-bold text-xl md:text-2xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
-                  {r.name}
-                </span>
-                <span className="col-start-2 font-typewriter text-xs tracking-type uppercase text-bureau-rust-ink md:col-start-auto">
-                  {r.anomalyType.replace("/", " / ")}
-                </span>
-                <span className="col-start-2 font-typewriter text-xs tracking-type text-bureau-manila-light/85 md:col-start-auto">
-                  {r.status}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+
+        {related.length > 0 && (
+          <div>
+            <DeskGroupLabel>Related files</DeskGroupLabel>
+            <ul>
+              {related.map((r) => (
+                <li key={r._id} className="border-t border-bureau-manila-light/15">
+                  <Link href={`/anomaly/${r.slug.current}`} className={DESK_ROW}>
+                    <DeskNumber prefix="AD" number={r.fileNumber ? formatFileNo(r.fileNumber) : "—"} />
+                    <span className="font-display font-bold text-xl md:text-2xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
+                      {r.name}
+                    </span>
+                    <span className="col-start-2 font-typewriter text-xs tracking-type uppercase text-bureau-rust-ink md:col-start-auto">
+                      {r.anomalyType.replace("/", " / ")}
+                    </span>
+                    <span className="col-start-2 font-typewriter text-xs tracking-type text-bureau-manila-light/85 md:col-start-auto">
+                      {r.status}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {bulletins.length > 0 && (
+          <div className={related.length > 0 ? "mt-10" : undefined}>
+            <DeskGroupLabel>In the bulletins</DeskGroupLabel>
+            <ul>
+              {bulletins.map((b) => {
+                // "BUR-013" → small "BUR" over a big "013", matching AD-### above
+                const [prefix, number] = b.bulletinNumber.includes("-")
+                  ? [b.bulletinNumber.split("-")[0], b.bulletinNumber.split("-").slice(1).join("-")]
+                  : ["BUR", b.bulletinNumber];
+                return (
+                  <li key={b._id} className="border-t border-bureau-manila-light/15">
+                    <Link href={`/bulletin/${b.slug.current}`} className={DESK_ROW}>
+                      <DeskNumber prefix={prefix} number={number} />
+                      <span className="min-w-0">
+                        <span className="block font-display font-bold text-xl md:text-2xl leading-tight text-bureau-paper transition-colors group-hover:text-bureau-rust">
+                          {b.title}
+                        </span>
+                        {b.summary && (
+                          <span className="mt-1 font-sans text-sm leading-relaxed text-bureau-manila-light/80 line-clamp-2">
+                            {b.summary}
+                          </span>
+                        )}
+                      </span>
+                      <span className="col-start-2 font-typewriter text-xs tracking-type uppercase text-bureau-rust-ink md:col-start-auto">
+                        {BULLETIN_CATEGORIES[b.category]?.label ?? "Bulletin"}
+                      </span>
+                      <span className="col-start-2 font-typewriter text-xs tracking-type text-bureau-manila-light/85 md:col-start-auto">
+                        Filed {formatLedgerDate(b.date)}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            <Link
+              href="/bulletins"
+              className="mt-5 inline-block font-typewriter text-sm tracking-type border-b border-dotted border-bureau-manila-light/70 hover:border-solid focus-visible:outline-bureau-rust-ink"
+            >
+              All bulletins →
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
