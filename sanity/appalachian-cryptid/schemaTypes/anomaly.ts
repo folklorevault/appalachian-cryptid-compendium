@@ -114,6 +114,14 @@ export default defineType({
       description: 'Year or date of first known documentation, e.g., "1913" or "pre-Colonial"',
     }),
     defineField({
+      name: 'firstDocumentedShort',
+      title: 'First Documented (Ledger)',
+      type: 'string',
+      description:
+        'A few words for the Anomalies Desk ledger, e.g. "January 1897" or "Predates written record". Falls back to the start of First Documented when blank.',
+      validation: (Rule) => Rule.max(32).warning('Keep it short; the ledger column is narrow.'),
+    }),
+    defineField({
       name: 'description',
       title: 'Short Description',
       type: 'text',

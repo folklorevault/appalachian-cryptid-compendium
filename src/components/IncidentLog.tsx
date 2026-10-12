@@ -19,8 +19,27 @@ export const IncidentLog = ({
   station = "FIELD STATION",
   className,
 }: IncidentLogProps) => {
-  // Parse content into log entries if it contains newlines
-  const entries = content.split('\n').filter(line => line.trim());
+  // Editors write transmissions as a header (STATION:/SUBJECT:), timestamped
+  // lines ("2243 HRS — …") and a closing "[CASE STATUS: …]". Pull those apart
+  // so the slip shows each line's own time once, not a generated one on top.
+  const lines = content.split("\n").map((line) => line.trim()).filter(Boolean);
+  let stationLine: string | undefined;
+  let statusLine: string | undefined;
+  const entries: { time?: string; text: string }[] = [];
+  for (const line of lines) {
+    const header = line.match(/^(STATION|SUBJECT):\s*(.*)$/i);
+    if (header) {
+      if (header[1].toUpperCase() === "STATION") stationLine = header[2];
+      continue;
+    }
+    const status = line.match(/^\[(.*)\]$/);
+    if (status) {
+      statusLine = status[1];
+      continue;
+    }
+    const timed = line.match(/^(\d{4})\s*HRS\s*[—–-]\s*(.*)$/i);
+    entries.push(timed ? { time: timed[1], text: timed[2] } : { text: line });
+  }
 
   // Generate a pseudo-random time based on case number for consistency
   const baseHour = caseNumber
@@ -50,7 +69,7 @@ export const IncidentLog = ({
             <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
               <div>
                 <span className="text-bureau-ink-muted">STATION:</span>{" "}
-                <span className="tracking-wider">{station.toUpperCase()}</span>
+                <span className="tracking-wider">{(stationLine ?? station).toUpperCase()}</span>
               </div>
               <div>
                 <span className="text-bureau-ink-muted">CASE:</span>{" "}
@@ -73,7 +92,8 @@ export const IncidentLog = ({
               // Calculate fake timestamp for each entry
               const hour = (baseHour + Math.floor(idx / 4)) % 24;
               const minute = (idx * 7 + 13) % 60;
-              const timestamp = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
+              const timestamp =
+                entry.time ?? `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
 
               return (
                 <div key={idx} className="flex gap-3">
@@ -81,7 +101,7 @@ export const IncidentLog = ({
                     {timestamp} HRS -
                   </span>
                   <span className="uppercase tracking-wide">
-                    {entry.trim()}
+                    {entry.text}
                   </span>
                 </div>
               );
@@ -94,7 +114,7 @@ export const IncidentLog = ({
               ─── END TRANSMISSION ───
             </div>
             <div className="text-center text-xs mt-2 text-muted-foreground">
-              CLASSIFICATION: RESTRICTED • RETAIN FOR RECORDS
+              {statusLine ? statusLine.toUpperCase() : "CLASSIFICATION: RESTRICTED • RETAIN FOR RECORDS"}
             </div>
           </div>
         </div>
