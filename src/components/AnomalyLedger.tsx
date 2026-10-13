@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useDeferredValue } from "react";
+import { useMemo, useState, useDeferredValue, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
@@ -199,7 +199,10 @@ function TypeTab({
   );
 }
 
-function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
+// ⚡ Optimization: Wrap heavily-repeated child component in React.memo()
+// This tells React to skip rendering the component if its props haven't changed.
+// Expected Impact: Reduces render times and improves responsiveness during state changes like search filtering.
+const LedgerRow = memo(function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
   const source = a.gridImage ?? a.image;
   const thumb = source
     ? urlFor(source).width(128).height(171).fit("crop").quality(60).url()
@@ -263,4 +266,4 @@ function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
       </Link>
     </li>
   );
-}
+});
