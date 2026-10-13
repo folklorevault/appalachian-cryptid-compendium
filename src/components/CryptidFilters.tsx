@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LabelTape } from "@/components/EvidenceChip";
 import { CasefileCard } from "@/components/CasefileCard";
-import { Search, FolderOpen } from "lucide-react";
+import { Search } from "lucide-react";
 import type { SanityCryptidListItem } from "@/types/sanity";
 import { buildStateChips, matchesStateFilter, stateName } from "@/lib/states";
 
@@ -242,7 +242,7 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
       </section>
 
       {/* Cryptid Grid — tighter top padding */}
-      <section className="pt-4 pb-16 px-6 lg:pb-20 lg:px-8">
+      <section className="pt-4 pb-8 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {filteredCryptids.length === 0 ? (
             <div role="status" className="max-w-md mx-auto text-center py-12">
@@ -286,22 +286,19 @@ export const CryptidFilters = ({ cryptids }: CryptidFiltersProps) => {
                 {visibleCryptidCards}
               </div>
               {hasMore && (
-                <div className="text-center mt-10">
-                  <Button
+                <div className="text-center mt-8">
+                  <button
+                    type="button"
                     onClick={() => {
                       pendingDrawerFocus.current = drawers.length;
                       setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
                     }}
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-bureau-border text-foreground hover:bg-muted/50 gap-2"
+                    className="group inline-block px-3 py-3.5 font-typewriter text-xs uppercase tracking-label text-primary"
                   >
-                    <FolderOpen className="h-4 w-4" />
-                    Next Drawer
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-2 font-typewriter">
-                    {filteredCryptids.length - visibleCount} files remaining
-                  </p>
+                    <span className="border-b border-dotted border-primary/60 group-hover:border-solid">
+                      Next Drawer
+                    </span>
+                  </button>
                 </div>
               )}
             </>

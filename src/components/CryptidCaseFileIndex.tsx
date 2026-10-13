@@ -11,7 +11,7 @@ export function CryptidCaseFileIndex({ cryptids }: CryptidCaseFileIndexProps) {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-6 lg:px-8 -mt-6 pb-8">
+    <div className="max-w-6xl mx-auto">
       <details className="group rounded-sm border border-bureau-border/60 bg-card/40">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 select-none [&::-webkit-details-marker]:hidden">
           <span>

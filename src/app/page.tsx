@@ -16,6 +16,10 @@ import { SightingsMapTeaser } from "@/components/SightingsMapTeaser";
 import { AnomaliesDeskBand } from "@/components/AnomaliesDeskBand";
 import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { Footer } from "@/components/Footer";
+import {
+  StructuredData,
+  createCollectionPageSchema,
+} from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Appalachian Cryptid Field Guide — Creatures of the Mountains & the American South",
@@ -39,6 +43,9 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background paper-texture">
+      {/* Every case file, in the initial HTML — the drawers only render the
+          first six until a visitor opens more */}
+      <StructuredData type="collection" data={createCollectionPageSchema(cryptids)} />
       <main id="main-content">
 
         {/* ── Hero ─────────────────────────────────────────────────── */}
@@ -166,7 +173,6 @@ export default async function Home() {
             </h2>
           </div>
           <CryptidFilters cryptids={cryptids} />
-          <CryptidCaseFileIndex cryptids={cryptids} />
         </section>
 
         {/* ── Anomalies Desk: things without bodies, edited in Sanity ─ */}
@@ -189,6 +195,11 @@ export default async function Home() {
               <NewsletterSignup />
             </DeferredMount>
           </div>
+        </section>
+
+        {/* ── Reference index: every case file A–Z, collapsed by default ─ */}
+        <section className="py-10 px-6 lg:px-8 border-t border-border" aria-label="Complete case file index">
+          <CryptidCaseFileIndex cryptids={cryptids} />
         </section>
 
       </main>
