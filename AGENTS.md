@@ -128,6 +128,13 @@ Every type size, tracking value and color should trace back to a named token in 
 
 When a new page or component copies an existing pattern (hero, ledger row, card, section head), copy its type classes too rather than re-choosing sizes. After a redesign of one section, compare its H1, lede and row titles against the homepage before shipping.
 
+**Restraint.** The site is moving toward quieter, and that is deliberate: a real bureau file is a little dry and confident that what's inside is interesting. Before adding anything (an icon, a count, a badge, a box, a helper line), ask two questions: does it need to be here, and does it need to be this loud?
+
+- **Turn things down before taking them out.** A secondary tool can stay but move lower or get quieter. The Complete Case File Index sits collapsed above the footer, not under the drawers.
+- **Secondary controls are text, not buttons.** Follow "Next Drawer": a centered `font-typewriter text-xs uppercase tracking-label text-primary` label with a dotted underline that goes solid on hover, and a padded hit area of about 44px. Save outlined and stamped buttons for the one primary action in a section.
+- **Spend the loudness on signature moments.** The Anomalies Desk plate headline, the anomaly file numbers and the stamps only land because everything around them stays calm.
+- **Don't add back what a distillation pass removed** (remaining-file counts, decorative icons on controls, duplicate stamps) without a reason the change can name.
+
 ### Security Headers
 
 CSP and security headers are configured in `next.config.ts` via the `headers()` function. When adding new external resources, update the CSP directives there.
