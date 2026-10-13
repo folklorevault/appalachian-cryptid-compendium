@@ -6,7 +6,6 @@ import {
   fetchAnomalies,
   fetchHomepageAnomaliesDesk,
 } from "@/lib/sanity/fetchers";
-import { CryptidCaseFileIndex } from "@/components/CryptidCaseFileIndex";
 import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { DeferredMount } from "@/components/DeferredMount";
@@ -166,7 +165,6 @@ export default async function Home() {
             </h2>
           </div>
           <CryptidFilters cryptids={cryptids} />
-          <CryptidCaseFileIndex cryptids={cryptids} />
         </section>
 
         {/* ── Anomalies Desk: things without bodies, edited in Sanity ─ */}
