@@ -6,6 +6,7 @@ import {
   fetchAnomalies,
   fetchHomepageAnomaliesDesk,
 } from "@/lib/sanity/fetchers";
+import { CryptidCaseFileIndex } from "@/components/CryptidCaseFileIndex";
 import { CryptidFilters } from "@/components/CryptidFilters";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { DeferredMount } from "@/components/DeferredMount";
@@ -194,6 +195,11 @@ export default async function Home() {
               <NewsletterSignup />
             </DeferredMount>
           </div>
+        </section>
+
+        {/* ── Reference index: every case file A–Z, collapsed by default ─ */}
+        <section className="py-10 px-6 lg:px-8 border-t border-border" aria-label="Complete case file index">
+          <CryptidCaseFileIndex cryptids={cryptids} />
         </section>
 
       </main>
