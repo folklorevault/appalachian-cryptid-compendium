@@ -15,6 +15,10 @@ import { SightingsMapTeaser } from "@/components/SightingsMapTeaser";
 import { AnomaliesDeskBand } from "@/components/AnomaliesDeskBand";
 import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { Footer } from "@/components/Footer";
+import {
+  StructuredData,
+  createCollectionPageSchema,
+} from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Appalachian Cryptid Field Guide — Creatures of the Mountains & the American South",
@@ -38,6 +42,9 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background paper-texture">
+      {/* Every case file, in the initial HTML — the drawers only render the
+          first six until a visitor opens more */}
+      <StructuredData type="collection" data={createCollectionPageSchema(cryptids)} />
       <main id="main-content">
 
         {/* ── Hero ─────────────────────────────────────────────────── */}
