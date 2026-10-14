@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useDeferredValue } from "react";
+import { useMemo, useState, useDeferredValue, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
@@ -56,6 +56,12 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
   }, [entries, type, deferredQuery]);
 
   const filtered = type !== "all" || query.trim() !== "";
+
+  const ledgerRows = useMemo(() => {
+    return visible.map((entry) => (
+      <LedgerRow key={entry.anomaly._id} {...entry} />
+    ));
+  }, [visible]);
 
   // No files at all means the fetch came back empty, not that a filter
   // matched nothing. Say so instead of showing the "no match" copy.
@@ -148,9 +154,7 @@ export function AnomalyLedger({ entries }: { entries: LedgerEntry[] }) {
         </div>
       ) : (
         <ol role="list" className="list-none">
-          {visible.map((entry) => (
-            <LedgerRow key={entry.anomaly._id} {...entry} />
-          ))}
+          {ledgerRows}
         </ol>
       )}
 
@@ -199,7 +203,7 @@ function TypeTab({
   );
 }
 
-function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
+const LedgerRow = memo(function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
   const source = a.gridImage ?? a.image;
   const thumb = source
     ? urlFor(source).width(128).height(171).fit("crop").quality(60).url()
@@ -263,4 +267,4 @@ function LedgerRow({ anomaly: a, fileNo }: LedgerEntry) {
       </Link>
     </li>
   );
-}
+});

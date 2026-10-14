@@ -25,3 +25,7 @@
 ## 2024-11-20 - Preventing unnecessary mapping of hidden responsive elements
 **Learning:** In components with both desktop and mobile layouts rendered in the same React tree (hidden via CSS media queries), state updates intended only for the desktop view (like row hovers) will cause the parent to re-map the array for the mobile view, unnecessarily eating main thread time.
 **Action:** Memoize the mapped array of mobile elements using `useMemo` so that desktop-only state changes (like hovers) skip recreating the VDOM array for the mobile layout entirely.
+
+## 2024-11-20 - Memoizing list rows in AnomalyLedger
+**Learning:** In list views containing components that use Next.js `Image` or complex styling (like `LedgerRow` in `AnomalyLedger.tsx`), parent re-renders caused by unrelated state changes (like search filtering using `useDeferredValue`) trigger expensive and noticeable re-renders of the list components.
+**Action:** Wrap child components inside maps using `React.memo`, and wrap the array mapping block itself in `useMemo` depending on the filtered source array. This ensures unchanged items are skipped during re-renders.
