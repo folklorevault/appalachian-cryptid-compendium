@@ -25,3 +25,6 @@
 ## 2024-11-20 - Preventing unnecessary mapping of hidden responsive elements
 **Learning:** In components with both desktop and mobile layouts rendered in the same React tree (hidden via CSS media queries), state updates intended only for the desktop view (like row hovers) will cause the parent to re-map the array for the mobile view, unnecessarily eating main thread time.
 **Action:** Memoize the mapped array of mobile elements using `useMemo` so that desktop-only state changes (like hovers) skip recreating the VDOM array for the mobile layout entirely.
+## 2025-03-09 - Memoizing heavy row components in filtered lists
+**Learning:** In the `AnomalyLedger.tsx` component, the `LedgerRow` was a simple functional component mapped from a large list. Even with deferred search queries, updating the filter state caused the entire `AnomalyLedger` to re-render, subsequently recreating every single visible `LedgerRow` (which includes images, complex layouts, and formatting). For long lists, this lack of memoization causes measurable main thread blocking and poor INP during text input.
+**Action:** Wrap heavily repeated row/card components inside list views (like `LedgerRow`) with `React.memo()`. This ensures that when the parent component's filter/search state updates, only the rows whose actual data props have changed will be re-rendered, preserving responsiveness.
