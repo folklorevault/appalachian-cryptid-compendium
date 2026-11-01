@@ -12,7 +12,7 @@ Paste-ready HTML for the new-subscriber welcome sequence. These files are not pa
 
 - **No unsubscribe block.** Sequenzy adds its own footer, so the Loops `{{ unsubscribeUrl }}` row was taken out of all three emails.
 - **Copy sources.** Email 2 draws on Bulletin BUR-001 (`/bulletin/what-is-a-cryptid`) and the Not Deer, Mothman and Wampus Cat files. Email 3 uses the "Homepage: Anomalies Desk" singleton and the anomaly files.
-- **Email 3 styling.** It borrows the ink plate from `AnomaliesDeskBand.tsx`: `bureau-ink` background, rust accents, Rule 1 / Rule 2, the file-number ledger and the stamp button. File numbers follow the site's creation order (001 = oldest).
-- **Stays current by hand.** The anomaly ledger and featured file are written into the HTML and don't pull from Sanity. When you add or change anomalies, update email 3 to match.
+- **Email 3 styling.** It borrows the ink plate from `AnomaliesDeskBand.tsx`: `bureau-ink` background, rust accents, Rule 1 / Rule 2 and the stamp button.
+- **Email 3 is a teaser.** It features The Whistler and hints at three other files without naming them, then sends readers to `/anomalies`. New anomalies won't make it out of date. The featured file is written into the HTML, so if The Whistler is ever renamed or moved, update email 3.
 - **Images** come from the Sanity CDN as JPG (`fm=jpg`), because Outlook can't show WebP.
 - **Fonts.** Rokkitt, Special Elite and Work Sans load from Google Fonts where the email client allows it. Other clients fall back to Georgia, Courier and the system sans.
