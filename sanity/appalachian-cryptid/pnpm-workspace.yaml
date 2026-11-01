@@ -33,10 +33,19 @@ overrides:
   "brace-expansion@>=2.0.0 <2.1.7": ">=5.0.12 <6.0.0"
   "brace-expansion@>=3.0.0 <3.0.9": ">=5.0.12 <6.0.0"
   "brace-expansion@>=4.0.0 <5.0.12": ">=5.0.12 <6.0.0"
-  # undici GHSA-4cwx-7wf7-3272 plus GHSA-3wwx-pv8p-q78v (WebSocket decompression DoS).
-  # The latter raises the 7.x patch boundary to 7.29.1.
-  # 6.28.0 is already at the v6 patch boundary, so only the 7.x line needs lifting.
-  "undici@>=7.0.0 <7.29.1": ">=7.29.1 <8.0.0"
+  # undici GHSA-4cwx-7wf7-3272 plus GHSA-3wwx-pv8p-q78v (WebSocket decompression DoS), then the
+  # October 2026 batch (GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx,
+  # GHSA-qrxm-fqhp-jwvm, GHSA-4qv8-2p9j-2685, GHSA-f72v-6w45-q472, GHSA-9fm3-97px-rjf6,
+  # GHSA-55wc-3pg8-jfw6), which raises the 7.x patch boundary to 7.30.1.
+  # Only the 7.x line resolves in the studio tree today, so only it needs lifting.
+  "undici@>=7.0.0 <7.30.1": ">=7.30.1 <8.0.0"
+  # zod GHSA-mrhx-c7xc-m3w5 — memory exhaustion validating oversized constrained collections.
+  # Dev-only (@sanity/eslint-config-studio -> eslint-plugin-react-hooks -> zod@4.5.4).
+  "zod@>=4.0.0 <4.6.6": ">=4.6.6 <5.0.0"
+  # minimatch GHSA-g3hv-75wg-m249 — DoS via globparts amplification. Fixed only in 11.0.1, never
+  # backported. Reaches the studio via @sanity/cli (@oclif/core and friends) on 10.x; 11.x keeps
+  # 10.x's CommonJS/ESM named exports. Verified with `sanity build` and `eslint .` after the bump.
+  "minimatch@<11.0.1": ">=11.0.1 <12.0.0"
   "ws@>=8.0.0 <8.21.0": ">=8.21.0"
   "smol-toml@<1.6.1": ">=1.6.1"
   # GHSA-7q85-xj36-vmfc (ZIP allocation DoS) and GHSA-vwc7-r8mq-g2x9

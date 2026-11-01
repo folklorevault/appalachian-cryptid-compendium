@@ -64,3 +64,11 @@ overrides:
   # exactly 6.0.10 (latest typography still does). 7.0.0's only break is "insertions during
   # iteration are safe"; verified by diffing the full production CSS before/after: identical.
   "postcss-selector-parser@<7.1.6": ">=7.1.6 <8.0.0"
+  # zod GHSA-mrhx-c7xc-m3w5 — memory exhaustion validating oversized constrained collections.
+  # Dev-only (eslint-config-next -> eslint-plugin-react-hooks -> zod@4.3.6); patch-level within 4.x.
+  "zod@>=4.0.0 <4.6.6": ">=4.6.6 <5.0.0"
+  # minimatch GHSA-g3hv-75wg-m249 — DoS via globparts amplification. Fixed only in 11.0.1, never
+  # backported to 3.x or 10.x. Dev-only here (ESLint internals, previously 3.1.5 and 10.2.4).
+  # Unlike the brace-expansion 1.x case above, ESLint still loads and enforces rules on 11.x:
+  # verified with `mise lint` plus a deliberate rules-of-hooks violation that it still caught.
+  "minimatch@<11.0.1": ">=11.0.1 <12.0.0"
