@@ -26,7 +26,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: "24"
+          node-version: "26"
 
       # Pre-merge: inspect this branch's next.config.ts. Fails the PR if a
       # change would ship a BotID-breaking CSP.
