@@ -25,6 +25,7 @@ import {
   bulletinSlugsWithDatesQuery,
   feedItemsQuery,
   linkInBioQuery,
+  latestCaseFilesQuery,
   homepageAnomaliesDeskQuery,
   anomalyListItemBySlugQuery,
 } from "./queries";
@@ -39,6 +40,7 @@ import type {
   SanityBulletinListItem,
   SanityBulletin,
   SanityLinkInBio,
+  LatestCaseFile,
   SanityHomepageAnomaliesDesk,
   FeedItem,
 } from "@/types/sanity";
@@ -418,6 +420,24 @@ export async function fetchLinkInBio(): Promise<SanityLinkInBio> {
     "linkInBio",
   ]);
   return result ?? fallbackLinkInBio;
+}
+
+// Newest case files for /links. Static fallback has no creation dates, so it
+// just shows the first few static cryptids.
+export async function fetchLatestCaseFiles(): Promise<LatestCaseFile[]> {
+  const result = await sanityFetch<LatestCaseFile[]>(latestCaseFilesQuery, undefined, [
+    "cryptids",
+    "anomalies",
+  ]);
+  if (result && result.length > 0) return result;
+  return staticCryptids.slice(0, 3).map((c) => ({
+    _id: c.id,
+    _type: "cryptid" as const,
+    name: c.name,
+    slug: c.id,
+    description: c.description,
+    kind: c.classification,
+  }));
 }
 
 // ── RSS feed fetcher ─────────────────────────────────────────
