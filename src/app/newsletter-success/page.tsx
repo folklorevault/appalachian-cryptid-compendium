@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { CheckCircle } from "lucide-react";
 
 export const metadata = {
-  title: "Registered | Appalachian Cryptid Division",
+  title: "Check Your Inbox | Appalachian Cryptid Division",
   robots: { index: false },
 };
 
@@ -18,14 +18,15 @@ export default function NewsletterSuccess() {
         <div className="text-center max-w-md">
           <CheckCircle className="h-8 w-8 text-primary mx-auto mb-4" />
           <div className="text-xs uppercase tracking-widest text-muted-foreground font-typewriter mb-4">
-            Roster Addition Confirmed
+            Roster Addition Received
           </div>
           <h1 className="text-title font-bold text-foreground font-display mb-4">
-            Registered
+            Check Your Inbox
           </h1>
           <p className="text-muted-foreground mb-8">
             Your transmission address has been logged with the Bureau.
-            You will receive dispatches as new case files are processed.
+            One last step: open the confirmation email we just sent and
+            click the link inside. Dispatches begin once you do.
           </p>
           <Link href="/">
             <Button
