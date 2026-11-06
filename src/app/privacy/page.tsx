@@ -79,7 +79,7 @@ export default function PrivacyPage() {
           </h2>
           <p className="mb-4">
             If you subscribe to the newsletter, your email address is sent to
-            Loops, the service I use to manage the mailing list and deliver
+            Sequenzy, the service I use to manage the mailing list and deliver
             emails.
           </p>
           <p className="mb-4">
@@ -166,7 +166,7 @@ export default function PrivacyPage() {
           </p>
           <ul className="mb-4 list-disc space-y-1 pl-6">
             <li>Stripe for checkout and payment processing;</li>
-            <li>Loops for newsletter delivery;</li>
+            <li>Sequenzy for newsletter delivery;</li>
             <li>Sanity for site content and optional submissions;</li>
             <li>Vercel for site hosting, analytics, and bot protection;</li>
             <li>Mapbox for the interactive map.</li>

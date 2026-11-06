@@ -74,7 +74,7 @@ const CompactSignup = ({ initialEmail }: { initialEmail?: string }) => {
         <div className="flex items-center gap-3">
           <CheckCircle className="h-4 w-4 text-primary shrink-0" aria-hidden="true" />
           <p className="text-sm font-typewriter text-foreground/80">
-            Registered. You'll get an email when new case files drop.
+            Almost there. Check your inbox and confirm your address to get new case files.
           </p>
         </div>
       </div>
@@ -162,7 +162,7 @@ const FullSignup = () => {
             {/* Confirmed stamp */}
             <div className="absolute top-6 right-6 z-20">
               <Stamp
-                text="Confirmed"
+                text="Received"
                 variant="primary"
                 rotation={-8}
                 className="text-sm px-4 py-1.5"
@@ -182,7 +182,7 @@ const FullSignup = () => {
                 Department of Unexplained Phenomena
               </div>
               <div className="memo-title mt-3">
-                Roster Addition — Confirmed
+                Roster Addition — Pending Verification
               </div>
             </div>
 
@@ -191,8 +191,8 @@ const FullSignup = () => {
               <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
               <div className="memo-body text-sm leading-relaxed">
                 Your transmission address has been logged with the Bureau.
-                You will receive dispatches as new case files are processed
-                and field advisories are issued.
+                One last step: open the confirmation email we just sent and
+                click the link inside. Dispatches begin once you do.
               </div>
             </div>
 

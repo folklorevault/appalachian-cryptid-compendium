@@ -1,6 +1,6 @@
 # Welcome sequence (Sequenzy)
 
-Paste-ready HTML for the new-subscriber welcome sequence. These files are not part of the Next.js app. The live site still sends signups to Loops through `src/app/api/newsletter/route.ts` until the switch to Sequenzy.
+Paste-ready HTML for the new-subscriber welcome sequence. These files are not part of the Next.js app. The live site sends signups to Sequenzy through `src/app/api/newsletter/route.ts`; the live copies of these emails now live in Sequenzy, so treat these files as reference only.
 
 | # | File | Subject | Preheader (already in the HTML) |
 |---|---|---|---|
