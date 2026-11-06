@@ -54,10 +54,10 @@ Verify that required env vars are referenced correctly:
 # Check that NEXT_PUBLIC_ vars are used client-side and server vars are server-only
 grep -r "process.env.SANITY_API_TOKEN" src/app --include="*.tsx" --include="*.ts" -l
 grep -r "process.env.SANITY_WEBHOOK_SECRET" src/app --include="*.tsx" --include="*.ts" -l
-grep -r "process.env.LOOPS_API_KEY" src/app --include="*.tsx" --include="*.ts" -l
+grep -r "process.env.SEQUENZY_API_KEY" src/app --include="*.tsx" --include="*.ts" -l
 ```
 
-Server-only vars (`SANITY_API_TOKEN`, `SANITY_WEBHOOK_SECRET`, `LOOPS_API_KEY`) should only appear in:
+Server-only vars (`SANITY_API_TOKEN`, `SANITY_WEBHOOK_SECRET`, `SEQUENZY_API_KEY`) should only appear in:
 - `src/app/api/` route handlers
 - Server Components (not files with `"use client"`)
 
