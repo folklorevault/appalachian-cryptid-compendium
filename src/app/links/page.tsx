@@ -1,11 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
-import { fetchLinkInBio } from "@/lib/sanity/fetchers";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { fetchLatestCaseFiles, fetchLinkInBio } from "@/lib/sanity/fetchers";
+import { urlFor } from "@/lib/sanity/image";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { Stamp } from "@/components/Stamp";
 import { cn } from "@/lib/utils";
-import type { SocialPlatform } from "@/types/sanity";
+import type { LatestCaseFile, SocialPlatform } from "@/types/sanity";
 
 export const metadata: Metadata = {
   title: "Bureau Directory",
@@ -36,8 +38,46 @@ function isExternal(url: string): boolean {
   return /^(https?:|mailto:)/i.test(url);
 }
 
+function caseFileHref(file: LatestCaseFile): string {
+  return `/${file._type}/${file.slug}`;
+}
+
+function caseFileDesk(file: LatestCaseFile): string {
+  return file._type === "anomaly" ? "Anomalies Desk" : "Cryptid File";
+}
+
+function caseFileStatus(file: LatestCaseFile): string | null {
+  if (!file.status) return null;
+  return file.status === "Cold" ? "Cold Case" : file.status;
+}
+
+/** Rule, label, rule: the section head used throughout this page. */
+function SectionHead({
+  id,
+  className,
+  children,
+}: {
+  id?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={cn("mb-4 flex items-center gap-3", className)}>
+      <span className="block h-px flex-1 bg-border" aria-hidden="true" />
+      <h2
+        id={id}
+        className="font-typewriter text-tag uppercase tracking-eyebrow text-bureau-ink-muted"
+      >
+        {children}
+      </h2>
+      <span className="block h-px flex-1 bg-border" aria-hidden="true" />
+    </div>
+  );
+}
+
 export default async function LinksPage() {
-  const data = await fetchLinkInBio();
+  const [data, latest] = await Promise.all([fetchLinkInBio(), fetchLatestCaseFiles()]);
+  const [justFiled, ...alsoFiled] = latest;
 
   return (
     <div className="min-h-screen bg-background paper-texture">
@@ -97,8 +137,112 @@ export default async function LinksPage() {
           </div>
         )}
 
-        {/* Case files */}
-        <nav aria-label="Bureau directory" className="mt-8 space-y-4">
+        {/* Newsletter: first thing visitors from social posts see */}
+        <section aria-label="Newsletter signup" className="mt-10">
+          <NewsletterSignup variant="compact" />
+        </section>
+
+        {/* Just filed: newest case file, pulled automatically */}
+        {justFiled && (
+          <section aria-labelledby="just-filed-heading" className="mt-12">
+            <SectionHead id="just-filed-heading">Just Filed</SectionHead>
+
+            <Link
+              href={caseFileHref(justFiled)}
+              className="group plate-stock plate-ink relative block overflow-hidden rounded-sm border border-bureau-ink-dark bg-bureau-ink text-bureau-manila-light shadow-md transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              {justFiled.gridImage?.asset && (
+                <div className="relative aspect-[4/3] border-b border-bureau-manila-light/20">
+                  <Image
+                    src={urlFor(justFiled.gridImage).width(896).height(672).url()}
+                    alt={justFiled.imageAlt ?? ""}
+                    fill
+                    sizes="(max-width: 448px) 100vw, 448px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              )}
+
+              <div className="relative z-[2] px-5 pb-6 pt-5">
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <p className="flex items-center gap-2.5 font-typewriter text-xs uppercase tracking-eyebrow text-bureau-rust-ink">
+                    <span className="block h-px w-6 bg-current opacity-70" aria-hidden="true" />
+                    {caseFileDesk(justFiled)}
+                    {justFiled.kind && <span className="text-bureau-manila-light/70">· {justFiled.kind}</span>}
+                  </p>
+                  {caseFileStatus(justFiled) && (
+                    <span
+                      className="shrink-0 border-2 border-bureau-rust-ink px-2 py-0.5 font-typewriter text-tag font-bold uppercase tracking-label text-bureau-rust-ink"
+                      style={{ transform: "rotate(-5deg)" }}
+                    >
+                      {caseFileStatus(justFiled)}
+                    </span>
+                  )}
+                </div>
+
+                <h3 className="font-display text-title font-bold leading-tight text-bureau-paper">
+                  {justFiled.name}
+                </h3>
+
+                {(justFiled.subhead || justFiled.description) && (
+                  <p className="mt-2.5 line-clamp-4 font-sans text-sm leading-relaxed text-bureau-manila-light/90">
+                    {justFiled.subhead || justFiled.description}
+                  </p>
+                )}
+
+                <span
+                  className="stamp-btn mt-5 inline-block px-4 py-2.5 text-xs text-bureau-rust-ink"
+                  style={{ "--stamp-rot": "-1.5deg" } as React.CSSProperties}
+                >
+                  Open the file<span aria-hidden="true">{"\u00A0→"}</span>
+                </span>
+              </div>
+            </Link>
+
+            {alsoFiled.length > 0 && (
+              <ul className="mt-4 divide-y divide-dashed divide-border border-y border-dashed border-border">
+                {alsoFiled.map((file) => (
+                  <li key={file._id}>
+                    <Link
+                      href={caseFileHref(file)}
+                      className="group flex items-center gap-3.5 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    >
+                      {file.gridImage?.asset ? (
+                        <Image
+                          src={urlFor(file.gridImage).width(112).height(112).url()}
+                          alt=""
+                          width={56}
+                          height={56}
+                          className="h-14 w-14 shrink-0 rounded-sm border border-border object-cover"
+                        />
+                      ) : (
+                        <span className="h-14 w-14 shrink-0 rounded-sm border border-border bg-bureau-manila" aria-hidden="true" />
+                      )}
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-typewriter text-caption uppercase tracking-label text-muted-foreground">
+                          {caseFileDesk(file)}
+                          {file.kind && ` · ${file.kind}`}
+                        </span>
+                        <span className="block truncate font-display text-xl font-bold leading-tight text-foreground transition-colors group-hover:text-primary">
+                          {file.name}
+                        </span>
+                      </span>
+                      <ArrowRight
+                        className="h-4 w-4 shrink-0 text-primary/50 transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
+
+        {/* Curated directory (Link in Bio singleton) */}
+        <SectionHead className="mt-12">Bureau Directory</SectionHead>
+        <nav aria-label="Bureau directory" className="space-y-4">
           {data.links.map((link, idx) => {
             const external = isExternal(link.url);
             const key = link._key ?? `${link.url}-${idx}`;
@@ -116,7 +260,7 @@ export default async function LinksPage() {
                     <span
                       style={{ transform: "rotate(2.5deg)" }}
                       className={cn(
-                        "shrink-0 border-2 px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-eyebrow shadow-[inset_0_0_0_1px_currentColor]",
+                        "shrink-0 border-2 px-2 py-0.5 font-display text-tag font-bold uppercase tracking-eyebrow shadow-[inset_0_0_0_1px_currentColor]",
                         isFeatured
                           ? "border-destructive text-destructive"
                           : "border-accent text-accent"
@@ -170,11 +314,6 @@ export default async function LinksPage() {
             );
           })}
         </nav>
-
-        {/* Newsletter */}
-        <div className="mt-10">
-          <NewsletterSignup variant="compact" />
-        </div>
 
         {/* Socials */}
         {data.socials && data.socials.length > 0 && (
