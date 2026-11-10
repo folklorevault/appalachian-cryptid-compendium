@@ -281,7 +281,27 @@ export const bulletinBySlugQuery = `*[_type == "bulletin" && slug.current == $sl
   metaTitle,
   metaDescription,
   readTime,
-  body,
+  format,
+  specimen {
+    number,
+    wallLabel,
+    accession[] { _key, label, value },
+    curatorsNote,
+    status[] { _key, label, value, emphasis },
+    plates[] {
+      ...,
+      "dimensions": asset->metadata.dimensions { width, height },
+      "lqip": asset->metadata.lqip
+    }
+  },
+  body[] {
+    ...,
+    _type == "bodyImage" => {
+      ...,
+      "dimensions": asset->metadata.dimensions { width, height },
+      "lqip": asset->metadata.lqip
+    }
+  },
   relatedCryptids[]-> { _id, name, slug },
   relatedAnomalies[]-> { _id, name, slug }
 }`;

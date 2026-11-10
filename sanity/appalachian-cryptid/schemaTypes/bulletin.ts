@@ -1,4 +1,4 @@
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, defineArrayMember} from 'sanity'
 
 export default defineType({
   name: 'bulletin',
@@ -47,6 +47,28 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'format',
+      title: 'Layout',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Standard bulletin', value: 'standard'},
+          {title: 'Specimen report', value: 'specimen'},
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'standard',
+      description:
+        'Specimen report: an object record with a photo-led ink cover, accession rows, and plates. Fill in the Specimen fields below.',
+    }),
+    defineField({
+      name: 'specimen',
+      title: 'Specimen',
+      type: 'specimenRecord',
+      hidden: ({document}) => document?.format !== 'specimen',
+    }),
+    defineField({
       name: 'summary',
       title: 'Summary',
       type: 'text',
@@ -77,8 +99,64 @@ export default defineType({
       name: 'body',
       title: 'Body',
       type: 'array',
-      of: [{type: 'block'}],
-      description: 'Full bulletin content (rich text)',
+      of: [
+        defineArrayMember({type: 'block'}),
+        defineArrayMember({type: 'table'}),
+        defineArrayMember({
+          type: 'image',
+          name: 'bodyImage',
+          title: 'Photo',
+          options: {hotspot: true},
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Describe what the photo shows, for screen readers and search.',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'placement',
+              title: 'Placement',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'In the text column', value: 'inline'},
+                  {title: 'In the margin (specimen reports)', value: 'margin'},
+                ],
+                layout: 'radio',
+                direction: 'horizontal',
+              },
+              initialValue: 'inline',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+              description: 'Shown under the photo. Avoid em dashes.',
+            }),
+            defineField({
+              name: 'credit',
+              title: 'Credit',
+              type: 'string',
+              description: 'Photographer or holding institution, e.g. "Courtesy of Transylvania University"',
+            }),
+          ],
+        }),
+        defineArrayMember({type: 'marginNote'}),
+      ],
+      description: 'Full bulletin content: rich text, tables, photos, and margin notes',
+      // Opt this field into the Studio's built-in table editor; other
+      // Portable Text fields stay table-free.
+      components: {
+        portableText: {
+          plugins: (props) =>
+            props.renderDefault({
+              ...props,
+              plugins: {...props.plugins, table: {enabled: true}},
+            }),
+        },
+      },
     }),
     defineField({
       name: 'relatedCryptids',
