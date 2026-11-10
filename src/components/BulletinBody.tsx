@@ -87,7 +87,8 @@ function BulletinTable({ value }: { value: TableValue }) {
                   <th
                     key={cell._key}
                     scope="row"
-                    className="py-2 pr-4 text-left align-top font-typewriter text-xs font-normal tracking-type text-muted-foreground"
+                    // pt-2.5 sets the 12px label on the 14px value's baseline.
+                    className="pt-2.5 pb-2 pr-4 text-left align-top font-typewriter text-xs font-normal tracking-type text-muted-foreground"
                   >
                     <CellContent cell={cell} />
                   </th>
