@@ -3,10 +3,6 @@ import { Heart } from "lucide-react";
 import { EmailLink } from "@/components/ContactEmail";
 import { CONTACT_EMAIL } from "@/lib/contact";
 
-interface FooterProps {
-  variant?: "simple" | "full";
-}
-
 // Easter egg: a tiny form number that leads to the unlisted witness statement.
 const FormStamp = () => (
   <Link
@@ -18,48 +14,8 @@ const FormStamp = () => (
   </Link>
 );
 
-export const Footer = ({ variant = "simple" }: FooterProps) => {
+export const Footer = () => {
   const year = new Date().getFullYear();
-
-  if (variant === "simple") {
-    return (
-      <footer className="border-t border-border bg-card py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 text-center">
-          <p className="text-sm text-muted-foreground">
-            © {year} Appalachian Cryptid Field Guide. Compiled in East
-            Tennessee.
-          </p>
-          <ul className="flex items-center gap-4 text-xs">
-            <li>
-              <Link
-                href="/contact"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                Contact
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/privacy"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                Privacy Policy
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/terms"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                Terms &amp; Conditions
-              </Link>
-            </li>
-          </ul>
-          <FormStamp />
-        </div>
-      </footer>
-    );
-  }
 
   return (
     <footer className="border-t border-border bg-card py-16 px-6 lg:py-20 lg:px-8">

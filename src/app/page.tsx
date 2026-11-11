@@ -204,7 +204,7 @@ export default async function Home() {
 
       </main>
 
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }

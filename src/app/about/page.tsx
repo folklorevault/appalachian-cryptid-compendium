@@ -19,7 +19,7 @@ export default function AboutPage() {
         <AboutDirective />
       </main>
 
-      <Footer variant="full" />
+      <Footer />
       <BackToTop />
     </div>
   );

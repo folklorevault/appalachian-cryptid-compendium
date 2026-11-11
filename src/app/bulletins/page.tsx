@@ -86,7 +86,7 @@ export default async function BulletinsPage() {
         <BulletinLedger bulletins={bulletins} />
       </main>
 
-      <Footer variant="simple" />
+      <Footer />
     </div>
   );
 }

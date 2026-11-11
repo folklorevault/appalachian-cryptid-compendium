@@ -87,7 +87,7 @@ export default function ShopPage() {
           <ShopProductCard />
         </section>
       </main>
-      <Footer variant="simple" />
+      <Footer />
     </div>
   );
 }

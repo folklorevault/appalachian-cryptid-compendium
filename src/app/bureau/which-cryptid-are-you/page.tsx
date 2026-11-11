@@ -26,7 +26,7 @@ export default async function AssessmentPage() {
       <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-6 pb-20 pt-12 sm:pt-16">
         <AffinityAssessment results={results} />
       </main>
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }

@@ -94,7 +94,7 @@ export default async function AnomaliesPage() {
         </section>
       </main>
 
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }
