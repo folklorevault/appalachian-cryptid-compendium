@@ -218,10 +218,34 @@ export interface SanityBulletinListItem {
   relatedCryptids?: Array<{ _id: string; name: string; slug: SanitySlug }>
 }
 
+export type BulletinFormat = 'standard' | 'specimen'
+
+export interface SanitySpecimenPlate {
+  _key: string
+  asset?: { _ref: string }
+  alt?: string
+  caption?: string
+  credit?: string
+  dimensions?: { width: number; height: number }
+  lqip?: string
+}
+
+// The object-record fields of a specimen-report bulletin (format: 'specimen').
+export interface SanitySpecimenRecord {
+  number?: string
+  wallLabel?: string[]
+  plates?: SanitySpecimenPlate[]
+  accession?: Array<{ _key: string; label: string; value: string }>
+  curatorsNote?: string
+  status?: Array<{ _key: string; label: string; value: string; emphasis?: boolean }>
+}
+
 export interface SanityBulletin extends SanityBulletinListItem {
   _type: 'bulletin'
   metaTitle?: string
   metaDescription?: string
+  format?: BulletinFormat
+  specimen?: SanitySpecimenRecord
   body?: unknown[]
   relatedAnomalies?: Array<{ _id: string; name: string; slug: SanitySlug }>
 }

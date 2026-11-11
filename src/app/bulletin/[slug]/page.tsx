@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PortableText, type PortableTextBlock } from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/react";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -13,6 +13,8 @@ import {
 import { BackToTop } from "@/components/BackToTop";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { BulletinRefList } from "@/components/BulletinRefList";
+import { BulletinBody } from "@/components/BulletinBody";
+import { SpecimenReport } from "@/components/SpecimenReport";
 import { Footer } from "@/components/Footer";
 import {
   StructuredData,
@@ -26,7 +28,11 @@ import {
 } from "@/lib/sanity/fetchers";
 import { pickRelatedBulletins } from "@/lib/bulletins";
 import { formatLongDate, truncateMeta } from "@/lib/utils";
-import type { BulletinCategory } from "@/types/sanity";
+import type {
+  BulletinCategory,
+  SanityBulletin,
+  SanityBulletinListItem,
+} from "@/types/sanity";
 
 const CATEGORY_LABELS: Record<BulletinCategory, string> = {
   "field-terminology": "Field Terminology",
@@ -120,132 +126,158 @@ export default async function BulletinDetailPage({
         ])}
       />
       <main id="main-content">
-        {/* Breadcrumb */}
-        <div className="max-w-3xl mx-auto px-6 py-4">
-          <Breadcrumb>
-            <BreadcrumbList className="font-typewriter uppercase tracking-widest text-xs">
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/bulletins">Bureau Bulletins</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>/</BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbPage>{bulletin.title}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-
-        {/* Header */}
-        <div className="max-w-3xl mx-auto px-6 pb-6">
-          <div className="flex items-center gap-3 flex-wrap mb-3">
-            <span className="font-typewriter text-xs font-bold tracking-type text-bureau-ink">
-              {bulletin.bulletinNumber}
-            </span>
-            <span className="font-typewriter text-xs text-bureau-ink-muted">
-              {formatLongDate(bulletin.date)}
-            </span>
-            <span
-              className="font-typewriter text-xs tracking-widest uppercase pb-px"
-              style={{
-                color: `hsl(var(--bulletin-${bulletin.category}))`,
-                borderBottom: `1.5px solid hsl(var(--bulletin-${bulletin.category}) / 0.25)`,
-              }}
-            >
-              {categoryLabel}
-            </span>
-            {bulletin.readTime && (
-              <span className="font-typewriter text-xs text-muted-foreground/80">
-                {bulletin.readTime} read
-              </span>
-            )}
-          </div>
-
-          <h1 className="font-display font-bold text-foreground leading-tight text-[clamp(1.6rem,4vw,2.4rem)] mb-3">
-            {bulletin.title}
-          </h1>
-
-          {bulletin.summary && (
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
-              {bulletin.summary}
-            </p>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div className="max-w-3xl mx-auto px-6">
-          <hr className="border-t-2 border-bureau-ink-muted mb-8" />
-        </div>
-
-        {/* Body */}
-        <article className="max-w-3xl mx-auto px-6 pb-12">
-          {bulletin.body && bulletin.body.length > 0 ? (
-            <div className="prose prose-stone max-w-none font-sans text-foreground leading-relaxed [&_p]:mb-4 [&_h2]:font-display [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-3 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-2 [&_blockquote]:border-l-2 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground">
-              <PortableText value={bulletin.body as PortableTextBlock[]} />
+        {bulletin.format === "specimen" ? (
+          <>
+            <SpecimenReport bulletin={bulletin} />
+            <div className="max-w-3xl mx-auto px-6 pb-12">
+              <RelatedFiles bulletin={bulletin} relatedBulletins={relatedBulletins} />
             </div>
-          ) : (
-            <p className="text-muted-foreground italic font-typewriter text-sm">
-              Full bulletin content not yet available.
-            </p>
-          )}
+          </>
+        ) : (
+          <>
+            {/* Breadcrumb */}
+            <div className="max-w-3xl mx-auto px-6 py-4">
+              <Breadcrumb>
+                <BreadcrumbList className="font-typewriter uppercase tracking-widest text-xs">
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link href="/bulletins">Bureau Bulletins</Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>{bulletin.title}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
 
-          {/* Related Case Files */}
-          {bulletin.relatedCryptids && bulletin.relatedCryptids.length > 0 && (
-            <div className="mt-10 pt-6 border-t border-border">
-              <h2 className="text-lg font-bold text-foreground font-display mb-3">
-                Related Case Files
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {bulletin.relatedCryptids.map((cryptid) => (
-                  <Link
-                    key={cryptid._id}
-                    href={`/cryptid/${cryptid.slug.current}`}
-                    className="font-typewriter text-xs tracking-type text-primary border border-primary/30 rounded-sm px-2.5 py-1 no-underline hover:bg-primary/5 transition-colors"
-                  >
-                    {cryptid.name}
-                  </Link>
-                ))}
+            {/* Header */}
+            <div className="max-w-3xl mx-auto px-6 pb-6">
+              <div className="flex items-center gap-3 flex-wrap mb-3">
+                <span className="font-typewriter text-xs font-bold tracking-type text-bureau-ink">
+                  {bulletin.bulletinNumber}
+                </span>
+                <span className="font-typewriter text-xs text-bureau-ink-muted">
+                  {formatLongDate(bulletin.date)}
+                </span>
+                <span
+                  className="font-typewriter text-xs tracking-widest uppercase pb-px"
+                  style={{
+                    color: `hsl(var(--bulletin-${bulletin.category}))`,
+                    borderBottom: `1.5px solid hsl(var(--bulletin-${bulletin.category}) / 0.25)`,
+                  }}
+                >
+                  {categoryLabel}
+                </span>
+                {bulletin.readTime && (
+                  <span className="font-typewriter text-xs text-muted-foreground/80">
+                    {bulletin.readTime} read
+                  </span>
+                )}
               </div>
-            </div>
-          )}
 
-          {/* Related Anomalies */}
-          {bulletin.relatedAnomalies &&
-            bulletin.relatedAnomalies.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-border">
-                <h2 className="text-lg font-bold text-foreground font-display mb-3">
-                  Related Anomalies
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {bulletin.relatedAnomalies.map((anomaly) => (
-                    <Link
-                      key={anomaly._id}
-                      href={`/anomaly/${anomaly.slug.current}`}
-                      className="font-typewriter text-xs tracking-type text-accent border border-accent/30 rounded-sm px-2.5 py-1 no-underline hover:bg-accent/5 transition-colors"
-                    >
-                      {anomaly.name}
-                    </Link>
-                  ))}
+              <h1 className="font-display font-bold text-foreground leading-tight text-[clamp(1.6rem,4vw,2.4rem)] mb-3">
+                {bulletin.title}
+              </h1>
+
+              {bulletin.summary && (
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                  {bulletin.summary}
+                </p>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className="max-w-3xl mx-auto px-6">
+              <hr className="border-t-2 border-bureau-ink-muted mb-8" />
+            </div>
+
+            {/* Body */}
+            <article className="max-w-3xl mx-auto px-6 pb-12">
+              {bulletin.body && bulletin.body.length > 0 ? (
+                <div className="prose prose-stone max-w-none font-sans text-foreground leading-relaxed [&_p]:mb-4 [&_h2]:font-display [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-3 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-2 [&_blockquote]:border-l-2 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground">
+                  <BulletinBody value={bulletin.body as PortableTextBlock[]} />
                 </div>
-              </div>
-            )}
+              ) : (
+                <p className="text-muted-foreground italic font-typewriter text-sm">
+                  Full bulletin content not yet available.
+                </p>
+              )}
 
-          {/* Related Bulletins — keeps the section cross-linked */}
-          <BulletinRefList
-            heading="Related Bulletins"
-            bulletins={relatedBulletins}
-          />
-
-          {/* Newsletter */}
-          <div className="mt-10 pt-8 border-t border-border">
-            <NewsletterSignup variant="compact" />
-          </div>
-        </article>
+              <RelatedFiles bulletin={bulletin} relatedBulletins={relatedBulletins} />
+            </article>
+          </>
+        )}
       </main>
 
       <BackToTop />
       <Footer />
     </div>
+  );
+}
+
+// Cross-links and the newsletter, shared by both layouts.
+function RelatedFiles({
+  bulletin,
+  relatedBulletins,
+}: {
+  bulletin: SanityBulletin;
+  relatedBulletins: SanityBulletinListItem[];
+}) {
+  return (
+    <>
+      {/* Related Case Files */}
+      {bulletin.relatedCryptids && bulletin.relatedCryptids.length > 0 && (
+        <div className="mt-10 pt-6 border-t border-border">
+          <h2 className="text-lg font-bold text-foreground font-display mb-3">
+            Related Case Files
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {bulletin.relatedCryptids.map((cryptid) => (
+              <Link
+                key={cryptid._id}
+                href={`/cryptid/${cryptid.slug.current}`}
+                className="font-typewriter text-xs tracking-type text-primary border border-primary/30 rounded-sm px-2.5 py-1 no-underline hover:bg-primary/5 transition-colors"
+              >
+                {cryptid.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Related Anomalies */}
+      {bulletin.relatedAnomalies &&
+        bulletin.relatedAnomalies.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-border">
+            <h2 className="text-lg font-bold text-foreground font-display mb-3">
+              Related Anomalies
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {bulletin.relatedAnomalies.map((anomaly) => (
+                <Link
+                  key={anomaly._id}
+                  href={`/anomaly/${anomaly.slug.current}`}
+                  className="font-typewriter text-xs tracking-type text-accent border border-accent/30 rounded-sm px-2.5 py-1 no-underline hover:bg-accent/5 transition-colors"
+                >
+                  {anomaly.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+      {/* Related Bulletins — keeps the section cross-linked */}
+      <BulletinRefList
+        heading="Related Bulletins"
+        bulletins={relatedBulletins}
+      />
+
+      {/* Newsletter */}
+      <div className="mt-10 pt-8 border-t border-border">
+        <NewsletterSignup variant="compact" />
+      </div>
+    </>
   );
 }
