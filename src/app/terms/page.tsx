@@ -199,7 +199,7 @@ export default function TermsPage() {
         </article>
       </main>
 
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }

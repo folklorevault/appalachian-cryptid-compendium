@@ -47,7 +47,7 @@ export default function WitnessFormPage() {
           .
         </p>
       </main>
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }

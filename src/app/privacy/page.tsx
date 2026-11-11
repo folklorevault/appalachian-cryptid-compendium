@@ -257,7 +257,7 @@ export default function PrivacyPage() {
         </article>
       </main>
 
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }

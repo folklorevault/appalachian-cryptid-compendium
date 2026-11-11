@@ -64,7 +64,7 @@ export default async function AssessmentResultPage({ params }: Props) {
 
         <AssessmentResultPanel result={result} />
       </main>
-      <Footer variant="full" />
+      <Footer />
     </div>
   );
 }
