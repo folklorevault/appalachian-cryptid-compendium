@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
+import { EmailLink } from "@/components/ContactEmail";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 interface FooterProps {
   variant?: "simple" | "full";
@@ -155,14 +157,32 @@ export const Footer = ({ variant = "simple" }: FooterProps) => {
           </div>
           <div>
             <h2 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">
-              A Note
+              Get in Touch
             </h2>
-            <p className="text-xs text-muted-foreground">
-              This field guide honors the storytelling traditions of Appalachia
-              and the South. Many accounts trace back through Cherokee and other
-              Indigenous traditions. We're just trying to organize the lore—not
-              claim to be the first to record it.
+            <p className="text-sm text-muted-foreground mb-3">
+              Mentioned the Bureau on a podcast or in an article? I&apos;d love
+              to hear about it. I&apos;m also open to collaborations and
+              invitations.
             </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <EmailLink
+                  location="footer"
+                  className="break-words text-foreground underline underline-offset-2 hover:text-primary transition-colors"
+                >
+                  {CONTACT_EMAIL}
+                </EmailLink>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Contact the Bureau
+                  <span aria-hidden="true">{" →"}</span>
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
