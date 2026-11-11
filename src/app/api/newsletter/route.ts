@@ -24,32 +24,39 @@ async function parseEmail(request: NextRequest): Promise<{ email: string; loaded
   };
 }
 
-// Add contact to Loops.so mailing list
-async function addToLoops(email: string): Promise<boolean> {
-  const loopsApiKey = process.env.LOOPS_API_KEY;
-  if (!loopsApiKey) {
-    console.warn("LOOPS_API_KEY not configured — skipping Loops signup");
+// Sequenzy list new signups join. The live "Welcome sequence" fires on
+// contact-added, then moves the contact from this list to "Newsletter
+// Subscribers" when it finishes.
+const SEQUENZY_SIGNUP_LIST_ID = "sh109lrrjyqh9jyevrap0qlk";
+
+// Add contact to Sequenzy and start the welcome sequence
+async function addToSequenzy(email: string): Promise<boolean> {
+  const apiKey = process.env.SEQUENZY_API_KEY;
+  if (!apiKey) {
+    console.warn("SEQUENZY_API_KEY not configured — skipping Sequenzy signup");
     return false;
   }
 
-  const response = await fetch("https://app.loops.so/api/v1/contacts/create", {
+  const response = await fetch("https://api.sequenzy.com/api/v1/subscribers", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${loopsApiKey}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       email,
-      source: "appalachian-cryptid-compendium",
-      mailingLists: {
-        cmlwtpmz40dhh0iyf479cb0jr: true,
-      },
+      tags: ["website-signup"],
+      lists: [SEQUENZY_SIGNUP_LIST_ID],
+      enrollInSequences: true,
     }),
   });
 
+  // Someone signing up twice is not an error for the visitor.
+  if (response.status === 409) return true;
+
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("Loops API error:", errorText);
+    console.error("Sequenzy API error:", response.status, errorText);
     return false;
   }
 
@@ -108,7 +115,7 @@ function successResponse(isFormSubmission: boolean, request: NextRequest) {
   return NextResponse.json({ success: true });
 }
 
-// Newsletter signup handler — adds to Loops.so + creates Sanity subscriber record
+// Newsletter signup handler — adds to Sequenzy + creates Sanity subscriber record
 export async function POST(request: NextRequest) {
   try {
     // BotID check — blocks automated bots at the platform level
@@ -140,21 +147,21 @@ export async function POST(request: NextRequest) {
       return successResponse(isFormSubmission, request);
     }
 
-    // Add to Loops (primary — this is what actually sends emails)
+    // Add to Sequenzy (primary — this is what actually sends emails)
     // and Sanity (secondary — subscriber record for the CMS)
-    const [loopsOk, sanityOk] = await Promise.all([
-      addToLoops(email),
+    const [sequenzyOk, sanityOk] = await Promise.all([
+      addToSequenzy(email),
       addToSanity(email),
     ]);
 
-    // Fail only if Loops fails and was configured (i.e., key exists but API errored)
-    if (!loopsOk && process.env.LOOPS_API_KEY) {
+    // Fail only if Sequenzy fails and was configured (i.e., key exists but API errored)
+    if (!sequenzyOk && process.env.SEQUENZY_API_KEY) {
       return errorResponse(isFormSubmission, "Subscription failed. Try again.", request);
     }
 
     // If neither service was configured, that's a server config problem
-    if (!loopsOk && !sanityOk) {
-      console.error("Neither LOOPS_API_KEY nor SANITY_API_TOKEN configured");
+    if (!sequenzyOk && !sanityOk) {
+      console.error("Neither SEQUENZY_API_KEY nor SANITY_API_TOKEN configured");
       return errorResponse(isFormSubmission, "Server configuration error", request);
     }
 

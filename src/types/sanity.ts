@@ -299,6 +299,21 @@ export interface LinkInBioSocial {
   url: string
 }
 
+export interface LatestCaseFile {
+  _id: string
+  _type: 'cryptid' | 'anomaly'
+  name: string
+  slug: string
+  subhead?: string
+  description?: string
+  /** Anomaly type, or cryptid classification. */
+  kind?: string
+  /** Anomalies only. */
+  status?: AnomalyStatus
+  gridImage?: SanityImage
+  imageAlt?: string
+}
+
 export interface SanityLinkInBio {
   _id: string
   _type: 'linkInBio'

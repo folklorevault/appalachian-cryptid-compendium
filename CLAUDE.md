@@ -61,7 +61,7 @@ Pages live in `src/app/` using Next.js file-based routing:
 ### API Routes
 
 - `api/sightings/route.ts` — `POST` sighting reports (writes to Sanity as `sightingReport` documents)
-- `api/newsletter/route.ts` — `POST` newsletter signups (forwards to Loops.so)
+- `api/newsletter/route.ts` — `POST` newsletter signups (adds to Sequenzy, which starts the welcome sequence)
 - `api/revalidate/route.ts` — `POST` Sanity webhook handler (on-demand ISR via `revalidateTag`)
 
 ### Sanity CMS Integration
@@ -142,7 +142,7 @@ CSP and security headers are configured in `next.config.ts` via the `headers()` 
 **Server-only (set in Vercel dashboard):**
 - `SANITY_API_TOKEN` — Write token for sighting report submissions
 - `SANITY_WEBHOOK_SECRET` — Webhook verification secret
-- `LOOPS_API_KEY` — Loops.so newsletter API key
+- `SEQUENZY_API_KEY` — Sequenzy newsletter API key
 
 ## Sanity Studio Setup
 

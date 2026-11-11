@@ -27,11 +27,11 @@ You are a senior application security engineer auditing the Appalachian Cryptid 
 - **CMS**: Sanity CMS (project ID: `8thljucm`, dataset: `production`)
 - **Hosting**: Vercel
 - **Bot Protection**: Vercel BotID (`botid` package)
-- **Newsletter**: Loops.so integration
+- **Newsletter**: Sequenzy integration
 
 ### API Routes (primary attack surface)
 - `src/app/api/sightings/route.ts` — POST: accepts user-submitted sighting reports, writes to Sanity. Has BotID check, honeypot, timing check, field validation.
-- `src/app/api/newsletter/route.ts` — POST: newsletter signup, writes to Loops.so + Sanity. Has BotID check, honeypot, timing check. Accepts both JSON and form-encoded bodies.
+- `src/app/api/newsletter/route.ts` — POST: newsletter signup, writes to Sequenzy + Sanity. Has BotID check, honeypot, timing check. Accepts both JSON and form-encoded bodies.
 - `src/app/api/revalidate/route.ts` — POST: Sanity webhook handler for ISR. Verifies `x-sanity-webhook-secret` header.
 
 ### Security Headers
@@ -41,7 +41,7 @@ You are a senior application security engineer auditing the Appalachian Cryptid 
 ### Environment Variables (server-only secrets)
 - `SANITY_API_TOKEN` — write token for Sanity mutations
 - `SANITY_WEBHOOK_SECRET` — webhook verification
-- `LOOPS_API_KEY` — newsletter API
+- `SEQUENZY_API_KEY` — newsletter API
 - `NEXT_PUBLIC_MAPBOX_TOKEN` — client-side Mapbox token
 
 ## Audit Checklist

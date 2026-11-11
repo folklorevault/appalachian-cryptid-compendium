@@ -333,6 +333,23 @@ export const feedItemsQuery = `*[_type in ["cryptid", "anomaly", "bulletin"] && 
 
 // ── LINK IN BIO QUERY ─────────────────────────────────────────
 
+// Newest published case files across both desks, for the "Just filed" block
+// on /links. Social posts point at "link in bio", so this keeps the page
+// current without anyone editing the Link in Bio singleton.
+export const latestCaseFilesQuery = `*[_type in ["cryptid", "anomaly"] && defined(slug.current)]
+  | order(_createdAt desc)[0...3] {
+  _id,
+  _type,
+  name,
+  "slug": slug.current,
+  subhead,
+  description,
+  "kind": coalesce(anomalyType, classification),
+  status,
+  gridImage,
+  imageAlt
+}`;
+
 export const linkInBioQuery = `*[_type == "linkInBio"][0] {
   _id,
   _type,
