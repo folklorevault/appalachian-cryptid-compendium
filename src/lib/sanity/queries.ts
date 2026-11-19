@@ -393,3 +393,46 @@ export const homepageAnomaliesDeskQuery = `*[_type == "homepageAnomaliesDesk"][0
 export const anomalyListItemBySlugQuery = `*[_type == "anomaly" && slug.current == $slug][0] {
   ${anomalyListFields}
 }`;
+
+// ── EVENTS DIRECTORY ─────────────────────────────────────────
+// Internal fields (organizerType, webPresence) are deliberately not projected.
+
+const eventFields = `
+  _id,
+  _updatedAt,
+  name,
+  slug,
+  kind,
+  legend,
+  subjects[]-> { _id, _type, name, slug },
+  summary,
+  town,
+  state,
+  organizer,
+  officialUrl,
+  admission,
+  familyFriendly,
+  usualMonth,
+  usualTiming,
+  editions[] { _key, year, startDate, endDate, verifiedAt, sourceUrl },
+  lastCheckedAt
+`;
+
+export const eventsListQuery = `*[_type == "event" && defined(slug.current)] | order(name asc) {
+  ${eventFields}
+}`;
+
+export const eventBySlugQuery = `*[_type == "event" && slug.current == $slug][0] {
+  ${eventFields}
+}`;
+
+// Events that list a given cryptid or anomaly in `subjects` (the case-file
+// "Where to celebrate" box).
+export const eventsReferencingQuery = `*[_type == "event" && references($id)] | order(usualMonth asc) {
+  ${eventFields}
+}`;
+
+export const eventSlugsQuery = `*[_type == "event" && defined(slug.current)].slug.current`;
+
+// Slugs with _updatedAt (for sitemap)
+export const eventSlugsWithDatesQuery = `*[_type == "event" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`;

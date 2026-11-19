@@ -9,6 +9,7 @@ import sighting from './sighting'
 import table from './table'
 import marginNote from './marginNote'
 import specimenRecord from './specimenRecord'
+import event from './event'
 
 // Shared object types (caseFileSection, sighting, table, marginNote,
 // specimenRecord) are registered before the documents that reference them.
@@ -24,4 +25,5 @@ export const schemaTypes = [
   bulletin,
   linkInBio,
   homepageAnomaliesDesk,
+  event,
 ]
