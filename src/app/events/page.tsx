@@ -18,7 +18,7 @@ export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
   const year = seasonYear();
-  const title = `Cryptid Festivals ${year}: Appalachia and the South`;
+  const title = `The Appalachian and Greater South Cryptid Events Directory (${year})`;
   const description =
     "A checked calendar of cryptid festivals and conferences across Appalachia and the South, from Mothman to Bigfoot to the Woodbooger, with dates and whether they're confirmed.";
   return {
