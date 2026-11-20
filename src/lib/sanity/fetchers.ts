@@ -2,7 +2,7 @@
 // Used in Server Components — no client-side caching needed.
 
 import { cache } from "react";
-import { sanityClient } from "./client";
+import { sanityReadClient } from "./client";
 import {
   cryptidsListQuery,
   filteredCryptidsQuery,
@@ -60,7 +60,7 @@ async function sanityFetch<T>(
   tags?: string[]
 ): Promise<T | null> {
   try {
-    return await sanityClient.fetch<T>(query, params, {
+    return await sanityReadClient.fetch<T>(query, params, {
       next: { tags: tags ?? ["sanity"] },
     });
   } catch (error) {

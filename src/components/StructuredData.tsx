@@ -161,9 +161,37 @@ interface ItemListSchema {
   }>;
 }
 
+interface EventSchema {
+  "@context": "https://schema.org";
+  "@type": "Event";
+  name: string;
+  description?: string;
+  startDate: string;
+  endDate?: string;
+  eventStatus: "https://schema.org/EventScheduled";
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode";
+  url: string;
+  isAccessibleForFree?: boolean;
+  location: {
+    "@type": "Place";
+    name: string;
+    address: {
+      "@type": "PostalAddress";
+      addressLocality: string;
+      addressRegion: string;
+      addressCountry: "US";
+    };
+  };
+  organizer?: {
+    "@type": "Organization";
+    name: string;
+    url?: string;
+  };
+}
+
 type StructuredDataProps = {
-  type: "website" | "article" | "breadcrumb" | "collection" | "faq" | "blog" | "blogPosting" | "itemList";
-  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema | BlogSchema | BlogPostingSchema | ItemListSchema;
+  type: "website" | "article" | "breadcrumb" | "collection" | "faq" | "blog" | "blogPosting" | "itemList" | "event";
+  data: WebSiteSchema | ArticleSchema | BreadcrumbSchema | CollectionPageSchema | FAQPageSchema | BlogSchema | BlogPostingSchema | ItemListSchema | EventSchema;
 };
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -447,5 +475,50 @@ export function createCollectionPageSchema(
         description: cryptid.description || undefined,
       })),
     },
+  };
+}
+
+// Only for an edition with confirmed dates: Google treats Event markup without
+// a real start date as invalid, so "Dates not announced" pages get none.
+export function createEventSchema(event: {
+  name: string;
+  slug: string;
+  summary?: string;
+  startDate: string;
+  endDate?: string;
+  town: string;
+  state: string;
+  organizer?: string;
+  officialUrl?: string;
+  free?: boolean;
+}): EventSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.name,
+    ...(event.summary && { description: event.summary }),
+    startDate: event.startDate,
+    ...(event.endDate && { endDate: event.endDate }),
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    url: `https://appalachiancryptid.com/events/${event.slug}`,
+    ...(event.free !== undefined && { isAccessibleForFree: event.free }),
+    location: {
+      "@type": "Place",
+      name: event.town,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: event.town,
+        addressRegion: event.state,
+        addressCountry: "US",
+      },
+    },
+    ...(event.organizer && {
+      organizer: {
+        "@type": "Organization",
+        name: event.organizer,
+        ...(event.officialUrl && { url: event.officialUrl }),
+      },
+    }),
   };
 }

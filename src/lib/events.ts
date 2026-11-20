@@ -89,6 +89,12 @@ export function groupEventsByMonth(events: SanityEvent[], today = todayISO()): E
   const byMonth = new Map<number, DatedEvent[]>();
 
   for (const event of events) {
+    // Studio won't publish an event without these, but drafts in local
+    // preview can lack them. Leave those off the calendar, and say so.
+    if (!event.usualMonth || !event.usualTiming) {
+      console.warn(`[events] "${event.name}" has no usual month/timing; left off the calendar.`);
+      continue;
+    }
     const status = eventStatus(event, today);
     const month = eventMonth(event, status);
     byMonth.set(month, [...(byMonth.get(month) ?? []), { event, status }]);
@@ -134,4 +140,89 @@ export function formatEditionDates(edition: SanityEventEdition): string {
     return `${startLabel} – ${MONTH_ABBR[e.month - 1]} ${e.day}, ${s.year}`;
   }
   return `${startLabel}–${e.day}, ${s.year}`;
+}
+
+// "Third weekend of September" → "third weekend of September", for use after
+// "Usually". A leading month name ("April lately…") keeps its capital.
+const lowerFirst = (s: string) =>
+  MONTH_NAMES.some((m) => s.startsWith(m)) ? s : s.charAt(0).toLowerCase() + s.slice(1);
+
+/** "Usually third weekend of September" / "Usually April lately; …" */
+export const usually = (event: SanityEvent) => `Usually ${lowerFirst(event.usualTiming)}`;
+
+/** "12 Nov 2026" — for verified/checked notes. */
+export function formatDay(iso: string): string {
+  const d = parts(iso);
+  return `${d.day} ${MONTH_ABBR[d.month - 1]} ${d.year}`;
+}
+
+/**
+ * The season the calendar is planning for. From November on, this year's
+ * festivals are over, so the page looks ahead to next year.
+ */
+export function seasonYear(today = todayISO()): number {
+  const { year, month } = parts(today);
+  return month >= 11 ? year + 1 : year;
+}
+
+/**
+ * What the register's date block shows. Its border carries the status
+ * (solid confirmed, dashed expected, dotted lapsed); `main` is the day range,
+ * a rough timing word, or the year it last ran.
+ */
+export function dateBlock(
+  event: SanityEvent,
+  status: EventStatus
+): { month: string; main?: string; approx: boolean; label: string } {
+  if (status.kind === "confirmed") {
+    const s = parts(status.edition.startDate!);
+    const e = status.edition.endDate ? parts(status.edition.endDate) : s;
+    return {
+      month: MONTH_ABBR[s.month - 1],
+      main: e.day === s.day && e.month === s.month ? String(s.day) : `${s.day}–${e.day}`,
+      approx: false,
+      label: formatEditionDates(status.edition),
+    };
+  }
+  const month = MONTH_ABBR[event.usualMonth - 1];
+  if (status.kind === "lapsed") {
+    return {
+      month,
+      main: `’${String(status.lastHeld.year).slice(2)}`,
+      approx: true,
+      label: `Last held ${status.lastHeld.year}`,
+    };
+  }
+  const word = event.usualTiming.match(/^(early|mid|late)\b/i)?.[1];
+  return {
+    month,
+    main: word ? word[0].toUpperCase() + word.slice(1).toLowerCase() : undefined,
+    approx: true,
+    label: usually(event),
+  };
+}
+
+/** The small line under the status badge. */
+export function statusNote(event: SanityEvent, status: EventStatus): string | undefined {
+  switch (status.kind) {
+    case "confirmed":
+      return `Verified ${formatDay(status.edition.verifiedAt)}`;
+    case "expected":
+      return status.lastHeld
+        ? `Last held ${formatEditionDates(status.lastHeld)}`
+        : usually(event);
+    case "lapsed":
+      return event.lastCheckedAt ? `Checked ${formatDay(event.lastCheckedAt)}` : undefined;
+  }
+}
+
+export function statusLabel(status: EventStatus): string {
+  switch (status.kind) {
+    case "confirmed":
+      return `Confirmed ${status.edition.year}`;
+    case "expected":
+      return "Dates not announced";
+    case "lapsed":
+      return `Last held ${status.lastHeld.year}`;
+  }
 }

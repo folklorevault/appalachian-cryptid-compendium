@@ -15,6 +15,7 @@ const desktopNavItems: NavItem[] = [
   { href: "/", label: "Field Guide" },
   { href: "/anomalies", label: "Anomalies" },
   { href: "/map", label: "Sightings Map" },
+  { href: "/events", label: "Events" },
   { href: "/bulletins", label: "Bulletins" },
   { href: "/report", label: "File a Report" },
 ];
@@ -27,6 +28,7 @@ const mobileMainItems: NavItem[] = [
 
 const mobileMoreItems: NavItem[] = [
   { href: "/anomalies", label: "Anomalies" },
+  { href: "/events", label: "Events" },
   { href: "/bulletins", label: "Bulletins" },
   { href: "/shop", label: "Shop" },
 ];

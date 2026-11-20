@@ -78,6 +78,7 @@
   --color-bureau-stamp-ink: hsl(var(--bureau-stamp-ink));
   --color-bureau-rust: hsl(var(--bureau-rust));
   --color-bureau-rust-ink: hsl(var(--bureau-rust-ink));
+  --color-bureau-green-pale: hsl(var(--bureau-green-pale));
 }
 
 @theme {
@@ -258,6 +259,11 @@ All colors MUST be HSL.
     --bureau-rust: 8 50% 62%;
     --bureau-rust-ink: 10 55% 68%;
 
+    /* Pale green on Filing Green plates (Events Directory). The plate is
+       --primary pinned by .plate-stock, so like rust this isn't redefined
+       under .dark. 5.0:1 on Filing Green: eyebrows, labels, small type. */
+    --bureau-green-pale: 150 35% 80%;
+
     /* Manila folder stock — gradient stops for case folders, tabs, drawer chips */
     --bureau-folder-hi: 40 42% 80%;
     --bureau-folder-lo: 40 37% 76%;
@@ -400,6 +406,12 @@ All colors MUST be HSL.
      1.6:1 on the ink, rust-ink is 4.5:1. Pair with .plate-stock. */
   .plate-ink {
     --ring: var(--bureau-rust-ink);
+  }
+
+  /* Filing Green plates (bg-primary): the default green ring would vanish
+     into the plate, so the ring turns paper. Pair with .plate-stock. */
+  .plate-green {
+    --ring: var(--bureau-paper);
   }
 }
 
