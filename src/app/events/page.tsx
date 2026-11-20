@@ -60,7 +60,7 @@ export default async function EventsPage() {
               </p>
               <h1
                 id="events-heading"
-                className="font-display font-bold text-hero leading-none tracking-tight text-bureau-paper text-balance max-w-[15ch] mb-6"
+                className="font-display font-bold text-hero leading-none tracking-tight text-bureau-paper text-balance max-w-4xl mb-6"
               >
                 The Appalachian and Greater South Cryptid Events Directory
               </h1>
