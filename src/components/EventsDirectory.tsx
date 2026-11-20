@@ -34,6 +34,9 @@ export function EventsDirectory({ months, intro, nextUp }: EventsDirectoryProps)
   const [query, setQuery] = useState("");
   const terms = normalize(query).split(" ").filter(Boolean);
   const filtering = selectedState !== "all" || terms.length > 0;
+  // Nothing published yet (e.g. before launch): no search, and an honest
+  // "being checked" note instead of a "no matches" message.
+  const isEmpty = months.length === 0;
 
   const all = months.flatMap((m) => m.entries);
   const { chips, singles } = buildStateChips(all.map((e) => ({ states: [e.event.state] })));
@@ -89,6 +92,7 @@ export function EventsDirectory({ months, intro, nextUp }: EventsDirectoryProps)
               )}
 
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3.5">
+                {!isEmpty && (
                 <div className="relative w-full max-w-sm">
                   <label htmlFor="event-search" className="sr-only">
                     Search events
@@ -117,6 +121,7 @@ export function EventsDirectory({ months, intro, nextUp }: EventsDirectoryProps)
                     </button>
                   )}
                 </div>
+                )}
                 <Link
                   href="/events/submit"
                   className="font-typewriter text-xs tracking-type text-bureau-manila-light border-b border-dotted border-bureau-manila-light/60 hover:border-solid"
@@ -138,16 +143,32 @@ export function EventsDirectory({ months, intro, nextUp }: EventsDirectoryProps)
             <h2 id="calendar-heading" className="font-display font-bold text-xl text-foreground">
               The calendar
             </h2>
+            {!isEmpty && (
             <p className="font-typewriter text-xs tracking-type text-muted-foreground" aria-live="polite">
               {filtering ? `${visibleCount} of ${all.length} events` : `${visibleCount} events`}
             </p>
+            )}
           </div>
-          <p className="font-typewriter text-xs tracking-type text-muted-foreground mb-2">
-            A solid box means the dates are confirmed. A dashed box means the event runs every year
-            but hasn’t announced dates yet.
-          </p>
 
-          {visibleCount === 0 && (
+          {isEmpty ? (
+            <p className="mt-4 py-6 border-y border-border text-base leading-relaxed text-muted-foreground max-w-[60ch]">
+              The Bureau is checking this season’s dates against their sources. The first listings
+              go up soon.{" "}
+              <Link
+                href="/events/submit"
+                className="font-typewriter text-xs tracking-type text-primary border-b border-dotted border-primary/60 hover:border-solid"
+              >
+                Know of one? Tell the Bureau
+              </Link>
+            </p>
+          ) : (
+            <p className="font-typewriter text-xs tracking-type text-muted-foreground mb-2">
+              A solid box means the dates are confirmed. A dashed box means the event runs every year
+              but hasn’t announced dates yet.
+            </p>
+          )}
+
+          {!isEmpty && visibleCount === 0 && (
             <p className="mt-8 py-6 border-y border-border text-sm text-muted-foreground">
               No events match{terms.length > 0 && <> “{query.trim()}”</>}
               {selectedState !== "all" && <> in this state</>}.{" "}
