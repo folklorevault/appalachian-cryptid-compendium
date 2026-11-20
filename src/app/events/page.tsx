@@ -18,7 +18,7 @@ export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
   const year = seasonYear();
-  const title = `Cryptid Festivals ${year}: Appalachia and the South`;
+  const title = `The Appalachian and Greater South Cryptid Events Directory (${year})`;
   const description =
     "A checked calendar of cryptid festivals and conferences across Appalachia and the South, from Mothman to Bigfoot to the Woodbooger, with dates and whether they're confirmed.";
   return {
@@ -60,9 +60,9 @@ export default async function EventsPage() {
               </p>
               <h1
                 id="events-heading"
-                className="font-display font-bold text-hero leading-none tracking-tight text-bureau-paper text-balance max-w-[15ch] mb-6"
+                className="font-display font-bold text-hero leading-none tracking-tight text-bureau-paper text-balance max-w-4xl mb-6"
               >
-                Cryptid Festivals of Appalachia and the South
+                The Appalachian and Greater South Cryptid Events Directory
               </h1>
               <p className="font-sans text-base leading-relaxed text-bureau-manila-light max-w-[54ch] mb-3.5">
                 Every town that throws a party for its monster, checked against its source before it
