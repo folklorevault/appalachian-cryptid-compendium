@@ -10,5 +10,9 @@ initBotId({
       path: "/api/sightings",
       method: "POST",
     },
+    {
+      path: "/api/event-submissions",
+      method: "POST",
+    },
   ],
 });

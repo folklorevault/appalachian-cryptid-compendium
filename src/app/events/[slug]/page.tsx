@@ -255,7 +255,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               <p className="mt-6 font-typewriter text-xs tracking-type text-muted-foreground">
                 Running this event, or spotted a date change?{" "}
                 <Link
-                  href="/contact"
+                  href={`/events/submit?event=${slug}`}
                   className="text-foreground border-b border-dotted border-foreground/60 hover:border-solid"
                 >
                   Tell the Bureau

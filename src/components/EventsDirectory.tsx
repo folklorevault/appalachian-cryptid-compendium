@@ -118,7 +118,7 @@ export function EventsDirectory({ months, intro, nextUp }: EventsDirectoryProps)
                   )}
                 </div>
                 <Link
-                  href="/contact"
+                  href="/events/submit"
                   className="font-typewriter text-xs tracking-type text-bureau-manila-light border-b border-dotted border-bureau-manila-light/60 hover:border-solid"
                 >
                   Running an event? Tell the Bureau
