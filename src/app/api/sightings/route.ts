@@ -244,7 +244,12 @@ export async function POST(request: NextRequest) {
     const documentId = `sighting-${generateId()}`;
 
     const sanityDocument = {
-      _id: documentId,
+      // Saved as a draft on purpose. The dataset is public, and only documents
+      // whose _id contains a dot are hidden from unauthenticated reads, so a
+      // published sightingReport would expose the witness's name and email to
+      // anyone querying the API. Drafts stay reviewable in Studio, where the
+      // Publish action is removed for this type (sanity.config.ts).
+      _id: `drafts.${documentId}`,
       _type: "sightingReport",
       status: "pending",
       witnessName: body.witness_name?.trim() || "Anonymous",

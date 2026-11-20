@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { PortableTextBlock } from "@portabletext/react";
 import {
@@ -10,6 +9,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { BulletinBody } from "@/components/BulletinBody";
+import { PlateGallery } from "@/components/PlateGallery";
+import { PlateViewer, type ViewerPlate } from "@/components/PlateViewer";
 import { urlFor } from "@/lib/sanity/image";
 import type { SanityBulletin, SanitySpecimenPlate } from "@/types/sanity";
 
@@ -41,6 +42,28 @@ function plateSrc(plate: SanitySpecimenPlate, width: number) {
   return urlFor(plate).width(width).fit("max").quality(80).url();
 }
 
+// The cover frame is 4:5. Plates near that shape fill it; tall or wide ones
+// (a microscope slide) are shown whole so their labels aren't cropped off.
+const FRAME_ASPECT = 4 / 5;
+
+function toViewerPlate(plate: SanitySpecimenPlate, index: number): ViewerPlate {
+  const { width = 1200, height = 900 } = plate.dimensions ?? {};
+  const shapeRatio = width / height / FRAME_ASPECT;
+  return {
+    key: plate._key,
+    label: plateLabel(index),
+    src: plateSrc(plate, 1400),
+    thumb: urlFor(plate).width(320).height(320).fit("crop").url(),
+    width,
+    height,
+    alt: plate.alt ?? "",
+    lqip: plate.lqip,
+    caption: plate.caption,
+    credit: plate.credit,
+    fit: shapeRatio > 0.8 && shapeRatio < 1.25 ? "cover" : "contain",
+  };
+}
+
 // The H1 drops a leading "Specimen Report:"; the cover's eyebrow says it.
 function displayTitle(title: string) {
   return title.replace(/^specimen report:\s*/i, "");
@@ -50,6 +73,7 @@ export function SpecimenReport({ bulletin }: { bulletin: SanityBulletin }) {
   const specimen = bulletin.specimen ?? {};
   const plates = (specimen.plates ?? []).filter((p) => p.asset);
   const [cover] = plates;
+  const viewerPlates = plates.map(toViewerPlate);
   const wallLabel = specimen.wallLabel ?? [];
   const accession = specimen.accession ?? [];
   const status = specimen.status ?? [];
@@ -110,48 +134,7 @@ export function SpecimenReport({ bulletin }: { bulletin: SanityBulletin }) {
               // Sticky on wide screens: the record column outruns the
               // photo, so the jar stays in view while the rows scroll by.
               <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-start">
-                <figure>
-                  <div className="aspect-4/5 border border-bureau-manila-light/35 p-1.5">
-                    <div className="relative h-full w-full overflow-hidden bg-bureau-ink-dark">
-                      <Image
-                        src={plateSrc(cover, 1400)}
-                        alt={cover.alt ?? ""}
-                        fill
-                        priority
-                        sizes="(min-width: 1024px) 640px, 100vw"
-                        placeholder={cover.lqip ? "blur" : "empty"}
-                        blurDataURL={cover.lqip}
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                  <figcaption className="sr-only">
-                    {plateLabel(0)}. {cover.caption}
-                  </figcaption>
-                </figure>
-                {plates.length > 1 && (
-                  <ul className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4">
-                    {plates.map((plate, i) => (
-                      <li key={plate._key}>
-                        <a
-                          href={`#plate-${i + 1}`}
-                          className="group relative block aspect-square overflow-hidden bg-bureau-ink-dark outline-1 -outline-offset-1 outline-bureau-manila-light/20 hover:outline-bureau-rust-ink"
-                        >
-                          <Image
-                            src={urlFor(plate).width(320).height(320).fit("crop").url()}
-                            alt=""
-                            fill
-                            sizes="160px"
-                            className="object-cover"
-                          />
-                          <span className="sr-only">
-                            {plateLabel(i)}{plate.caption ? `: ${plate.caption}` : ""}
-                          </span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <PlateViewer plates={viewerPlates} />
               </div>
             )}
 
@@ -227,30 +210,7 @@ export function SpecimenReport({ bulletin }: { bulletin: SanityBulletin }) {
             <h2 id="plates-heading" className="mb-6 font-display text-xl font-bold text-foreground">
               Plates
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {plates.map((plate, i) => {
-                const { width = 1200, height = 900 } = plate.dimensions ?? {};
-                return (
-                  <figure key={plate._key} id={`plate-${i + 1}`} className="scroll-mt-28">
-                    <Image
-                      src={plateSrc(plate, 1000)}
-                      alt={plate.alt ?? ""}
-                      width={width}
-                      height={height}
-                      sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
-                      placeholder={plate.lqip ? "blur" : "empty"}
-                      blurDataURL={plate.lqip}
-                      className="h-auto w-full"
-                    />
-                    <figcaption className="mt-2.5 text-sm leading-relaxed text-foreground">
-                      <strong className="font-semibold">{plateLabel(i)}.</strong>
-                      {plate.caption && <> {plate.caption}</>}
-                      {plate.credit && <span className="text-muted-foreground"> {plate.credit}</span>}
-                    </figcaption>
-                  </figure>
-                );
-              })}
-            </div>
+            <PlateGallery plates={viewerPlates} />
           </div>
         </section>
       )}
