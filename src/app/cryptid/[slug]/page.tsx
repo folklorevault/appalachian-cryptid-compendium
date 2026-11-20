@@ -35,16 +35,22 @@ import { DeferredMount } from "@/components/DeferredMount";
 import { ReportSightingCTA } from "@/components/ReportSightingCTA";
 import { FieldSupplyDrop } from "@/components/FieldSupplyDrop";
 import { BulletinRefList } from "@/components/BulletinRefList";
+import { WhereToCelebrate } from "@/components/WhereToCelebrate";
 import { Footer } from "@/components/Footer";
 import {
   fetchCryptidBySlug,
   fetchCryptidSlugs,
   fetchRelatedCryptids,
   fetchBulletinsReferencing,
+  fetchEventsReferencing,
 } from "@/lib/sanity/fetchers";
 import { urlFor } from "@/lib/sanity/image";
 
 // ── Static params for build-time generation ──────────────
+
+// The "Where to celebrate" box shows event status, which changes with the
+// date as well as with Sanity, so rebuild daily.
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const slugs = await fetchCryptidSlugs();
@@ -123,13 +129,14 @@ export default async function CryptidDetailPage({
     notFound();
   }
 
-  const [relatedCryptids, referencingBulletins] = await Promise.all([
+  const [relatedCryptids, referencingBulletins, celebrations] = await Promise.all([
     fetchRelatedCryptids(
       cryptid.slug?.current,
       cryptid.region,
       cryptid.dangerLevel
     ),
     fetchBulletinsReferencing(cryptid._id),
+    fetchEventsReferencing(cryptid._id),
   ]);
 
   const imageUrl = cryptid.image
@@ -293,6 +300,8 @@ export default async function CryptidDetailPage({
               </div>
             </section>
           )}
+
+          <WhereToCelebrate events={celebrations} />
 
           {/* Case File Sections — styled like open folders in the cabinet (always-visible, not togglable,
               so headings carry the search query); chrome matches the File Abstract box above */}

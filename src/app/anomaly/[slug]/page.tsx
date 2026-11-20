@@ -40,7 +40,9 @@ import {
   fetchAnomalySlugs,
   fetchRelatedAnomalies,
   fetchBulletinsReferencing,
+  fetchEventsReferencing,
 } from "@/lib/sanity/fetchers";
+import { WhereToCelebrate } from "@/components/WhereToCelebrate";
 import { urlFor } from "@/lib/sanity/image";
 import {
   formatFileNo,
@@ -67,6 +69,10 @@ const typeIcons: Record<AnomalyType, typeof Zap> = {
 };
 
 // ── Static params ────────────────────────────────────────
+
+// The "Where to celebrate" box shows event status, which changes with the
+// date as well as with Sanity, so rebuild daily.
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const slugs = await fetchAnomalySlugs();
@@ -145,13 +151,14 @@ export default async function AnomalyDetailPage({
     notFound();
   }
 
-  const [relatedAnomalies, referencingBulletins] = await Promise.all([
+  const [relatedAnomalies, referencingBulletins, celebrations] = await Promise.all([
     fetchRelatedAnomalies(
       anomaly.slug?.current,
       anomaly.anomalyType,
       anomaly.region
     ),
     fetchBulletinsReferencing(anomaly._id),
+    fetchEventsReferencing(anomaly._id),
   ]);
 
   const imageUrl = anomaly.image
@@ -372,6 +379,8 @@ export default async function AnomalyDetailPage({
                   ))}
                 </FileSection>
               )}
+
+              <WhereToCelebrate events={celebrations} />
 
               {/* Case File Sections — always visible (not togglable) so headings carry the search query */}
               {anomaly.caseFileSections?.map((section) => (

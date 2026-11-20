@@ -56,3 +56,7 @@ gitleaks-baseline.json
 
 # Private analytics exports + strategy notes (GSC / Rybbit / Bing citations) — local only, never publish
 seostuff/
+
+# Local planning docs and print files (not part of the site)
+/Appalachianandgreatersoutheventsdirectory.md
+/field-guide-print/

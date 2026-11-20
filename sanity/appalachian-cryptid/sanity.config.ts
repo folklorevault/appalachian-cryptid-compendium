@@ -17,11 +17,11 @@ export default defineConfig({
   },
 
   document: {
-    // Sighting reports hold witness names and emails and must stay drafts:
-    // the dataset is public, and publishing would make them readable by
-    // anyone. Review and edit them as drafts; never publish.
+    // Visitor submissions hold names and emails and must stay drafts: the
+    // dataset is public, and publishing would make them readable by anyone.
+    // Review and edit them as drafts; never publish.
     actions: (prev, {schemaType}) =>
-      schemaType === 'sightingReport'
+      schemaType === 'sightingReport' || schemaType === 'eventSubmission'
         ? prev.filter(
             (action) => action.action !== 'publish' && action.displayName !== 'SchedulePublishAction',
           )

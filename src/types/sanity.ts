@@ -340,3 +340,48 @@ export interface SanityHomepageAnomaliesDesk {
   featureBlurb?: string
   featureImage?: (SanityImage & { alt?: string }) | null
 }
+
+// ── Events directory ────────────────────────────────────────
+
+export type EventKind = 'festival' | 'conference'
+export type EventAdmission = 'free' | 'ticketed' | 'mixed'
+
+export interface SanityEventEdition {
+  _key: string
+  year: number
+  /** YYYY-MM-DD. Only missing on past years whose exact dates weren't found. */
+  startDate?: string
+  endDate?: string
+  verifiedAt: string
+  sourceUrl: string
+}
+
+export interface SanityEventSubject {
+  _id: string
+  _type: 'cryptid' | 'anomaly'
+  name: string
+  slug: SanitySlug
+}
+
+export interface SanityEvent {
+  _id: string
+  _updatedAt: string
+  name: string
+  slug: SanitySlug
+  kind: EventKind
+  /** Short chip label for what the event celebrates. */
+  legend: string
+  subjects?: SanityEventSubject[]
+  summary?: string
+  town: string
+  state: string
+  organizer?: string
+  officialUrl?: string
+  admission?: EventAdmission
+  familyFriendly?: boolean
+  /** 1–12. Files the event until this year's dates are out. */
+  usualMonth: number
+  usualTiming: string
+  editions?: SanityEventEdition[]
+  lastCheckedAt?: string
+}

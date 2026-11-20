@@ -54,6 +54,15 @@ export async function POST(request: NextRequest) {
       // otherwise the backlinks never appear on the referenced pages.
       revalidateTag("cryptids", "max");
       revalidateTag("anomalies", "max");
+    } else if (type === "event") {
+      revalidateTag("events", "max");
+      if (slug) {
+        revalidateTag(`event-${slug}`, "max");
+      }
+      // Events reference case files (subjects), which render a "Where to
+      // celebrate" box — refresh them the same way bulletin backlinks are.
+      revalidateTag("cryptids", "max");
+      revalidateTag("anomalies", "max");
     } else {
       // For unknown types, revalidate everything
       revalidateTag("sanity", "max");

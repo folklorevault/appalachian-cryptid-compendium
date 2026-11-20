@@ -2,7 +2,7 @@
 // Used in Server Components — no client-side caching needed.
 
 import { cache } from "react";
-import { sanityClient } from "./client";
+import { sanityReadClient } from "./client";
 import {
   cryptidsListQuery,
   filteredCryptidsQuery,
@@ -28,6 +28,11 @@ import {
   latestCaseFilesQuery,
   homepageAnomaliesDeskQuery,
   anomalyListItemBySlugQuery,
+  eventsListQuery,
+  eventBySlugQuery,
+  eventsReferencingQuery,
+  eventSlugsQuery,
+  eventSlugsWithDatesQuery,
 } from "./queries";
 import { cryptids as staticCryptids } from "@/data/cryptids";
 import type {
@@ -43,6 +48,7 @@ import type {
   LatestCaseFile,
   SanityHomepageAnomaliesDesk,
   FeedItem,
+  SanityEvent,
 } from "@/types/sanity";
 import { bulletins as staticBulletins, bulletinToListItem } from "@/data/bulletins";
 
@@ -54,7 +60,7 @@ async function sanityFetch<T>(
   tags?: string[]
 ): Promise<T | null> {
   try {
-    return await sanityClient.fetch<T>(query, params, {
+    return await sanityReadClient.fetch<T>(query, params, {
       next: { tags: tags ?? ["sanity"] },
     });
   } catch (error) {
@@ -522,4 +528,30 @@ export async function fetchHomepageAnomaliesDesk(): Promise<SanityHomepageAnomal
     tags
   );
   return { ...fallbackAnomaliesDesk, featuredAnomaly };
+}
+
+// ── Event fetchers ───────────────────────────────────────────
+// Sanity-only, like anomalies: there is no static fallback for events.
+
+export async function fetchEvents(): Promise<SanityEvent[]> {
+  return (await sanityFetch<SanityEvent[]>(eventsListQuery, undefined, ["events"])) ?? [];
+}
+
+export const fetchEventBySlug = cache(async (
+  slug: string
+): Promise<SanityEvent | null> => {
+  return sanityFetch<SanityEvent>(eventBySlugQuery, { slug }, ["events", `event-${slug}`]);
+});
+
+/** Events that celebrate a given cryptid or anomaly (by document _id). */
+export async function fetchEventsReferencing(id: string): Promise<SanityEvent[]> {
+  return (await sanityFetch<SanityEvent[]>(eventsReferencingQuery, { id }, ["events"])) ?? [];
+}
+
+export async function fetchEventSlugs(): Promise<string[]> {
+  return (await sanityFetch<string[]>(eventSlugsQuery, undefined, ["events"])) ?? [];
+}
+
+export async function fetchEventSlugsWithDates(): Promise<SlugWithDate[]> {
+  return (await sanityFetch<SlugWithDate[]>(eventSlugsWithDatesQuery, undefined, ["events"])) ?? [];
 }

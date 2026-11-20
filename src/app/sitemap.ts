@@ -3,16 +3,18 @@ import {
   fetchCryptidSlugsWithDates,
   fetchAnomalySlugsWithDates,
   fetchBulletinSlugsWithDates,
+  fetchEventSlugsWithDates,
 } from "@/lib/sanity/fetchers";
 import { ASSESSMENT_PATH, RESULT_SLUGS, resultPath } from "@/data/assessment";
 
 const BASE_URL = "https://appalachiancryptid.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [cryptids, anomalies, bulletins] = await Promise.all([
+  const [cryptids, anomalies, bulletins, events] = await Promise.all([
     fetchCryptidSlugsWithDates(),
     fetchAnomalySlugsWithDates(),
     fetchBulletinSlugsWithDates(),
+    fetchEventSlugsWithDates(),
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -30,6 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/bulletins`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/events`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
@@ -81,6 +89,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const eventPages: MetadataRoute.Sitemap = events.map((e) => ({
+    url: `${BASE_URL}/events/${e.slug}`,
+    lastModified: new Date(e._updatedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
   // Form ACD-41 quiz and its shareable result pages. Form ACD-27B is unlisted on purpose.
   const assessmentPages: MetadataRoute.Sitemap = [
     {
@@ -97,5 +112,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...staticPages, ...assessmentPages, ...cryptidPages, ...anomalyPages, ...bulletinPages];
+  return [...staticPages, ...assessmentPages, ...cryptidPages, ...anomalyPages, ...bulletinPages, ...eventPages];
 }
