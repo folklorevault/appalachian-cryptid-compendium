@@ -15,4 +15,16 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
+
+  document: {
+    // Sighting reports hold witness names and emails and must stay drafts:
+    // the dataset is public, and publishing would make them readable by
+    // anyone. Review and edit them as drafts; never publish.
+    actions: (prev, {schemaType}) =>
+      schemaType === 'sightingReport'
+        ? prev.filter(
+            (action) => action.action !== 'publish' && action.displayName !== 'SchedulePublishAction',
+          )
+        : prev,
+  },
 })
