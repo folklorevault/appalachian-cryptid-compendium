@@ -62,7 +62,7 @@ export default async function EventsPage() {
                 id="events-heading"
                 className="font-display font-bold text-hero leading-none tracking-tight text-bureau-paper text-balance max-w-[15ch] mb-6"
               >
-                Cryptid Festivals of Appalachia and the South
+                The Appalachian and Greater South Cryptid Events Directory
               </h1>
               <p className="font-sans text-base leading-relaxed text-bureau-manila-light max-w-[54ch] mb-3.5">
                 Every town that throws a party for its monster, checked against its source before it
