@@ -83,6 +83,10 @@ async function addToSanity(email: string): Promise<boolean> {
       mutations: [
         {
           create: {
+            // A dotted _id keeps the record private: the dataset is public and
+            // only root-path documents are readable without a token. Without
+            // this, every subscriber's email was queryable by anyone.
+            _id: `drafts.subscriber-${crypto.randomUUID()}`,
             _type: "newsletterSubscriber",
             email,
             subscribedAt: new Date().toISOString(),
