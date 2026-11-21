@@ -156,6 +156,42 @@ export default defineType({
       type: 'boolean',
       group: 'listing',
     }),
+    defineField({
+      name: 'performers',
+      title: 'Featured guests',
+      type: 'array',
+      group: 'listing',
+      description:
+        'Headline speakers, bands or performers the organizer has announced. Optional: Google shows them in event results. Leave empty if none are announced.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'performer',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Name',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'kind',
+              title: 'Kind',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Person (speaker, author, guest)', value: 'person'},
+                  {title: 'Band or group', value: 'group'},
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'person',
+            }),
+          ],
+          preview: {select: {title: 'name', subtitle: 'kind'}},
+        }),
+      ],
+    }),
 
     // ── Dates ──────────────────────────────────────────────────
     defineField({

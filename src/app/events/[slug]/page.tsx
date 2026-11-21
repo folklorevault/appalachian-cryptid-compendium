@@ -20,6 +20,8 @@ import {
   type EventStatus,
 } from "@/lib/events";
 import { stateName } from "@/lib/states";
+import { urlFor } from "@/lib/sanity/image";
+import type { SanityEvent } from "@/types/sanity";
 
 // Status depends on today's date as well as Sanity, so rebuild daily.
 export const revalidate = 86400;
@@ -62,6 +64,13 @@ export async function generateMetadata({
   };
 }
 
+/** Plates of the creatures the event celebrates, for Event markup (Google wants a representative image). */
+const eventImages = (event: SanityEvent) =>
+  (event.subjects ?? [])
+    .filter((s) => s.image?.asset)
+    .slice(0, 3)
+    .map((s) => urlFor(s.image).width(1200).height(675).fit("crop").format("jpg").url());
+
 const ADMISSION_LABEL = {
   free: "Free",
   ticketed: "Ticketed",
@@ -91,9 +100,12 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             endDate: status.edition.endDate,
             town: event.town,
             state: event.state,
-            organizer: event.organizer,
+            // No organizer on file: the festival's own site stands in for it.
+            organizer: event.organizer ?? (event.officialUrl ? event.name : undefined),
             officialUrl: event.officialUrl,
-            free: event.admission ? event.admission !== "ticketed" : undefined,
+            admission: event.admission,
+            images: eventImages(event),
+            performers: event.performers,
           })}
         />
       )}
