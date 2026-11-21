@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 export const metadata: Metadata = {
   title: "Terms of Use & Shop Terms",
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
     description:
       "Terms governing use of the Appalachian Cryptid site and purchases from the Appalachian Cryptid Shop.",
     url: "https://appalachiancryptid.com/terms",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary",
+    images: [SHARE_IMAGE],
     title: "Terms of Use & Shop Terms | Appalachian Cryptid Field Guide",
     description:
       "Terms governing use of the Appalachian Cryptid site and purchases from the Appalachian Cryptid Shop.",

@@ -361,6 +361,12 @@ export interface SanityEventSubject {
   _type: 'cryptid' | 'anomaly'
   name: string
   slug: SanitySlug
+  image?: SanityImage
+}
+
+export interface SanityEventPerformer {
+  name: string
+  kind?: 'person' | 'group'
 }
 
 export interface SanityEvent {
@@ -379,6 +385,8 @@ export interface SanityEvent {
   officialUrl?: string
   admission?: EventAdmission
   familyFriendly?: boolean
+  /** Announced headline guests; feeds Event `performer` markup. */
+  performers?: SanityEventPerformer[]
   /** 1–12. Files the event until this year's dates are out. */
   usualMonth: number
   usualTiming: string

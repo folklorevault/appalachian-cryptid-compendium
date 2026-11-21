@@ -8,6 +8,7 @@ import { SiteHeaderGate } from "@/components/SiteHeaderGate";
 import { ConsoleGreeting } from "@/components/bureau/ConsoleGreeting";
 import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 const workSans = localFont({
   src: [
@@ -54,16 +55,11 @@ export const metadata: Metadata = {
     siteName: "Appalachian Cryptids List",
     type: "website",
     locale: "en_US",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-      },
-    ],
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [SHARE_IMAGE],
   },
   icons: {
     apple: "/apple-touch-icon.png",

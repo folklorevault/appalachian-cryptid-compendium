@@ -4,6 +4,7 @@ import { AnomalyLedger, type LedgerEntry } from "@/components/AnomalyLedger";
 import { formatFileNo } from "@/lib/anomalyFile";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { Footer } from "@/components/Footer";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 export const metadata: Metadata = {
   title: "Anomalies Desk",
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     description:
       "Lights, hauntings, curses, and other unresolved Appalachian incidents.",
     url: "https://appalachiancryptid.com/anomalies",
+    images: [SHARE_IMAGE],
   },
 };
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CopyEmailButton, EmailLink } from "@/components/ContactEmail";
 import { Footer } from "@/components/Footer";
 import { CONTACT_EMAIL } from "@/lib/contact";
+import { SHARE_IMAGE } from "@/lib/share-image";
 const DESCRIPTION =
   "Featured the Bureau on a podcast or in an article? Get in touch. Press, collaborations, corrections, privacy requests, and shop support.";
 
@@ -16,9 +17,11 @@ export const metadata: Metadata = {
     title: "Contact | Appalachian Cryptid Field Guide",
     description: DESCRIPTION,
     url: "https://appalachiancryptid.com/contact",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary",
+    images: [SHARE_IMAGE],
     title: "Contact | Appalachian Cryptid Field Guide",
     description: DESCRIPTION,
   },

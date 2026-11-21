@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
     description:
       "How the Appalachian Cryptid Field Guide and Shop collect, use, and protect your information.",
     url: "https://appalachiancryptid.com/privacy",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary",
+    images: [SHARE_IMAGE],
     title: "Privacy Policy | Appalachian Cryptid Field Guide",
     description:
       "How the Appalachian Cryptid Field Guide and Shop collect, use, and protect your information.",

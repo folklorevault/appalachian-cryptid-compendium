@@ -33,6 +33,7 @@ import type {
   SanityBulletin,
   SanityBulletinListItem,
 } from "@/types/sanity";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 const CATEGORY_LABELS: Record<BulletinCategory, string> = {
   "field-terminology": "Field Terminology",
@@ -83,6 +84,7 @@ export async function generateMetadata({
       description,
       type: "article",
       url: `https://appalachiancryptid.com/bulletin/${slug}`,
+      images: [SHARE_IMAGE],
     },
   };
 }

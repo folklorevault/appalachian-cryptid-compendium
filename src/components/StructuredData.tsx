@@ -167,10 +167,11 @@ interface EventSchema {
   name: string;
   description?: string;
   startDate: string;
-  endDate?: string;
+  endDate: string;
   eventStatus: "https://schema.org/EventScheduled";
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode";
   url: string;
+  image: string[];
   isAccessibleForFree?: boolean;
   location: {
     "@type": "Place";
@@ -186,6 +187,17 @@ interface EventSchema {
     "@type": "Organization";
     name: string;
     url?: string;
+  };
+  performer?: Array<{
+    "@type": "Person" | "PerformingGroup";
+    name: string;
+  }>;
+  offers?: {
+    "@type": "Offer";
+    url?: string;
+    price?: string;
+    priceCurrency?: "USD";
+    availability?: "https://schema.org/InStock";
   };
 }
 
@@ -480,6 +492,14 @@ export function createCollectionPageSchema(
 
 // Only for an edition with confirmed dates: Google treats Event markup without
 // a real start date as invalid, so "Dates not announced" pages get none.
+//
+// Google's recommended fields (endDate, image, organizer, offers, performer)
+// are filled from what the listing actually records, never invented:
+// - endDate falls back to startDate (a one-day event ends the day it starts).
+// - image is the celebrated cryptid's plate when there is one, else the site card.
+// - offers says "free" only when entry is free; ticketed events point at the
+//   official link without a price we haven't checked.
+// - performer appears only when guests have been announced in Sanity.
 export function createEventSchema(event: {
   name: string;
   slug: string;
@@ -490,19 +510,38 @@ export function createEventSchema(event: {
   state: string;
   organizer?: string;
   officialUrl?: string;
-  free?: boolean;
+  admission?: "free" | "ticketed" | "mixed";
+  images?: string[];
+  performers?: Array<{ name: string; kind?: "person" | "group" }>;
 }): EventSchema {
+  const baseUrl = "https://appalachiancryptid.com";
+  const freeEntry = event.admission === "free" || event.admission === "mixed";
+  const offers: EventSchema["offers"] =
+    freeEntry
+      ? {
+          "@type": "Offer",
+          ...(event.officialUrl && { url: event.officialUrl }),
+          price: "0",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+        }
+      : event.officialUrl
+        ? { "@type": "Offer", url: event.officialUrl }
+        : undefined;
+  const performers = event.performers?.filter((p) => p.name?.trim());
+
   return {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.name,
     ...(event.summary && { description: event.summary }),
     startDate: event.startDate,
-    ...(event.endDate && { endDate: event.endDate }),
+    endDate: event.endDate ?? event.startDate,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    url: `https://appalachiancryptid.com/events/${event.slug}`,
-    ...(event.free !== undefined && { isAccessibleForFree: event.free }),
+    url: `${baseUrl}/events/${event.slug}`,
+    image: event.images?.length ? event.images : [`${baseUrl}/og-image.jpg`],
+    ...(event.admission && { isAccessibleForFree: freeEntry }),
     location: {
       "@type": "Place",
       name: event.town,
@@ -520,5 +559,12 @@ export function createEventSchema(event: {
         ...(event.officialUrl && { url: event.officialUrl }),
       },
     }),
+    ...(performers?.length && {
+      performer: performers.map((p) => ({
+        "@type": p.kind === "group" ? ("PerformingGroup" as const) : ("Person" as const),
+        name: p.name.trim(),
+      })),
+    }),
+    ...(offers && { offers }),
   };
 }
