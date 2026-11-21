@@ -11,6 +11,7 @@ import {
   todayISO,
 } from "@/lib/events";
 import { stateName } from "@/lib/states";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 // Status ("Confirmed", "Dates not announced") depends on today's date, not
 // just on Sanity, so rebuild daily even when no webhook fires.
@@ -25,8 +26,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: "/events" },
-    openGraph: { title, description, url: "https://appalachiancryptid.com/events" },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: {
+      title,
+      description,
+      url: "https://appalachiancryptid.com/events",
+      images: [SHARE_IMAGE],
+    },
+    twitter: { card: "summary_large_image", title, description, images: [SHARE_IMAGE] },
   };
 }
 

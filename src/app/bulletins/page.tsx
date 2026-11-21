@@ -7,6 +7,7 @@ import {
   createBlogSchema,
   createBreadcrumbSchema,
 } from "@/components/StructuredData";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 export const metadata: Metadata = {
   title: "Bureau Bulletins",
@@ -20,9 +21,11 @@ export const metadata: Metadata = {
     description:
       "Field primers, regional analysis, and operational guidance from the Bureau.",
     url: "https://appalachiancryptid.com/bulletins",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [SHARE_IMAGE],
     title: "Bureau Bulletins | Appalachian Cryptid Field Guide",
     description:
       "Field primers, regional analysis, and operational guidance from the Bureau.",

@@ -22,6 +22,7 @@ import {
 import { stateName } from "@/lib/states";
 import { urlFor } from "@/lib/sanity/image";
 import type { SanityEvent } from "@/types/sanity";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 // Status depends on today's date as well as Sanity, so rebuild daily.
 export const revalidate = 86400;
@@ -34,6 +35,13 @@ export async function generateStaticParams() {
 /** The year searchers attach to this event: its confirmed edition, else the coming season. */
 const pageYear = (status: EventStatus, today: string) =>
   status.kind === "confirmed" ? status.edition.year : seasonYear(today);
+
+/** Plates of the creatures the event celebrates, for Event markup (Google wants a representative image). */
+const eventImages = (event: SanityEvent) =>
+  (event.subjects ?? [])
+    .filter((s) => s.image?.asset)
+    .slice(0, 3)
+    .map((s) => urlFor(s.image).width(1200).height(630).fit("crop").format("jpg").url());
 
 export async function generateMetadata({
   params,
@@ -55,21 +63,25 @@ export async function generateMetadata({
       ? `${event.name} ${year}: ${formatEditionDates(status.edition)} in ${place}. Dates checked against the source by the Bureau.`
       : `${event.name} in ${place}. ${usually(event)}; ${year} dates not announced yet. The Bureau lists them as soon as they are.`);
 
+  // The celebrated cryptid's plate when there is one, else the site card.
+  const plate = eventImages(event)[0];
+  const shareImages = plate
+    ? [{ url: plate, width: 1200, height: 630, alt: `${event.name}, ${place}` }]
+    : [SHARE_IMAGE];
+
   return {
     title,
     description,
     alternates: { canonical: `/events/${slug}` },
-    openGraph: { title, description, url: `https://appalachiancryptid.com/events/${slug}` },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: {
+      title,
+      description,
+      url: `https://appalachiancryptid.com/events/${slug}`,
+      images: shareImages,
+    },
+    twitter: { card: "summary_large_image", title, description, images: shareImages },
   };
 }
-
-/** Plates of the creatures the event celebrates, for Event markup (Google wants a representative image). */
-const eventImages = (event: SanityEvent) =>
-  (event.subjects ?? [])
-    .filter((s) => s.image?.asset)
-    .slice(0, 3)
-    .map((s) => urlFor(s.image).width(1200).height(675).fit("crop").format("jpg").url());
 
 const ADMISSION_LABEL = {
   free: "Free",

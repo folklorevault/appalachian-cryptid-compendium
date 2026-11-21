@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ShopProductCard } from "@/components/ShopProductCard";
 import { Footer } from "@/components/Footer";
+import { SHARE_IMAGE } from "@/lib/share-image";
 
 export const metadata: Metadata = {
   title: "Gift Shop",
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
     title: "Gift Shop | Appalachian Cryptid Field Guide",
     description: "Official merchandise from Field Office No. 7.",
     url: "https://appalachiancryptid.com/shop",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [SHARE_IMAGE],
     title: "Gift Shop | Appalachian Cryptid Field Guide",
     description: "Official merchandise from Field Office No. 7.",
   },
