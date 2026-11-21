@@ -9,5 +9,5 @@ export const SHARE_IMAGE = {
   url: "/og-image.jpg",
   width: 1200,
   height: 630,
-  alt: "Appalachian Cryptid Bureau field guide",
+  alt: "Appalachian Cryptid Bureau: Mothman over the Appalachian mountains. Cryptids and mysteries from the holler.",
 };
