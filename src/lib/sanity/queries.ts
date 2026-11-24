@@ -415,7 +415,7 @@ const eventFields = `
   performers[] { name, kind },
   usualMonth,
   usualTiming,
-  editions[] { _key, year, startDate, endDate, verifiedAt, sourceUrl },
+  editions[] { _key, year, startDate, endDate, ticketPrice, ticketsOnSale, verifiedAt, sourceUrl },
   lastCheckedAt
 `;
 

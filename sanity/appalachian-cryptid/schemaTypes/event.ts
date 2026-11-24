@@ -261,6 +261,21 @@ export default defineType({
                 }),
             }),
             defineField({
+              name: 'ticketPrice',
+              title: 'Ticket price (USD)',
+              type: 'number',
+              description:
+                'Lowest general-admission price for this year, from the organizer’s own ticket page. Leave empty for free events or if no price is published yet.',
+              validation: (Rule) => Rule.min(0).precision(2),
+            }),
+            defineField({
+              name: 'ticketsOnSale',
+              title: 'Tickets on sale from',
+              type: 'date',
+              description:
+                'The day tickets went on sale, if the organizer says. Leave empty if you don’t know: the site uses the “Verified on” date instead.',
+            }),
+            defineField({
               name: 'verifiedAt',
               title: 'Verified on',
               type: 'date',
