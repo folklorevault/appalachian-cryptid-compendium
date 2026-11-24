@@ -198,6 +198,7 @@ interface EventSchema {
     price?: string;
     priceCurrency?: "USD";
     availability?: "https://schema.org/InStock";
+    validFrom?: string;
   };
 }
 
@@ -497,8 +498,12 @@ export function createCollectionPageSchema(
 // are filled from what the listing actually records, never invented:
 // - endDate falls back to startDate (a one-day event ends the day it starts).
 // - image is the celebrated cryptid's plate when there is one, else the site card.
-// - offers says "free" only when entry is free; ticketed events point at the
-//   official link without a price we haven't checked.
+// - offers says "free" only when entry is free. Ticketed events carry a price
+//   only once one is recorded from the organizer's ticket page; until then they
+//   point at the official link without one.
+// - offers.validFrom is when tickets went on sale if recorded, else the day the
+//   Bureau verified the dates (the offer was certainly public by then), never
+//   later than the event itself.
 // - performer appears only when guests have been announced in Sanity.
 export function createEventSchema(event: {
   name: string;
@@ -511,23 +516,31 @@ export function createEventSchema(event: {
   organizer?: string;
   officialUrl?: string;
   admission?: "free" | "ticketed" | "mixed";
+  ticketPrice?: number;
+  ticketsOnSale?: string;
+  verifiedAt?: string;
   images?: string[];
   performers?: Array<{ name: string; kind?: "person" | "group" }>;
 }): EventSchema {
   const baseUrl = "https://appalachiancryptid.com";
   const freeEntry = event.admission === "free" || event.admission === "mixed";
+  const price = freeEntry ? 0 : event.ticketPrice;
+  const onSale = event.ticketsOnSale ?? event.verifiedAt;
+  // ISO dates compare correctly as strings.
+  const validFrom = onSale && (onSale > event.startDate ? event.startDate : onSale);
   const offers: EventSchema["offers"] =
-    freeEntry
+    price !== undefined || event.officialUrl
       ? {
           "@type": "Offer",
           ...(event.officialUrl && { url: event.officialUrl }),
-          price: "0",
-          priceCurrency: "USD",
-          availability: "https://schema.org/InStock",
+          ...(price !== undefined && {
+            price: String(price),
+            priceCurrency: "USD" as const,
+            availability: "https://schema.org/InStock" as const,
+          }),
+          ...(validFrom && { validFrom }),
         }
-      : event.officialUrl
-        ? { "@type": "Offer", url: event.officialUrl }
-        : undefined;
+      : undefined;
   const performers = event.performers?.filter((p) => p.name?.trim());
 
   return {

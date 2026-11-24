@@ -352,6 +352,10 @@ export interface SanityEventEdition {
   /** YYYY-MM-DD. Only missing on past years whose exact dates weren't found. */
   startDate?: string
   endDate?: string
+  /** Lowest general-admission price in USD, from the organizer's ticket page. */
+  ticketPrice?: number
+  /** YYYY-MM-DD the organizer put tickets on sale, when known. */
+  ticketsOnSale?: string
   verifiedAt: string
   sourceUrl: string
 }

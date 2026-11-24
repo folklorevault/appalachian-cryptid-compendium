@@ -116,6 +116,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             organizer: event.organizer ?? (event.officialUrl ? event.name : undefined),
             officialUrl: event.officialUrl,
             admission: event.admission,
+            ticketPrice: status.edition.ticketPrice ?? undefined,
+            ticketsOnSale: status.edition.ticketsOnSale ?? undefined,
+            verifiedAt: status.edition.verifiedAt,
             images: eventImages(event),
             performers: event.performers,
           })}
