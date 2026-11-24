@@ -37,7 +37,7 @@ export default function TermsPage() {
             Terms of Use &amp; Shop Terms
           </h1>
           <p className="mt-3 text-sm text-muted-foreground font-typewriter">
-            Last updated July 20, 2026
+            Last updated November 24, 2026
           </p>
         </div>
 
@@ -64,7 +64,10 @@ export default function TermsPage() {
             verified scientific claims or professional advice.
           </p>
 
-          <h2 className="font-display text-xl font-bold text-foreground mt-10 mb-3">
+          <h2
+            id="shop-orders"
+            className="font-display text-xl font-bold text-foreground mt-10 mb-3 scroll-mt-28"
+          >
             Shop orders
           </h2>
           <p className="mb-4">
@@ -79,17 +82,27 @@ export default function TermsPage() {
             or cancel the order for a refund.
           </p>
           <p className="mb-4">
-            If your order arrives damaged or incorrect, or has not arrived by
-            its expected delivery date, email{" "}
+            <strong className="text-foreground">All sales are final.</strong>{" "}
+            I don&apos;t accept returns or exchanges.
+          </p>
+          <p className="mb-4">
+            The one exception is a defective order. If an item arrives
+            damaged, misprinted, or otherwise defective, or I sent the wrong
+            item, email{" "}
             <a
               href="mailto:dispatch@appalachiancryptid.com"
               className="text-primary underline underline-offset-2"
             >
               dispatch@appalachiancryptid.com
             </a>{" "}
-            within 30 days of the delivery or expected delivery date. Include
-            the email address used for the order and a description of the
-            problem.
+            within 30 days of delivery. Include the email address used for the
+            order and a photo of the problem, and I will refund the defective
+            item. You don&apos;t need to send it back.
+          </p>
+          <p className="mb-4">
+            If your order has not arrived by its expected delivery date, email
+            the same address within 30 days of that date and I will look into
+            it.
           </p>
           <p className="mb-4">
             Product availability may change without notice. I may cancel and

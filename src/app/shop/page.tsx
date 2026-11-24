@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ShopProductCard } from "@/components/ShopProductCard";
 import { Footer } from "@/components/Footer";
 import { SHARE_IMAGE } from "@/lib/share-image";
@@ -88,6 +89,16 @@ export default function ShopPage() {
           </div>
 
           <ShopProductCard />
+
+          <p className="mt-10 text-center font-typewriter text-xs tracking-type text-muted-foreground">
+            All sales final. Defective items refunded.{" "}
+            <Link
+              href="/terms#shop-orders"
+              className="text-primary underline underline-offset-2"
+            >
+              Shop terms
+            </Link>
+          </p>
         </section>
       </main>
       <Footer />

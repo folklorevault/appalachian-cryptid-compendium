@@ -18,6 +18,7 @@ const desktopNavItems: NavItem[] = [
   { href: "/events", label: "Events" },
   { href: "/bulletins", label: "Bulletins" },
   { href: "/report", label: "File a Report" },
+  { href: "/shop", label: "Shop" },
 ];
 
 const mobileMainItems: NavItem[] = [
